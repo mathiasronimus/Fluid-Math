@@ -1,0 +1,121 @@
+{
+    "terms": [
+        "13",
+        "+",
+        "2",
+        "x",
+        "+",
+        "x",
+        "=",
+        "16",
+        "3",
+        "-",
+        "13",
+        "-",
+        "13",
+        "3",
+        "1"
+    ],
+    "steps": [
+        {
+            "color": {
+                "0": "red",
+                "4": "blue"
+            },
+            "text": "Solving an Equation - Tap to Demonstrate",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "Start by <em>Simplifying</em> the Xs.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            1,
+                            8,
+                            3,
+                            6,
+                            7
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "<em>Subtract</em> 13 from both sides.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            9,
+                            10,
+                            1,
+                            8,
+                            3,
+                            6,
+                            7,
+                            11,
+                            12
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "Simplify.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            8,
+                            3,
+                            6,
+                            13
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "<em>Divide</em> both sides by 3.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            3,
+                            6,
+                            14
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

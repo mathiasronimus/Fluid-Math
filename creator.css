@@ -1,0 +1,131 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.border {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.tool-bar-icon {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.content {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.slides {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.slide {
+    height: 100px;
+    width: 140px;
+    cursor: pointer;
+    padding: 5px;
+    text-align: center;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;    
+}
+
+.background {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+.dialog {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    position: fixed;
+}
+
+.contentOption {
+    padding: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.okButton {
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+#main-column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+}
+
+#top-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 50px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+#middle-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+}
+
+#right-centre {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    align-items: center;
+}
+
+#central-area {
+    flex-grow: 1;
+    overflow-y: scroll;
+}
+
+#bottom-row {
+    height: 150px;
+    overflow-x: scroll;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+}

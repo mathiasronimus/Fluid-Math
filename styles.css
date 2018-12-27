@@ -1,0 +1,26 @@
+.eqContainer {
+    max-width: 650px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.eqLower {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.eqIcon {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.eqText {
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
