@@ -1,5 +1,5 @@
 import Padding from './Padding';
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import C from '../main/consts';
 import EqContent from './EqContent';

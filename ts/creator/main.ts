@@ -3,7 +3,7 @@ import CreatorCanvasController from "./CreatorCanvasController";
 import C from '../main/consts';
 import ContentPane from "./ContentPane";
 import Slides from "./Slides";
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 import CanvasController from "../main/CanvasController";
 
 export default class Controller {

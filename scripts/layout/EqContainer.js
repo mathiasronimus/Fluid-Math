@@ -13,11 +13,16 @@ define(["require", "exports", "./EqComponent"], function (require, exports, EqCo
         interpolate(o, a) {
             return undefined;
         }
-        draw(f, ctx) {
-            //do nothing
-        }
-        //Containers don't draw anything, their
-        //drawables are purely for layout.
+        /**
+         * Containers are not drawn.
+         *
+         * @param s The layout state.
+         * @param ctx The graphics context.
+         */
+        draw(s, ctx) { }
+        /**
+         * Containers don't animate.
+         */
         shouldAnimate() {
             return false;
         }

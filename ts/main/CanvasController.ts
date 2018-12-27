@@ -3,7 +3,7 @@ import HBox from "../layout/HBox";
 import Padding from "../layout/Padding";
 import VBox from "../layout/VBox";
 import EqComponent from "../layout/EqComponent";
-import LayoutState from "../animation/Frame";
+import LayoutState from "../animation/LayoutState";
 import EqContainer from "../layout/EqContainer";
 import AnimationSet from '../animation/AnimationSet';
 import MoveAnimation from "../animation/MoveAnimation";

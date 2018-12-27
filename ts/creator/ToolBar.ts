@@ -1,5 +1,5 @@
 import Controller from "./main";
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 
 export default class ToolBar {
 

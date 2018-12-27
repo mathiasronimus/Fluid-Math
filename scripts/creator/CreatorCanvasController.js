@@ -29,7 +29,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         }
         redraw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.frames.forEach(f => {
+            this.currStates.forEach(f => {
                 //Draw borders
                 if (f.component instanceof VBox_1.default) {
                     this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
@@ -76,7 +76,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         }
         nextStep() {
             //Override to not animate
-            this.frames = this.calcLayout(++this.currStep);
+            this.currStates = this.calcLayout(++this.currStep);
         }
         //Override to change padding
         parseContainer(containerObj) {
@@ -138,12 +138,12 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param y The y-ordinate clicked.
          */
         selectClick(x, y) {
-            let clickedFrame = this.getClickedFrame(x, y);
-            if (clickedFrame === undefined) {
+            let clickedLayout = this.getClickedLayout(x, y);
+            if (clickedLayout === undefined) {
                 throw "click wasn't on any frame";
             }
             else {
-                this.controller.select(clickedFrame);
+                this.controller.select(clickedLayout);
             }
         }
         /**
@@ -192,7 +192,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             if (this.onCanvas()) {
                 throw "duplicate content not allowed";
             }
-            let clickedFrame = this.getClickedFrame(x, y);
+            let clickedFrame = this.getClickedLayout(x, y);
             if (clickedFrame === undefined) {
                 //Didn't click on anything
                 throw "click wasn't on any frame";
@@ -221,43 +221,43 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * Adds adjacent to or inside the HBox,
          * depending on click.
          *
-         * @param clickedFrame The Frame of the clicked HBox.
+         * @param clickedLayout The layout state of the clicked HBox.
          * @param x The x-ordinate of the click.
          */
-        addClickOnHbox(clickedFrame, x) {
-            if (clickedFrame.onLeft(x)) {
-                if (x - clickedFrame.tlx <= consts_1.default.creatorHBoxPadding / 2) {
+        addClickOnHbox(clickedLayout, x) {
+            if (clickedLayout.onLeft(x)) {
+                if (x - clickedLayout.tlx <= consts_1.default.creatorHBoxPadding / 2) {
                     //Outer border, add adjacent
-                    let containerFrame = clickedFrame.layoutParent;
-                    if (containerFrame === undefined) {
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerFrame.component;
-                        this.addBefore(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                        let container = containerLayout.component;
+                        this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                     }
                 }
                 else {
                     //Inner border, add inside
-                    clickedFrame.component.getChildren().unshift(this.getAddComponent());
+                    clickedLayout.component.getChildren().unshift(this.getAddComponent());
                 }
             }
             else {
                 //On right
-                if (clickedFrame.tlx + clickedFrame.width - x <= consts_1.default.creatorHBoxPadding / 2) {
+                if (clickedLayout.tlx + clickedLayout.width - x <= consts_1.default.creatorHBoxPadding / 2) {
                     //Outer border, add adjacent
-                    let containerFrame = clickedFrame.layoutParent;
-                    if (containerFrame === undefined) {
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerFrame.component;
-                        this.addAfter(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                        let container = containerLayout.component;
+                        this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                     }
                 }
                 else {
                     //Inner border, add inside
-                    clickedFrame.component.getChildren().push(this.getAddComponent());
+                    clickedLayout.component.getChildren().push(this.getAddComponent());
                 }
             }
         }
@@ -266,43 +266,43 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * This adds adjacent to or inside the Vbox
          * depending on which part was clicked.
          *
-         * @param clickedFrame The Frame of the clicked Vbox.
+         * @param clickedLayout The Layout state of the clicked Vbox.
          * @param y The y-ordinate of the click.
          */
-        addClickOnVbox(clickedFrame, y) {
-            if (clickedFrame.onTop(y)) {
-                if (y - clickedFrame.tly <= consts_1.default.creatorVBoxPadding / 2) {
+        addClickOnVbox(clickedLayout, y) {
+            if (clickedLayout.onTop(y)) {
+                if (y - clickedLayout.tly <= consts_1.default.creatorVBoxPadding / 2) {
                     //Outer border, add adjacent
-                    let containerFrame = clickedFrame.layoutParent;
-                    if (containerFrame === undefined) {
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerFrame.component;
-                        this.addBefore(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                        let container = containerLayout.component;
+                        this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                     }
                 }
                 else {
                     //Inside border, add inside
-                    clickedFrame.component.getChildren().unshift(this.getAddComponent());
+                    clickedLayout.component.getChildren().unshift(this.getAddComponent());
                 }
             }
             else {
                 //On bottom
-                if (clickedFrame.tly + clickedFrame.height - y <= consts_1.default.creatorVBoxPadding / 2) {
+                if (clickedLayout.tly + clickedLayout.height - y <= consts_1.default.creatorVBoxPadding / 2) {
                     //Outer border, add adjacent
-                    let containerFrame = clickedFrame.layoutParent;
-                    if (containerFrame === undefined) {
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerFrame.component;
-                        this.addAfter(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                        let container = containerLayout.component;
+                        this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                     }
                 }
                 else {
                     //Inner border, add inside
-                    clickedFrame.component.getChildren().push(this.getAddComponent());
+                    clickedLayout.component.getChildren().push(this.getAddComponent());
                 }
             }
         }
@@ -311,33 +311,33 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * component. This adds the content
          * adjacent to the component.
          *
-         * @param clickedFrame The Frame of the clicked component.
+         * @param clickedLayout The Layout state of the clicked component.
          * @param x The x-ordinate clicked.
          * @param y The y-ordinate clicked.
          */
-        addClickOnComponent(clickedFrame, x, y) {
+        addClickOnComponent(clickedLayout, x, y) {
             //Add adjacent to content
-            let container = clickedFrame.layoutParent.component;
+            let container = clickedLayout.layoutParent.component;
             if (container instanceof VBox_1.default) {
                 //Add top/bottom
-                if (clickedFrame.onTop(y)) {
+                if (clickedLayout.onTop(y)) {
                     //Add top
-                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                 }
                 else {
                     //Add bottom
-                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                 }
             }
             else if (container instanceof HBox_1.default) {
                 //Add left/right
-                if (clickedFrame.onLeft(x)) {
+                if (clickedLayout.onLeft(x)) {
                     //Add left
-                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                 }
                 else {
                     //Add right
-                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedFrame.component);
+                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
                 }
             }
             else {
@@ -352,11 +352,11 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param x X-ordinate on the canvas.
          * @param y Y-ordinate on the canvas.
          */
-        getClickedFrame(x, y) {
-            for (let i = 0; i < this.frames.length; i++) {
-                let currFrame = this.frames[i];
-                if (currFrame.contains(x, y)) {
-                    return currFrame;
+        getClickedLayout(x, y) {
+            for (let i = 0; i < this.currStates.length; i++) {
+                let currState = this.currStates[i];
+                if (currState.contains(x, y)) {
+                    return currState;
                 }
             }
             return undefined;
@@ -451,19 +451,19 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * reflect the changes made.
          */
         refresh() {
-            let root = this.frames[this.frames.length - 1].component;
+            let root = this.currStates[this.currStates.length - 1].component;
             let newLayout = this.toStepLayout(root);
             this.onLayoutModified(this.controller.instructionsFromStep(newLayout));
         }
         /**
          * Delete the component that generated
-         * a frame.
+         * a layout state.
          *
-         * @param frame The frame.
+         * @param state The layout state generated by a component.
          */
-        delete(frame) {
-            let parentChildren = frame.layoutParent.component.getChildren();
-            parentChildren.splice(parentChildren.indexOf(frame.component), 1);
+        delete(state) {
+            let parentChildren = state.layoutParent.component.getChildren();
+            parentChildren.splice(parentChildren.indexOf(state.component), 1);
             this.refresh();
         }
         /**

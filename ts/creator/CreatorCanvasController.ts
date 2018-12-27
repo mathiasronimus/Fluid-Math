@@ -5,7 +5,7 @@ import EqContainer from '../layout/EqContainer';
 import EqContent from '../layout/EqContent';
 import Padding from '../layout/Padding';
 import C from '../main/consts';
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
 import Controller from "./main";
 

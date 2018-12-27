@@ -1,5 +1,5 @@
 import BezierCallback from "./BezierCallback";
-import LayoutState from "./Frame";
+import LayoutState from "./LayoutState";
 import AnimationSet from "./AnimationSet";
 import C from '../main/consts';
 

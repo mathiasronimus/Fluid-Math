@@ -1,4 +1,4 @@
-define(["require", "exports", "./EqContainer", "../animation/Frame"], function (require, exports, EqContainer_1, Frame_1) {
+define(["require", "exports", "./EqContainer", "../animation/LayoutState"], function (require, exports, EqContainer_1, LayoutState_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class HBox extends EqContainer_1.default {
@@ -24,8 +24,8 @@ define(["require", "exports", "./EqContainer", "../animation/Frame"], function (
             }
             return totalWidth + this.padding.width();
         }
-        addDrawable(parentFrame, drawables, tlx, tly, currScale) {
-            let frame = new Frame_1.default(parentFrame, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
+        addLayout(parentLayout, layouts, tlx, tly, currScale) {
+            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
             const innerHeight = this.getHeight() - this.padding.height();
             let upToX = tlx + this.padding.left;
             for (let i = 0; i < this.children.length; i++) {
@@ -33,10 +33,10 @@ define(["require", "exports", "./EqContainer", "../animation/Frame"], function (
                 let childHeight = currChild.getHeight();
                 //Position child in the middle vertically
                 let childTLY = (innerHeight - childHeight) / 2 + this.padding.top + tly;
-                upToX += currChild.addDrawable(frame, drawables, upToX, childTLY, currScale).width;
+                upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
             }
-            drawables.push(frame);
-            return frame;
+            layouts.push(state);
+            return state;
         }
     }
     exports.default = HBox;

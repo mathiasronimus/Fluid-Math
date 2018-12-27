@@ -1,6 +1,11 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Represents any component (container, content)
+     * that takes up space and forms a part of the
+     * layout of a step.
+     */
     class EqComponent {
         constructor(padding) {
             this.fixedWidth = -1;

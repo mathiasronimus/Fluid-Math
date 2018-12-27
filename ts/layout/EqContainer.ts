@@ -1,5 +1,5 @@
 import EqComponent from './EqComponent';
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 
 export default abstract class EqContainer extends EqComponent {

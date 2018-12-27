@@ -58,7 +58,7 @@ define(["require", "exports"], function (require, exports) {
          * component.
          */
         delete() {
-            this.controller.currCanvas.delete(this.selectedFrame);
+            this.controller.currCanvas.delete(this.selectedLayout);
             this.unselect();
         }
         /**
@@ -69,7 +69,7 @@ define(["require", "exports"], function (require, exports) {
          */
         select(frame) {
             this.selected = true;
-            this.selectedFrame = frame;
+            this.selectedLayout = frame;
             //Clear current content
             this.element.innerHTML = "";
             this.element.classList.add('selected');
@@ -91,7 +91,7 @@ define(["require", "exports"], function (require, exports) {
          */
         unselect() {
             this.selected = false;
-            this.selectedFrame = undefined;
+            this.selectedLayout = undefined;
             this.element.classList.remove('selected');
             this.element.innerHTML = "";
             this.setDefaultContent();

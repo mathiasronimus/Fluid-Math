@@ -1,7 +1,7 @@
 import EqContainer from './EqContainer';
 import EqComponent from './EqComponent';
 import Padding from './Padding';
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 
 export default class HBox extends EqContainer {
 

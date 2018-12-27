@@ -67,7 +67,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          */
         redraw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.frames.forEach(f => {
+            this.currStates.forEach(f => {
                 this.ctx.save();
                 f.component.draw(f, this.ctx);
                 this.ctx.restore();
@@ -77,8 +77,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * Recalculates and redraws the current step.
          */
         recalc() {
-            this.frames = this.calcLayout(this.currStep);
-            this.fitSize(this.frames[this.frames.length - 1].height);
+            this.currStates = this.calcLayout(this.currStep);
+            this.fitSize(this.currStates[this.currStates.length - 1].height);
             this.redraw();
         }
         /**
@@ -91,11 +91,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 return;
             }
             this.currStep++;
-            let oldDrawables = this.frames;
-            this.frames = this.calcLayout(this.currStep);
-            let rootDrawable = this.frames[this.frames.length - 1];
-            let height = rootDrawable.height;
-            let anims = this.diff(oldDrawables, this.lastHeight, height);
+            let oldStates = this.currStates;
+            this.currStates = this.calcLayout(this.currStep);
+            let rootLayout = this.currStates[this.currStates.length - 1];
+            let height = rootLayout.height;
+            let anims = this.diff(oldStates, this.lastHeight, height);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -109,11 +109,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 return;
             }
             this.currStep--;
-            let oldDrawables = this.frames;
-            this.frames = this.calcLayout(this.currStep);
-            let rootDrawable = this.frames[this.frames.length - 1];
-            let height = rootDrawable.height;
-            let anims = this.diff(oldDrawables, this.lastHeight, height);
+            let oldStates = this.currStates;
+            this.currStates = this.calcLayout(this.currStep);
+            let rootLayout = this.currStates[this.currStates.length - 1];
+            let height = rootLayout.height;
+            let anims = this.diff(oldStates, this.lastHeight, height);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -127,11 +127,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 return;
             }
             this.currStep = 0;
-            let oldDrawables = this.frames;
-            this.frames = this.calcLayout(this.currStep);
-            let rootDrawable = this.frames[this.frames.length - 1];
-            let height = rootDrawable.height;
-            let anims = this.diff(oldDrawables, this.lastHeight, height);
+            let oldStates = this.currStates;
+            this.currStates = this.calcLayout(this.currStep);
+            let rootLayout = this.currStates[this.currStates.length - 1];
+            let height = rootLayout.height;
+            let anims = this.diff(oldStates, this.lastHeight, height);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -142,11 +142,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * Also animates the canvas height to
          * accomodate the new layout.
          *
-         * @param old The set of drawables from the previous step.
+         * @param oldStates The set of layouts from the previous step.
          * @param cHeightBefore The height of the canvas before the animation.
          * @param cHeightAfter The height of the canvas after the animation.
          */
-        diff(oldFrames, cHeightBefore, cHeightAfter) {
+        diff(oldStates, cHeightBefore, cHeightAfter) {
             let set = new AnimationSet_1.default(() => {
                 //When done
                 this.animating = false;
@@ -155,35 +155,35 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
             //Look through content to see what has happened to it (avoiding containers)
             this.content.forEach(content => {
-                let frameBefore = undefined;
+                let stateBefore = undefined;
                 //We may be initilizing, where there are no old frames and everything is added
-                if (oldFrames !== undefined)
-                    for (let o = 0; o < oldFrames.length; o++) {
-                        let oldFrame = oldFrames[o];
-                        if (oldFrame.component === content) {
-                            frameBefore = oldFrame;
+                if (oldStates !== undefined)
+                    for (let o = 0; o < oldStates.length; o++) {
+                        let oldState = oldStates[o];
+                        if (oldState.component === content) {
+                            stateBefore = oldState;
                             break;
                         }
                     }
-                let frameAfter = undefined;
-                for (let n = 0; n < this.frames.length; n++) {
-                    let newFrame = this.frames[n];
-                    if (newFrame.component === content) {
-                        frameAfter = newFrame;
+                let stateAfter = undefined;
+                for (let n = 0; n < this.currStates.length; n++) {
+                    let newState = this.currStates[n];
+                    if (newState.component === content) {
+                        stateAfter = newState;
                         break;
                     }
                 }
-                if (frameBefore && frameAfter) {
+                if (stateBefore && stateAfter) {
                     //Content has just moved
-                    set.addAnimation(new MoveAnimation_1.default(frameBefore, frameAfter, set, this.ctx));
+                    set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
                 }
-                else if (frameBefore) {
+                else if (stateBefore) {
                     //Doesn't exist after, has been removed
-                    set.addAnimation(new RemoveAnimation_1.default(frameBefore, set, this.ctx));
+                    set.addAnimation(new RemoveAnimation_1.default(stateBefore, set, this.ctx));
                 }
-                else if (frameAfter) {
+                else if (stateAfter) {
                     //Doesn't exist before, has been added
-                    set.addAnimation(new AddAnimation_1.default(frameAfter, set, this.ctx));
+                    set.addAnimation(new AddAnimation_1.default(stateAfter, set, this.ctx));
                 }
             });
             return set;
@@ -238,7 +238,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             });
         }
         /**
-         * Calculate and return the drawables for
+         * Calculate and return the layout for
          * a particular step.
          *
          * @param idx The step number.
@@ -251,7 +251,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             //Set the text
             this.textArea.innerHTML = this.steps[idx].text;
             let toReturn = [];
-            root.addDrawable(undefined, toReturn, 0, 0, 1);
+            root.addLayout(undefined, toReturn, 0, 0, 1);
             return toReturn;
         }
         /**

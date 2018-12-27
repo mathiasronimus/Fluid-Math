@@ -1,6 +1,6 @@
 import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
-import LayoutState from './Frame';
+import LayoutState from './LayoutState';
 import C from '../main/consts';
 
 export default class MoveAnimation extends BezierCallback {

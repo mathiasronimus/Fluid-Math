@@ -1,6 +1,6 @@
 import EqContainer from './EqContainer';
 import EqComponent from './EqComponent';
-import LayoutState from '../animation/Frame';
+import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 
 export default class VBox extends EqContainer {

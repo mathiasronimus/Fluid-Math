@@ -1,4 +1,4 @@
-define(["require", "exports", "./Padding", "../animation/Frame", "../main/consts", "./EqContent"], function (require, exports, Padding_1, Frame_1, consts_1, EqContent_1) {
+define(["require", "exports", "./Padding", "../animation/LayoutState", "../main/consts", "./EqContent"], function (require, exports, Padding_1, LayoutState_1, consts_1, EqContent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const padding = Padding_1.default.even(consts_1.default.termPadding);
@@ -36,10 +36,10 @@ define(["require", "exports", "./Padding", "../animation/Frame", "../main/consts
         calcWidth() {
             return this.fixedWidth;
         }
-        addDrawable(parentFrame, drawables, tlx, tly, currScale) {
-            let drawable = new Frame_1.default(parentFrame, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
-            drawables.push(drawable);
-            return drawable;
+        addLayout(parentLayout, layouts, tlx, tly, currScale) {
+            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+            layouts.push(state);
+            return state;
         }
         draw(f, ctx) {
             ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
