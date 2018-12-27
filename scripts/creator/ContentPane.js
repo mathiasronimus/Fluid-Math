@@ -20,7 +20,7 @@ define(["require", "exports"], function (require, exports) {
             //Containers
             let containerTitle = document.createElement('div');
             containerTitle.className = 'title';
-            containerTitle.innerHTML = 'CONTENT';
+            containerTitle.innerHTML = 'CONTAINER';
             this.element.appendChild(containerTitle);
             this.containerEl = document.createElement('div');
             this.element.appendChild(this.containerEl);

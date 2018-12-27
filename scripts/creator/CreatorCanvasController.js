@@ -22,10 +22,12 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             this.textField.cols = 70;
             this.textField.value = this.steps[0].text;
             this.container.appendChild(this.textField);
-            this.container.appendChild(this.controller.getOkButton(function () {
+            let confirm = this.controller.getOkButton(function () {
                 this.newText = this.textField.value;
                 this.refresh();
-            }.bind(this)));
+            }.bind(this));
+            confirm.innerHTML = "Set Text";
+            this.container.appendChild(confirm);
         }
         redraw() {
             super.redraw();

@@ -30,7 +30,7 @@ export default class ContentPane {
         //Containers
         let containerTitle = document.createElement('div');
         containerTitle.className = 'title';
-        containerTitle.innerHTML = 'CONTENT';
+        containerTitle.innerHTML = 'CONTAINER';
         this.element.appendChild(containerTitle);
 
         this.containerEl = document.createElement('div');
