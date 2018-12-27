@@ -9,11 +9,17 @@ import C from '../main/consts';
  */
 export default class AddAnimation extends BezierCallback {
 
-    constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
+    constructor(end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
 
         let step = function(completion: number) {
             ctx.save();
-            start.component.draw(start.changeScale(completion), ctx);
+            //Translate to the right spot
+            ctx.translate(end.tlx + end.width / 2, end.tly + end.height / 2);
+
+            //Scale according to the animation
+            ctx.scale(completion, completion);
+
+            end.component.draw(end.width, end.height, ctx);
             ctx.restore();
         };
 

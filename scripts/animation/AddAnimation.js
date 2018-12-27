@@ -6,10 +6,14 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
      * 0 to its normal size.
      */
     class AddAnimation extends BezierCallback_1.default {
-        constructor(start, set, ctx) {
+        constructor(end, set, ctx) {
             let step = function (completion) {
                 ctx.save();
-                start.component.draw(start.changeScale(completion), ctx);
+                //Translate to the right spot
+                ctx.translate(end.tlx + end.width / 2, end.tly + end.height / 2);
+                //Scale according to the animation
+                ctx.scale(completion, completion);
+                end.component.draw(end.width, end.height, ctx);
                 ctx.restore();
             };
             super(consts_1.default.addDuration, consts_1.default.addEasing, undefined, step, set);

@@ -56,7 +56,7 @@ export default class CreatorCanvasController extends CanvasController {
     }
 
     protected redraw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        super.redraw();
         this.currStates.forEach(f => {
 
             //Draw borders
@@ -101,9 +101,6 @@ export default class CreatorCanvasController extends CanvasController {
 
                 this.ctx.strokeStyle = "#000";
             }
-            this.ctx.save();
-            f.component.draw(f, this.ctx);
-            this.ctx.restore();
         });
 
         function line(x1, y1, x2, y2, ctx: CanvasRenderingContext2D) {

@@ -20,13 +20,8 @@ export default abstract class EqContainer extends EqComponent {
         return undefined;
     }
 
-    /**
-     * Containers are not drawn.
-     * 
-     * @param s The layout state.
-     * @param ctx The graphics context.
-     */
-    draw(s: LayoutState, ctx: CanvasRenderingContext2D) {}
+    //Containers aren't drawn.
+    draw(width: number, height: number, ctx: CanvasRenderingContext2D) {}
 
     /**
      * Containers don't animate.

@@ -41,11 +41,9 @@ define(["require", "exports", "./Padding", "../animation/LayoutState", "../main/
             layouts.push(state);
             return state;
         }
-        draw(f, ctx) {
-            ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
-            ctx.scale(f.scale, f.scale);
+        draw(width, height, ctx) {
             this.setFill(ctx);
-            ctx.fillText(this.text, -f.width / 2 + this.padding.left, -f.height / 2 + this.padding.top + this.ascent);
+            ctx.fillText(this.text, -width / 2 + this.padding.left, -height / 2 + this.padding.top + this.ascent);
         }
         shouldAnimate() {
             return true;

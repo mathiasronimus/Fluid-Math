@@ -3,6 +3,9 @@ import C from '../main/consts';
 import AnimationSet from "./AnimationSet";
 import EqContent from "../layout/EqContent";
 
+/**
+ * Animates between two colors.
+ */
 export default class ColorAnimation extends BezierCallback {
 
     constructor(before: number[], after: number[], set: AnimationSet, content: EqContent) {

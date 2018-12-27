@@ -28,7 +28,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }.bind(this)));
         }
         redraw() {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            super.redraw();
             this.currStates.forEach(f => {
                 //Draw borders
                 if (f.component instanceof VBox_1.default) {
@@ -63,9 +63,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                     line(f.tlx + f.width - pad, f.tly, f.tlx + f.width - pad, f.tly + f.height, this.ctx);
                     this.ctx.strokeStyle = "#000";
                 }
-                this.ctx.save();
-                f.component.draw(f, this.ctx);
-                this.ctx.restore();
             });
             function line(x1, y1, x2, y2, ctx) {
                 ctx.beginPath();

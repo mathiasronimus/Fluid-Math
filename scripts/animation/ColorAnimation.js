@@ -1,6 +1,9 @@
 define(["require", "exports", "./BezierCallback", "../main/consts"], function (require, exports, BezierCallback_1, consts_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Animates between two colors.
+     */
     class ColorAnimation extends BezierCallback_1.default {
         constructor(before, after, set, content) {
             let step = function (completion) {

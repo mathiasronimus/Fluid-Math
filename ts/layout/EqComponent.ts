@@ -56,12 +56,17 @@ export default abstract class EqComponent {
     abstract addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState;
 
     /**
-     * Draws the component on the canvas.
+     * Draws the component on the canvas. Should
+     * draw with the component centered on (0, 0).
+     * Animations will transform this to the correct
+     * position. There is no need to call save() or
+     * restore(), animations handle this too.
      * 
-     * @param s The layout state to draw.
+     * @param width The width to draw at.
+     * @param height The height to draw at.
      * @param ctx The context of the canvas to draw on.
      */
-    abstract draw(s: LayoutState, ctx: CanvasRenderingContext2D);
+    abstract draw(width: number, height: number, ctx: CanvasRenderingContext2D);
 
     /**
      * Return a Component an amount-th between

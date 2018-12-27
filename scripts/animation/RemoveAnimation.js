@@ -5,8 +5,12 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
         constructor(start, set, ctx) {
             let step = function (completion) {
                 ctx.save();
-                ctx.fillStyle = "rgba(0, 0, 0, " + (1 - completion) + ")";
-                start.component.draw(start.changeScale(1 - completion), ctx);
+                let invComp = 1 - completion;
+                //Translate to right spot
+                ctx.translate(start.tlx + start.width / 2, start.tly + start.height / 2);
+                //Scale
+                ctx.scale(invComp, invComp);
+                start.component.draw(start.width, start.height, ctx);
                 ctx.restore();
             };
             super(consts_1.default.removeDuration, consts_1.default.removeEasing, undefined, step, set);

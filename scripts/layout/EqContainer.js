@@ -13,13 +13,8 @@ define(["require", "exports", "./EqComponent"], function (require, exports, EqCo
         interpolate(o, a) {
             return undefined;
         }
-        /**
-         * Containers are not drawn.
-         *
-         * @param s The layout state.
-         * @param ctx The graphics context.
-         */
-        draw(s, ctx) { }
+        //Containers aren't drawn.
+        draw(width, height, ctx) { }
         /**
          * Containers don't animate.
          */

@@ -69,7 +69,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.currStates.forEach(f => {
                 this.ctx.save();
-                f.component.draw(f, this.ctx);
+                this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
+                this.ctx.scale(f.scale, f.scale);
+                f.component.draw(f.width, f.height, this.ctx);
                 this.ctx.restore();
             });
         }
