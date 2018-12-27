@@ -1,12 +1,11 @@
 import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
-import bezier from './BezierEasing';
-import Frame from './Frame';
+import LayoutState from './Frame';
 import C from '../main/consts';
 
 export default class RemoveAnimation extends BezierCallback {
 
-    constructor(start: Frame, set: AnimationSet, ctx: CanvasRenderingContext2D) {
+    constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
 
         let step = function(completion) {
             ctx.save();

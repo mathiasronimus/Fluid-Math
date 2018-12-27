@@ -1,9 +1,8 @@
 import Padding from './Padding';
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 import EqComponent from './EqComponent';
 import C from '../main/consts';
 import EqContent from './EqContent';
-import EqContainer from './EqContainer';
 
 const padding: Padding = Padding.even(C.termPadding);
 const color = "rgba(0, 0, 0, 0.85)";
@@ -51,14 +50,14 @@ export default class Term extends EqContent {
         return this.fixedWidth;
     }
     
-    addDrawable(parentFrame: Frame, drawables: Frame[], tlx: number, tly: number, currScale: number): Frame {
-        let drawable = 
-            new Frame(parentFrame, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
-        drawables.push(drawable);
-        return drawable;
+    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+        let state = 
+            new LayoutState(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+        layouts.push(state);
+        return state;
     }
     
-    draw(f: Frame, ctx: CanvasRenderingContext2D) {
+    draw(f: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
         ctx.scale(f.scale, f.scale);
         this.setFill(ctx);

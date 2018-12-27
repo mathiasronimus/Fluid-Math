@@ -1,6 +1,6 @@
 import EqContainer from './EqContainer';
 import EqComponent from './EqComponent';
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 import Padding from './Padding';
 
 export default class VBox extends EqContainer {
@@ -28,8 +28,8 @@ export default class VBox extends EqContainer {
         return maxWidth + this.padding.width();
     }
 
-    addDrawable(parentFrame: Frame, drawables: Frame[], tlx: number, tly: number, currScale: number): Frame {
-        let frame = new Frame(parentFrame, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
+    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+        let state = new LayoutState(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
         const innerWidth = this.getWidth() - this.padding.width();
         let upToY = tly + this.padding.top;
 
@@ -39,11 +39,11 @@ export default class VBox extends EqContainer {
 
             //Position child in the middle horizontally
             let childTLX = (innerWidth - childWidth) / 2 + this.padding.left + tlx;
-            upToY += currChild.addDrawable(frame, drawables, childTLX, upToY, currScale).height;
+            upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
         }        
 
-        drawables.push(frame);
+        layouts.push(state);
 
-        return frame;
+        return state;
     }
 }

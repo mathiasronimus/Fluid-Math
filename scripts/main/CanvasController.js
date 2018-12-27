@@ -152,7 +152,6 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 this.animating = false;
             });
             let color = this.steps[this.currStep]['color'];
-            console.log(color);
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
             //Look through content to see what has happened to it (avoiding containers)
             this.content.forEach(content => {

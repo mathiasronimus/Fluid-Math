@@ -3,7 +3,7 @@ import CreatorCanvasController from "./CreatorCanvasController";
 import C from '../main/consts';
 import ContentPane from "./ContentPane";
 import Slides from "./Slides";
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 import CanvasController from "../main/CanvasController";
 
 export default class Controller {
@@ -50,7 +50,7 @@ export default class Controller {
      * 
      * @param comp 
      */
-    select(comp: Frame): void {
+    select(comp: LayoutState): void {
         this.toolBar.select(comp);
     }
 

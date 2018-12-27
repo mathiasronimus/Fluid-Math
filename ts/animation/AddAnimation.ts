@@ -1,5 +1,5 @@
 import BezierCallback from "./BezierCallback";
-import Frame from "./Frame";
+import LayoutState from "./Frame";
 import AnimationSet from "./AnimationSet";
 import C from '../main/consts';
 
@@ -9,7 +9,7 @@ import C from '../main/consts';
  */
 export default class AddAnimation extends BezierCallback {
 
-    constructor(start: Frame, set: AnimationSet, ctx: CanvasRenderingContext2D) {
+    constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
 
         let step = function(completion: number) {
             ctx.save();

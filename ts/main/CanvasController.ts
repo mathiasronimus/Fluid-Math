@@ -3,10 +3,9 @@ import HBox from "../layout/HBox";
 import Padding from "../layout/Padding";
 import VBox from "../layout/VBox";
 import EqComponent from "../layout/EqComponent";
-import Frame from "../animation/Frame";
+import LayoutState from "../animation/Frame";
 import EqContainer from "../layout/EqContainer";
 import AnimationSet from '../animation/AnimationSet';
-import BezierCallback from "../animation/BezierCallback";
 import MoveAnimation from "../animation/MoveAnimation";
 import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
@@ -29,7 +28,7 @@ export default class CanvasController {
     protected steps: any[];
 
     protected content: EqComponent[];
-    protected frames: Frame[];
+    protected currStates: LayoutState[];
     protected animating = false;
     protected lastHeight = 0;
 
@@ -94,7 +93,6 @@ export default class CanvasController {
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
         window.addEventListener('resize', this.recalc);
-
     }
 
     /**
@@ -103,7 +101,7 @@ export default class CanvasController {
      */
     protected redraw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.frames.forEach(f => {
+        this.currStates.forEach(f => {
             this.ctx.save();
             f.component.draw(f, this.ctx);
             this.ctx.restore();
@@ -114,8 +112,8 @@ export default class CanvasController {
      * Recalculates and redraws the current step.
      */
     protected recalc() {
-        this.frames = this.calcLayout(this.currStep);
-        this.fitSize(this.frames[this.frames.length - 1].height);
+        this.currStates = this.calcLayout(this.currStep);
+        this.fitSize(this.currStates[this.currStates.length - 1].height);
         this.redraw();
     }
 
@@ -131,12 +129,12 @@ export default class CanvasController {
 
         this.currStep++;
 
-        let oldDrawables = this.frames;
-        this.frames = this.calcLayout(this.currStep);
+        let oldStates = this.currStates;
+        this.currStates = this.calcLayout(this.currStep);
 
-        let rootDrawable = this.frames[this.frames.length - 1];
-        let height = rootDrawable.height;
-        let anims = this.diff(oldDrawables, this.lastHeight, height);
+        let rootLayout = this.currStates[this.currStates.length - 1];
+        let height = rootLayout.height;
+        let anims = this.diff(oldStates, this.lastHeight, height);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -153,12 +151,12 @@ export default class CanvasController {
 
         this.currStep--;
 
-        let oldDrawables = this.frames;
-        this.frames = this.calcLayout(this.currStep);
+        let oldStates = this.currStates;
+        this.currStates = this.calcLayout(this.currStep);
 
-        let rootDrawable = this.frames[this.frames.length - 1];
-        let height = rootDrawable.height;
-        let anims = this.diff(oldDrawables, this.lastHeight, height);
+        let rootLayout = this.currStates[this.currStates.length - 1];
+        let height = rootLayout.height;
+        let anims = this.diff(oldStates, this.lastHeight, height);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -175,12 +173,12 @@ export default class CanvasController {
 
         this.currStep = 0;
 
-        let oldDrawables = this.frames;
-        this.frames = this.calcLayout(this.currStep);
+        let oldStates = this.currStates;
+        this.currStates = this.calcLayout(this.currStep);
 
-        let rootDrawable = this.frames[this.frames.length - 1];
-        let height = rootDrawable.height;
-        let anims = this.diff(oldDrawables, this.lastHeight, height);
+        let rootLayout = this.currStates[this.currStates.length - 1];
+        let height = rootLayout.height;
+        let anims = this.diff(oldStates, this.lastHeight, height);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -192,11 +190,11 @@ export default class CanvasController {
      * Also animates the canvas height to
      * accomodate the new layout.
      * 
-     * @param old The set of drawables from the previous step.
+     * @param oldStates The set of layouts from the previous step.
      * @param cHeightBefore The height of the canvas before the animation.
      * @param cHeightAfter The height of the canvas after the animation.
      */
-    private diff(oldFrames: Frame[], cHeightBefore: number, cHeightAfter: number): AnimationSet {
+    private diff(oldStates: LayoutState[], cHeightBefore: number, cHeightAfter: number): AnimationSet {
 
         let set = new AnimationSet(() => {
             //When done
@@ -210,34 +208,34 @@ export default class CanvasController {
         //Look through content to see what has happened to it (avoiding containers)
         this.content.forEach(content => {
 
-            let frameBefore: Frame = undefined;
+            let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
-            if (oldFrames !== undefined) for (let o = 0; o < oldFrames.length; o++) {
-                let oldFrame = oldFrames[o];
-                if (oldFrame.component === content) {
-                    frameBefore = oldFrame;
+            if (oldStates !== undefined) for (let o = 0; o < oldStates.length; o++) {
+                let oldState = oldStates[o];
+                if (oldState.component === content) {
+                    stateBefore = oldState;
                     break;
                 }
             }
 
-            let frameAfter: Frame = undefined;
-            for (let n = 0; n < this.frames.length; n++) {
-                let newFrame = this.frames[n];
-                if (newFrame.component === content) {
-                    frameAfter = newFrame;
+            let stateAfter: LayoutState = undefined;
+            for (let n = 0; n < this.currStates.length; n++) {
+                let newState = this.currStates[n];
+                if (newState.component === content) {
+                    stateAfter = newState;
                     break;
                 }
             }
 
-            if (frameBefore && frameAfter) {
+            if (stateBefore && stateAfter) {
                 //Content has just moved
-                set.addAnimation(new MoveAnimation(frameBefore, frameAfter, set, this.ctx));
-            } else if (frameBefore) {
+                set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
+            } else if (stateBefore) {
                 //Doesn't exist after, has been removed
-                set.addAnimation(new RemoveAnimation(frameBefore, set, this.ctx));
-            } else if (frameAfter) {
+                set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
+            } else if (stateAfter) {
                 //Doesn't exist before, has been added
-                set.addAnimation(new AddAnimation(frameAfter, set, this.ctx));
+                set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
             }
 
         });
@@ -302,12 +300,12 @@ export default class CanvasController {
     }
 
     /**
-     * Calculate and return the drawables for
+     * Calculate and return the layout for
      * a particular step.
      * 
      * @param idx The step number.
      */
-    protected calcLayout(idx): Frame[] {
+    protected calcLayout(idx): LayoutState[] {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
@@ -317,8 +315,8 @@ export default class CanvasController {
         //Set the text
         this.textArea.innerHTML = this.steps[idx].text;
 
-        let toReturn: Frame[] = [];
-        root.addDrawable(undefined, toReturn, 0, 0, 1);
+        let toReturn: LayoutState[] = [];
+        root.addLayout(undefined, toReturn, 0, 0, 1);
         return toReturn;
     }
 

@@ -1,5 +1,5 @@
 import EqComponent from './EqComponent';
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 import Padding from './Padding';
 
 export default abstract class EqContainer extends EqComponent {
@@ -20,12 +20,17 @@ export default abstract class EqContainer extends EqComponent {
         return undefined;
     }
 
-    draw(f: Frame, ctx: CanvasRenderingContext2D) {
-        //do nothing
-    }
+    /**
+     * Containers are not drawn.
+     * 
+     * @param s The layout state.
+     * @param ctx The graphics context.
+     */
+    draw(s: LayoutState, ctx: CanvasRenderingContext2D) {}
 
-    //Containers don't draw anything, their
-    //drawables are purely for layout.
+    /**
+     * Containers don't animate.
+     */
     shouldAnimate() {
         return false;
     }

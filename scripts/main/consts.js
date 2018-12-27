@@ -26,16 +26,23 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         moveEasing: BezierEasing_1.default(0.4, 0.0, 0.2, 1),
         removeDuration: 300,
         removeEasing: BezierEasing_1.default(0.4, 0.0, 1, 1),
-        //Color
+        colorDuration: 600,
+        colorEasing: BezierEasing_1.default(0.5, 0.5, 0.5, 0.5),
+        //Appearance
         colors: {
-            "red": "#F44336",
-            "pink": "#E91E63",
-            "purple": "#9C27B0",
-            "blue": "#2196F3",
-            "teal": "#009688",
-            "green": "#4CAF50",
-            "orange": "#FF9800"
-        }
+            //RGB
+            "red": [244, 67, 54],
+            "pink": [233, 30, 99],
+            "purple": [156, 39, 176],
+            "blue": [33, 150, 243],
+            "teal": [0, 150, 136],
+            "green": [76, 175, 80],
+            "orange": [255, 152, 0]
+        },
+        defaultColor: [0, 0, 0],
+        fadedOpacity: 0.3,
+        normalOpacity: 0.85,
+        focusedOpacity: 1
     };
     exports.default = constants;
 });

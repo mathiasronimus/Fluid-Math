@@ -1,7 +1,11 @@
 import EqComponent from "../layout/EqComponent";
 import EqContainer from "../layout/EqContainer";
 
-export default class Frame {
+/**
+ * Stores how a component should be
+ * drawn at a particular step.
+ */
+export default class LayoutState {
     tlx: number;
     tly: number;
     width: number;
@@ -10,7 +14,7 @@ export default class Frame {
     //but needs to be taken into account for drawing.)
     scale: number;
     component: EqComponent;
-    layoutParent: Frame;
+    layoutParent: LayoutState;
 
     constructor(layoutParent, component, tlx, tly, width, height, scale) {
         this.tlx = tlx;
@@ -22,12 +26,8 @@ export default class Frame {
         this.scale = scale;
     }
 
-    changeScale(amount: number): Frame {
-        return new Frame(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, this.scale * amount);
-    }
-
     /**
-     * Checks if this frame contains the 
+     * Checks if this layout contains the 
      * specified point.
      * 
      * @param x X-ordinate of the point.
@@ -42,7 +42,7 @@ export default class Frame {
 
     /**
      * Checks if the x-ordinate is on
-     * the left half of this frame.
+     * the left half of this layout.
      * 
      * @param x The x-ordinate
      */
@@ -52,14 +52,18 @@ export default class Frame {
 
     /**
      * Checks if the y-ordinate is on
-     * the top half of this frame.
+     * the top half of this layout.
      * 
      * @param y The y-ordinate
      */
     onTop(y: number): boolean {
         return y <= this.tly + this.height / 2;
     }
- 
+
+    changeScale(amount: number): LayoutState {
+        return new LayoutState(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, this.scale * amount);
+    }
+
     /**
      * Returns a Frame an amount-th way between
      * start and end. For example, amount=0.5 would
@@ -71,7 +75,7 @@ export default class Frame {
      * @param end The ending Frame.
      * @param amount The percentage between them as decimal.
      */
-    static interpolate(start: Frame, end: Frame, amount: number): Frame {
+    static interpolate(start: LayoutState, end: LayoutState, amount: number): LayoutState {
         let invAmount = 1 - amount;
 
         let newComp = start.component.interpolate(end.component, amount);
@@ -81,6 +85,6 @@ export default class Frame {
         let newHeight = start.height * invAmount + end.height * amount;
         let newScale = start.scale * invAmount + end.scale * amount;
 
-        return new Frame(start.layoutParent, newComp, newTlx, newTly, newWidth, newHeight, newScale);
+        return new LayoutState(start.layoutParent, newComp, newTlx, newTly, newWidth, newHeight, newScale);
     }
 }

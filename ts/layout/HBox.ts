@@ -1,7 +1,7 @@
 import EqContainer from './EqContainer';
 import EqComponent from './EqComponent';
 import Padding from './Padding';
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 
 export default class HBox extends EqContainer {
 
@@ -30,8 +30,8 @@ export default class HBox extends EqContainer {
         return totalWidth + this.padding.width();
     }
 
-    addDrawable(parentFrame: Frame, drawables: Frame[], tlx: number, tly: number, currScale: number): Frame {
-        let frame = new Frame(parentFrame, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
+    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+        let state = new LayoutState(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
         const innerHeight = this.getHeight() - this.padding.height();
         let upToX = tlx + this.padding.left;
 
@@ -41,12 +41,12 @@ export default class HBox extends EqContainer {
 
             //Position child in the middle vertically
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top + tly;
-            upToX += currChild.addDrawable(frame, drawables, upToX, childTLY, currScale).width;
+            upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
         }
         
 
-        drawables.push(frame);
+        layouts.push(state);
 
-        return frame;
+        return state;
     }
 }

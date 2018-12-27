@@ -1,5 +1,5 @@
 import Controller from "./main";
-import Frame from '../animation/Frame';
+import LayoutState from '../animation/Frame';
 
 export default class ToolBar {
 
@@ -7,7 +7,7 @@ export default class ToolBar {
     private controller: Controller;
 
     private selected: boolean = false;
-    private selectedFrame: Frame;
+    private selectedLayout: LayoutState;
 
     constructor(controller: Controller) {
         this.controller = controller;
@@ -72,7 +72,7 @@ export default class ToolBar {
      * component.
      */
     private delete(): void {
-        this.controller.currCanvas.delete(this.selectedFrame);
+        this.controller.currCanvas.delete(this.selectedLayout);
         this.unselect();
     }
 
@@ -82,9 +82,9 @@ export default class ToolBar {
      * 
      * @param frame The frame to select.
      */
-    select(frame: Frame) {
+    select(frame: LayoutState) {
         this.selected = true;
-        this.selectedFrame = frame;
+        this.selectedLayout = frame;
 
         //Clear current content
         this.element.innerHTML = "";
@@ -110,7 +110,7 @@ export default class ToolBar {
      */
     unselect(): void {
         this.selected = false;
-        this.selectedFrame = undefined;
+        this.selectedLayout = undefined;
         this.element.classList.remove('selected');
         this.element.innerHTML = "";
         this.setDefaultContent();
