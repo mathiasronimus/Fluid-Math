@@ -5,7 +5,6 @@ import C from '../main/consts';
 import EqContent from './EqContent';
 
 const padding: Padding = Padding.even(C.termPadding);
-const color = "rgba(0, 0, 0, 0.85)";
 
 export default class Term extends EqContent {
 

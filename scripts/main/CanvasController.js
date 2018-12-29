@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../animation/ColorAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, ColorAnimation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -153,10 +153,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 //When done
                 this.animating = false;
             });
-            let color = this.steps[this.currStep]['color'];
+            let stepColors = this.steps[this.currStep]['color'];
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
             //Look through content to see what has happened to it (avoiding containers)
-            this.content.forEach(content => {
+            for (let i = 0; i < this.content.length; i++) {
+                let content = this.content[i];
                 let stateBefore = undefined;
                 //We may be initilizing, where there are no old frames and everything is added
                 if (oldStates !== undefined)
@@ -175,9 +176,23 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         break;
                     }
                 }
+                //Find the color for this content
+                let colorAfter;
+                if (stepColors !== undefined && stepColors[i] !== undefined) {
+                    //A color is specified
+                    colorAfter = consts_1.default.colors[stepColors[i]];
+                }
+                else {
+                    //A color isn't specified, use default
+                    colorAfter = consts_1.default.defaultColor;
+                }
                 if (stateBefore && stateAfter) {
                     //Content has just moved
                     set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
+                    //If color has changed, animate it
+                    if (content.hasDifferentColor(colorAfter)) {
+                        set.addAnimation(new ColorAnimation_1.default(content.getColor(), colorAfter, set, content));
+                    }
                 }
                 else if (stateBefore) {
                     //Doesn't exist after, has been removed
@@ -186,8 +201,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 else if (stateAfter) {
                     //Doesn't exist before, has been added
                     set.addAnimation(new AddAnimation_1.default(stateAfter, set, this.ctx));
+                    //Set the color immediately
+                    content.setColor(colorAfter);
                 }
-            });
+            }
             return set;
         }
         /**

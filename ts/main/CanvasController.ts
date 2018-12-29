@@ -11,6 +11,8 @@ import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
 import CanvasSizeAnimation from "../animation/CanvasSizeAnimation";
 import C from './consts';
+import EqContent from "../layout/EqContent";
+import ColorAnimation from "../animation/ColorAnimation";
 
 /**
  * Responsible for managing a single canvas,
@@ -27,7 +29,7 @@ export default class CanvasController {
     protected currStep = -1;
     protected steps: any[];
 
-    protected content: EqComponent[];
+    protected content: EqContent[];
     protected currStates: LayoutState[];
     protected animating = false;
     protected lastHeight = 0;
@@ -203,12 +205,13 @@ export default class CanvasController {
             this.animating = false;
         });
 
-        let color = this.steps[this.currStep]['color'];
+        let stepColors = this.steps[this.currStep]['color'];
 
         set.addAnimation(new CanvasSizeAnimation(cHeightBefore, cHeightAfter, this.fitSize, set));
 
         //Look through content to see what has happened to it (avoiding containers)
-        this.content.forEach(content => {
+        for (let i = 0; i < this.content.length; i++) {
+            let content = this.content[i];
 
             let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
@@ -229,18 +232,34 @@ export default class CanvasController {
                 }
             }
 
+            //Find the color for this content
+            let colorAfter: number[];
+            if (stepColors !== undefined && stepColors[i] !== undefined) {
+                //A color is specified
+                colorAfter = C.colors[stepColors[i]];
+            } else {
+                //A color isn't specified, use default
+                colorAfter = C.defaultColor;
+            }  
+
             if (stateBefore && stateAfter) {
                 //Content has just moved
                 set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
+                //If color has changed, animate it
+                if (content.hasDifferentColor(colorAfter)) {
+                    set.addAnimation(new ColorAnimation(content.getColor(), colorAfter, set, content));
+                }
             } else if (stateBefore) {
                 //Doesn't exist after, has been removed
                 set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
             } else if (stateAfter) {
                 //Doesn't exist before, has been added
                 set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
+                //Set the color immediately
+                content.setColor(colorAfter);
             }
 
-        });
+        }
 
         return set;
     }

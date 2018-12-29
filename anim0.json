@@ -19,8 +19,8 @@
     "steps": [
         {
             "color": {
-                "0": "red",
-                "4": "blue"
+                "0": "orange",
+                "4": "green"
             },
             "text": "Solving an Equation - Tap to Demonstrate",
             "root": {
