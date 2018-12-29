@@ -209,19 +209,20 @@ export default class CreatorCanvasController extends CanvasController {
      * @param toCheck The object to check.
      */
     private recursiveOnCanvas(toCheck: Object): boolean {
+        let found = false;
         Object.keys(toCheck).forEach(key => {
             let value = toCheck[key];
             if (typeof value === 'object') {
                 if (this.recursiveOnCanvas(value)) {
-                    return true;
+                    found = true;
                 }
             } else if (typeof value === 'number') {
                 if (value === this.adding) {
-                    return true;
+                    found = true;
                 }
             }
         });
-        return false;
+        return found;
     }
 
     /**

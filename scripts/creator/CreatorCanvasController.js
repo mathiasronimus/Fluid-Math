@@ -164,20 +164,21 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param toCheck The object to check.
          */
         recursiveOnCanvas(toCheck) {
+            let found = false;
             Object.keys(toCheck).forEach(key => {
                 let value = toCheck[key];
                 if (typeof value === 'object') {
                     if (this.recursiveOnCanvas(value)) {
-                        return true;
+                        found = true;
                     }
                 }
                 else if (typeof value === 'number') {
                     if (value === this.adding) {
-                        return true;
+                        found = true;
                     }
                 }
             });
-            return false;
+            return found;
         }
         /**
          * Adds a container/content at the
