@@ -107,6 +107,9 @@ export default class CanvasController {
             this.ctx.save();
             this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
             this.ctx.scale(f.scale, f.scale);
+            if (f.component instanceof EqContent) {
+                f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
+            }
             f.component.draw(f.width, f.height, this.ctx);
             this.ctx.restore();
         });
@@ -205,8 +208,6 @@ export default class CanvasController {
             this.animating = false;
         });
 
-        let stepColors = this.steps[this.currStep]['color'];
-
         set.addAnimation(new CanvasSizeAnimation(cHeightBefore, cHeightAfter, this.fitSize, set));
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -232,15 +233,7 @@ export default class CanvasController {
                 }
             }
 
-            //Find the color for this content
-            let colorAfter: number[];
-            if (stepColors !== undefined && stepColors[i] !== undefined) {
-                //A color is specified
-                colorAfter = C.colors[stepColors[i]];
-            } else {
-                //A color isn't specified, use default
-                colorAfter = C.defaultColor;
-            }  
+            let colorAfter: number[] = this.getColorForContent(i);
 
             if (stateBefore && stateAfter) {
                 //Content has just moved
@@ -262,6 +255,24 @@ export default class CanvasController {
         }
 
         return set;
+    }
+
+    /**
+     * Given a piece of content, determine
+     * what color it should be for the current
+     * step.
+     * 
+     * @param contentIdx The index of the content to find the color for.
+     */
+    private getColorForContent(contentIdx: number): number[] {
+        let stepColors = this.steps[this.currStep]['color'];
+        if (stepColors !== undefined && stepColors[contentIdx] !== undefined) {
+            //A color is specified
+            return C.colors[stepColors[contentIdx]];
+        } else {
+            //A color isn't specified, use default
+            return C.colors['default'];
+        }  
     }
 
     /**

@@ -85,6 +85,12 @@ body {
     cursor: pointer;
 }
 
+.color-selector {
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+}
+
 #main-column {
     display: flex;
     flex-direction: column;

@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "../main/consts"], function (require, exports, consts_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class ToolBar {
@@ -85,6 +85,30 @@ define(["require", "exports"], function (require, exports) {
             deleteEl.className = 'tool-bar-icon material-icons';
             deleteEl.addEventListener('click', this.delete.bind(this));
             this.element.appendChild(deleteEl);
+            //Add option to change color
+            let colorEl = document.createElement('span');
+            colorEl.innerHTML = 'palette';
+            colorEl.className = 'tool-bar-icon material-icons';
+            colorEl.addEventListener('click', this.changeColor.bind(this, frame.component));
+            this.element.appendChild(colorEl);
+        }
+        changeColor(toChange) {
+            //Bring up a dialog to change color
+            let modalRoot = document.createElement('div');
+            //Add elements representing each color
+            Object.keys(consts_1.default.colors).forEach(colorName => {
+                let colorEl = document.createElement('div');
+                let color = consts_1.default.colors[colorName];
+                colorEl.innerHTML = colorName;
+                colorEl.style.backgroundColor = 'rgb(' + color[0] + ", " + color[1] + "," + color[2] + ")";
+                colorEl.className = 'color-selector';
+                colorEl.addEventListener('click', function (colorName) {
+                    this.controller.removeModal();
+                    this.controller.currCanvas.changeColor(this.selectedLayout.component, colorName);
+                }.bind(this, colorName));
+                modalRoot.appendChild(colorEl);
+            });
+            this.controller.modal(modalRoot);
         }
         /**
          * Unselect and display default content.

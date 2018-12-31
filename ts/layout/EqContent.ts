@@ -9,7 +9,7 @@ export default abstract class EqContent extends EqComponent {
 
     constructor(padding: Padding) {
         super(padding);
-        this.color = C.defaultColor;
+        this.color = C.colors['default'];
         this.opacity = C.normalOpacity;
     }
 

@@ -40,9 +40,9 @@ const constants = {
         "blue": [33,150,243],
         "teal": [0,150,136],
         "green": [76,175,80],
-        "orange": [255,152,0]
+        "orange": [255,152,0],
+        "default": [0,0,0]
     },
-    defaultColor: [0,0,0],
     fadedOpacity: 0.3,
     normalOpacity: 0.85,
     focusedOpacity: 1

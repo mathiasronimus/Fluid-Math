@@ -4,7 +4,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
     class EqContent extends EqComponent_1.default {
         constructor(padding) {
             super(padding);
-            this.color = consts_1.default.defaultColor;
+            this.color = consts_1.default.colors['default'];
             this.opacity = consts_1.default.normalOpacity;
         }
         setFill(ctx) {

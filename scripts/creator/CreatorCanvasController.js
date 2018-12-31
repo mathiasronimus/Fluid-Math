@@ -7,6 +7,10 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         State[State["Selecting"] = 1] = "Selecting";
         State[State["Idle"] = 2] = "Idle";
     })(State || (State = {}));
+    /**
+     * Overrides methods of the canvas controller to
+     * provide editing functionality.
+     */
     class CreatorCanvasController extends CanvasController_1.default {
         constructor(container, instructions, fontFamily, fontWeight, onLayoutModified, controller) {
             super(container, instructions, fontFamily, fontWeight);
@@ -372,6 +376,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          */
         toStepLayout(root) {
             return {
+                color: this.steps[0].color,
                 text: this.newText ?
                     this.newText :
                     this.steps[0].text,
@@ -431,7 +436,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          */
         addBefore(arr, toAdd, before) {
             let index = arr.indexOf(before);
-            console.log(index);
             arr.splice(index, 0, toAdd);
         }
         /**
@@ -496,6 +500,58 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          */
         getStepAsInstructions() {
             return this.controller.instructionsFromStep(this.steps[0]);
+        }
+        /**
+         * Changes the color of components. If the selected
+         * component is a container, changes the color of all
+         * components within it. If it is content, just changes
+         * that content.
+         *
+         * @param selected The layout of the component to apply color to.
+         * @param colorName The name of the color (defined by the keys in C.colors)
+         */
+        changeColor(selected, colorName) {
+            this.recChangeColor(selected, colorName);
+            this.refresh();
+        }
+        recChangeColor(selected, colorName) {
+            if (selected instanceof EqContent_1.default) {
+                //Just apply to the content
+                this.applyColor(selected, colorName);
+            }
+            else if (selected instanceof EqContainer_1.default) {
+                //Apply to all children
+                selected.getChildren().forEach(child => {
+                    this.changeColor(child, colorName);
+                });
+            }
+            else {
+                throw "undefined component type.";
+            }
+        }
+        /**
+         * Applies color to a particular piece of content.
+         *
+         * @param applyTo The content to apply color to.
+         * @param colorName The name of the color.
+         */
+        applyColor(applyTo, colorName) {
+            let step = this.steps[0];
+            if (step['color'] === undefined) {
+                step.color = {};
+            }
+            let index = this.content.indexOf(applyTo);
+            if (colorName === 'default') {
+                //Remove any color already set for this content
+                delete step.color[index];
+                if (Object.keys(step.color).length === 0) {
+                    //Empty colors, delete as well
+                    delete step.color;
+                }
+            }
+            else {
+                step.color[index] = colorName;
+            }
         }
         /**
          * Sets the state of a new canvas to be

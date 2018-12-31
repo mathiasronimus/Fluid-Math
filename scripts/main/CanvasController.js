@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../animation/ColorAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, ColorAnimation_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -71,6 +71,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 this.ctx.save();
                 this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
                 this.ctx.scale(f.scale, f.scale);
+                if (f.component instanceof EqContent_1.default) {
+                    f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
+                }
                 f.component.draw(f.width, f.height, this.ctx);
                 this.ctx.restore();
             });
@@ -153,7 +156,6 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 //When done
                 this.animating = false;
             });
-            let stepColors = this.steps[this.currStep]['color'];
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
             //Look through content to see what has happened to it (avoiding containers)
             for (let i = 0; i < this.content.length; i++) {
@@ -176,16 +178,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         break;
                     }
                 }
-                //Find the color for this content
-                let colorAfter;
-                if (stepColors !== undefined && stepColors[i] !== undefined) {
-                    //A color is specified
-                    colorAfter = consts_1.default.colors[stepColors[i]];
-                }
-                else {
-                    //A color isn't specified, use default
-                    colorAfter = consts_1.default.defaultColor;
-                }
+                let colorAfter = this.getColorForContent(i);
                 if (stateBefore && stateAfter) {
                     //Content has just moved
                     set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
@@ -206,6 +199,24 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 }
             }
             return set;
+        }
+        /**
+         * Given a piece of content, determine
+         * what color it should be for the current
+         * step.
+         *
+         * @param contentIdx The index of the content to find the color for.
+         */
+        getColorForContent(contentIdx) {
+            let stepColors = this.steps[this.currStep]['color'];
+            if (stepColors !== undefined && stepColors[contentIdx] !== undefined) {
+                //A color is specified
+                return consts_1.default.colors[stepColors[contentIdx]];
+            }
+            else {
+                //A color isn't specified, use default
+                return consts_1.default.colors['default'];
+            }
         }
         /**
          * Fit the width of the canvas to the container,

@@ -2,7 +2,6 @@ define(["require", "exports", "./Padding", "../animation/LayoutState", "../main/
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const padding = Padding_1.default.even(consts_1.default.termPadding);
-    const color = "rgba(0, 0, 0, 0.85)";
     class Term extends EqContent_1.default {
         constructor(text, ctx, ctxWidth, ctxHeight) {
             //At the time of term initialization, layout is unknown.

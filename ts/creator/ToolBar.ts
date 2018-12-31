@@ -1,5 +1,7 @@
 import Controller from "./main";
 import LayoutState from '../animation/LayoutState';
+import EqComponent from "../layout/EqComponent";
+import C from '../main/consts';
 
 export default class ToolBar {
 
@@ -103,6 +105,34 @@ export default class ToolBar {
         deleteEl.className = 'tool-bar-icon material-icons';
         deleteEl.addEventListener('click', this.delete.bind(this));
         this.element.appendChild(deleteEl);
+
+        //Add option to change color
+        let colorEl = document.createElement('span');
+        colorEl.innerHTML = 'palette';
+        colorEl.className = 'tool-bar-icon material-icons';
+        colorEl.addEventListener('click', this.changeColor.bind(this, frame.component));
+        this.element.appendChild(colorEl);
+    }
+
+    private changeColor(toChange: EqComponent) {
+        //Bring up a dialog to change color
+        let modalRoot = document.createElement('div');
+
+        //Add elements representing each color
+        Object.keys(C.colors).forEach(colorName => {
+            let colorEl = document.createElement('div');
+            let color = C.colors[colorName];
+            colorEl.innerHTML = colorName;
+            colorEl.style.backgroundColor = 'rgb(' + color[0] + ", " + color[1] + "," + color[2] + ")";
+            colorEl.className = 'color-selector';
+            colorEl.addEventListener('click', function(colorName: string) {
+                this.controller.removeModal();
+                this.controller.currCanvas.changeColor(this.selectedLayout.component, colorName);
+            }.bind(this, colorName));
+            modalRoot.appendChild(colorEl);
+        });
+
+        this.controller.modal(modalRoot);
     }
 
     /**
