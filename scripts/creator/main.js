@@ -1,4 +1,4 @@
-define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main/consts", "./ContentPane", "./Slides", "../main/CanvasController"], function (require, exports, ToolBar_1, CreatorCanvasController_1, consts_1, ContentPane_1, Slides_1, CanvasController_1) {
+define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main/consts", "./ContentPane", "./Slides", "../main/CanvasController", "../main/helpers"], function (require, exports, ToolBar_1, CreatorCanvasController_1, consts_1, ContentPane_1, Slides_1, CanvasController_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Controller {
@@ -14,6 +14,7 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main
             this.contentManager = new ContentPane_1.default(this);
             this.slideManager = new Slides_1.default(this);
             this.slideManager.addNewSlide();
+            helpers_1.addStyleSheet();
         }
         /**
          * Get the instructions object

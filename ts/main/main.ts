@@ -1,5 +1,6 @@
 import CanvasController from './CanvasController';
 import C from './consts';
+import { addStyleSheet } from './helpers';
 
 WebFont.load({
     google: {
@@ -11,6 +12,7 @@ WebFont.load({
 
 function init() {
     
+    addStyleSheet();
     let containers = document.getElementsByClassName('eqContainer');
 
     //For each container, get its instructions from the server

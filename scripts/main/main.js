@@ -1,4 +1,4 @@
-define(["require", "exports", "./CanvasController", "./consts"], function (require, exports, CanvasController_1, consts_1) {
+define(["require", "exports", "./CanvasController", "./consts", "./helpers"], function (require, exports, CanvasController_1, consts_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     WebFont.load({
@@ -9,6 +9,7 @@ define(["require", "exports", "./CanvasController", "./consts"], function (requi
         inactive: function () { init(); }
     });
     function init() {
+        helpers_1.addStyleSheet();
         let containers = document.getElementsByClassName('eqContainer');
         //For each container, get its instructions from the server
         for (let i = 0; i < containers.length; i++) {

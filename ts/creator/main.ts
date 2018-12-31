@@ -5,6 +5,7 @@ import ContentPane from "./ContentPane";
 import Slides from "./Slides";
 import LayoutState from '../animation/LayoutState';
 import CanvasController from "../main/CanvasController";
+import { addStyleSheet } from '../main/helpers';
 
 export default class Controller {
 
@@ -28,7 +29,7 @@ export default class Controller {
         this.contentManager = new ContentPane(this);
         this.slideManager = new Slides(this);
         this.slideManager.addNewSlide();
-
+        addStyleSheet();
     }
 
     /**
