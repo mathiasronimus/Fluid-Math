@@ -26,8 +26,10 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         moveEasing: BezierEasing_1.default(0.4, 0.0, 0.2, 1),
         removeDuration: 300,
         removeEasing: BezierEasing_1.default(0.4, 0.0, 1, 1),
-        colorDuration: 600,
+        colorDuration: 300,
         colorEasing: BezierEasing_1.default(0.5, 0.5, 0.5, 0.5),
+        opacityDuration: 300,
+        opacityEasing: BezierEasing_1.default(0.5, 0.5, 0.5, 0.5),
         //Appearance
         colors: {
             //RGB

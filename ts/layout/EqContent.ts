@@ -40,4 +40,8 @@ export default abstract class EqContent extends EqComponent {
     setOpacity(newOpacity: number): void {
         this.opacity = newOpacity;
     }
+
+    getOpacity(): number {
+        return this.opacity;
+    }
 }

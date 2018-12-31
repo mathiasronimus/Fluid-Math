@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -179,13 +179,18 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                     }
                 }
                 let colorAfter = this.getColorForContent(i);
+                let opacityAfter = this.getOpacityForContent(i);
                 if (stateBefore && stateAfter) {
-                    //Content has just moved
-                    set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
                     //If color has changed, animate it
                     if (content.hasDifferentColor(colorAfter)) {
                         set.addAnimation(new ColorAnimation_1.default(content.getColor(), colorAfter, set, content));
                     }
+                    //If opacity has changed, animate it
+                    if (content.getOpacity() !== opacityAfter) {
+                        set.addAnimation(new OpacityAnimation_1.default(content.getOpacity(), opacityAfter, content, set));
+                    }
+                    //Content has just moved
+                    set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
                 }
                 else if (stateBefore) {
                     //Doesn't exist after, has been removed
@@ -196,6 +201,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                     set.addAnimation(new AddAnimation_1.default(stateAfter, set, this.ctx));
                     //Set the color immediately
                     content.setColor(colorAfter);
+                    //Set the opacity immediately
+                    content.setOpacity(opacityAfter);
                 }
             }
             return set;
@@ -216,6 +223,23 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             else {
                 //A color isn't specified, use default
                 return consts_1.default.colors['default'];
+            }
+        }
+        /**
+         * Gets the opacity for a piece of content
+         * at the current step.
+         *
+         * @param contentIdx The index of the content to find the opacity of.
+         */
+        getOpacityForContent(contentIdx) {
+            let stepOpacity = this.steps[this.currStep]['opacity'];
+            if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
+                //Opacity specified
+                return parseFloat(stepOpacity[contentIdx]);
+            }
+            else {
+                //No opacity specified
+                return consts_1.default.normalOpacity;
             }
         }
         /**

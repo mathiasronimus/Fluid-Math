@@ -89,10 +89,10 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             let colorEl = document.createElement('span');
             colorEl.innerHTML = 'palette';
             colorEl.className = 'tool-bar-icon material-icons';
-            colorEl.addEventListener('click', this.changeColor.bind(this, frame.component));
+            colorEl.addEventListener('click', this.changeColor.bind(this));
             this.element.appendChild(colorEl);
         }
-        changeColor(toChange) {
+        changeColor() {
             //Bring up a dialog to change color
             let modalRoot = document.createElement('div');
             //Add elements representing each color

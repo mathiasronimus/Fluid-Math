@@ -110,11 +110,11 @@ export default class ToolBar {
         let colorEl = document.createElement('span');
         colorEl.innerHTML = 'palette';
         colorEl.className = 'tool-bar-icon material-icons';
-        colorEl.addEventListener('click', this.changeColor.bind(this, frame.component));
+        colorEl.addEventListener('click', this.changeColor.bind(this));
         this.element.appendChild(colorEl);
     }
 
-    private changeColor(toChange: EqComponent) {
+    private changeColor() {
         //Bring up a dialog to change color
         let modalRoot = document.createElement('div');
 

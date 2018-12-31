@@ -30,6 +30,9 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
         setOpacity(newOpacity) {
             this.opacity = newOpacity;
         }
+        getOpacity() {
+            return this.opacity;
+        }
     }
     exports.default = EqContent;
 });

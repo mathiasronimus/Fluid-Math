@@ -43,6 +43,12 @@
                 "3": "red",
                 "5": "red"
             },
+            "opacity": {
+                "3": "1",
+                "5": "1",
+                "1": "0.2",
+                "0": "0.2"
+            },
             "text": "Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.",
             "root": {
                 "type": "vbox",
@@ -87,7 +93,8 @@
         },
         {
             "color": {
-                "10": "red"
+                "10": "red",
+                "12": "red"
             },
             "text": "<em>Subtract</em> <em class=\"red\">13</em> from both sides.",
             "root": {

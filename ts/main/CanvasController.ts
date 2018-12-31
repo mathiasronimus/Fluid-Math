@@ -13,6 +13,7 @@ import CanvasSizeAnimation from "../animation/CanvasSizeAnimation";
 import C from './consts';
 import EqContent from "../layout/EqContent";
 import ColorAnimation from "../animation/ColorAnimation";
+import OpacityAnimation from "../animation/OpacityAnimation";
 
 /**
  * Responsible for managing a single canvas,
@@ -109,6 +110,7 @@ export default class CanvasController {
             this.ctx.scale(f.scale, f.scale);
             if (f.component instanceof EqContent) {
                 f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
+                f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
             }
             f.component.draw(f.width, f.height, this.ctx);
             this.ctx.restore();
@@ -234,14 +236,19 @@ export default class CanvasController {
             }
 
             let colorAfter: number[] = this.getColorForContent(i);
+            let opacityAfter: number = this.getOpacityForContent(i);
 
             if (stateBefore && stateAfter) {
-                //Content has just moved
-                set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
                 //If color has changed, animate it
                 if (content.hasDifferentColor(colorAfter)) {
                     set.addAnimation(new ColorAnimation(content.getColor(), colorAfter, set, content));
                 }
+                //If opacity has changed, animate it
+                if (content.getOpacity() !== opacityAfter) {
+                    set.addAnimation(new OpacityAnimation(content.getOpacity(), opacityAfter, content, set));
+                }
+                //Content has just moved
+                set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
             } else if (stateBefore) {
                 //Doesn't exist after, has been removed
                 set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
@@ -250,6 +257,8 @@ export default class CanvasController {
                 set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
                 //Set the color immediately
                 content.setColor(colorAfter);
+                //Set the opacity immediately
+                content.setOpacity(opacityAfter);
             }
 
         }
@@ -275,6 +284,23 @@ export default class CanvasController {
         }  
     }
 
+    /**
+     * Gets the opacity for a piece of content
+     * at the current step.
+     * 
+     * @param contentIdx The index of the content to find the opacity of.
+     */
+    private getOpacityForContent(contentIdx: number): number {
+        let stepOpacity = this.steps[this.currStep]['opacity'];
+        if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
+            //Opacity specified
+            return parseFloat(stepOpacity[contentIdx]);
+        } else {
+            //No opacity specified
+            return C.normalOpacity;
+        }
+    }
+ 
     /**
      * Fit the width of the canvas to the container,
      * but set the height.
