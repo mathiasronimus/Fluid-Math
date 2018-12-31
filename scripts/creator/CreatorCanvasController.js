@@ -27,7 +27,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             this.textField.value = this.steps[0].text;
             this.container.appendChild(this.textField);
             let confirm = this.controller.getOkButton(function () {
-                this.newText = this.textField.value;
+                this.steps[0].text = this.textField.value;
                 this.refresh();
             }.bind(this));
             confirm.innerHTML = "Set Text";
@@ -378,9 +378,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             return {
                 color: this.steps[0].color,
                 opacity: this.steps[0].opacity,
-                text: this.newText ?
-                    this.newText :
-                    this.steps[0].text,
+                text: this.steps[0].text,
                 root: this.containerToStepLayout(root)
             };
         }

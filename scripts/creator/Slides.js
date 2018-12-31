@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "../main/helpers"], function (require, exports, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Slides {
@@ -27,7 +27,7 @@ define(["require", "exports"], function (require, exports) {
             let instructions;
             if (index > 0) {
                 //Copy from previous slide
-                instructions = Object.assign({}, this.slideInstructions[index - 1]);
+                instructions = helpers_1.deepClone(this.slideInstructions[index - 1]);
             }
             else {
                 //Create new

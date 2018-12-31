@@ -15,4 +15,44 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
         document.head.appendChild(styleEl);
     }
     exports.addStyleSheet = addStyleSheet;
+    /**
+     * Deeply clones an object, ie clones it
+     * and all of its child objects.
+     *
+     * @param toClone The object to clone.
+     */
+    function deepClone(toClone) {
+        let cloneTo = {};
+        recDeepClone(toClone, cloneTo);
+        return cloneTo;
+    }
+    exports.deepClone = deepClone;
+    function recDeepClone(toClone, cloneTo) {
+        Object.keys(toClone).forEach(key => {
+            let val = toClone[key];
+            if (typeof val === 'object') {
+                if (Array.isArray(val)) {
+                    //Clone array
+                    cloneTo[key] = [];
+                    for (let i = 0; i < val.length; i++) {
+                        if (typeof val[i] === 'object') {
+                            cloneTo[key][i] = {};
+                            recDeepClone(val[i], cloneTo[key][i]);
+                        }
+                        else {
+                            cloneTo[key][i] = val[i];
+                        }
+                    }
+                }
+                else {
+                    //Clone object
+                    cloneTo[key] = {};
+                    recDeepClone(val, cloneTo[key]);
+                }
+            }
+            else {
+                cloneTo[key] = val;
+            }
+        });
+    }
 });

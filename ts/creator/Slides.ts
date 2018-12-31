@@ -1,4 +1,5 @@
 import Controller from "./main";
+import { deepClone } from '../main/helpers';
 
 export default class Slides {
     private controller: Controller;
@@ -34,7 +35,7 @@ export default class Slides {
         let instructions;
         if (index > 0) {
             //Copy from previous slide
-            instructions = Object.assign({}, this.slideInstructions[index - 1]);
+            instructions = deepClone(this.slideInstructions[index - 1]);
         } else {
             //Create new
             instructions = this.controller.instructionsFromStep({

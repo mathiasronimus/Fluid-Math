@@ -34,7 +34,6 @@ export default class CreatorCanvasController extends CanvasController {
     private onLayoutModified: (Object) => void;
 
     private textField: HTMLTextAreaElement;
-    private newText: string;
 
     private controller: Controller;
 
@@ -54,7 +53,7 @@ export default class CreatorCanvasController extends CanvasController {
         this.textField.value = this.steps[0].text;
         this.container.appendChild(this.textField);
         let confirm = this.controller.getOkButton(function() {
-            this.newText = this.textField.value;
+            this.steps[0].text = this.textField.value;
             this.refresh();
         }.bind(this));
         confirm.innerHTML = "Set Text";
@@ -416,18 +415,13 @@ export default class CreatorCanvasController extends CanvasController {
      * Start the conversion to a step
      * layout object.
      * 
-     * ENSURE THIS DOES NOT RETURN REFERENCES
-     * TO THE ORIGINAL INSTRUCTIONS OBJECT.
-     * 
      * @param root The root container.
      */
     private toStepLayout(root: EqContainer): Object {
         return {
             color: this.steps[0].color,
             opacity: this.steps[0].opacity,
-            text:   this.newText ?
-                    this.newText :
-                    this.steps[0].text,
+            text: this.steps[0].text,
             root: this.containerToStepLayout(root)
         }
     }
