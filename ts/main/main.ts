@@ -4,7 +4,7 @@ import { addStyleSheet } from './helpers';
 
 WebFont.load({
     google: {
-        families: [C.fontFamily + ":" + C.fontWeight]
+        families: [C.fontFamily + ":" + C.fontWeight + ",400"]
     },
     active: function () { init(); },
     inactive: function () { init(); }

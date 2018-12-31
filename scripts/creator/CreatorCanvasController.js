@@ -369,9 +369,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * Start the conversion to a step
          * layout object.
          *
-         * ENSURE THIS DOES NOT RETURN REFERENCES
-         * TO THE ORIGINAL INSTRUCTIONS OBJECT.
-         *
          * @param root The root container.
          */
         toStepLayout(root) {

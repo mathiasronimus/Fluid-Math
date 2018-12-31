@@ -24,10 +24,6 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.fontFamily = fontFamily;
             this.fontWeight = fontWeight;
             this.fitSize = this.fitSize.bind(this);
-            //Create canvas
-            this.canvas = document.createElement("canvas");
-            this.ctx = this.canvas.getContext("2d");
-            this.container.appendChild(this.canvas);
             //Create area below canvas
             let lowerArea = document.createElement("div");
             lowerArea.className = "eqLower";
@@ -51,6 +47,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             lowerArea.appendChild(restButton);
             this.restart = this.restart.bind(this);
             restButton.addEventListener("click", this.restart);
+            //Create canvas
+            this.canvas = document.createElement("canvas");
+            this.ctx = this.canvas.getContext("2d");
+            this.container.appendChild(this.canvas);
             //Initialize Components and display first step
             this.initContent(instructions);
             this.nextStep();

@@ -33,18 +33,18 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         //Appearance
         colors: {
             //RGB
-            "red": [244, 67, 54],
-            "pink": [233, 30, 99],
-            "purple": [156, 39, 176],
-            "blue": [33, 150, 243],
-            "teal": [0, 150, 136],
-            "green": [76, 175, 80],
-            "orange": [255, 152, 0],
+            "red": [229, 57, 53],
+            "pink": [216, 27, 96],
+            "purple": [142, 36, 170],
+            "blue": [30, 136, 229],
+            "teal": [0, 137, 123],
+            "green": [67, 160, 71],
+            "orange": [251, 140, 0],
             "default": [0, 0, 0]
         },
         fadedOpacity: 0.3,
-        normalOpacity: 0.85,
-        focusedOpacity: 1
+        normalOpacity: 0.6,
+        focusedOpacity: 0.9
     };
     exports.default = constants;
 });

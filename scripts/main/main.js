@@ -3,7 +3,7 @@ define(["require", "exports", "./CanvasController", "./consts", "./helpers"], fu
     Object.defineProperty(exports, "__esModule", { value: true });
     WebFont.load({
         google: {
-            families: [consts_1.default.fontFamily + ":" + consts_1.default.fontWeight]
+            families: [consts_1.default.fontFamily + ":" + consts_1.default.fontWeight + ",400"]
         },
         active: function () { init(); },
         inactive: function () { init(); }
