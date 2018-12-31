@@ -10,18 +10,20 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
     color: rgba(0, 0, 0, 0.67);
 }
 
 .eqIcon {
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
 }
 
 .eqText {
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
+    flex-grow: 1;
+    padding: 10px;
+    text-align: center;
 }
 
 em {

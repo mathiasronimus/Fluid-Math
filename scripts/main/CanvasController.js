@@ -54,9 +54,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             //Initialize Components and display first step
             this.initContent(instructions);
             this.nextStep();
-            //Bind next step to canvas click
+            //Bind next step to canvas/text click
             this.nextStep = this.nextStep.bind(this);
             this.canvas.addEventListener("click", this.nextStep);
+            this.textArea.addEventListener('click', this.nextStep);
             //Redraw when window size changes
             this.recalc = this.recalc.bind(this);
             window.addEventListener('resize', this.recalc);
