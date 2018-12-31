@@ -73,6 +73,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 this.ctx.scale(f.scale, f.scale);
                 if (f.component instanceof EqContent_1.default) {
                     f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
+                    f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
                 }
                 f.component.draw(f.width, f.height, this.ctx);
                 this.ctx.restore();
@@ -235,7 +236,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             let stepOpacity = this.steps[this.currStep]['opacity'];
             if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
                 //Opacity specified
-                return parseFloat(stepOpacity[contentIdx]);
+                return stepOpacity[contentIdx];
             }
             else {
                 //No opacity specified

@@ -424,6 +424,7 @@ export default class CreatorCanvasController extends CanvasController {
     private toStepLayout(root: EqContainer): Object {
         return {
             color: this.steps[0].color,
+            opacity: this.steps[0].opacity,
             text:   this.newText ?
                     this.newText :
                     this.steps[0].text,
@@ -563,25 +564,51 @@ export default class CreatorCanvasController extends CanvasController {
      * components within it. If it is content, just changes
      * that content.
      * 
-     * @param selected The layout of the component to apply color to.
+     * @param selected The component to apply color to.
      * @param colorName The name of the color (defined by the keys in C.colors)
      */
     changeColor(selected: EqComponent, colorName: string) {
-        this.recChangeColor(selected, colorName);
+        this.forEachUnder(selected, function(content) {
+            this.applyColor(content, colorName);
+        }.bind(this));
         this.refresh();
     }
 
-    private recChangeColor(selected: EqComponent, colorName: string) {
-        if (selected instanceof EqContent) {
-            //Just apply to the content
-            this.applyColor(selected as EqContent, colorName);
-        } else if (selected instanceof EqContainer) {
-            //Apply to all children
-            selected.getChildren().forEach(child => {
-                this.changeColor(child, colorName);
+    /**
+     * Changes the opacity of components. If the selected
+     * component is a container, changes the color of all 
+     * components within it. If it is content, just changes
+     * that content.
+     * 
+     * @param selected The component to apply opacity to.
+     * @param opacity The new opacity level.
+     */
+    changeOpacity(selected: EqComponent, opacity: number) {
+        this.forEachUnder(selected, function(content) {
+            this.applyOpacity(content, opacity);
+        }.bind(this));
+        this.refresh();
+    }
+
+    /**
+     * Visits every piece of content under a 
+     * container, calling a function for each.
+     * If called with content as the beginning,
+     * just calls the function for that content.
+     * 
+     * @param component The component to start with.
+     * @param forEach The function to call for each piece of content.
+     */
+    private forEachUnder(component: EqComponent, forEach: (content: EqContent) => void) {
+        if (component instanceof EqContent) {
+            //Call the function
+            forEach(component);
+        } else if (component instanceof EqContainer) {
+            component.getChildren().forEach(child => {
+                this.forEachUnder(child, forEach);
             });
         } else {
-            throw "undefined component type.";
+            throw "undefined component type";
         }
     }
 
@@ -606,6 +633,30 @@ export default class CreatorCanvasController extends CanvasController {
             }
         } else {
             step.color[index] = colorName;
+        }
+    }
+
+    /**
+     * Applies opacity to a particular piece of content.
+     * 
+     * @param applyTo The content to apply opacity to.
+     * @param opacity The opacity to apply.
+     */
+    private applyOpacity(applyTo: EqContent, opacity: number) {
+        let step = this.steps[0];
+        if (step['opacity'] === undefined) {
+            step.opacity = {};
+        }
+        let index = this.content.indexOf(applyTo);
+        if (opacity === C.normalOpacity) {
+            //Remove any opacity already set for this content
+            delete step.opacity[index];
+            if (Object.keys(step.opacity).length === 0) {
+                //Empty opacity, delete as well
+                delete step.opacity;
+            }
+        } else {
+            step.opacity[index] = opacity;
         }
     }
 

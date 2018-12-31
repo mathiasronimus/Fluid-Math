@@ -377,6 +377,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         toStepLayout(root) {
             return {
                 color: this.steps[0].color,
+                opacity: this.steps[0].opacity,
                 text: this.newText ?
                     this.newText :
                     this.steps[0].text,
@@ -507,26 +508,51 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * components within it. If it is content, just changes
          * that content.
          *
-         * @param selected The layout of the component to apply color to.
+         * @param selected The component to apply color to.
          * @param colorName The name of the color (defined by the keys in C.colors)
          */
         changeColor(selected, colorName) {
-            this.recChangeColor(selected, colorName);
+            this.forEachUnder(selected, function (content) {
+                this.applyColor(content, colorName);
+            }.bind(this));
             this.refresh();
         }
-        recChangeColor(selected, colorName) {
-            if (selected instanceof EqContent_1.default) {
-                //Just apply to the content
-                this.applyColor(selected, colorName);
+        /**
+         * Changes the opacity of components. If the selected
+         * component is a container, changes the color of all
+         * components within it. If it is content, just changes
+         * that content.
+         *
+         * @param selected The component to apply opacity to.
+         * @param opacity The new opacity level.
+         */
+        changeOpacity(selected, opacity) {
+            this.forEachUnder(selected, function (content) {
+                this.applyOpacity(content, opacity);
+            }.bind(this));
+            this.refresh();
+        }
+        /**
+         * Visits every piece of content under a
+         * container, calling a function for each.
+         * If called with content as the beginning,
+         * just calls the function for that content.
+         *
+         * @param component The component to start with.
+         * @param forEach The function to call for each piece of content.
+         */
+        forEachUnder(component, forEach) {
+            if (component instanceof EqContent_1.default) {
+                //Call the function
+                forEach(component);
             }
-            else if (selected instanceof EqContainer_1.default) {
-                //Apply to all children
-                selected.getChildren().forEach(child => {
-                    this.changeColor(child, colorName);
+            else if (component instanceof EqContainer_1.default) {
+                component.getChildren().forEach(child => {
+                    this.forEachUnder(child, forEach);
                 });
             }
             else {
-                throw "undefined component type.";
+                throw "undefined component type";
             }
         }
         /**
@@ -551,6 +577,30 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }
             else {
                 step.color[index] = colorName;
+            }
+        }
+        /**
+         * Applies opacity to a particular piece of content.
+         *
+         * @param applyTo The content to apply opacity to.
+         * @param opacity The opacity to apply.
+         */
+        applyOpacity(applyTo, opacity) {
+            let step = this.steps[0];
+            if (step['opacity'] === undefined) {
+                step.opacity = {};
+            }
+            let index = this.content.indexOf(applyTo);
+            if (opacity === consts_1.default.normalOpacity) {
+                //Remove any opacity already set for this content
+                delete step.opacity[index];
+                if (Object.keys(step.opacity).length === 0) {
+                    //Empty opacity, delete as well
+                    delete step.opacity;
+                }
+            }
+            else {
+                step.opacity[index] = opacity;
             }
         }
         /**

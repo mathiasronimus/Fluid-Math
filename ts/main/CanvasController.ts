@@ -294,7 +294,7 @@ export default class CanvasController {
         let stepOpacity = this.steps[this.currStep]['opacity'];
         if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
             //Opacity specified
-            return parseFloat(stepOpacity[contentIdx]);
+            return stepOpacity[contentIdx];
         } else {
             //No opacity specified
             return C.normalOpacity;

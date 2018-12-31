@@ -91,6 +91,12 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             colorEl.className = 'tool-bar-icon material-icons';
             colorEl.addEventListener('click', this.changeColor.bind(this));
             this.element.appendChild(colorEl);
+            //Add option to change opacity
+            let opacityEl = document.createElement('span');
+            opacityEl.innerHTML = 'texture';
+            opacityEl.className = 'tool-bar-icon material-icons';
+            opacityEl.addEventListener('click', this.changeOpacity.bind(this));
+            this.element.appendChild(opacityEl);
         }
         changeColor() {
             //Bring up a dialog to change color
@@ -108,6 +114,25 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
                 }.bind(this, colorName));
                 modalRoot.appendChild(colorEl);
             });
+            this.controller.modal(modalRoot);
+        }
+        changeOpacity() {
+            //Bring up a dialog to change color
+            let modalRoot = document.createElement('div');
+            let addEl = function (opacityName, opacity) {
+                let el = document.createElement('div');
+                el.className = 'opacity-selector';
+                el.innerHTML = opacityName;
+                el.style.opacity = "" + opacity;
+                el.addEventListener('click', function (opacity) {
+                    this.controller.removeModal();
+                    this.controller.currCanvas.changeOpacity(this.selectedLayout.component, opacity);
+                }.bind(this, opacity));
+                modalRoot.appendChild(el);
+            }.bind(this);
+            addEl('faded', consts_1.default.fadedOpacity);
+            addEl('normal', consts_1.default.normalOpacity);
+            addEl('focused', consts_1.default.focusedOpacity);
             this.controller.modal(modalRoot);
         }
         /**

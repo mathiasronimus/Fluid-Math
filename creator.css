@@ -91,6 +91,11 @@ body {
     cursor: pointer;
 }
 
+.opacity-selector {
+    padding: 10px;
+    cursor: pointer;
+}
+
 #main-column {
     display: flex;
     flex-direction: column;

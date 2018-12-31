@@ -112,6 +112,13 @@ export default class ToolBar {
         colorEl.className = 'tool-bar-icon material-icons';
         colorEl.addEventListener('click', this.changeColor.bind(this));
         this.element.appendChild(colorEl);
+
+        //Add option to change opacity
+        let opacityEl = document.createElement('span');
+        opacityEl.innerHTML = 'texture';
+        opacityEl.className = 'tool-bar-icon material-icons';
+        opacityEl.addEventListener('click', this.changeOpacity.bind(this));
+        this.element.appendChild(opacityEl);
     }
 
     private changeColor() {
@@ -131,6 +138,28 @@ export default class ToolBar {
             }.bind(this, colorName));
             modalRoot.appendChild(colorEl);
         });
+
+        this.controller.modal(modalRoot);
+    }
+
+    private changeOpacity() {
+        //Bring up a dialog to change color
+        let modalRoot = document.createElement('div');
+        let addEl = function(opacityName: string, opacity: number) {
+            let el = document.createElement('div');
+            el.className = 'opacity-selector';
+            el.innerHTML = opacityName;
+            el.style.opacity = "" + opacity;
+            el.addEventListener('click', function(opacity: number) {
+                this.controller.removeModal();
+                this.controller.currCanvas.changeOpacity(this.selectedLayout.component, opacity);
+            }.bind(this, opacity));
+            modalRoot.appendChild(el);
+        }.bind(this);
+
+        addEl('faded', C.fadedOpacity);
+        addEl('normal', C.normalOpacity);
+        addEl('focused', C.focusedOpacity);
 
         this.controller.modal(modalRoot);
     }
