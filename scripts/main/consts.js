@@ -47,7 +47,6 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         fadedOpacity: 0.3,
         normalOpacity: 0.6,
         focusedOpacity: 0.9,
-        progressStrokeStyle: 'rgba(0, 0, 0, 0.2)'
     };
     exports.default = constants;
 });

@@ -122,6 +122,10 @@ export default class CanvasController {
             f.component.draw(f.width, f.height, this.ctx);
             this.ctx.restore();
         });
+
+        //Redraw the progress line
+        let widthPerSegment = this.container.clientWidth / (this.steps.length - 1);
+        this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
     }
 
     /**

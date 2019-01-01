@@ -82,6 +82,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 f.component.draw(f.width, f.height, this.ctx);
                 this.ctx.restore();
             });
+            //Redraw the progress line
+            let widthPerSegment = this.container.clientWidth / (this.steps.length - 1);
+            this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
         }
         /**
          * Recalculates and redraws the current step.
