@@ -64,27 +64,34 @@ export default class CanvasController {
         upperArea.className = "eqUpper";
         this.container.appendChild(upperArea);
 
-        //Create back button
-        let backButton = document.createElement("div");
-        backButton.className = "material-icons eqIcon";
-        backButton.innerHTML = "arrow_back";
-        upperArea.appendChild(backButton);
-        this.prevStep = this.prevStep.bind(this);
-        backButton.addEventListener("click", this.prevStep);
+        //Create back button, if needed
+        if (this.steps.length > 1) {
+            let backButton = document.createElement("div");
+            backButton.className = "material-icons eqIcon";
+            backButton.innerHTML = "arrow_back";
+            upperArea.appendChild(backButton);
+            this.prevStep = this.prevStep.bind(this);
+            backButton.addEventListener("click", this.prevStep);
+        }
 
-        //Create text area
-        this.textArea = document.createElement("div");
-        this.textArea.className = "eqText";
-        this.textArea.innerHTML = "test";
-        upperArea.appendChild(this.textArea);
+        //Create text area, if needed
+        //text doesn't show if: there is only one step and it has no text
+        if (!(this.steps.length === 1 && this.steps[0]['text'] === undefined)) {
+            this.textArea = document.createElement("div");
+            this.textArea.className = "eqText";
+            this.textArea.innerHTML = "test";
+            upperArea.appendChild(this.textArea);
+        }
 
         //Create restart button
-        let restButton = document.createElement("div");
-        restButton.className = "material-icons eqIcon";
-        restButton.innerHTML = "replay";
-        upperArea.appendChild(restButton);
-        this.restart = this.restart.bind(this);
-        restButton.addEventListener("click", this.restart);
+        if (this.steps.length > 1) {
+            let restButton = document.createElement("div");
+            restButton.className = "material-icons eqIcon";
+            restButton.innerHTML = "replay";
+            upperArea.appendChild(restButton);
+            this.restart = this.restart.bind(this);
+            restButton.addEventListener("click", this.restart);
+        }
 
         //Create canvas
         this.canvas = document.createElement("canvas");
@@ -98,7 +105,9 @@ export default class CanvasController {
         //Bind next step to canvas/text click
         this.nextStep = this.nextStep.bind(this);
         this.canvas.addEventListener("click", this.nextStep);
-        this.textArea.addEventListener('click', this.nextStep);
+        if (this.textArea) {
+            this.textArea.addEventListener('click', this.nextStep);
+        }
 
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
@@ -294,7 +303,7 @@ export default class CanvasController {
         } else {
             //A color isn't specified, use default
             return C.colors['default'];
-        }  
+        }
     }
 
     /**
@@ -313,7 +322,7 @@ export default class CanvasController {
             return C.normalOpacity;
         }
     }
- 
+
     /**
      * Fit the width of the canvas to the container,
      * but set the height.
@@ -332,11 +341,11 @@ export default class CanvasController {
      * @param h The number of css pixel in height.
      */
     private setSize(w: number, h: number) {
-        
+
         //Update canvas css size
         this.canvas.style.width = w + "px";
         this.canvas.style.height = h + "px";
-        
+
         //Update canvas pixel size for HDPI
         let pixelRatio = window.devicePixelRatio || 1;
         this.canvas.width = w * pixelRatio;
@@ -384,7 +393,9 @@ export default class CanvasController {
         root.setFixedWidth(this.container.clientWidth);
 
         //Set the text
-        this.textArea.innerHTML = this.steps[idx].text;
+        if (this.textArea) {
+            this.textArea.innerHTML = this.steps[idx].text;
+        }
 
         let toReturn: LayoutState[] = [];
         root.addLayout(undefined, toReturn, 0, 0, 1);
@@ -400,11 +411,11 @@ export default class CanvasController {
         let type: string = containerObj.type;
         if (type === "vbox") {
             return new VBox(
-                this.parseContainerChildren(containerObj.children), 
+                this.parseContainerChildren(containerObj.children),
                 Padding.even(C.defaultVBoxPadding));
         } else if (type === "hbox") {
             return new HBox(
-                this.parseContainerChildren(containerObj.children), 
+                this.parseContainerChildren(containerObj.children),
                 Padding.even(C.defaultHBoxPadding));
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";

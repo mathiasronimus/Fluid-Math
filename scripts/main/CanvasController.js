@@ -31,25 +31,32 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             let upperArea = document.createElement("div");
             upperArea.className = "eqUpper";
             this.container.appendChild(upperArea);
-            //Create back button
-            let backButton = document.createElement("div");
-            backButton.className = "material-icons eqIcon";
-            backButton.innerHTML = "arrow_back";
-            upperArea.appendChild(backButton);
-            this.prevStep = this.prevStep.bind(this);
-            backButton.addEventListener("click", this.prevStep);
-            //Create text area
-            this.textArea = document.createElement("div");
-            this.textArea.className = "eqText";
-            this.textArea.innerHTML = "test";
-            upperArea.appendChild(this.textArea);
+            //Create back button, if needed
+            if (this.steps.length > 1) {
+                let backButton = document.createElement("div");
+                backButton.className = "material-icons eqIcon";
+                backButton.innerHTML = "arrow_back";
+                upperArea.appendChild(backButton);
+                this.prevStep = this.prevStep.bind(this);
+                backButton.addEventListener("click", this.prevStep);
+            }
+            //Create text area, if needed
+            //text doesn't show if: there is only one step and it has no text
+            if (!(this.steps.length === 1 && this.steps[0]['text'] === undefined)) {
+                this.textArea = document.createElement("div");
+                this.textArea.className = "eqText";
+                this.textArea.innerHTML = "test";
+                upperArea.appendChild(this.textArea);
+            }
             //Create restart button
-            let restButton = document.createElement("div");
-            restButton.className = "material-icons eqIcon";
-            restButton.innerHTML = "replay";
-            upperArea.appendChild(restButton);
-            this.restart = this.restart.bind(this);
-            restButton.addEventListener("click", this.restart);
+            if (this.steps.length > 1) {
+                let restButton = document.createElement("div");
+                restButton.className = "material-icons eqIcon";
+                restButton.innerHTML = "replay";
+                upperArea.appendChild(restButton);
+                this.restart = this.restart.bind(this);
+                restButton.addEventListener("click", this.restart);
+            }
             //Create canvas
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext("2d");
@@ -60,7 +67,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             //Bind next step to canvas/text click
             this.nextStep = this.nextStep.bind(this);
             this.canvas.addEventListener("click", this.nextStep);
-            this.textArea.addEventListener('click', this.nextStep);
+            if (this.textArea) {
+                this.textArea.addEventListener('click', this.nextStep);
+            }
             //Redraw when window size changes
             this.recalc = this.recalc.bind(this);
             window.addEventListener('resize', this.recalc);
@@ -313,7 +322,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             let root = this.parseContainer(rootObj);
             root.setFixedWidth(this.container.clientWidth);
             //Set the text
-            this.textArea.innerHTML = this.steps[idx].text;
+            if (this.textArea) {
+                this.textArea.innerHTML = this.steps[idx].text;
+            }
             let toReturn = [];
             root.addLayout(undefined, toReturn, 0, 0, 1);
             return toReturn;
