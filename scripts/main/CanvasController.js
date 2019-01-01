@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -24,27 +24,30 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.fontFamily = fontFamily;
             this.fontWeight = fontWeight;
             this.fitSize = this.fitSize.bind(this);
-            //Create area below canvas
-            let lowerArea = document.createElement("div");
-            lowerArea.className = "eqLower";
-            this.container.appendChild(lowerArea);
+            this.progressLine = document.createElement('div');
+            this.progressLine.className = "progressLine";
+            this.container.appendChild(this.progressLine);
+            //Create area above canvas
+            let upperArea = document.createElement("div");
+            upperArea.className = "eqUpper";
+            this.container.appendChild(upperArea);
             //Create back button
             let backButton = document.createElement("div");
             backButton.className = "material-icons eqIcon";
             backButton.innerHTML = "arrow_back";
-            lowerArea.appendChild(backButton);
+            upperArea.appendChild(backButton);
             this.prevStep = this.prevStep.bind(this);
             backButton.addEventListener("click", this.prevStep);
             //Create text area
             this.textArea = document.createElement("div");
             this.textArea.className = "eqText";
             this.textArea.innerHTML = "test";
-            lowerArea.appendChild(this.textArea);
+            upperArea.appendChild(this.textArea);
             //Create restart button
             let restButton = document.createElement("div");
             restButton.className = "material-icons eqIcon";
             restButton.innerHTML = "replay";
-            lowerArea.appendChild(restButton);
+            upperArea.appendChild(restButton);
             this.restart = this.restart.bind(this);
             restButton.addEventListener("click", this.restart);
             //Create canvas
@@ -102,7 +105,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStates = this.calcLayout(this.currStep);
             let rootLayout = this.currStates[this.currStates.length - 1];
             let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height);
+            let anims = this.diff(oldStates, this.lastHeight, height, this.currStep - 1, this.currStep);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -120,7 +123,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStates = this.calcLayout(this.currStep);
             let rootLayout = this.currStates[this.currStates.length - 1];
             let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height);
+            let anims = this.diff(oldStates, this.lastHeight, height, this.currStep + 1, this.currStep);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -133,12 +136,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 //Can't go to next step
                 return;
             }
+            let oldStep = this.currStep;
             this.currStep = 0;
             let oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
             let rootLayout = this.currStates[this.currStates.length - 1];
             let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height);
+            let anims = this.diff(oldStates, this.lastHeight, height, oldStep, 0);
             this.lastHeight = height;
             this.animating = true;
             anims.start();
@@ -153,12 +157,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param cHeightBefore The height of the canvas before the animation.
          * @param cHeightAfter The height of the canvas after the animation.
          */
-        diff(oldStates, cHeightBefore, cHeightAfter) {
+        diff(oldStates, cHeightBefore, cHeightAfter, stepBefore, stepAfter) {
             let set = new AnimationSet_1.default(() => {
                 //When done
                 this.animating = false;
             });
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
+            set.addAnimation(new ProgressAnimation_1.default(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
             for (let i = 0; i < this.content.length; i++) {
                 let content = this.content[i];

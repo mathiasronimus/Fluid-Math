@@ -32,6 +32,8 @@ const constants = {
     colorEasing: bezier(0.5, 0.5, 0.5, 0.5),
     opacityDuration: 300,
     opacityEasing: bezier(0.5, 0.5, 0.5, 0.5),
+    progressDuration: 600,
+    progressEasing: bezier(0.4, 0.0, 0.2, 1),
 
     //Appearance
     colors: {
@@ -47,7 +49,7 @@ const constants = {
     },
     fadedOpacity: 0.3,
     normalOpacity: 0.6,
-    focusedOpacity: 0.9
+    focusedOpacity: 0.9,
 }
 
 export default constants;

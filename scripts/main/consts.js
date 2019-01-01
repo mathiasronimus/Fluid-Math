@@ -30,6 +30,8 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         colorEasing: BezierEasing_1.default(0.5, 0.5, 0.5, 0.5),
         opacityDuration: 300,
         opacityEasing: BezierEasing_1.default(0.5, 0.5, 0.5, 0.5),
+        progressDuration: 600,
+        progressEasing: BezierEasing_1.default(0.4, 0.0, 0.2, 1),
         //Appearance
         colors: {
             //RGB
@@ -44,7 +46,8 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         },
         fadedOpacity: 0.3,
         normalOpacity: 0.6,
-        focusedOpacity: 0.9
+        focusedOpacity: 0.9,
+        progressStrokeStyle: 'rgba(0, 0, 0, 0.2)'
     };
     exports.default = constants;
 });

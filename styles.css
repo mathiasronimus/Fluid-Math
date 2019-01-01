@@ -4,7 +4,7 @@
     border-radius: 5px;
 }
 
-.eqLower {
+.eqUpper {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -24,6 +24,12 @@
     flex-grow: 1;
     padding: 10px;
     text-align: center;
+}
+
+.progressLine {
+    height: 1px;
+    width: 0px;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 em {

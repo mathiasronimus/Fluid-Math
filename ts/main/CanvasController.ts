@@ -14,6 +14,7 @@ import C from './consts';
 import EqContent from "../layout/EqContent";
 import ColorAnimation from "../animation/ColorAnimation";
 import OpacityAnimation from "../animation/OpacityAnimation";
+import ProgressAnimation from "../animation/ProgressAnimation";
 
 /**
  * Responsible for managing a single canvas,
@@ -24,6 +25,7 @@ export default class CanvasController {
 
     protected container: Element;
     protected textArea: HTMLDivElement;
+    protected progressLine: HTMLDivElement;
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
 
@@ -53,16 +55,20 @@ export default class CanvasController {
         this.fontWeight = fontWeight;
         this.fitSize = this.fitSize.bind(this);
 
-        //Create area below canvas
-        let lowerArea = document.createElement("div");
-        lowerArea.className = "eqLower";
-        this.container.appendChild(lowerArea);
+        this.progressLine = document.createElement('div');
+        this.progressLine.className = "progressLine";
+        this.container.appendChild(this.progressLine);
+
+        //Create area above canvas
+        let upperArea = document.createElement("div");
+        upperArea.className = "eqUpper";
+        this.container.appendChild(upperArea);
 
         //Create back button
         let backButton = document.createElement("div");
         backButton.className = "material-icons eqIcon";
         backButton.innerHTML = "arrow_back";
-        lowerArea.appendChild(backButton);
+        upperArea.appendChild(backButton);
         this.prevStep = this.prevStep.bind(this);
         backButton.addEventListener("click", this.prevStep);
 
@@ -70,13 +76,13 @@ export default class CanvasController {
         this.textArea = document.createElement("div");
         this.textArea.className = "eqText";
         this.textArea.innerHTML = "test";
-        lowerArea.appendChild(this.textArea);
+        upperArea.appendChild(this.textArea);
 
         //Create restart button
         let restButton = document.createElement("div");
         restButton.className = "material-icons eqIcon";
         restButton.innerHTML = "replay";
-        lowerArea.appendChild(restButton);
+        upperArea.appendChild(restButton);
         this.restart = this.restart.bind(this);
         restButton.addEventListener("click", this.restart);
 
@@ -144,7 +150,7 @@ export default class CanvasController {
 
         let rootLayout = this.currStates[this.currStates.length - 1];
         let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height);
+        let anims = this.diff(oldStates, this.lastHeight, height, this.currStep - 1, this.currStep);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -166,7 +172,7 @@ export default class CanvasController {
 
         let rootLayout = this.currStates[this.currStates.length - 1];
         let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height);
+        let anims = this.diff(oldStates, this.lastHeight, height, this.currStep + 1, this.currStep);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -181,6 +187,7 @@ export default class CanvasController {
             return;
         }
 
+        let oldStep = this.currStep;
         this.currStep = 0;
 
         let oldStates = this.currStates;
@@ -188,7 +195,7 @@ export default class CanvasController {
 
         let rootLayout = this.currStates[this.currStates.length - 1];
         let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height);
+        let anims = this.diff(oldStates, this.lastHeight, height, oldStep, 0);
         this.lastHeight = height;
         this.animating = true;
         anims.start();
@@ -204,7 +211,7 @@ export default class CanvasController {
      * @param cHeightBefore The height of the canvas before the animation.
      * @param cHeightAfter The height of the canvas after the animation.
      */
-    private diff(oldStates: LayoutState[], cHeightBefore: number, cHeightAfter: number): AnimationSet {
+    private diff(oldStates: LayoutState[], cHeightBefore: number, cHeightAfter: number, stepBefore: number, stepAfter: number): AnimationSet {
 
         let set = new AnimationSet(() => {
             //When done
@@ -212,6 +219,7 @@ export default class CanvasController {
         });
 
         set.addAnimation(new CanvasSizeAnimation(cHeightBefore, cHeightAfter, this.fitSize, set));
+        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
         for (let i = 0; i < this.content.length; i++) {
