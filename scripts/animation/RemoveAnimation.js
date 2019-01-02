@@ -3,6 +3,7 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
     Object.defineProperty(exports, "__esModule", { value: true });
     class RemoveAnimation extends BezierCallback_1.default {
         constructor(start, set, ctx) {
+            let content = start.component;
             let step = function (completion) {
                 ctx.save();
                 let invComp = 1 - completion;
@@ -10,7 +11,7 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
                 ctx.translate(start.tlx + start.width / 2, start.tly + start.height / 2);
                 //Scale
                 ctx.scale(invComp, invComp);
-                start.component.draw(start.width, start.height, ctx);
+                content.draw(start.width, start.height, ctx);
                 ctx.restore();
             };
             super(consts_1.default.removeDuration, consts_1.default.removeEasing, undefined, step, set);

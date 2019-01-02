@@ -2,6 +2,7 @@ import BezierCallback from "./BezierCallback";
 import LayoutState from "./LayoutState";
 import AnimationSet from "./AnimationSet";
 import C from '../main/consts';
+import EqContent from "../layout/EqContent";
 
 /**
  * Animates a component in by scaling it from
@@ -11,6 +12,8 @@ export default class AddAnimation extends BezierCallback {
 
     constructor(end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
 
+        let content = end.component as EqContent;
+
         let step = function(completion: number) {
             ctx.save();
             //Translate to the right spot
@@ -19,7 +22,7 @@ export default class AddAnimation extends BezierCallback {
             //Scale according to the animation
             ctx.scale(completion, completion);
 
-            end.component.draw(end.width, end.height, ctx);
+            content.draw(end.width, end.height, ctx);
             ctx.restore();
         };
 

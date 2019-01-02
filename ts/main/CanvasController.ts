@@ -123,8 +123,8 @@ export default class CanvasController {
             if (f.component instanceof EqContent) {
                 f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
                 f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
+                f.component.draw(f.width, f.height, this.ctx);
             }
-            f.component.draw(f.width, f.height, this.ctx);
             this.ctx.restore();
         });
 

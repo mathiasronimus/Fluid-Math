@@ -2,10 +2,13 @@ import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
 import LayoutState from './LayoutState';
 import C from '../main/consts';
+import EqContent from "../layout/EqContent";
 
 export default class RemoveAnimation extends BezierCallback {
 
     constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
+
+        let content = start.component as EqContent;
 
         let step = function(completion) {
             ctx.save();
@@ -18,7 +21,7 @@ export default class RemoveAnimation extends BezierCallback {
             //Scale
             ctx.scale(invComp, invComp);
 
-            start.component.draw(start.width, start.height, ctx);
+            content.draw(start.width, start.height, ctx);
             ctx.restore();
         }
 

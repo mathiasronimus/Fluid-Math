@@ -3,6 +3,7 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
     Object.defineProperty(exports, "__esModule", { value: true });
     class MoveAnimation extends BezierCallback_1.default {
         constructor(start, end, set, ctx) {
+            let content = start.component;
             let step = function (completion) {
                 ctx.save();
                 //Calculate the interpolations
@@ -16,7 +17,7 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
                 ctx.translate(x + width / 2, y + height / 2);
                 //Scale according to animation
                 ctx.scale(scale, scale);
-                start.component.draw(width, height, ctx);
+                content.draw(width, height, ctx);
                 ctx.restore();
             };
             super(consts_1.default.moveDuration, consts_1.default.moveEasing, undefined, step, set);

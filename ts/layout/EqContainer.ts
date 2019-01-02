@@ -14,19 +14,4 @@ export default abstract class EqContainer extends EqComponent {
     getChildren(): EqComponent[] {
         return this.children;
     }
-
-    //Should never be called
-    interpolate(o: EqComponent, a: number): EqComponent {
-        return undefined;
-    }
-
-    //Containers aren't drawn.
-    draw(width: number, height: number, ctx: CanvasRenderingContext2D) {}
-
-    /**
-     * Containers don't animate.
-     */
-    shouldAnimate() {
-        return false;
-    }
 }

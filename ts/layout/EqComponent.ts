@@ -54,32 +54,4 @@ export default abstract class EqComponent {
      * @param currScale The current canvas scaling factor.
      */
     abstract addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState;
-
-    /**
-     * Draws the component on the canvas. Should
-     * draw with the component centered on (0, 0).
-     * Animations will transform this to the correct
-     * position. There is no need to call save() or
-     * restore(), animations handle this too.
-     * 
-     * @param width The width to draw at.
-     * @param height The height to draw at.
-     * @param ctx The context of the canvas to draw on.
-     */
-    abstract draw(width: number, height: number, ctx: CanvasRenderingContext2D);
-
-    /**
-     * Return a Component an amount-th between
-     * this component and another component. For
-     * example, amount=0.5 means halfway between. 
-     * 
-     * @param otherComp The other component
-     * @param amount The percentage between as a decimal.
-     */
-    abstract interpolate(otherComp: EqComponent, amount: number): EqComponent;
-
-    /**
-     * Whether this component should be animated.
-     */
-    abstract shouldAnimate(): boolean;
 }

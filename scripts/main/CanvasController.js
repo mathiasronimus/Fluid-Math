@@ -85,8 +85,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 if (f.component instanceof EqContent_1.default) {
                     f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
                     f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
+                    f.component.draw(f.width, f.height, this.ctx);
                 }
-                f.component.draw(f.width, f.height, this.ctx);
                 this.ctx.restore();
             });
             //Redraw the progress line

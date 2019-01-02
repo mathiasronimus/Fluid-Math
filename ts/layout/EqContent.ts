@@ -13,6 +13,19 @@ export default abstract class EqContent extends EqComponent {
         this.opacity = C.normalOpacity;
     }
 
+    /**
+     * Draws the content on the canvas. Should
+     * draw with the content centered on (0, 0).
+     * Animations will transform this to the correct
+     * position. There is no need to call save() or
+     * restore(), animations handle this too.
+     * 
+     * @param width The width to draw at.
+     * @param height The height to draw at.
+     * @param ctx The context of the canvas to draw on.
+     */
+    abstract draw(width: number, height: number, ctx: CanvasRenderingContext2D);
+
     protected setFill(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
     }

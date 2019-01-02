@@ -2,10 +2,13 @@ import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
 import LayoutState from './LayoutState';
 import C from '../main/consts';
+import EqContent from "../layout/EqContent";
 
 export default class MoveAnimation extends BezierCallback {
 
     constructor(start: LayoutState, end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
+
+        let content = start.component as EqContent;
 
         let step = function(completion: number) {
             ctx.save();
@@ -24,7 +27,7 @@ export default class MoveAnimation extends BezierCallback {
             //Scale according to animation
             ctx.scale(scale, scale);
 
-            start.component.draw(width, height, ctx);
+            content.draw(width, height, ctx);
 
             ctx.restore();
         };
