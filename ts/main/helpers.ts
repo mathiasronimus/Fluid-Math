@@ -51,3 +51,19 @@ function recDeepClone(toClone: Object, cloneTo: Object) {
         }
     });
 }
+
+/**
+ * Draws a line from one point to another.
+ * 
+ * @param x1 Starting x.
+ * @param y1 Starting y.
+ * @param x2 End x.
+ * @param y2 End y.
+ * @param ctx The context to draw a line on.
+ */
+export function line(x1, y1, x2, y2, ctx: CanvasRenderingContext2D) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+}

@@ -36,46 +36,10 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         redraw() {
             super.redraw();
             this.currStates.forEach(f => {
-                //Draw borders
-                if (f.component instanceof VBox_1.default) {
-                    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-                    //Outer border
-                    this.ctx.rect(f.tlx, f.tly, f.width, f.height);
-                    this.ctx.stroke();
-                    let pad = consts_1.default.creatorVBoxPadding;
-                    //Middle border, top and bottom
-                    this.ctx.setLineDash([5]);
-                    line(f.tlx, f.tly + pad / 2, f.tlx + f.width, f.tly + pad / 2, this.ctx);
-                    line(f.tlx, f.tly + f.height - pad / 2, f.tlx + f.width, f.tly + f.height - pad / 2, this.ctx);
-                    //Inner border, top and bottom
-                    this.ctx.setLineDash([]);
-                    line(f.tlx, f.tly + pad, f.tlx + f.width, f.tly + pad, this.ctx);
-                    line(f.tlx, f.tly + f.height - pad, f.tlx + f.width, f.tly + f.height - pad, this.ctx);
-                    this.ctx.strokeStyle = "#000";
-                }
-                else if (f.component instanceof HBox_1.default) {
-                    this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-                    //Outer border
-                    this.ctx.rect(f.tlx, f.tly, f.width, f.height);
-                    this.ctx.stroke();
-                    let pad = consts_1.default.creatorHBoxPadding;
-                    //Middle border, top and bottom
-                    this.ctx.setLineDash([5]);
-                    line(f.tlx + pad / 2, f.tly, f.tlx + pad / 2, f.tly + f.height, this.ctx);
-                    line(f.tlx + f.width - pad / 2, f.tly, f.tlx + f.width - pad / 2, f.tly + f.height, this.ctx);
-                    //Inner border, top and bottom
-                    this.ctx.setLineDash([]);
-                    line(f.tlx + pad, f.tly, f.tlx + pad, f.tly + f.height, this.ctx);
-                    line(f.tlx + f.width - pad, f.tly, f.tlx + f.width - pad, f.tly + f.height, this.ctx);
-                    this.ctx.strokeStyle = "#000";
+                if (f.component instanceof EqContainer_1.default) {
+                    f.component.creatorDraw(f, this.ctx);
                 }
             });
-            function line(x1, y1, x2, y2, ctx) {
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.stroke();
-            }
         }
         nextStep() {
             //Override to not animate

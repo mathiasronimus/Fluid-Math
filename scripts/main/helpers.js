@@ -55,4 +55,20 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
             }
         });
     }
+    /**
+     * Draws a line from one point to another.
+     *
+     * @param x1 Starting x.
+     * @param y1 Starting y.
+     * @param x2 End x.
+     * @param y2 End y.
+     * @param ctx The context to draw a line on.
+     */
+    function line(x1, y1, x2, y2, ctx) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+    exports.line = line;
 });
