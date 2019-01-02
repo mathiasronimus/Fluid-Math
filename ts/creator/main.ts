@@ -82,6 +82,7 @@ export default class Controller {
         let instructions: any = {};
 
         instructions.terms = this.contentManager.getTerms();
+        instructions.metrics = this.contentManager.getMetrics();
         instructions.steps = [
             step
         ];

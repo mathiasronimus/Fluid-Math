@@ -62,6 +62,7 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "./Conte
         instructionsFromStep(step) {
             let instructions = {};
             instructions.terms = this.contentManager.getTerms();
+            instructions.metrics = this.contentManager.getMetrics();
             instructions.steps = [
                 step
             ];

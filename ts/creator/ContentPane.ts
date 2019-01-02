@@ -196,7 +196,7 @@ export default class ContentPane {
      * Get the font metrics object for the
      * terms in this slideshow.
      */
-    private getMetrics(): Object {
+    getMetrics(): Object {
         let metrics = {};
         metrics['widths'] = [];
 
