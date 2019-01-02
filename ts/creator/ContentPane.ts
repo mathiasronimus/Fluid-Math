@@ -1,4 +1,5 @@
 import Controller from "./main";
+import C from '../main/consts';
 
 export default class ContentPane {
 
@@ -192,6 +193,77 @@ export default class ContentPane {
     }
 
     /**
+     * Get the font metrics object for the
+     * terms in this slideshow.
+     */
+    private getMetrics(): Object {
+        let metrics = {};
+        metrics['widths'] = [];
+
+        /* Look for the max ascent and
+           descent, which all terms will use. */
+        let maxAscent = 0;
+        let maxDescent = 0;
+        this.terms.forEach(term => {
+            let termMetrics = this.measureTerm(term);
+            if (termMetrics['ascent'] > maxAscent) {
+                maxAscent = termMetrics['ascent'];
+            }
+            if (termMetrics['descent'] > maxDescent) {
+                maxDescent = termMetrics['descent'];
+            }
+            //All terms have their own width
+            metrics['widths'].push(termMetrics['width']);
+        });
+        metrics['ascent'] = maxAscent;
+        metrics['height'] = maxAscent + maxDescent;
+        return metrics;
+    }
+
+    /**
+     * Measure the metrics for a term.
+     * 
+     * @param term The term to measure.
+     */
+    private measureTerm(term: string): object {
+        let toReturn = {};
+
+        //Create a canvas to measure with
+        let testCanvas = document.createElement("canvas");
+        testCanvas.width = 400;
+        testCanvas.height = C.fontSize * C.testCanvasFontSizeMultiple;
+        let testCtx = testCanvas.getContext("2d");
+        testCtx.font = C.fontSize + "px " + C.fontFamily;
+
+        //Get the width
+        toReturn['width'] = testCtx.measureText(term).width;
+
+        //Draw the text on the canvas to measure ascent and descent
+        testCtx.fillStyle = "white";
+        testCtx.fillRect(0, 0, testCanvas.width, testCanvas.height);
+        testCtx.fillStyle = "black";
+        testCtx.fillText(term, 0, testCanvas.height / 2);
+
+        let image = testCtx.getImageData(0, 0, toReturn['width'], testCanvas.height);
+        let imageData = image.data;
+        
+        //Go down until we find text
+        let i = 0;
+        while (++i < imageData.length && imageData[i] === 255);
+        let ascent = i / (image.width * 4);
+        
+        //Go up until we find text
+        i = imageData.length - 1;
+        while (--i > 0 && imageData[i] === 255);
+        let descent = i / (image.width * 4);
+        
+        toReturn['ascent'] = testCanvas.height / 2 - ascent;
+        toReturn['descent'] = descent - testCanvas.height / 2;
+
+        return toReturn;
+    }
+
+    /**
      * Delete the currently selected content.
      */
     delete() {
@@ -237,6 +309,7 @@ export default class ContentPane {
      * @param toJSON The JSON object.
      */
     addJSON(toJSON: Object): void {
+        toJSON['metrics'] = this.getMetrics();
         toJSON['terms'] = this.terms;
     }
 

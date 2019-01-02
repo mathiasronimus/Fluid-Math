@@ -12,8 +12,8 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
      * provide editing functionality.
      */
     class CreatorCanvasController extends CanvasController_1.default {
-        constructor(container, instructions, fontFamily, fontWeight, onLayoutModified, controller) {
-            super(container, instructions, fontFamily, fontWeight);
+        constructor(container, instructions, onLayoutModified, controller) {
+            super(container, instructions);
             this.state = State.Idle;
             this.controller = controller;
             this.recalc();

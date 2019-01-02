@@ -14,15 +14,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param container The container.
          * @param instructions The instructions.
          */
-        constructor(container, instructions, fontFamily, fontWeight) {
+        constructor(container, instructions) {
             this.currStep = -1;
             this.animating = false;
             this.lastHeight = 0;
             this.container = container;
             this.steps = instructions.steps;
             this.content = [];
-            this.fontFamily = fontFamily;
-            this.fontWeight = fontWeight;
             this.fitSize = this.fitSize.bind(this);
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
@@ -286,7 +284,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.canvas.width = w * pixelRatio;
             this.canvas.height = h * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
-            this.ctx.font = this.fontWeight + " " + consts_1.default.fontSize + "px " + this.fontFamily;
+            this.ctx.font = consts_1.default.fontWeight + " " + consts_1.default.fontSize + "px " + consts_1.default.fontFamily;
         }
         /**
          * Uses the instructions to initialize all
@@ -298,17 +296,12 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          */
         initContent(instructions) {
             //Initialize all terms
-            //Create the canvas so that terms can
-            //measure themselves.
-            let testCanvas = document.createElement("canvas");
-            testCanvas.width = 400;
-            testCanvas.height = consts_1.default.fontSize * consts_1.default.testCanvasFontSizeMultiple;
-            let testCtx = testCanvas.getContext("2d");
-            testCtx.font = consts_1.default.fontSize + "px " + this.fontFamily;
-            instructions.terms.forEach(t => {
-                let term = new Term_1.default(t, testCtx, this.canvas.width, this.canvas.height);
+            for (let i = 0; i < instructions.terms.length; i++) {
+                let width = instructions.metrics.widths[i];
+                let text = instructions.terms[i];
+                let term = new Term_1.default(text, width, instructions.metrics.height, instructions.metrics.ascent);
                 this.content.push(term);
-            });
+            }
         }
         /**
          * Calculate and return the layout for

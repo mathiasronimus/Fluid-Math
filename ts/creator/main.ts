@@ -65,7 +65,7 @@ export default class Controller {
         this.centreEl.innerHTML = "";
         this.slideManager.stepChanged(stepLayout);
         let oldCanvas = this.currCanvas;
-        this.currCanvas = new CreatorCanvasController(this.centreEl, stepLayout, C.fontFamily, C.fontWeight, this.setDisplayCanvas, this);
+        this.currCanvas = new CreatorCanvasController(this.centreEl, stepLayout, this.setDisplayCanvas, this);
         if (oldCanvas) {
             CreatorCanvasController.transferState(oldCanvas, this.currCanvas);
         }
@@ -153,7 +153,7 @@ export default class Controller {
 
         let modalRoot = document.createElement('div');
         this.modal(modalRoot);
-        new CanvasController(modalRoot, instructions, C.fontFamily, C.fontWeight);
+        new CanvasController(modalRoot, instructions);
     }
 
     /**

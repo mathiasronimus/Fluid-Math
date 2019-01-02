@@ -1,4 +1,4 @@
-define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main/consts", "./ContentPane", "./Slides", "../main/CanvasController", "../main/helpers"], function (require, exports, ToolBar_1, CreatorCanvasController_1, consts_1, ContentPane_1, Slides_1, CanvasController_1, helpers_1) {
+define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "./ContentPane", "./Slides", "../main/CanvasController", "../main/helpers"], function (require, exports, ToolBar_1, CreatorCanvasController_1, ContentPane_1, Slides_1, CanvasController_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Controller {
@@ -47,7 +47,7 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main
             this.centreEl.innerHTML = "";
             this.slideManager.stepChanged(stepLayout);
             let oldCanvas = this.currCanvas;
-            this.currCanvas = new CreatorCanvasController_1.default(this.centreEl, stepLayout, consts_1.default.fontFamily, consts_1.default.fontWeight, this.setDisplayCanvas, this);
+            this.currCanvas = new CreatorCanvasController_1.default(this.centreEl, stepLayout, this.setDisplayCanvas, this);
             if (oldCanvas) {
                 CreatorCanvasController_1.default.transferState(oldCanvas, this.currCanvas);
             }
@@ -123,7 +123,7 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main
             let instructions = this.getFinalInstructions();
             let modalRoot = document.createElement('div');
             this.modal(modalRoot);
-            new CanvasController_1.default(modalRoot, instructions, consts_1.default.fontFamily, consts_1.default.fontWeight);
+            new CanvasController_1.default(modalRoot, instructions);
         }
         /**
          * Delete the current slide.

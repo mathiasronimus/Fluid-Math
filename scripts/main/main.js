@@ -22,7 +22,7 @@ define(["require", "exports", "./CanvasController", "./consts", "./helpers"], fu
             let this_ = this;
             let onLoad = function () {
                 let instructions = JSON.parse(this.responseText);
-                new CanvasController_1.default(this_.container, instructions, consts_1.default.fontFamily, consts_1.default.fontWeight);
+                new CanvasController_1.default(this_.container, instructions);
             };
             let req = new XMLHttpRequest();
             req.addEventListener("load", onLoad);

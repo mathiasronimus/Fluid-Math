@@ -1,1 +1,203 @@
-{"terms":["13","+","2","x","+","x","=","16","3","-","13","-","13","3","1"],"steps":[{"text":"Solving an Equation - Tap to Demonstrate","root":{"type":"vbox","children":[{"type":"hbox","children":[0,1,2,3,4,5,6,7]}]}},{"color":{"3":"red","5":"red"},"opacity":{"3":0.9,"5":0.9},"text":"Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.","root":{"type":"vbox","children":[{"type":"hbox","children":[0,1,2,3,4,5,6,7]}]}},{"color":{"3":"red"},"opacity":{"3":0.9},"text":"Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.","root":{"type":"vbox","children":[{"type":"hbox","children":[0,1,8,3,6,7]}]}},{"color":{"10":"red","12":"red"},"opacity":{"10":0.9,"12":0.9},"text":"<em>Subtract</em> <em class=\"red\">13</em> from both sides.","root":{"type":"vbox","children":[{"type":"hbox","children":[0,9,10,1,8,3,6,7,11,12]}]}},{"color":{"10":"red"},"text":"Simplify.","root":{"type":"vbox","children":[{"type":"hbox","children":[8,3,6,7,11,12]}]}},{"text":"Simplify.","root":{"type":"vbox","children":[{"type":"hbox","children":[8,3,6,13]}]}},{"text":"<em>Divide</em> both sides by 3.","root":{"type":"vbox","children":[{"type":"hbox","children":[3,6,14]}]}}]}
+{
+    "metrics": {
+        "widths": [
+            33.779296875,
+            17.021484375,
+            16.8896484375,
+            15.087890625,
+            17.021484375,
+            15.087890625,
+            16.8896484375,
+            33.779296875,
+            16.8896484375,
+            8.2177734375,
+            33.779296875,
+            8.2177734375,
+            33.779296875,
+            16.8896484375,
+            16.8896484375
+        ],
+        "ascent": 21.909090909090907,
+        "height": 21.909090909090907
+    },
+    "terms": [
+        "13",
+        "+",
+        "2",
+        "x",
+        "+",
+        "x",
+        "=",
+        "16",
+        "3",
+        "-",
+        "13",
+        "-",
+        "13",
+        "3",
+        "1"
+    ],
+    "steps": [
+        {
+            "text": "Solving an Equation - Tap to Demonstrate",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "color": {
+                "3": "red",
+                "5": "red"
+            },
+            "opacity": {
+                "3": 0.9,
+                "5": 0.9
+            },
+            "text": "Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "color": {
+                "3": "red"
+            },
+            "opacity": {
+                "3": 0.9
+            },
+            "text": "Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            1,
+                            8,
+                            3,
+                            6,
+                            7
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "color": {
+                "10": "red",
+                "12": "red"
+            },
+            "opacity": {
+                "10": 0.9,
+                "12": 0.9
+            },
+            "text": "<em>Subtract</em> <em class=\"red\">13</em> from both sides.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            0,
+                            9,
+                            10,
+                            1,
+                            8,
+                            3,
+                            6,
+                            7,
+                            11,
+                            12
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "color": {
+                "10": "red"
+            },
+            "text": "Simplify.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            8,
+                            3,
+                            6,
+                            7,
+                            11,
+                            12
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "Simplify.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            8,
+                            3,
+                            6,
+                            13
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "text": "<em>Divide</em> both sides by 3.",
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            3,
+                            6,
+                            14
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

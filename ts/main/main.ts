@@ -32,7 +32,7 @@ class InstructionsRequest {
         let this_ = this;
         let onLoad = function() {
             let instructions = JSON.parse(this.responseText);
-            new CanvasController(this_.container, instructions, C.fontFamily, C.fontWeight);
+            new CanvasController(this_.container, instructions);
         }
 
         let req: XMLHttpRequest = new XMLHttpRequest();

@@ -33,12 +33,10 @@ export default class CanvasController {
     protected steps: any[];
 
     protected content: EqContent[];
+
     protected currStates: LayoutState[];
     protected animating = false;
     protected lastHeight = 0;
-
-    protected fontFamily: string;
-    protected fontWeight: string;
 
     /**
      * Create a new Canvas Controller,
@@ -47,12 +45,10 @@ export default class CanvasController {
      * @param container The container. 
      * @param instructions The instructions.
      */
-    constructor(container: Element, instructions, fontFamily: string, fontWeight: string) {
+    constructor(container: Element, instructions) {
         this.container = container;
         this.steps = instructions.steps;
         this.content = [];
-        this.fontFamily = fontFamily;
-        this.fontWeight = fontWeight;
         this.fitSize = this.fitSize.bind(this);
 
         this.progressLine = document.createElement('div');
@@ -351,7 +347,7 @@ export default class CanvasController {
         this.canvas.width = w * pixelRatio;
         this.canvas.height = h * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
-        this.ctx.font = this.fontWeight + " " + C.fontSize + "px " + this.fontFamily;
+        this.ctx.font = C.fontWeight + " " + C.fontSize + "px " + C.fontFamily;
     }
 
     /**
@@ -364,19 +360,12 @@ export default class CanvasController {
      */
     private initContent(instructions) {
         //Initialize all terms
-
-        //Create the canvas so that terms can
-        //measure themselves.
-        let testCanvas = document.createElement("canvas");
-        testCanvas.width = 400;
-        testCanvas.height = C.fontSize * C.testCanvasFontSizeMultiple;
-        let testCtx = testCanvas.getContext("2d");
-        testCtx.font = C.fontSize + "px " + this.fontFamily;
-
-        instructions.terms.forEach(t => {
-            let term = new Term(t, testCtx, this.canvas.width, this.canvas.height);
+        for (let i = 0; i < instructions.terms.length; i++) {
+            let width = instructions.metrics.widths[i];
+            let text = instructions.terms[i];
+            let term = new Term(text, width, instructions.metrics.height, instructions.metrics.ascent);
             this.content.push(term);
-        });
+        }
     }
 
     /**

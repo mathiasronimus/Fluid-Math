@@ -37,8 +37,8 @@ export default class CreatorCanvasController extends CanvasController {
 
     private controller: Controller;
 
-    constructor(container: Element, instructions, fontFamily: string, fontWeight: string, onLayoutModified: (Object) => void, controller: Controller) {
-        super(container, instructions, fontFamily, fontWeight);
+    constructor(container: Element, instructions, onLayoutModified: (Object) => void, controller: Controller) {
+        super(container, instructions);
         this.state = State.Idle;
         this.controller = controller;
         this.recalc();
