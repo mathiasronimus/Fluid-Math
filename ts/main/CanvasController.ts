@@ -32,7 +32,7 @@ export default class CanvasController {
     protected currStep = -1;
     protected steps: any[];
 
-    protected content: EqContent[];
+    protected terms: Term[];
 
     protected currStates: LayoutState[];
     protected animating = false;
@@ -48,7 +48,7 @@ export default class CanvasController {
     constructor(container: Element, instructions) {
         this.container = container;
         this.steps = instructions.steps;
-        this.content = [];
+        this.terms = [];
         this.fitSize = this.fitSize.bind(this);
 
         this.progressLine = document.createElement('div');
@@ -121,8 +121,8 @@ export default class CanvasController {
             this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
             this.ctx.scale(f.scale, f.scale);
             if (f.component instanceof EqContent) {
-                f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
-                f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
+                f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
+                f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
                 f.component.draw(f.width, f.height, this.ctx);
             }
             this.ctx.restore();
@@ -211,6 +211,29 @@ export default class CanvasController {
     }
 
     /**
+     * Returns the total amount of content
+     * in this slideshow.
+     */
+    private getNumContent(): number {
+        return this.terms.length;
+    }
+
+    /**
+     * Returns the content for a particular
+     * index. This is used when looping through
+     * all content. The order goes Terms,
+     * 
+     * @param i The index of the content to get.
+     */
+    private getContent(i): EqContent {
+        if (i >= 0 && i < this.terms.length) {
+            return this.terms[i];
+        } else {
+            throw "content out of bounds";
+        }
+    }
+ 
+    /**
      * Calculates and returns a set of animations
      * to play between the current and old step. 
      * Also animates the canvas height to
@@ -231,8 +254,8 @@ export default class CanvasController {
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
-        for (let i = 0; i < this.content.length; i++) {
-            let content = this.content[i];
+        for (let i = 0; i < this.getNumContent(); i++) {
+            let content = this.getContent(i);
 
             let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
@@ -253,8 +276,9 @@ export default class CanvasController {
                 }
             }
 
-            let colorAfter: number[] = this.getColorForContent(i);
-            let opacityAfter: number = this.getOpacityForContent(i);
+            let contentRef = this.getContentRefFromIndex(i);
+            let colorAfter: number[] = this.getColorForContent(contentRef);
+            let opacityAfter: number = this.getOpacityForContent(contentRef);
 
             if (stateBefore && stateAfter) {
                 //If color has changed, animate it
@@ -289,13 +313,13 @@ export default class CanvasController {
      * what color it should be for the current
      * step.
      * 
-     * @param contentIdx The index of the content to find the color for.
+     * @param contentRef The reference of the content to find the color for.
      */
-    private getColorForContent(contentIdx: number): number[] {
+    private getColorForContent(contentRef: string): number[] {
         let stepColors = this.steps[this.currStep]['color'];
-        if (stepColors !== undefined && stepColors[contentIdx] !== undefined) {
+        if (stepColors !== undefined && stepColors[contentRef] !== undefined) {
             //A color is specified
-            return C.colors[stepColors[contentIdx]];
+            return C.colors[stepColors[contentRef]];
         } else {
             //A color isn't specified, use default
             return C.colors['default'];
@@ -306,13 +330,13 @@ export default class CanvasController {
      * Gets the opacity for a piece of content
      * at the current step.
      * 
-     * @param contentIdx The index of the content to find the opacity of.
+     * @param contentRef The reference of the content to find the opacity of.
      */
-    private getOpacityForContent(contentIdx: number): number {
+    private getOpacityForContent(contentRef: string): number {
         let stepOpacity = this.steps[this.currStep]['opacity'];
-        if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
+        if (stepOpacity !== undefined && stepOpacity[contentRef] !== undefined) {
             //Opacity specified
-            return stepOpacity[contentIdx];
+            return stepOpacity[contentRef];
         } else {
             //No opacity specified
             return C.normalOpacity;
@@ -364,7 +388,55 @@ export default class CanvasController {
             let width = instructions.metrics.widths[i];
             let text = instructions.terms[i];
             let term = new Term(text, width, instructions.metrics.height, instructions.metrics.ascent);
-            this.content.push(term);
+            this.terms.push(term);
+        }
+    }
+
+    /**
+     * Given a piece of content, get the
+     * string used to reference it in the
+     * JSON instructions.
+     * 
+     * @param content The content to find a reference for.
+     */
+    protected getContentReference(content: EqContent): string {
+        if (content instanceof Term) {
+            return 't' + this.terms.indexOf(content);
+        } else {
+            throw "unrecognized content type";
+        }
+    }
+
+    /**
+     * Given the concatenated index of
+     * some content, get the reference
+     * for it. Preferred to the above method.
+     * 
+     * @param index The concatenated index of the content.
+     */
+    protected getContentRefFromIndex(index: number) {
+        if (index >= 0 && index < this.terms.length) {
+            return 't' + index;
+        } else {
+            throw "unrecognized content type";
+        }
+    }
+
+    /**
+     * Returns the content for a particular
+     * content reference as used in the JSON
+     * format.
+     * 
+     * @param ref The content reference.
+     */
+    protected getContentFromRef(ref: string) {
+        let contentType: string = ref.substring(0, 1);
+        let contentIndex: number = parseFloat(ref.substring(1, ref.length));
+
+        if (contentType === 't') {
+            return this.terms[contentIndex];
+        } else {
+            throw "unrecognized content type";
         }
     }
 
@@ -424,8 +496,8 @@ export default class CanvasController {
         children.forEach(child => {
             if (typeof child === 'object') {
                 toReturn.push(this.parseContainer(child));
-            } else if (typeof child === 'number') {
-                toReturn.push(this.content[child]);
+            } else if (typeof child === 'string') {
+                toReturn.push(this.getContentFromRef(child));
             } else {
                 throw "Invalid type of child in JSON file.";
             }

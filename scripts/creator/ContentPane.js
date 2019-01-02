@@ -74,7 +74,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             let el = this.newTermEl(index);
             this.termEl.appendChild(el);
             this.select(el);
-            this.controller.currCanvas.setAdding(index);
+            this.controller.currCanvas.setAdding('t' + index);
             this.controller.setDisplayCanvas(this.controller.currCanvas.getStepAsInstructions());
         }
         /**
@@ -91,7 +91,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             el.addEventListener('click', function () {
                 this.deselect();
                 this.select(el);
-                this.controller.currCanvas.setAdding(index);
+                this.controller.currCanvas.setAdding('t' + index);
             }.bind(this));
             return el;
         }
@@ -222,6 +222,43 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             return toReturn;
         }
         /**
+         * Returns the reference of the
+         * selected Term. If a term is not
+         * selected, returns undefined.
+         */
+        findSelectedTerm() {
+            let index = undefined;
+            for (let i = 0; i < this.termEl.childElementCount; i++) {
+                let currEl = this.termEl.children[i];
+                if (currEl === this.selected) {
+                    index = i;
+                    break;
+                }
+            }
+            if (!index) {
+                return undefined;
+            }
+            return 't' + index;
+        }
+        /**
+         * Given a reference to content,
+         * delete the content pane's copy
+         * of the content from its arrays.
+         *
+         * @param ref The reference of the content to delete.
+         */
+        deleteContent(ref) {
+            let type = ref.charAt(0);
+            let index = parseFloat(ref.substring(1, ref.length));
+            if (type === 't') {
+                this.terms.splice(index, 1);
+                this.refreshTerms();
+            }
+            else {
+                throw "unrecognized content type";
+            }
+        }
+        /**
          * Delete the currently selected content.
          */
         delete() {
@@ -235,22 +272,14 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
                 throw "can't delete that";
             }
             //Look through terms to see if selected is there
-            let index = undefined;
-            for (let i = 0; i < this.termEl.childElementCount; i++) {
-                let currEl = this.termEl.children[i];
-                if (currEl === this.selected) {
-                    index = i;
-                    break;
-                }
-            }
+            let ref = this.findSelectedTerm();
             //Remove element representing the content
             this.selected.parentElement.removeChild(this.selected);
             this.deselect();
             //Remove from array
-            this.terms.splice(index, 1);
-            this.refreshTerms();
+            this.deleteContent(ref);
             //Remove the content from all steps
-            this.controller.slideManager.removeContent(index);
+            this.controller.slideManager.removeContent(ref);
         }
         getTerms() {
             return this.terms;

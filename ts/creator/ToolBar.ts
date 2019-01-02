@@ -143,7 +143,7 @@ export default class ToolBar {
     }
 
     private changeOpacity() {
-        //Bring up a dialog to change color
+        //Bring up a dialog to change opacity
         let modalRoot = document.createElement('div');
         let addEl = function(opacityName: string, opacity: number) {
             let el = document.createElement('div');

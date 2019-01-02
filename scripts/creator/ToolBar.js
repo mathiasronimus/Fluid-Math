@@ -117,7 +117,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             this.controller.modal(modalRoot);
         }
         changeOpacity() {
-            //Bring up a dialog to change color
+            //Bring up a dialog to change opacity
             let modalRoot = document.createElement('div');
             let addEl = function (opacityName, opacity) {
                 let el = document.createElement('div');

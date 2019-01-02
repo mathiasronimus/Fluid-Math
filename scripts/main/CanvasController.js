@@ -20,7 +20,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.lastHeight = 0;
             this.container = container;
             this.steps = instructions.steps;
-            this.content = [];
+            this.terms = [];
             this.fitSize = this.fitSize.bind(this);
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
@@ -83,8 +83,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
                 this.ctx.scale(f.scale, f.scale);
                 if (f.component instanceof EqContent_1.default) {
-                    f.component.setColor(this.getColorForContent(this.content.indexOf(f.component)));
-                    f.component.setOpacity(this.getOpacityForContent(this.content.indexOf(f.component)));
+                    f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
+                    f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
                     f.component.draw(f.width, f.height, this.ctx);
                 }
                 this.ctx.restore();
@@ -158,6 +158,28 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             anims.start();
         }
         /**
+         * Returns the total amount of content
+         * in this slideshow.
+         */
+        getNumContent() {
+            return this.terms.length;
+        }
+        /**
+         * Returns the content for a particular
+         * index. This is used when looping through
+         * all content. The order goes Terms,
+         *
+         * @param i The index of the content to get.
+         */
+        getContent(i) {
+            if (i >= 0 && i < this.terms.length) {
+                return this.terms[i];
+            }
+            else {
+                throw "content out of bounds";
+            }
+        }
+        /**
          * Calculates and returns a set of animations
          * to play between the current and old step.
          * Also animates the canvas height to
@@ -175,8 +197,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
             set.addAnimation(new ProgressAnimation_1.default(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
-            for (let i = 0; i < this.content.length; i++) {
-                let content = this.content[i];
+            for (let i = 0; i < this.getNumContent(); i++) {
+                let content = this.getContent(i);
                 let stateBefore = undefined;
                 //We may be initilizing, where there are no old frames and everything is added
                 if (oldStates !== undefined)
@@ -195,8 +217,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         break;
                     }
                 }
-                let colorAfter = this.getColorForContent(i);
-                let opacityAfter = this.getOpacityForContent(i);
+                let contentRef = this.getContentRefFromIndex(i);
+                let colorAfter = this.getColorForContent(contentRef);
+                let opacityAfter = this.getOpacityForContent(contentRef);
                 if (stateBefore && stateAfter) {
                     //If color has changed, animate it
                     if (content.hasDifferentColor(colorAfter)) {
@@ -229,13 +252,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * what color it should be for the current
          * step.
          *
-         * @param contentIdx The index of the content to find the color for.
+         * @param contentRef The reference of the content to find the color for.
          */
-        getColorForContent(contentIdx) {
+        getColorForContent(contentRef) {
             let stepColors = this.steps[this.currStep]['color'];
-            if (stepColors !== undefined && stepColors[contentIdx] !== undefined) {
+            if (stepColors !== undefined && stepColors[contentRef] !== undefined) {
                 //A color is specified
-                return consts_1.default.colors[stepColors[contentIdx]];
+                return consts_1.default.colors[stepColors[contentRef]];
             }
             else {
                 //A color isn't specified, use default
@@ -246,13 +269,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * Gets the opacity for a piece of content
          * at the current step.
          *
-         * @param contentIdx The index of the content to find the opacity of.
+         * @param contentRef The reference of the content to find the opacity of.
          */
-        getOpacityForContent(contentIdx) {
+        getOpacityForContent(contentRef) {
             let stepOpacity = this.steps[this.currStep]['opacity'];
-            if (stepOpacity !== undefined && stepOpacity[contentIdx] !== undefined) {
+            if (stepOpacity !== undefined && stepOpacity[contentRef] !== undefined) {
                 //Opacity specified
-                return stepOpacity[contentIdx];
+                return stepOpacity[contentRef];
             }
             else {
                 //No opacity specified
@@ -300,7 +323,54 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 let width = instructions.metrics.widths[i];
                 let text = instructions.terms[i];
                 let term = new Term_1.default(text, width, instructions.metrics.height, instructions.metrics.ascent);
-                this.content.push(term);
+                this.terms.push(term);
+            }
+        }
+        /**
+         * Given a piece of content, get the
+         * string used to reference it in the
+         * JSON instructions.
+         *
+         * @param content The content to find a reference for.
+         */
+        getContentReference(content) {
+            if (content instanceof Term_1.default) {
+                return 't' + this.terms.indexOf(content);
+            }
+            else {
+                throw "unrecognized content type";
+            }
+        }
+        /**
+         * Given the concatenated index of
+         * some content, get the reference
+         * for it. Preferred to the above method.
+         *
+         * @param index The concatenated index of the content.
+         */
+        getContentRefFromIndex(index) {
+            if (index >= 0 && index < this.terms.length) {
+                return 't' + index;
+            }
+            else {
+                throw "unrecognized content type";
+            }
+        }
+        /**
+         * Returns the content for a particular
+         * content reference as used in the JSON
+         * format.
+         *
+         * @param ref The content reference.
+         */
+        getContentFromRef(ref) {
+            let contentType = ref.substring(0, 1);
+            let contentIndex = parseFloat(ref.substring(1, ref.length));
+            if (contentType === 't') {
+                return this.terms[contentIndex];
+            }
+            else {
+                throw "unrecognized content type";
             }
         }
         /**
@@ -354,8 +424,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 if (typeof child === 'object') {
                     toReturn.push(this.parseContainer(child));
                 }
-                else if (typeof child === 'number') {
-                    toReturn.push(this.content[child]);
+                else if (typeof child === 'string') {
+                    toReturn.push(this.getContentFromRef(child));
                 }
                 else {
                     throw "Invalid type of child in JSON file.";

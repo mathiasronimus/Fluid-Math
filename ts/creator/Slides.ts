@@ -117,15 +117,52 @@ export default class Slides {
      * When content is removed,
      * remove it from all the steps.
      * 
-     * @param index The index of the content removed.
+     * @param ref The reference of the content removed.
      */
-    removeContent(index: number) {
+    removeContent(ref: string) {
+        let index: number = parseFloat(ref.substring(1, ref.length));
         //Recursively look for any numbers in the step hierarchy
         this.slideInstructions.forEach(inst => {
-            recursiveRemove(inst['steps'][0]);
+            recursiveRemove(inst['steps'][0]['root']);
+        });
+        console.log(this.slideInstructions);
+        //Re-calculate the color/opacity references
+        this.slideInstructions.forEach(inst => {
+            if (inst['steps'][0]['color']) {
+                removeDeletedKeys(inst['steps'][0]['color']);
+            }
+            if (inst['steps'][0]['opacity']) {
+                removeDeletedKeys(inst['steps'][0]['opacity']);
+            }
+        });
+        //Re-calculate the metrics
+        let metrics = this.controller.contentManager.getMetrics();
+        this.slideInstructions.forEach(inst => {
+            inst['metrics'] = metrics;
         });
         //Re-select the current slide to refresh
         this.setActiveSlide(this.slideEls.indexOf(this.selectedEl));
+
+        //Looks through the keys of an object to
+        //find deleted references.
+        function removeDeletedKeys(deleteIn: object) {
+            Object.keys(deleteIn).forEach(key => {
+                let val = deleteIn[key];
+                if (key.charAt(0) === ref.charAt(0)) {
+                    //Same content type
+                    let keyIndex = parseFloat(key.substring(1, key.length));
+                    if (keyIndex === index) {
+                        //Reference to deleted content, delete it
+                        delete deleteIn[key]
+                    } else if (keyIndex > index) {
+                        //Deletion affected array, shift this key index down
+                        let newKey = key.charAt(0) + (keyIndex - 1);
+                        delete deleteIn[key];
+                        deleteIn[newKey] = val;
+                    }
+                }
+            });
+        }
 
         //Looks through an objects properties to
         //remove a certain index.
@@ -134,14 +171,23 @@ export default class Slides {
                 let value = lookIn[key];
                 if (typeof value === 'object') {
                     recursiveRemove(value);
-                } else if (typeof value === 'number') {
+                    if (Array.isArray(value)) {
+                        /* Treating the array like an object
+                           leaves empty values. Clear these
+                           out. */
+                        lookIn[key] = value.filter(el => el !== null);
+                    }
+                } else if (typeof value === 'string') {
                     //If > index, decrement to account for
                     //shifting in array, otherwise remove
-                    let number = value as number;
-                    if (number > index) {
-                        lookIn[key]--;
-                    } else if (number === index) {
-                        delete lookIn[key];
+                    if (value.charAt(0) === ref.charAt(0)) {
+                        //Value refers to same content type
+                        let valIndex: number = parseFloat(value.substring(1, value.length));
+                        if (valIndex === index) {
+                            delete lookIn[key];
+                        } else if (valIndex > index) {
+                            lookIn[key] = value.charAt(0) + (valIndex - 1);
+                        }
                     }
                 }
             });

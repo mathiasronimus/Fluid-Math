@@ -8,6 +8,7 @@ import C from '../main/consts';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
 import Controller from "./main";
+import Term from '../layout/Term';
 
 enum State {
     Adding,
@@ -25,9 +26,8 @@ export default class CreatorCanvasController extends CanvasController {
 
     //The thing to add when clicked.
     //If container, is object.
-    //If content, is number.
-    //If undefined, remove things instead.
-    private adding: number | Object;
+    //If content, is string.
+    private adding: string | Object;
 
     //Called when the canvas is clicked and something done
     //Is passed the layout for the single step the controller posseses
@@ -99,8 +99,8 @@ export default class CreatorCanvasController extends CanvasController {
         if (typeof this.adding === 'object') {
             //Adding a container
             return this.parseContainer(this.adding);
-        } else if (typeof this.adding === 'number') {
-            return this.content[this.adding];
+        } else if (typeof this.adding === 'string') {
+            return this.getContentFromRef(this.adding);
         } else {
             throw 'bad add type';
         }
@@ -172,7 +172,7 @@ export default class CreatorCanvasController extends CanvasController {
                 if (this.recursiveOnCanvas(value)) {
                     found = true;
                 }
-            } else if (typeof value === 'number') {
+            } else if (typeof value === 'string') {
                 if (value === this.adding) {
                     found = true;
                 }
@@ -409,15 +409,13 @@ export default class CreatorCanvasController extends CanvasController {
     private childrenToStepLayout(children: EqComponent[]): any[] {
         let toReturn = [];
         children.forEach(comp => {
-
-            if (comp instanceof EqContent) {
-                toReturn.push(this.content.indexOf(comp));
-            } else if (comp instanceof EqContainer) {
-                toReturn.push(this.containerToStepLayout(comp as EqContainer));
+            if (comp instanceof EqContainer) {
+                toReturn.push(this.containerToStepLayout(comp));
+            } else if (comp instanceof EqContent) {
+                toReturn.push(this.getContentReference(comp));
             } else {
                 throw "unrecognized type";
             }
-
         });
         return toReturn;
     }
@@ -570,16 +568,16 @@ export default class CreatorCanvasController extends CanvasController {
         if (step['color'] === undefined) {
             step.color = {};
         }
-        let index = this.content.indexOf(applyTo);
+        let ref = this.getContentReference(applyTo);
         if (colorName === 'default') {
             //Remove any color already set for this content
-            delete step.color[index];
+            delete step.color[ref];
             if (Object.keys(step.color).length === 0) {
                 //Empty colors, delete as well
                 delete step.color;
             }
         } else {
-            step.color[index] = colorName;
+            step.color[ref] = colorName;
         }
     }
 
@@ -594,16 +592,16 @@ export default class CreatorCanvasController extends CanvasController {
         if (step['opacity'] === undefined) {
             step.opacity = {};
         }
-        let index = this.content.indexOf(applyTo);
+        let ref = this.getContentReference(applyTo);
         if (opacity === C.normalOpacity) {
             //Remove any opacity already set for this content
-            delete step.opacity[index];
+            delete step.opacity[ref];
             if (Object.keys(step.opacity).length === 0) {
                 //Empty opacity, delete as well
                 delete step.opacity;
             }
         } else {
-            step.opacity[index] = opacity;
+            step.opacity[ref] = opacity;
         }
     }
 
