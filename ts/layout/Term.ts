@@ -36,7 +36,7 @@ export default class Term extends EqContent {
     }
     
     draw(width: number, height: number, ctx: CanvasRenderingContext2D) {
-        this.setFill(ctx);
+        this.setCtxStyle(ctx);
         ctx.fillText(this.text, -width / 2 + this.padding.left, -height / 2 + this.padding.top + this.ascent);
     }
 

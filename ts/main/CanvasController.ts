@@ -15,6 +15,7 @@ import EqContent from "../layout/EqContent";
 import ColorAnimation from "../animation/ColorAnimation";
 import OpacityAnimation from "../animation/OpacityAnimation";
 import ProgressAnimation from "../animation/ProgressAnimation";
+import HDivider from "../layout/HDivider";
 
 /**
  * Responsible for managing a single canvas,
@@ -33,6 +34,7 @@ export default class CanvasController {
     protected steps: any[];
 
     protected terms: Term[];
+    protected hDividers: HDivider[];
 
     protected currStates: LayoutState[];
     protected animating = false;
@@ -49,6 +51,7 @@ export default class CanvasController {
         this.container = container;
         this.steps = instructions.steps;
         this.terms = [];
+        this.hDividers = [];
         this.fitSize = this.fitSize.bind(this);
 
         this.progressLine = document.createElement('div');
@@ -215,7 +218,27 @@ export default class CanvasController {
      * in this slideshow.
      */
     private getNumContent(): number {
-        return this.terms.length;
+        return this.terms.length + this.hDividers.length;
+    }
+
+    /**
+     * Returns whether the concatenated
+     * index belongs to a term.
+     * 
+     * @param i The index.
+     */
+    private inTermRange(i: number): boolean {
+        return i >= 0 && i < this.terms.length;
+    }
+
+    /**
+     * Returns whether the concatenated
+     * index belongs to an h divider.
+     * 
+     * @param i The index.
+     */
+    private inHDividerRange(i: number): boolean {
+        return i >= this.terms.length && i < this.terms.length + this.hDividers.length;
     }
 
     /**
@@ -226,8 +249,10 @@ export default class CanvasController {
      * @param i The index of the content to get.
      */
     private getContent(i): EqContent {
-        if (i >= 0 && i < this.terms.length) {
+        if (this.inTermRange(i)) {
             return this.terms[i];
+        } else if (this.inHDividerRange(i)) {
+            return this.hDividers[i - this.terms.length];
         } else {
             throw "content out of bounds";
         }
@@ -382,13 +407,17 @@ export default class CanvasController {
      * 
      * @param instructions The instructions JSON Object.
      */
-    private initContent(instructions) {
+    protected initContent(instructions) {
         //Initialize all terms
         for (let i = 0; i < instructions.terms.length; i++) {
             let width = instructions.metrics.widths[i];
             let text = instructions.terms[i];
             let term = new Term(text, width, instructions.metrics.height, instructions.metrics.ascent);
             this.terms.push(term);
+        }
+        //Initialize h dividers
+        for (let i = 0; i < instructions.hDividers; i++) {
+            this.hDividers.push(new HDivider(C.hDividerPadding));
         }
     }
 
@@ -402,6 +431,8 @@ export default class CanvasController {
     protected getContentReference(content: EqContent): string {
         if (content instanceof Term) {
             return 't' + this.terms.indexOf(content);
+        } else if (content instanceof HDivider) {
+            return 'h' + this.hDividers.indexOf(content);
         } else {
             throw "unrecognized content type";
         }
@@ -415,8 +446,10 @@ export default class CanvasController {
      * @param index The concatenated index of the content.
      */
     protected getContentRefFromIndex(index: number) {
-        if (index >= 0 && index < this.terms.length) {
+        if (this.inTermRange(index)) {
             return 't' + index;
+        } else if (this.inHDividerRange(index)) {
+            return 'h' + (index - this.terms.length);
         } else {
             throw "unrecognized content type";
         }
@@ -435,6 +468,8 @@ export default class CanvasController {
 
         if (contentType === 't') {
             return this.terms[contentIndex];
+        } else if (contentType === 'h') {
+            return this.hDividers[contentIndex];
         } else {
             throw "unrecognized content type";
         }

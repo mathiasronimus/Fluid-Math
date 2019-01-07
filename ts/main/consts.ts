@@ -1,4 +1,5 @@
 import bezier from '../animation/BezierEasing';
+import Padding from '../layout/Padding';
 
 const constants = {
     //Font: size in px
@@ -14,10 +15,12 @@ const constants = {
     defaultVBoxPadding: 6,
     defaultHBoxPadding: 6,
     termPadding: 5,
+    hDividerPadding: new Padding(0, 5, 0, 5),
 
     //Creator
     creatorVBoxPadding: 30,
     creatorHBoxPadding: 30,
+    creatorHDividerPadding: Padding.even(5),
 
     //Animations: durations are in MS
     addDuration: 600,

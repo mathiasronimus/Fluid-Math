@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -21,6 +21,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.container = container;
             this.steps = instructions.steps;
             this.terms = [];
+            this.hDividers = [];
             this.fitSize = this.fitSize.bind(this);
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
@@ -162,7 +163,25 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * in this slideshow.
          */
         getNumContent() {
-            return this.terms.length;
+            return this.terms.length + this.hDividers.length;
+        }
+        /**
+         * Returns whether the concatenated
+         * index belongs to a term.
+         *
+         * @param i The index.
+         */
+        inTermRange(i) {
+            return i >= 0 && i < this.terms.length;
+        }
+        /**
+         * Returns whether the concatenated
+         * index belongs to an h divider.
+         *
+         * @param i The index.
+         */
+        inHDividerRange(i) {
+            return i >= this.terms.length && i < this.terms.length + this.hDividers.length;
         }
         /**
          * Returns the content for a particular
@@ -172,8 +191,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param i The index of the content to get.
          */
         getContent(i) {
-            if (i >= 0 && i < this.terms.length) {
+            if (this.inTermRange(i)) {
                 return this.terms[i];
+            }
+            else if (this.inHDividerRange(i)) {
+                return this.hDividers[i - this.terms.length];
             }
             else {
                 throw "content out of bounds";
@@ -325,6 +347,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 let term = new Term_1.default(text, width, instructions.metrics.height, instructions.metrics.ascent);
                 this.terms.push(term);
             }
+            //Initialize h dividers
+            for (let i = 0; i < instructions.hDividers; i++) {
+                this.hDividers.push(new HDivider_1.default(consts_1.default.hDividerPadding));
+            }
         }
         /**
          * Given a piece of content, get the
@@ -336,6 +362,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         getContentReference(content) {
             if (content instanceof Term_1.default) {
                 return 't' + this.terms.indexOf(content);
+            }
+            else if (content instanceof HDivider_1.default) {
+                return 'h' + this.hDividers.indexOf(content);
             }
             else {
                 throw "unrecognized content type";
@@ -349,8 +378,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param index The concatenated index of the content.
          */
         getContentRefFromIndex(index) {
-            if (index >= 0 && index < this.terms.length) {
+            if (this.inTermRange(index)) {
                 return 't' + index;
+            }
+            else if (this.inHDividerRange(index)) {
+                return 'h' + (index - this.terms.length);
             }
             else {
                 throw "unrecognized content type";
@@ -368,6 +400,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             let contentIndex = parseFloat(ref.substring(1, ref.length));
             if (contentType === 't') {
                 return this.terms[contentIndex];
+            }
+            else if (contentType === 'h') {
+                return this.hDividers[contentIndex];
             }
             else {
                 throw "unrecognized content type";

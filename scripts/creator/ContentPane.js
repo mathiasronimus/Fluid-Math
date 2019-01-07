@@ -37,6 +37,19 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             addTerm.className = "content material-icons";
             addTerm.addEventListener('click', this.addTerm.bind(this));
             this.element.appendChild(addTerm);
+            //H dividers
+            this.hDividers = 0;
+            let dividerTitle = document.createElement('div');
+            dividerTitle.className = 'title';
+            dividerTitle.innerHTML = "HORIZONTAL DIVIDER";
+            this.element.appendChild(dividerTitle);
+            this.hDividerEl = document.createElement('div');
+            this.element.appendChild(this.hDividerEl);
+            let addDivider = document.createElement('div');
+            addDivider.innerHTML = 'add';
+            addDivider.className = 'content material-icons';
+            addDivider.addEventListener('click', this.addDivider.bind(this));
+            this.element.appendChild(addDivider);
         }
         /**
          * Bring up a dialog to add a term.
@@ -94,6 +107,35 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
                 this.controller.currCanvas.setAdding('t' + index);
             }.bind(this));
             return el;
+        }
+        /**
+         * Add a new divider.
+         */
+        addDivider() {
+            this.hDividers++;
+            this.refreshDividers();
+            this.select(this.hDividerEl.children[this.hDividerEl.childElementCount - 1]);
+            this.controller.currCanvas.setAdding('h' + (this.hDividers - 1));
+            this.controller.setDisplayCanvas(this.controller.currCanvas.getStepAsInstructions());
+        }
+        /**
+         * Reset the divider selection elements
+         * to match the content pane's model.
+         */
+        refreshDividers() {
+            let els = [];
+            for (let i = 0; i < this.hDividers; i++) {
+                let el = document.createElement('div');
+                el.innerHTML = "" + i;
+                el.className = 'content';
+                el.addEventListener('click', function (select, index) {
+                    this.deselect();
+                    this.select(select);
+                    this.controller.currCanvas.setAdding('h' + index);
+                }.bind(this, el, i));
+                els.push(el);
+            }
+            this.controller.fillEl(this.hDividerEl, els);
         }
         /**
          * Unhighlight selectable content.
@@ -223,22 +265,24 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
         }
         /**
          * Returns the reference of the
-         * selected Term. If a term is not
+         * selected content. If nothing is
          * selected, returns undefined.
          */
-        findSelectedTerm() {
-            let index = undefined;
+        findRefOfSelected() {
+            //Search terms
             for (let i = 0; i < this.termEl.childElementCount; i++) {
                 let currEl = this.termEl.children[i];
                 if (currEl === this.selected) {
-                    index = i;
-                    break;
+                    return 't' + i;
                 }
             }
-            if (!index) {
-                return undefined;
+            //Search h dividers
+            for (let i = 0; i < this.hDividerEl.childElementCount; i++) {
+                let currEl = this.hDividerEl.children[i];
+                if (currEl === this.selected) {
+                    return 'h' + i;
+                }
             }
-            return 't' + index;
         }
         /**
          * Given a reference to content,
@@ -253,6 +297,10 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             if (type === 't') {
                 this.terms.splice(index, 1);
                 this.refreshTerms();
+            }
+            else if (type === 'h') {
+                this.hDividers--;
+                this.refreshDividers();
             }
             else {
                 throw "unrecognized content type";
@@ -271,8 +319,8 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             if (this.selected.parentElement === this.containerEl) {
                 throw "can't delete that";
             }
-            //Look through terms to see if selected is there
-            let ref = this.findSelectedTerm();
+            //Look through content to see if selected is there
+            let ref = this.findRefOfSelected();
             //Remove element representing the content
             this.selected.parentElement.removeChild(this.selected);
             this.deselect();
@@ -284,6 +332,9 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
         getTerms() {
             return this.terms;
         }
+        getDividers() {
+            return this.hDividers;
+        }
         /**
          * Add content information to
          * a JSON object for saving.
@@ -292,6 +343,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
          */
         addJSON(toJSON) {
             toJSON['metrics'] = this.getMetrics();
+            toJSON['hDividers'] = this.hDividers;
             toJSON['terms'] = this.terms;
         }
         /**
@@ -302,13 +354,10 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
          */
         fromJSON(instructions) {
             this.selected = undefined;
-            this.termEl.innerHTML = "";
             this.terms = instructions['terms'];
-            let termEls = [];
-            for (let i = 0; i < this.terms.length; i++) {
-                termEls.push(this.newTermEl(i));
-            }
-            this.controller.fillEl(this.termEl, termEls);
+            this.refreshTerms();
+            this.hDividers = instructions['hDividers'];
+            this.refreshDividers();
         }
     }
     exports.default = ContentPane;

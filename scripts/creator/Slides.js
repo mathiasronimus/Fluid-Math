@@ -31,12 +31,12 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             }
             else {
                 //Create new
-                instructions = this.controller.instructionsFromStep({
+                instructions = {
                     root: {
                         type: "vbox",
                         children: []
                     }
-                });
+                };
             }
             this.slideInstructions.splice(index, 0, instructions);
             this.setSlideEls();
@@ -74,17 +74,8 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             }
             this.selectedEl = this.slideEls[index];
             this.selectedEl.classList.add('selected');
-            this.controller.setDisplayCanvas(this.slideInstructions[index]);
-        }
-        /**
-         * Given instructions, such as those
-         * stored in slideInstructions, extracts
-         * their first step.
-         *
-         * @param instructions An instructions object.
-         */
-        instructionsToStep(instructions) {
-            return instructions['steps'][0];
+            let instructions = this.controller.instructionsFromStep(this.slideInstructions[index]);
+            this.controller.setDisplayCanvas(instructions);
         }
         /**
          * Lets the slides object know that the
@@ -96,7 +87,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
          */
         stepChanged(step) {
             let index = this.slideEls.indexOf(this.selectedEl);
-            this.slideInstructions[index] = step;
+            this.slideInstructions[index] = step['steps'][0];
         }
         /**
          * When content is removed,
@@ -108,22 +99,16 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             let index = parseFloat(ref.substring(1, ref.length));
             //Recursively look for any numbers in the step hierarchy
             this.slideInstructions.forEach(inst => {
-                recursiveRemove(inst['steps'][0]['root']);
+                recursiveRemove(inst['root']);
             });
-            console.log(this.slideInstructions);
             //Re-calculate the color/opacity references
             this.slideInstructions.forEach(inst => {
-                if (inst['steps'][0]['color']) {
-                    removeDeletedKeys(inst['steps'][0]['color']);
+                if (inst['color']) {
+                    removeDeletedKeys(inst['color']);
                 }
-                if (inst['steps'][0]['opacity']) {
-                    removeDeletedKeys(inst['steps'][0]['opacity']);
+                if (inst['opacity']) {
+                    removeDeletedKeys(inst['opacity']);
                 }
-            });
-            //Re-calculate the metrics
-            let metrics = this.controller.contentManager.getMetrics();
-            this.slideInstructions.forEach(inst => {
-                inst['metrics'] = metrics;
             });
             //Re-select the current slide to refresh
             this.setActiveSlide(this.slideEls.indexOf(this.selectedEl));
@@ -207,8 +192,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
          * @param toJSON The jSON object.
          */
         addJSON(toJSON) {
-            toJSON['steps'] = this.slideInstructions
-                .map(i => this.instructionsToStep(i));
+            toJSON['steps'] = this.slideInstructions;
         }
         /**
          * Load the slides from an instructions
@@ -221,7 +205,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             this.slideInstructions = [];
             for (let i = 0; i < instructions['steps'].length; i++) {
                 let currStep = instructions['steps'][i];
-                this.slideInstructions.push(this.controller.instructionsFromStep(currStep));
+                this.slideInstructions.push(currStep);
             }
             this.setSlideEls();
         }

@@ -83,6 +83,7 @@ export default class Controller {
 
         instructions.terms = this.contentManager.getTerms();
         instructions.metrics = this.contentManager.getMetrics();
+        instructions.hDividers = this.contentManager.getDividers();
         instructions.steps = [
             step
         ];

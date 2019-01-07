@@ -7,8 +7,16 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             this.color = consts_1.default.colors['default'];
             this.opacity = consts_1.default.normalOpacity;
         }
-        setFill(ctx) {
-            ctx.fillStyle = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
+        /**
+         * Sets a graphics context to have
+         * the color and opacity of this content.
+         *
+         * @param ctx The graphics context.
+         */
+        setCtxStyle(ctx) {
+            let style = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
+            ctx.fillStyle = style;
+            ctx.strokeStyle = style;
         }
         /**
          * Checks if this content has a different

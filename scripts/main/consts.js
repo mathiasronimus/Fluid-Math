@@ -1,4 +1,4 @@
-define(["require", "exports", "../animation/BezierEasing"], function (require, exports, BezierEasing_1) {
+define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"], function (require, exports, BezierEasing_1, Padding_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const constants = {
@@ -14,9 +14,11 @@ define(["require", "exports", "../animation/BezierEasing"], function (require, e
         defaultVBoxPadding: 6,
         defaultHBoxPadding: 6,
         termPadding: 5,
+        hDividerPadding: new Padding_1.default(0, 5, 0, 5),
         //Creator
         creatorVBoxPadding: 30,
         creatorHBoxPadding: 30,
+        creatorHDividerPadding: Padding_1.default.even(5),
         //Animations: durations are in MS
         addDuration: 600,
         addEasing: BezierEasing_1.default(0.0, 0.0, 0.2, 1),

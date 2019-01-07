@@ -1,4 +1,4 @@
-define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../layout/HBox", "../layout/EqContainer", "../layout/EqContent", "../layout/Padding", "../main/consts"], function (require, exports, CanvasController_1, VBox_1, HBox_1, EqContainer_1, EqContent_1, Padding_1, consts_1) {
+define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../layout/HBox", "../layout/EqContainer", "../layout/EqContent", "../layout/Padding", "../main/consts", "../layout/HDivider"], function (require, exports, CanvasController_1, VBox_1, HBox_1, EqContainer_1, EqContent_1, Padding_1, consts_1, HDivider_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var State;
@@ -59,6 +59,14 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }
             else {
                 throw "Invalid JSON File: Unrecognized type: " + type;
+            }
+        }
+        //Override to give h dividers some padding
+        initContent(instructions) {
+            super.initContent(instructions);
+            this.hDividers = [];
+            for (let i = 0; i < instructions['hDividers']; i++) {
+                this.hDividers.push(new HDivider_1.default(consts_1.default.creatorHDividerPadding));
             }
         }
         /**
@@ -381,7 +389,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                     toReturn.push(this.getContentReference(comp));
                 }
                 else {
-                    throw "unrecognized type";
+                    throw "unrecognized type " + typeof comp;
                 }
             });
             return toReturn;

@@ -11,6 +11,9 @@ export default class ContentPane {
     private termEl: HTMLElement;
     private terms: string[] = [];
 
+    private hDividerEl: HTMLElement;
+    private hDividers: number;
+
     private selected: HTMLElement;
 
     constructor(controller: Controller) {
@@ -52,6 +55,22 @@ export default class ContentPane {
         addTerm.className = "content material-icons";
         addTerm.addEventListener('click', this.addTerm.bind(this));
         this.element.appendChild(addTerm);
+
+        //H dividers
+        this.hDividers = 0;
+        let dividerTitle = document.createElement('div');
+        dividerTitle.className = 'title';
+        dividerTitle.innerHTML = "HORIZONTAL DIVIDER";
+        this.element.appendChild(dividerTitle);
+
+        this.hDividerEl = document.createElement('div');
+        this.element.appendChild(this.hDividerEl);
+
+        let addDivider = document.createElement('div');
+        addDivider.innerHTML = 'add';
+        addDivider.className = 'content material-icons';
+        addDivider.addEventListener('click', this.addDivider.bind(this));
+        this.element.appendChild(addDivider);
     }
 
     /**
@@ -116,6 +135,37 @@ export default class ContentPane {
             this.controller.currCanvas.setAdding('t' + index);
         }.bind(this));
         return el;
+    }
+
+    /**
+     * Add a new divider.
+     */
+    private addDivider() {
+        this.hDividers++;
+        this.refreshDividers();
+        this.select(this.hDividerEl.children[this.hDividerEl.childElementCount - 1] as HTMLElement);
+        this.controller.currCanvas.setAdding('h' + (this.hDividers - 1));
+        this.controller.setDisplayCanvas(this.controller.currCanvas.getStepAsInstructions());
+    }
+
+    /**
+     * Reset the divider selection elements
+     * to match the content pane's model.
+     */
+    private refreshDividers() {
+        let els = [];
+        for (let i = 0; i < this.hDividers; i++) {
+            let el = document.createElement('div');
+            el.innerHTML = "" + i;
+            el.className = 'content';
+            el.addEventListener('click', function(select: HTMLElement, index: number) {
+                this.deselect();
+                this.select(select);
+                this.controller.currCanvas.setAdding('h' + index);
+            }.bind(this, el, i));
+            els.push(el);
+        }
+        this.controller.fillEl(this.hDividerEl, els);
     }
 
     /**
@@ -265,22 +315,24 @@ export default class ContentPane {
 
     /**
      * Returns the reference of the
-     * selected Term. If a term is not
+     * selected content. If nothing is
      * selected, returns undefined.
      */
-    private findSelectedTerm(): string {
-        let index = undefined;
+    private findRefOfSelected(): string {
+        //Search terms
         for (let i = 0; i < this.termEl.childElementCount; i++) {
             let currEl = this.termEl.children[i];
             if (currEl === this.selected) {
-                index = i;
-                break;
+                return 't' + i;
             }
         }
-        if (!index) {
-            return undefined;
+        //Search h dividers
+        for (let i = 0; i < this.hDividerEl.childElementCount; i++) {
+            let currEl = this.hDividerEl.children[i];
+            if (currEl === this.selected) {
+                return 'h' + i;
+            }
         }
-        return 't' + index;
     }
 
     /**
@@ -297,6 +349,9 @@ export default class ContentPane {
         if (type === 't') {
             this.terms.splice(index, 1);
             this.refreshTerms();
+        } else if (type === 'h') {
+            this.hDividers--;
+            this.refreshDividers();
         } else {
             throw "unrecognized content type";
         }
@@ -315,8 +370,8 @@ export default class ContentPane {
         if (this.selected.parentElement === this.containerEl) {
             throw "can't delete that";
         }
-        //Look through terms to see if selected is there
-        let ref = this.findSelectedTerm();
+        //Look through content to see if selected is there
+        let ref = this.findRefOfSelected();
 
         //Remove element representing the content
         this.selected.parentElement.removeChild(this.selected);
@@ -333,6 +388,10 @@ export default class ContentPane {
         return this.terms;
     }
 
+    getDividers(): number {
+        return this.hDividers;
+    }
+
     /**
      * Add content information to
      * a JSON object for saving.
@@ -341,6 +400,7 @@ export default class ContentPane {
      */
     addJSON(toJSON: Object): void {
         toJSON['metrics'] = this.getMetrics();
+        toJSON['hDividers'] = this.hDividers;
         toJSON['terms'] = this.terms;
     }
 
@@ -352,13 +412,9 @@ export default class ContentPane {
      */
     fromJSON(instructions: Object): void {
         this.selected = undefined;
-        this.termEl.innerHTML = "";
         this.terms = instructions['terms'];
-        
-        let termEls = [];
-        for (let i = 0; i < this.terms.length; i++) {
-            termEls.push(this.newTermEl(i));
-        }
-        this.controller.fillEl(this.termEl, termEls);
+        this.refreshTerms();
+        this.hDividers = instructions['hDividers'];
+        this.refreshDividers();
     }
 }

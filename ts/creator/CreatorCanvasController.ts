@@ -9,6 +9,7 @@ import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
 import Controller from "./main";
 import Term from '../layout/Term';
+import HDivider from "../layout/HDivider";
 
 enum State {
     Adding,
@@ -89,6 +90,15 @@ export default class CreatorCanvasController extends CanvasController {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {
             throw "Invalid JSON File: Unrecognized type: " + type;
+        }
+    }
+
+    //Override to give h dividers some padding
+    protected initContent(instructions) {
+        super.initContent(instructions);
+        this.hDividers = [];
+        for (let i = 0; i < instructions['hDividers']; i++) {
+            this.hDividers.push(new HDivider(C.creatorHDividerPadding));
         }
     }
 
@@ -414,7 +424,7 @@ export default class CreatorCanvasController extends CanvasController {
             } else if (comp instanceof EqContent) {
                 toReturn.push(this.getContentReference(comp));
             } else {
-                throw "unrecognized type";
+                throw "unrecognized type " + typeof comp;
             }
         });
         return toReturn;
@@ -604,6 +614,8 @@ export default class CreatorCanvasController extends CanvasController {
             step.opacity[ref] = opacity;
         }
     }
+
+
 
     /**
      * Sets the state of a new canvas to be
