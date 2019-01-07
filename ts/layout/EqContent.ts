@@ -26,8 +26,16 @@ export default abstract class EqContent extends EqComponent {
      */
     abstract draw(width: number, height: number, ctx: CanvasRenderingContext2D);
 
-    protected setFill(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
+    /**
+     * Sets a graphics context to have
+     * the color and opacity of this content.
+     * 
+     * @param ctx The graphics context.
+     */
+    protected setCtxStyle(ctx: CanvasRenderingContext2D) {
+        let style = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
+        ctx.fillStyle = style;
+        ctx.strokeStyle = style;
     }
 
     /**
