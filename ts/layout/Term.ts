@@ -1,12 +1,12 @@
 import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
-import EqComponent from './EqComponent';
 import C from '../main/consts';
 import EqContent from './EqContent';
+import TermLayoutState from '../animation/TermLayoutState';
 
 const padding: Padding = Padding.even(C.termPadding);
 
-export default class Term extends EqContent {
+export default class Term extends EqContent<TermLayoutState> {
 
     private text: string;
     private ascent: number;
@@ -28,24 +28,15 @@ export default class Term extends EqContent {
         return this.fixedWidth;
     }
     
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): TermLayoutState {
         let state = 
-            new LayoutState(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+            new TermLayoutState(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
         layouts.push(state);
         return state;
     }
     
-    draw(width: number, height: number, ctx: CanvasRenderingContext2D) {
-        this.setCtxStyle(ctx);
-        ctx.fillText(this.text, -width / 2 + this.padding.left, -height / 2 + this.padding.top + this.ascent);
+    draw(before: TermLayoutState, after: TermLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
+        super.draw(before, after, progress, ctx);
+        ctx.fillText(this.text, -before.width / 2 + this.padding.left, -before.height / 2 + this.padding.top + this.ascent);
     }
-
-    shouldAnimate() {
-        return true;
-    }
-
-    interpolate(otherComp: EqComponent, amount: number): EqComponent {
-        return this;
-    }
-
 }

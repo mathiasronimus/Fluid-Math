@@ -3,7 +3,7 @@ import LayoutState from '../animation/LayoutState';
 import { line } from '../main/helpers';
 import Padding from "./Padding";
 
-export default class HDivider extends EqContent {
+export default class HDivider extends EqContent<LayoutState> {
 
     constructor(padding: Padding) {
         super(padding);
@@ -28,8 +28,9 @@ export default class HDivider extends EqContent {
         return state;
     }
 
-    draw(width: number, height: number, ctx: CanvasRenderingContext2D) {
-        this.setCtxStyle(ctx);
+    draw(before: LayoutState, after: LayoutState, progress: number, ctx: CanvasRenderingContext2D) {
+        super.draw(before, after, progress, ctx);
+        let width = before.width * (1 - progress) + after.width * progress;
         line(-width / 2 + this.padding.left, 0, width / 2 - this.padding.right, 0, ctx);
     }
 }

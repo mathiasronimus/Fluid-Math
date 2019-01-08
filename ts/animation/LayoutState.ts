@@ -58,4 +58,18 @@ export default class LayoutState {
     onTop(y: number): boolean {
         return y <= this.tly + this.height / 2;
     }
+
+    /**
+     * Returns a new Layout State the same
+     * as this one, but with a scaling of 0.
+     */
+    withZeroScale(): LayoutState {
+        return new LayoutState( this.layoutParent, 
+                                this.component,
+                                this.tlx,
+                                this.tly,
+                                this.width, 
+                                this.height,
+                                0);
+    }
 }

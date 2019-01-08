@@ -7,14 +7,15 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
      */
     class ProgressAnimation extends BezierCallback_1.default {
         constructor(startStep, endStep, numSteps, canvasWidth, line, set) {
+            super(consts_1.default.progressDuration, consts_1.default.progressEasing, set);
             let widthPerSegment = canvasWidth / (numSteps - 1);
-            let startWidth = startStep * widthPerSegment;
-            let endWidth = endStep * widthPerSegment;
-            let step = function (completion) {
-                let width = startWidth * (1 - completion) + endWidth * completion;
-                line.style.width = width + "px";
-            };
-            super(consts_1.default.progressDuration, consts_1.default.progressEasing, undefined, step, set);
+            this.startWidth = startStep * widthPerSegment;
+            this.endWidth = endStep * widthPerSegment;
+            this.line = line;
+        }
+        step(completion) {
+            let width = this.startWidth * (1 - completion) + this.endWidth * completion;
+            this.line.style.width = width + "px";
         }
     }
     exports.default = ProgressAnimation;

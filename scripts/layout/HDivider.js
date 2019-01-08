@@ -22,8 +22,9 @@ define(["require", "exports", "./EqContent", "../animation/LayoutState", "../mai
             layouts.push(state);
             return state;
         }
-        draw(width, height, ctx) {
-            this.setCtxStyle(ctx);
+        draw(before, after, progress, ctx) {
+            super.draw(before, after, progress, ctx);
+            let width = before.width * (1 - progress) + after.width * progress;
             helpers_1.line(-width / 2 + this.padding.left, 0, width / 2 - this.padding.right, 0, ctx);
         }
     }

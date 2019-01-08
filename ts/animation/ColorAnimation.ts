@@ -8,18 +8,24 @@ import EqContent from "../layout/EqContent";
  */
 export default class ColorAnimation extends BezierCallback {
 
-    constructor(before: number[], after: number[], set: AnimationSet, content: EqContent) {
+    private before: number[];
+    private after: number[];
+    private content: EqContent<any>;
 
-        let step = function(completion: number) {
-            let invComp = 1 - completion;
-            let newColor = [
-                before[0] * invComp + after[0] * completion,
-                before[1] * invComp + after[1] * completion,
-                before[2] * invComp + after[2] * completion
-            ];
-            content.setColor(newColor);
-        }
+    constructor(before: number[], after: number[], set: AnimationSet, content: EqContent<any>) {
+        super(C.colorDuration, C.colorEasing, set);
+        this.before = before;
+        this.after = after;
+        this.content = content;
+    }
 
-        super(C.colorDuration, C.colorEasing, undefined, step, set);
+    protected step(completion: number) {
+        let invComp = 1 - completion;
+        let newColor = [
+            this.before[0] * invComp + this.after[0] * completion,
+            this.before[1] * invComp + this.after[1] * completion,
+            this.before[2] * invComp + this.after[2] * completion
+        ];
+        this.content.setColor(newColor);
     }
 }

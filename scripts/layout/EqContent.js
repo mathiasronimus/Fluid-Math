@@ -8,6 +8,28 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             this.opacity = consts_1.default.normalOpacity;
         }
         /**
+         * Draws the content on the canvas.
+         * There is no need to call save() or
+         * restore(), animations handle this.
+         *
+         * @param before The State before.
+         * @param after The State after.
+         * @param progress How close we are to after, from before,
+         *                 from 0-1.
+         * @param ctx The rendering context.
+         */
+        draw(before, after, progress, ctx) {
+            let invProg = 1 - progress;
+            let x = before.tlx * invProg + after.tlx * progress;
+            let y = before.tly * invProg + after.tly * progress;
+            let width = before.width * invProg + after.width * progress;
+            let height = before.height * invProg + after.height * progress;
+            let scale = before.scale * invProg + after.scale * progress;
+            ctx.translate(x + width / 2, y + height / 2);
+            ctx.scale(scale, scale);
+            this.setCtxStyle(ctx);
+        }
+        /**
          * Sets a graphics context to have
          * the color and opacity of this content.
          *

@@ -6,16 +6,19 @@ define(["require", "exports", "./BezierCallback", "../main/consts"], function (r
      */
     class ColorAnimation extends BezierCallback_1.default {
         constructor(before, after, set, content) {
-            let step = function (completion) {
-                let invComp = 1 - completion;
-                let newColor = [
-                    before[0] * invComp + after[0] * completion,
-                    before[1] * invComp + after[1] * completion,
-                    before[2] * invComp + after[2] * completion
-                ];
-                content.setColor(newColor);
-            };
-            super(consts_1.default.colorDuration, consts_1.default.colorEasing, undefined, step, set);
+            super(consts_1.default.colorDuration, consts_1.default.colorEasing, set);
+            this.before = before;
+            this.after = after;
+            this.content = content;
+        }
+        step(completion) {
+            let invComp = 1 - completion;
+            let newColor = [
+                this.before[0] * invComp + this.after[0] * completion,
+                this.before[1] * invComp + this.after[1] * completion,
+                this.before[2] * invComp + this.after[2] * completion
+            ];
+            this.content.setColor(newColor);
         }
     }
     exports.default = ColorAnimation;

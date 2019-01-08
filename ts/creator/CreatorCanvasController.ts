@@ -554,7 +554,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param component The component to start with.
      * @param forEach The function to call for each piece of content.
      */
-    private forEachUnder(component: EqComponent, forEach: (content: EqContent) => void) {
+    private forEachUnder(component: EqComponent, forEach: (content: EqContent<any>) => void) {
         if (component instanceof EqContent) {
             //Call the function
             forEach(component);
@@ -573,7 +573,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param applyTo The content to apply color to.
      * @param colorName The name of the color.
      */
-    private applyColor(applyTo: EqContent, colorName: string) {
+    private applyColor(applyTo: EqContent<any>, colorName: string) {
         let step = this.steps[0];
         if (step['color'] === undefined) {
             step.color = {};
@@ -597,7 +597,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param applyTo The content to apply opacity to.
      * @param opacity The opacity to apply.
      */
-    private applyOpacity(applyTo: EqContent, opacity: number) {
+    private applyOpacity(applyTo: EqContent<any>, opacity: number) {
         let step = this.steps[0];
         if (step['opacity'] === undefined) {
             step.opacity = {};

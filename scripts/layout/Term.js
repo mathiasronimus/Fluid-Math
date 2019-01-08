@@ -1,4 +1,4 @@
-define(["require", "exports", "./Padding", "../animation/LayoutState", "../main/consts", "./EqContent"], function (require, exports, Padding_1, LayoutState_1, consts_1, EqContent_1) {
+define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../animation/TermLayoutState"], function (require, exports, Padding_1, consts_1, EqContent_1, TermLayoutState_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const padding = Padding_1.default.even(consts_1.default.termPadding);
@@ -18,19 +18,13 @@ define(["require", "exports", "./Padding", "../animation/LayoutState", "../main/
             return this.fixedWidth;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+            let state = new TermLayoutState_1.default(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
             layouts.push(state);
             return state;
         }
-        draw(width, height, ctx) {
-            this.setCtxStyle(ctx);
-            ctx.fillText(this.text, -width / 2 + this.padding.left, -height / 2 + this.padding.top + this.ascent);
-        }
-        shouldAnimate() {
-            return true;
-        }
-        interpolate(otherComp, amount) {
-            return this;
+        draw(before, after, progress, ctx) {
+            super.draw(before, after, progress, ctx);
+            ctx.fillText(this.text, -before.width / 2 + this.padding.left, -before.height / 2 + this.padding.top + this.ascent);
         }
     }
     exports.default = Term;

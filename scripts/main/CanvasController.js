@@ -81,12 +81,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.currStates.forEach(f => {
                 this.ctx.save();
-                this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
-                this.ctx.scale(f.scale, f.scale);
                 if (f.component instanceof EqContent_1.default) {
                     f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
                     f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
-                    f.component.draw(f.width, f.height, this.ctx);
+                    f.component.draw(f, f, 0, this.ctx);
                 }
                 this.ctx.restore();
             });

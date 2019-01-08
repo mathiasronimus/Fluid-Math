@@ -7,13 +7,11 @@ define(["require", "exports"], function (require, exports) {
      * determined by a bezier curve.
      */
     class BezierCallback {
-        constructor(duration, easing, begin, step, set) {
+        constructor(duration, easing, set) {
             this.started = false;
             this.done = false;
             this.duration = duration;
             this.easing = easing;
-            this.begin = begin;
-            this.step = step;
             this.set = set;
         }
         run(timestamp) {
@@ -23,8 +21,6 @@ define(["require", "exports"], function (require, exports) {
                 //Special Case: First Frame
                 this.tOffset = timestamp;
                 this.started = true;
-                if (this.begin)
-                    this.begin();
                 this.step(0);
                 return;
             }

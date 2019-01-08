@@ -46,6 +46,13 @@ define(["require", "exports"], function (require, exports) {
         onTop(y) {
             return y <= this.tly + this.height / 2;
         }
+        /**
+         * Returns a new Layout State the same
+         * as this one, but with a scaling of 0.
+         */
+        withZeroScale() {
+            return new LayoutState(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, 0);
+        }
     }
     exports.default = LayoutState;
 });

@@ -5,13 +5,19 @@ import AnimationSet from "./AnimationSet";
 
 export default class OpacityAnimation extends BezierCallback {
 
-    constructor(startOpacity: number, endOpacity: number, content: EqContent, set: AnimationSet) {
+    private startOpacity: number;
+    private endOpacity: number;
+    private content: EqContent<any>;
 
-        let step = function(completion) {
-            content.setOpacity(startOpacity * (1 - completion) + endOpacity * completion);
-        }
+    constructor(startOpacity: number, endOpacity: number, content: EqContent<any>, set: AnimationSet) {
+        super(C.opacityDuration, C.opacityEasing, set);
+        this.startOpacity = startOpacity;
+        this.endOpacity = endOpacity;
+        this.content = content;
+    }
 
-        super(C.opacityDuration, C.opacityEasing, undefined, step, set);
+    protected step(completion) {
+        this.content.setOpacity(this.startOpacity * (1 - completion) + this.endOpacity * completion);
     }
 
 }

@@ -8,17 +8,20 @@ import C from '../main/consts';
  */
 export default class ProgressAnimation extends BezierCallback {
 
+    private startWidth: number;
+    private endWidth: number;
+    private line: HTMLDivElement;
+
     constructor(startStep: number, endStep: number, numSteps: number, canvasWidth: number, line: HTMLDivElement, set: AnimationSet) {
-
+        super(C.progressDuration, C.progressEasing, set);
         let widthPerSegment = canvasWidth / (numSteps - 1);
-        let startWidth = startStep * widthPerSegment;
-        let endWidth = endStep * widthPerSegment;
+        this.startWidth = startStep * widthPerSegment;
+        this.endWidth = endStep * widthPerSegment;
+        this.line = line;
+    }
 
-        let step = function(completion: number) {
-            let width = startWidth * (1 - completion) + endWidth * completion;
-            line.style.width = width + "px";
-        }
-
-        super(C.progressDuration, C.progressEasing, undefined, step, set);
+    protected step (completion: number) {
+        let width = this.startWidth * (1 - completion) + this.endWidth * completion;
+        this.line.style.width = width + "px";
     }
 }

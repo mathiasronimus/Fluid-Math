@@ -10,7 +10,7 @@ export default abstract class EqComponent {
 
     protected fixedWidth: number = -1;
     protected fixedHeight: number = -1;
-    padding: Padding;
+    protected padding: Padding;
 
     constructor(padding) {
         this.padding = padding;

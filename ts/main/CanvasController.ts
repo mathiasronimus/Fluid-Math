@@ -121,12 +121,10 @@ export default class CanvasController {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.currStates.forEach(f => {
             this.ctx.save();
-            this.ctx.translate(f.tlx + f.width / 2, f.tly + f.height / 2);
-            this.ctx.scale(f.scale, f.scale);
             if (f.component instanceof EqContent) {
                 f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
                 f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
-                f.component.draw(f.width, f.height, this.ctx);
+                f.component.draw(f, f, 0, this.ctx);
             }
             this.ctx.restore();
         });
@@ -248,7 +246,7 @@ export default class CanvasController {
      * 
      * @param i The index of the content to get.
      */
-    private getContent(i): EqContent {
+    private getContent(i): EqContent<any> {
         if (this.inTermRange(i)) {
             return this.terms[i];
         } else if (this.inHDividerRange(i)) {
@@ -428,7 +426,7 @@ export default class CanvasController {
      * 
      * @param content The content to find a reference for.
      */
-    protected getContentReference(content: EqContent): string {
+    protected getContentReference(content: EqContent<any>): string {
         if (content instanceof Term) {
             return 't' + this.terms.indexOf(content);
         } else if (content instanceof HDivider) {
