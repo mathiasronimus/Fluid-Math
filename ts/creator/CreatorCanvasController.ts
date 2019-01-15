@@ -406,6 +406,8 @@ export default class CreatorCanvasController extends CanvasController {
         let toReturn: any = {};
         if (comp instanceof VBox) {
             toReturn.type = "vbox";
+        } else if (comp instanceof TightHBox) {
+            toReturn.type = 'tightHBox';
         } else if (comp instanceof HBox) {
             toReturn.type = "hbox";
         } else {

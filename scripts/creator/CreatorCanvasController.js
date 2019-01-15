@@ -366,6 +366,9 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             if (comp instanceof VBox_1.default) {
                 toReturn.type = "vbox";
             }
+            else if (comp instanceof TightHBox_1.default) {
+                toReturn.type = 'tightHBox';
+            }
             else if (comp instanceof HBox_1.default) {
                 toReturn.type = "hbox";
             }

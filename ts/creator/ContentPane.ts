@@ -227,6 +227,22 @@ export default class ContentPane {
         }.bind(this);
         hbox.addEventListener('click', addHbox);
         this.containerEl.appendChild(hbox);
+
+        let tightHbox = document.createElement('div');
+        tightHbox.innerHTML = 'tight hbox';
+        tightHbox.className = 'content';
+        let addTightHbox = function () {
+            this.controller.currCanvas.setAdding({
+                type: 'tightHBox',
+                children: [
+
+                ]
+            });
+            this.deselect();
+            this.select(tightHbox)
+        }.bind(this);
+        tightHbox.addEventListener('click', addTightHbox);
+        this.containerEl.appendChild(tightHbox);
     }
 
     /**
