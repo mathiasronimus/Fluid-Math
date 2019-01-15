@@ -16,6 +16,7 @@ import ColorAnimation from "../animation/ColorAnimation";
 import OpacityAnimation from "../animation/OpacityAnimation";
 import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
+import TightHBox from "../layout/TightHBox";
 
 /**
  * Responsible for managing a single canvas,
@@ -511,6 +512,11 @@ export default class CanvasController {
             return new HBox(
                 this.parseContainerChildren(containerObj.children),
                 Padding.even(C.defaultHBoxPadding));
+        } else if (type === "tightHBox") {
+            return new TightHBox(
+                this.parseContainerChildren(containerObj.children),
+                Padding.even(C.defaultTightHBoxPadding)
+            );
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

@@ -1,6 +1,7 @@
 import CanvasController from "../main/CanvasController";
 import VBox from "../layout/VBox";
 import HBox from "../layout/HBox";
+import TightHBox from '../layout/TightHBox';
 import EqContainer from '../layout/EqContainer';
 import EqContent from '../layout/EqContent';
 import Padding from '../layout/Padding';
@@ -86,6 +87,11 @@ export default class CreatorCanvasController extends CanvasController {
             return new HBox(
                 this.parseContainerChildren(containerObj.children),
                 Padding.even(C.creatorHBoxPadding));
+        } else if (type === "tightHBox") {
+            return new TightHBox(
+                this.parseContainerChildren(containerObj.children),
+                Padding.even(C.creatorTightHBoxPadding)
+            );
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

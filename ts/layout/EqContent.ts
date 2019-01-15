@@ -15,7 +15,12 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
     }
 
     /**
-     * Draws the content on the canvas. 
+     * Sets up the Canvas by performing
+     * transformations and style changes.
+     * Subclasses should call the method as
+     * defined here, then draw themselves
+     * centered on (0, 0). Returns width
+     * and height to allow them to do this.
      * There is no need to call save() or
      * restore(), animations handle this.
      * 
@@ -25,7 +30,7 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
      *                 from 0-1.
      * @param ctx The rendering context.
      */
-    draw(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D) {
+    setupCtx(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
         let invProg = 1 - progress;
         let x = before.tlx * invProg + after.tlx * progress;
         let y = before.tly * invProg + after.tly * progress;
@@ -35,7 +40,18 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
         ctx.translate(x + width / 2, y + height / 2);
         ctx.scale(scale, scale);
         this.setCtxStyle(ctx);
+        return [width, height];
     }
+
+    /**
+     * Draws the content on the canvas.
+     * 
+     * @param before The starting layout state.
+     * @param after The ending layout state.
+     * @param progress The progress through the animation from 0-1.
+     * @param ctx The graphics context to draw on.
+     */
+    abstract draw(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D);
 
     /**
      * Sets a graphics context to have

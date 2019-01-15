@@ -14,12 +14,15 @@ const constants = {
     //Layout:
     defaultVBoxPadding: 6,
     defaultHBoxPadding: 6,
-    termPadding: 5,
+    defaultTightHBoxPadding: 0,
+    termPadding: Padding.even(5),
+    tightTermPadding: new Padding(5, 3, 5, 3),
     hDividerPadding: new Padding(0, 5, 0, 5),
 
     //Creator
     creatorVBoxPadding: 30,
     creatorHBoxPadding: 30,
+    creatorTightHBoxPadding: 30,
     creatorHDividerPadding: Padding.even(5),
 
     //Animations: durations are in MS

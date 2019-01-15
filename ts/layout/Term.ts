@@ -4,8 +4,6 @@ import C from '../main/consts';
 import EqContent from './EqContent';
 import TermLayoutState from '../animation/TermLayoutState';
 
-const padding: Padding = Padding.even(C.termPadding);
-
 export default class Term extends EqContent<TermLayoutState> {
 
     private text: string;
@@ -13,7 +11,7 @@ export default class Term extends EqContent<TermLayoutState> {
 
     constructor(text: string, width: number, height: number, ascent: number) {
         //At the time of term initialization, layout is unknown.
-        super(padding);
+        super(C.termPadding);
         this.fixedWidth = width + this.padding.width();
         this.fixedHeight = height + this.padding.height();
         this.ascent = ascent;
@@ -36,7 +34,13 @@ export default class Term extends EqContent<TermLayoutState> {
     }
     
     draw(before: TermLayoutState, after: TermLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
-        super.draw(before, after, progress, ctx);
-        ctx.fillText(this.text, -before.width / 2 + this.padding.left, -before.height / 2 + this.padding.top + this.ascent);
+        let width = this.setupCtx(before, after, progress, ctx)[0];
+
+        //Interpolate padding and width if they've changed
+        let padding = before.padding === after.padding 
+                        ? before.padding //No padding change, don't bother calculating
+                        : Padding.between(before.padding, after.padding, progress); //Interpolate padding
+        
+        ctx.fillText(this.text, -width / 2 + padding.left, -before.height / 2 + padding.top + this.ascent);
     }
 }

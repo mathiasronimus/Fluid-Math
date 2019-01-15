@@ -8,7 +8,12 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             this.opacity = consts_1.default.normalOpacity;
         }
         /**
-         * Draws the content on the canvas.
+         * Sets up the Canvas by performing
+         * transformations and style changes.
+         * Subclasses should call the method as
+         * defined here, then draw themselves
+         * centered on (0, 0). Returns width
+         * and height to allow them to do this.
          * There is no need to call save() or
          * restore(), animations handle this.
          *
@@ -18,7 +23,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
          *                 from 0-1.
          * @param ctx The rendering context.
          */
-        draw(before, after, progress, ctx) {
+        setupCtx(before, after, progress, ctx) {
             let invProg = 1 - progress;
             let x = before.tlx * invProg + after.tlx * progress;
             let y = before.tly * invProg + after.tly * progress;
@@ -28,6 +33,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             ctx.translate(x + width / 2, y + height / 2);
             ctx.scale(scale, scale);
             this.setCtxStyle(ctx);
+            return [width, height];
         }
         /**
          * Sets a graphics context to have

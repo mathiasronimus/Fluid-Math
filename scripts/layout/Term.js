@@ -1,11 +1,10 @@
 define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../animation/TermLayoutState"], function (require, exports, Padding_1, consts_1, EqContent_1, TermLayoutState_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const padding = Padding_1.default.even(consts_1.default.termPadding);
     class Term extends EqContent_1.default {
         constructor(text, width, height, ascent) {
             //At the time of term initialization, layout is unknown.
-            super(padding);
+            super(consts_1.default.termPadding);
             this.fixedWidth = width + this.padding.width();
             this.fixedHeight = height + this.padding.height();
             this.ascent = ascent;
@@ -23,8 +22,12 @@ define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../
             return state;
         }
         draw(before, after, progress, ctx) {
-            super.draw(before, after, progress, ctx);
-            ctx.fillText(this.text, -before.width / 2 + this.padding.left, -before.height / 2 + this.padding.top + this.ascent);
+            let width = this.setupCtx(before, after, progress, ctx)[0];
+            //Interpolate padding and width if they've changed
+            let padding = before.padding === after.padding
+                ? before.padding //No padding change, don't bother calculating
+                : Padding_1.default.between(before.padding, after.padding, progress); //Interpolate padding
+            ctx.fillText(this.text, -width / 2 + padding.left, -before.height / 2 + padding.top + this.ascent);
         }
     }
     exports.default = Term;

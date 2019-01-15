@@ -1,4 +1,4 @@
-define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../layout/HBox", "../layout/EqContainer", "../layout/EqContent", "../layout/Padding", "../main/consts", "../layout/HDivider"], function (require, exports, CanvasController_1, VBox_1, HBox_1, EqContainer_1, EqContent_1, Padding_1, consts_1, HDivider_1) {
+define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../layout/HBox", "../layout/TightHBox", "../layout/EqContainer", "../layout/EqContent", "../layout/Padding", "../main/consts", "../layout/HDivider"], function (require, exports, CanvasController_1, VBox_1, HBox_1, TightHBox_1, EqContainer_1, EqContent_1, Padding_1, consts_1, HDivider_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var State;
@@ -53,6 +53,9 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }
             else if (type === "hbox") {
                 return new HBox_1.default(this.parseContainerChildren(containerObj.children), Padding_1.default.even(consts_1.default.creatorHBoxPadding));
+            }
+            else if (type === "tightHBox") {
+                return new TightHBox_1.default(this.parseContainerChildren(containerObj.children), Padding_1.default.even(consts_1.default.creatorTightHBoxPadding));
             }
             else if (type === undefined) {
                 throw "Invalid JSON File: Missing type attribute on container descriptor.";

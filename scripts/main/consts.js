@@ -13,11 +13,14 @@ define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"],
         //Layout:
         defaultVBoxPadding: 6,
         defaultHBoxPadding: 6,
-        termPadding: 5,
+        defaultTightHBoxPadding: 0,
+        termPadding: Padding_1.default.even(5),
+        tightTermPadding: new Padding_1.default(5, 3, 5, 3),
         hDividerPadding: new Padding_1.default(0, 5, 0, 5),
         //Creator
         creatorVBoxPadding: 30,
         creatorHBoxPadding: 30,
+        creatorTightHBoxPadding: 30,
         creatorHDividerPadding: Padding_1.default.even(5),
         //Animations: durations are in MS
         addDuration: 600,

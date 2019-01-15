@@ -29,8 +29,7 @@ export default class HDivider extends EqContent<LayoutState> {
     }
 
     draw(before: LayoutState, after: LayoutState, progress: number, ctx: CanvasRenderingContext2D) {
-        super.draw(before, after, progress, ctx);
-        let width = before.width * (1 - progress) + after.width * progress;
+        let width = this.setupCtx(before, after, progress, ctx)[0];
         line(-width / 2 + this.padding.left, 0, width / 2 - this.padding.right, 0, ctx);
     }
 }
