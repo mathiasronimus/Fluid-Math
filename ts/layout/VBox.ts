@@ -4,12 +4,10 @@ import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 import C from '../main/consts';
 import { line } from '../main/helpers';
+import LinearContainer from './LinearContainer';
+import CanvasController from '../main/CanvasController';
 
-export default class VBox extends EqContainer {
-
-    constructor(children: EqComponent[], padding: Padding) {
-        super(children, padding);
-    }
+export default class VBox extends LinearContainer {
 
     protected calcHeight(): number {
         let totalHeight = 0;
@@ -50,6 +48,60 @@ export default class VBox extends EqContainer {
         line(l.tlx, l.tly + l.height - pad, l.tlx + l.width, l.tly + l.height - pad, ctx);
 
         ctx.strokeStyle = "#000";
+    }
+
+    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        if (clickedLayout.onTop(y)) {
+            if (y - clickedLayout.tly <= C.creatorVBoxPadding / 2) {
+                //Outer border, add adjacent
+                let containerLayout = clickedLayout.layoutParent;
+                if (containerLayout === undefined) {
+                    throw "no containing frame";
+                }
+                else {
+                    let container = containerLayout.component as EqContainer;
+                    container.addClickOnChild(clickedLayout, x, y, toAdd);
+                }
+            } else {
+                //Inside border, add inside
+                this.children.unshift(toAdd);
+            }
+        }
+        else {
+            //On bottom
+            if (clickedLayout.tly + clickedLayout.height - y <= C.creatorVBoxPadding / 2) {
+                //Outer border, add adjacent
+                let containerLayout = clickedLayout.layoutParent;
+                if (containerLayout === undefined) {
+                    throw "no containing frame";
+                }
+                else {
+                    let container = containerLayout.component as EqContainer;
+                    container.addClickOnChild(clickedLayout, x, y, toAdd);
+                }
+            }
+            else {
+                //Inner border, add inside
+                this.children.push(toAdd);
+            }
+        }
+    }
+
+    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        if (clickedLayout.onTop(y)) {
+            //Add top
+            this.addBefore(toAdd, clickedLayout.component);
+        } else {
+            //Add bottom
+            this.addAfter(toAdd, clickedLayout.component);
+        }
+    }
+
+    toStepLayout(controller: CanvasController): Object {
+        let toReturn = {};
+        toReturn['type'] = 'vbox';
+        toReturn['children'] = this.childrentoStepLayout(controller);
+        return toReturn;
     }
 
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {

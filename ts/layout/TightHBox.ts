@@ -3,10 +3,19 @@ import C from '../main/consts';
 import Term from "./Term";
 import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
+import CanvasController from '../main/CanvasController';
 
 const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
 
 export default class TightHBox extends HBox {
+
+    //Override to have right type
+    toStepLayout(controller: CanvasController): Object {
+        let toReturn = {};
+        toReturn['type'] = 'tightHBox';
+        toReturn['children'] = this.childrentoStepLayout(controller);
+        return toReturn;
+    }
 
     //Override to account for reduced width of tight terms.
     protected calcWidth(): number {

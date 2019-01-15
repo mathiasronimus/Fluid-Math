@@ -427,7 +427,7 @@ export default class CanvasController {
      * 
      * @param content The content to find a reference for.
      */
-    protected getContentReference(content: EqContent<any>): string {
+    getContentReference(content: EqContent<any>): string {
         if (content instanceof Term) {
             return 't' + this.terms.indexOf(content);
         } else if (content instanceof HDivider) {
@@ -444,7 +444,7 @@ export default class CanvasController {
      * 
      * @param index The concatenated index of the content.
      */
-    protected getContentRefFromIndex(index: number) {
+    getContentRefFromIndex(index: number) {
         if (this.inTermRange(index)) {
             return 't' + index;
         } else if (this.inHDividerRange(index)) {
@@ -461,7 +461,7 @@ export default class CanvasController {
      * 
      * @param ref The content reference.
      */
-    protected getContentFromRef(ref: string) {
+    getContentFromRef(ref: string) {
         let contentType: string = ref.substring(0, 1);
         let contentIndex: number = parseFloat(ref.substring(1, ref.length));
 

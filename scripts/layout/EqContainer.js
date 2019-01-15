@@ -2,12 +2,8 @@ define(["require", "exports", "./EqComponent"], function (require, exports, EqCo
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class EqContainer extends EqComponent_1.default {
-        constructor(children, padding) {
+        constructor(padding) {
             super(padding);
-            this.children = children;
-        }
-        getChildren() {
-            return this.children;
         }
     }
     exports.default = EqContainer;

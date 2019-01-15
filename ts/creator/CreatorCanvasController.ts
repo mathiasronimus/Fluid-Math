@@ -209,118 +209,19 @@ export default class CreatorCanvasController extends CanvasController {
         if (this.onCanvas()) {
             throw "duplicate content not allowed";
         }
-        let clickedFrame: LayoutState = this.getClickedLayout(x, y);
-        if (clickedFrame === undefined) {
+        let clickedLayout: LayoutState = this.getClickedLayout(x, y);
+        if (clickedLayout === undefined) {
             //Didn't click on anything
             throw "click wasn't on any frame";
         }
-        else if (clickedFrame.component instanceof EqContent) {
-            this.addClickOnComponent(clickedFrame, x, y);
+        else if (clickedLayout.component instanceof EqContent) {
+            this.addClickOnComponent(clickedLayout, x, y);
         }
-        else if (clickedFrame.component instanceof EqContainer) {
-            //Add inside if in inside inner border, adjacent otherwise
-            if (clickedFrame.component instanceof VBox) {
-                this.addClickOnVbox(clickedFrame, y);
-            }
-            else if (clickedFrame.component instanceof HBox) {
-                this.addClickOnHbox(clickedFrame, x);
-            }
-            else {
-                throw 'unrecognized container type';
-            }
+        else if (clickedLayout.component instanceof EqContainer) {
+            clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
         }
         else {
             throw "unrecognized frame type";
-        }
-    }
-
-    /**
-     * Adds content when an Hbox was clicked.
-     * Adds adjacent to or inside the HBox,
-     * depending on click.
-     * 
-     * @param clickedLayout The layout state of the clicked HBox.
-     * @param x The x-ordinate of the click.
-     */
-    private addClickOnHbox(clickedLayout: LayoutState, x: number) {
-        if (clickedLayout.onLeft(x)) {
-            if (x - clickedLayout.tlx <= C.creatorHBoxPadding / 2) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-                }
-            }
-            else {
-                //Inner border, add inside
-                (clickedLayout.component as EqContainer).getChildren().unshift(this.getAddComponent());
-            }
-        } else {
-            //On right
-            if (clickedLayout.tlx + clickedLayout.width - x <= C.creatorHBoxPadding / 2) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component)
-                }
-            }
-            else {
-                //Inner border, add inside
-                (clickedLayout.component as EqContainer).getChildren().push(this.getAddComponent());
-            }
-        }
-    }
-
-    /**
-     * Adds content when a VBox was clicked.
-     * This adds adjacent to or inside the Vbox
-     * depending on which part was clicked.
-     * 
-     * @param clickedLayout The Layout state of the clicked Vbox.
-     * @param y The y-ordinate of the click.
-     */
-    private addClickOnVbox(clickedLayout: LayoutState, y: number): void {
-        if (clickedLayout.onTop(y)) {
-            if (y - clickedLayout.tly <= C.creatorVBoxPadding / 2) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-                }
-            } else {
-                //Inside border, add inside
-                (clickedLayout.component as EqContainer).getChildren().unshift(this.getAddComponent());
-            }
-        }
-        else {
-            //On bottom
-            if (clickedLayout.tly + clickedLayout.height - y <= C.creatorVBoxPadding / 2) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-                }
-            }
-            else {
-                //Inner border, add inside
-                (clickedLayout.component as EqContainer).getChildren().push(this.getAddComponent());
-            }
         }
     }
 
@@ -335,31 +236,8 @@ export default class CreatorCanvasController extends CanvasController {
      */
     private addClickOnComponent(clickedLayout: LayoutState, x: number, y: number): void {
         //Add adjacent to content
-        let container: EqComponent = clickedLayout.layoutParent.component;
-        if (container instanceof VBox) {
-            //Add top/bottom
-            if (clickedLayout.onTop(y)) {
-                //Add top
-                this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-            }
-            else {
-                //Add bottom
-                this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-            }
-        }
-        else if (container instanceof HBox) {
-            //Add left/right
-            if (clickedLayout.onLeft(x)) {
-                //Add left
-                this.addBefore(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-            }
-            else {
-                //Add right
-                this.addAfter(container.getChildren(), this.getAddComponent(), clickedLayout.component);
-            }
-        } else {
-            throw "unrecognized container type";
-        }
+        let container: EqContainer = clickedLayout.layoutParent.component as EqContainer;
+        container.addClickOnChild(clickedLayout, x, y, this.getAddComponent());
     }
 
     /**
@@ -391,77 +269,8 @@ export default class CreatorCanvasController extends CanvasController {
             color: this.steps[0].color,
             opacity: this.steps[0].opacity,
             text: this.steps[0].text,
-            root: this.containerToStepLayout(root)
+            root: root.toStepLayout(this)
         }
-    }
-
-    /**
-     * Given the root Component of a layout,
-     * return the JSON-ifyable representation
-     * as used by the steps array.
-     * 
-     * @param comp The component to start with.
-     */
-    private containerToStepLayout(comp: EqContainer): Object {
-        let toReturn: any = {};
-        if (comp instanceof VBox) {
-            toReturn.type = "vbox";
-        } else if (comp instanceof TightHBox) {
-            toReturn.type = 'tightHBox';
-        } else if (comp instanceof HBox) {
-            toReturn.type = "hbox";
-        } else {
-            throw 'unrecognized container type';
-        }
-        toReturn.children = this.childrenToStepLayout(comp.getChildren());
-        return toReturn;
-    }
-
-    /**
-     * Given a list of components,
-     * converts them all to the JSON-ifyable
-     * format.
-     * 
-     * @param children A list of components.
-     */
-    private childrenToStepLayout(children: EqComponent[]): any[] {
-        let toReturn = [];
-        children.forEach(comp => {
-            if (comp instanceof EqContainer) {
-                toReturn.push(this.containerToStepLayout(comp));
-            } else if (comp instanceof EqContent) {
-                toReturn.push(this.getContentReference(comp));
-            } else {
-                throw "unrecognized type " + typeof comp;
-            }
-        });
-        return toReturn;
-    }
-
-    /**
-     * Add an element before another in
-     * an array.
-     * 
-     * @param arr The array. 
-     * @param toAdd The element to add.
-     * @param before The element after the new one.
-     */
-    private addBefore(arr: EqComponent[], toAdd: EqComponent, before: EqComponent) {
-        let index = arr.indexOf(before);
-        arr.splice(index, 0, toAdd);
-    }
-
-    /**
-     * Add an element after another in an
-     * array.
-     * 
-     * @param arr The array.
-     * @param toAdd The element to add.
-     * @param after The element before the new one.
-     */
-    private addAfter(arr: EqComponent[], toAdd: EqComponent, after: EqComponent) {
-        let index = arr.indexOf(after);
-        arr.splice(index + 1, 0, toAdd);
     }
 
     /**
@@ -472,18 +281,6 @@ export default class CreatorCanvasController extends CanvasController {
         let root = this.currStates[this.currStates.length - 1].component as EqContainer;
         let newLayout = this.toStepLayout(root);
         this.onLayoutModified(this.controller.instructionsFromStep(newLayout));
-    }
-
-    /**
-     * Delete the component that generated
-     * a layout state.
-     * 
-     * @param state The layout state generated by a component. 
-     */
-    delete(state: LayoutState) {
-        let parentChildren = (state.layoutParent.component as EqContainer).getChildren();
-        parentChildren.splice(parentChildren.indexOf(state.component), 1);
-        this.refresh();
     }
 
     /**
@@ -522,6 +319,18 @@ export default class CreatorCanvasController extends CanvasController {
     }
 
     /**
+     * Delete the component that generated
+     * a layout state.
+     * 
+     * @param state The layout state generated by a component. 
+     */
+    delete(state: LayoutState) {
+        let parent = (state.layoutParent.component as EqContainer);
+        parent.delete(state.component);
+        this.refresh();
+    }
+
+    /**
      * Changes the color of components. If the selected
      * component is a container, changes the color of all
      * components within it. If it is content, just changes
@@ -531,9 +340,14 @@ export default class CreatorCanvasController extends CanvasController {
      * @param colorName The name of the color (defined by the keys in C.colors)
      */
     changeColor(selected: EqComponent, colorName: string) {
-        this.forEachUnder(selected, function(content) {
-            this.applyColor(content, colorName);
-        }.bind(this));
+        if (selected instanceof EqContent) {
+            this.applyColor(selected, colorName);
+        } else if (selected instanceof EqContainer) {
+            //Apply to all inside container
+            selected.forEachUnder(function(content) {
+                this.applyColor(content, colorName);
+            }.bind(this));
+        }
         this.refresh();
     }
 
@@ -547,32 +361,15 @@ export default class CreatorCanvasController extends CanvasController {
      * @param opacity The new opacity level.
      */
     changeOpacity(selected: EqComponent, opacity: number) {
-        this.forEachUnder(selected, function(content) {
-            this.applyOpacity(content, opacity);
-        }.bind(this));
-        this.refresh();
-    }
-
-    /**
-     * Visits every piece of content under a 
-     * container, calling a function for each.
-     * If called with content as the beginning,
-     * just calls the function for that content.
-     * 
-     * @param component The component to start with.
-     * @param forEach The function to call for each piece of content.
-     */
-    private forEachUnder(component: EqComponent, forEach: (content: EqContent<any>) => void) {
-        if (component instanceof EqContent) {
-            //Call the function
-            forEach(component);
-        } else if (component instanceof EqContainer) {
-            component.getChildren().forEach(child => {
-                this.forEachUnder(child, forEach);
-            });
-        } else {
-            throw "undefined component type";
+        if (selected instanceof EqContent) {
+            this.applyOpacity(selected, opacity);
+        } else if (selected instanceof EqContainer) {
+            //Apply to all inside the container
+            selected.forEachUnder(function(content) {
+                this.applyOpacity(content, opacity);
+            }.bind(this));
         }
+        this.refresh();
     }
 
     /**

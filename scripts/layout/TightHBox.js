@@ -3,6 +3,13 @@ define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animatio
     Object.defineProperty(exports, "__esModule", { value: true });
     const widthDiff = consts_1.default.termPadding.width() - consts_1.default.tightTermPadding.width();
     class TightHBox extends HBox_1.default {
+        //Override to have right type
+        toStepLayout(controller) {
+            let toReturn = {};
+            toReturn['type'] = 'tightHBox';
+            toReturn['children'] = this.childrentoStepLayout(controller);
+            return toReturn;
+        }
         //Override to account for reduced width of tight terms.
         calcWidth() {
             let totalWidth = 0;

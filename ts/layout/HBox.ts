@@ -4,12 +4,10 @@ import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
 import C from '../main/consts';
 import { line } from '../main/helpers';
+import LinearContainer from './LinearContainer';
+import CanvasController from '../main/CanvasController';
 
-export default class HBox extends EqContainer {
-
-    constructor(children: EqComponent[], padding: Padding) {
-        super(children, padding);
-    }
+export default class HBox extends LinearContainer {
 
     protected calcHeight(): number {
         let maxHeight = 0;
@@ -54,6 +52,60 @@ export default class HBox extends EqContainer {
         ctx.strokeStyle = "#000";
     }
 
+    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        if (clickedLayout.onLeft(x)) {
+            if (x - clickedLayout.tlx <= C.creatorHBoxPadding / 2) {
+                //Outer border, add adjacent
+                let containerLayout = clickedLayout.layoutParent;
+                if (containerLayout === undefined) {
+                    throw "no containing frame";
+                }
+                else {
+                    let container = containerLayout.component as EqContainer;
+                    container.addClickOnChild(clickedLayout, x, y, toAdd);
+                }
+            }
+            else {
+                //Inner border, add inside
+                this.children.unshift(toAdd);
+            }
+        } else {
+            //On right
+            if (clickedLayout.tlx + clickedLayout.width - x <= C.creatorHBoxPadding / 2) {
+                //Outer border, add adjacent
+                let containerLayout = clickedLayout.layoutParent;
+                if (containerLayout === undefined) {
+                    throw "no containing frame";
+                }
+                else {
+                    let container = containerLayout.component as EqContainer;
+                    container.addClickOnChild(clickedLayout, x, y, toAdd);
+                }
+            }
+            else {
+                //Inner border, add inside
+                this.children.push(toAdd);
+            }
+        }
+    }
+
+    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        if (clickedLayout.onLeft(x)) {
+            //Add left
+            this.addBefore(toAdd, clickedLayout.component);
+        } else {
+            //Add right
+            this.addAfter(toAdd, clickedLayout.component);
+        }
+    }
+
+    toStepLayout(controller: CanvasController): Object {
+        let toReturn = {};
+        toReturn['type'] = 'hbox';
+        toReturn['children'] = this.childrentoStepLayout(controller);
+        return toReturn;
+    }
+
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
         const innerHeight = this.getHeight() - this.padding.height();
@@ -67,7 +119,6 @@ export default class HBox extends EqContainer {
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top + tly;
             upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
         }
-
 
         layouts.push(state);
 

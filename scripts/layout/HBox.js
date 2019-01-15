@@ -1,10 +1,7 @@
-define(["require", "exports", "./EqContainer", "../animation/LayoutState", "../main/consts", "../main/helpers"], function (require, exports, EqContainer_1, LayoutState_1, consts_1, helpers_1) {
+define(["require", "exports", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class HBox extends EqContainer_1.default {
-        constructor(children, padding) {
-            super(children, padding);
-        }
+    class HBox extends LinearContainer_1.default {
         calcHeight() {
             let maxHeight = 0;
             for (let i = 0; i < this.children.length; i++) {
@@ -39,6 +36,59 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "../m
             helpers_1.line(l.tlx + pad, l.tly, l.tlx + pad, l.tly + l.height, ctx);
             helpers_1.line(l.tlx + l.width - pad, l.tly, l.tlx + l.width - pad, l.tly + l.height, ctx);
             ctx.strokeStyle = "#000";
+        }
+        addClick(clickedLayout, x, y, toAdd) {
+            if (clickedLayout.onLeft(x)) {
+                if (x - clickedLayout.tlx <= consts_1.default.creatorHBoxPadding / 2) {
+                    //Outer border, add adjacent
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
+                        throw "no containing frame";
+                    }
+                    else {
+                        let container = containerLayout.component;
+                        container.addClickOnChild(clickedLayout, x, y, toAdd);
+                    }
+                }
+                else {
+                    //Inner border, add inside
+                    this.children.unshift(toAdd);
+                }
+            }
+            else {
+                //On right
+                if (clickedLayout.tlx + clickedLayout.width - x <= consts_1.default.creatorHBoxPadding / 2) {
+                    //Outer border, add adjacent
+                    let containerLayout = clickedLayout.layoutParent;
+                    if (containerLayout === undefined) {
+                        throw "no containing frame";
+                    }
+                    else {
+                        let container = containerLayout.component;
+                        container.addClickOnChild(clickedLayout, x, y, toAdd);
+                    }
+                }
+                else {
+                    //Inner border, add inside
+                    this.children.push(toAdd);
+                }
+            }
+        }
+        addClickOnChild(clickedLayout, x, y, toAdd) {
+            if (clickedLayout.onLeft(x)) {
+                //Add left
+                this.addBefore(toAdd, clickedLayout.component);
+            }
+            else {
+                //Add right
+                this.addAfter(toAdd, clickedLayout.component);
+            }
+        }
+        toStepLayout(controller) {
+            let toReturn = {};
+            toReturn['type'] = 'hbox';
+            toReturn['children'] = this.childrentoStepLayout(controller);
+            return toReturn;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {
             let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
