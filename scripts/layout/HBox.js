@@ -91,14 +91,14 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
             return toReturn;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
-            const innerHeight = this.getHeight() - this.padding.height();
-            let upToX = tlx + this.padding.left;
+            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+            const innerHeight = (this.getHeight() - this.padding.height()) * currScale;
+            let upToX = tlx + this.padding.left * currScale;
             for (let i = 0; i < this.children.length; i++) {
                 let currChild = this.children[i];
-                let childHeight = currChild.getHeight();
+                let childHeight = currChild.getHeight() * currScale;
                 //Position child in the middle vertically
-                let childTLY = (innerHeight - childHeight) / 2 + this.padding.top + tly;
+                let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
                 upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
             }
             layouts.push(state);

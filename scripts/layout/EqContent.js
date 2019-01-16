@@ -13,7 +13,8 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
          * Subclasses should call the method as
          * defined here, then draw themselves
          * centered on (0, 0). Returns width
-         * and height to allow them to do this.
+         * and height and scale to allow them
+         * to do this.
          * There is no need to call save() or
          * restore(), animations handle this.
          *
@@ -33,7 +34,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             ctx.translate(x + width / 2, y + height / 2);
             ctx.scale(scale, scale);
             this.setCtxStyle(ctx);
-            return [width, height];
+            return [width, height, scale];
         }
         /**
          * Sets a graphics context to have

@@ -20,7 +20,8 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
      * Subclasses should call the method as
      * defined here, then draw themselves
      * centered on (0, 0). Returns width
-     * and height to allow them to do this.
+     * and height and scale to allow them 
+     * to do this.
      * There is no need to call save() or
      * restore(), animations handle this.
      * 
@@ -30,7 +31,7 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
      *                 from 0-1.
      * @param ctx The rendering context.
      */
-    setupCtx(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
+    setupCtx(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): [number, number, number] {
         let invProg = 1 - progress;
         let x = before.tlx * invProg + after.tlx * progress;
         let y = before.tly * invProg + after.tly * progress;
@@ -40,7 +41,7 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
         ctx.translate(x + width / 2, y + height / 2);
         ctx.scale(scale, scale);
         this.setCtxStyle(ctx);
-        return [width, height];
+        return [width, height, scale];
     }
 
     /**

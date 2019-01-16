@@ -17,6 +17,7 @@ import OpacityAnimation from "../animation/OpacityAnimation";
 import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
+import SubSuper from "../layout/SubSuper";
 
 /**
  * Responsible for managing a single canvas,
@@ -517,6 +518,20 @@ export default class CanvasController {
                 this.parseContainerChildren(containerObj.children),
                 Padding.even(C.defaultTightHBoxPadding)
             );
+        } else if (type === 'subSuper') {
+            let top = new HBox(
+                this.parseContainerChildren(containerObj.top),
+                Padding.even(0)
+            );
+            let middle = new TightHBox(
+                this.parseContainerChildren(containerObj.middle),
+                Padding.even(0)
+            );
+            let bottom = new HBox(
+                this.parseContainerChildren(containerObj.bottom),
+                Padding.even(0)
+            );
+            return new SubSuper(top, middle, bottom, C.defaultSubSuperPadding);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

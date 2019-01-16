@@ -15,9 +15,14 @@ const constants = {
     defaultVBoxPadding: 6,
     defaultHBoxPadding: 6,
     defaultTightHBoxPadding: 0,
+    defaultSubSuperPadding: Padding.even(0),
     termPadding: Padding.even(5),
-    tightTermPadding: new Padding(5, 3, 5, 3),
+    tightTermPadding: new Padding(5, 2, 5, 2),
     hDividerPadding: new Padding(0, 5, 0, 5),
+    //The scaling of exponents and subscripts.
+    expScale: 0.6,
+    //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
+    expPortrusion: 0.1,
 
     //Creator
     creatorVBoxPadding: 30,

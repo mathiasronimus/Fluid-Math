@@ -1,6 +1,11 @@
 define(["require", "exports", "./EqContainer", "./EqContent"], function (require, exports, EqContainer_1, EqContent_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    /**
+     * Represents a simple linear container
+     * whose contents can be represented as
+     * a single children array.
+     */
     class LinearContainer extends EqContainer_1.default {
         constructor(children, padding) {
             super(padding);

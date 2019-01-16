@@ -5,6 +5,8 @@ define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../
         constructor(text, width, height, ascent) {
             //At the time of term initialization, layout is unknown.
             super(consts_1.default.termPadding);
+            this.halfInnerWidth = width / 2;
+            this.halfInnerHeight = height / 2;
             this.fixedWidth = width + this.padding.width();
             this.fixedHeight = height + this.padding.height();
             this.ascent = ascent;
@@ -17,17 +19,17 @@ define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../
             return this.fixedWidth;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let state = new TermLayoutState_1.default(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+            let state = new TermLayoutState_1.default(parentLayout, this, tlx, tly, this.fixedWidth * currScale, this.fixedHeight * currScale, currScale);
             layouts.push(state);
             return state;
         }
         draw(before, after, progress, ctx) {
-            let width = this.setupCtx(before, after, progress, ctx)[0];
-            //Interpolate padding and width if they've changed
+            this.setupCtx(before, after, progress, ctx);
+            //Interpolate padding if it's changed
             let padding = before.padding === after.padding
                 ? before.padding //No padding change, don't bother calculating
                 : Padding_1.default.between(before.padding, after.padding, progress); //Interpolate padding
-            ctx.fillText(this.text, -width / 2 + padding.left, -before.height / 2 + padding.top + this.ascent);
+            ctx.fillText(this.text, -this.halfInnerWidth, -this.halfInnerHeight + this.ascent);
         }
     }
     exports.default = Term;

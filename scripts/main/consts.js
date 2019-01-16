@@ -14,9 +14,14 @@ define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"],
         defaultVBoxPadding: 6,
         defaultHBoxPadding: 6,
         defaultTightHBoxPadding: 0,
+        defaultSubSuperPadding: Padding_1.default.even(0),
         termPadding: Padding_1.default.even(5),
-        tightTermPadding: new Padding_1.default(5, 3, 5, 3),
+        tightTermPadding: new Padding_1.default(5, 2, 5, 2),
         hDividerPadding: new Padding_1.default(0, 5, 0, 5),
+        //The scaling of exponents and subscripts.
+        expScale: 0.6,
+        //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
+        expPortrusion: 0.1,
         //Creator
         creatorVBoxPadding: 30,
         creatorHBoxPadding: 30,

@@ -7,11 +7,15 @@ import TermLayoutState from '../animation/TermLayoutState';
 export default class Term extends EqContent<TermLayoutState> {
 
     private text: string;
+    private halfInnerWidth: number;
+    private halfInnerHeight: number;
     private ascent: number;
 
     constructor(text: string, width: number, height: number, ascent: number) {
         //At the time of term initialization, layout is unknown.
         super(C.termPadding);
+        this.halfInnerWidth = width / 2;
+        this.halfInnerHeight = height / 2;
         this.fixedWidth = width + this.padding.width();
         this.fixedHeight = height + this.padding.height();
         this.ascent = ascent;
@@ -28,19 +32,18 @@ export default class Term extends EqContent<TermLayoutState> {
     
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): TermLayoutState {
         let state = 
-            new TermLayoutState(parentLayout, this, tlx, tly, this.fixedWidth, this.fixedHeight, currScale);
+            new TermLayoutState(parentLayout, this, tlx, tly, this.fixedWidth * currScale, this.fixedHeight * currScale, currScale);
         layouts.push(state);
         return state;
     }
     
     draw(before: TermLayoutState, after: TermLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
-        let width = this.setupCtx(before, after, progress, ctx)[0];
+        this.setupCtx(before, after, progress, ctx);
 
-        //Interpolate padding and width if they've changed
+        //Interpolate padding if it's changed
         let padding = before.padding === after.padding 
                         ? before.padding //No padding change, don't bother calculating
                         : Padding.between(before.padding, after.padding, progress); //Interpolate padding
-        
-        ctx.fillText(this.text, -width / 2 + padding.left, -before.height / 2 + padding.top + this.ascent);
+        ctx.fillText(this.text, -this.halfInnerWidth, -this.halfInnerHeight + this.ascent);
     }
 }

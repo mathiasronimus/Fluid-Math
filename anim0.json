@@ -1,208 +1,74 @@
 {
     "metrics": {
         "widths": [
-            33.779296875,
-            17.021484375,
-            16.8896484375,
-            15.087890625,
-            17.021484375,
             15.087890625,
             16.8896484375,
-            33.779296875,
             16.8896484375,
-            8.2177734375,
-            33.779296875,
-            8.2177734375,
-            33.779296875,
             16.8896484375,
-            16.8896484375
+            41.66015625
         ],
-        "ascent": 21.909090909090907,
-        "height": 21.909090909090907
+        "ascent": 22.951219512195124,
+        "height": 28.84146341463415
     },
+    "hDividers": 0,
     "terms": [
-        "13",
-        "+",
+        "x",
         "2",
-        "x",
-        "+",
-        "x",
         "=",
-        "16",
-        "3",
-        "-",
-        "13",
-        "-",
-        "13",
-        "3",
-        "1"
+        "8",
+        "log"
     ],
     "steps": [
         {
-            "text": "Solving an Equation - Tap to Demonstrate",
             "root": {
                 "type": "vbox",
                 "children": [
                     {
                         "type": "hbox",
                         "children": [
-                            "t0",
-                            "t1",
                             {
-                                "type": "tightHBox",
-                                "children": [
-                                    "t2",
-                                    "t3"
+                                "type": "subSuper",
+                                "middle": [
+                                    "t1"
+                                ],
+                                "top": [
+                                    "t0"
+                                ],
+                                "bottom": []
+                            },
+                            "t2",
+                            "t3"
+                        ]
+                    }
+                ]
+            },
+            "text": "SubSuper Test"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "subSuper",
+                                "middle": [
+                                    "t4"
+                                ],
+                                "top": [],
+                                "bottom": [
+                                    "t1"
                                 ]
                             },
-                            "t4",
-                            "t5",
-                            "t6",
-                            "t7"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "color": {
-                "t3": "red",
-                "t5": "red"
-            },
-            "opacity": {
-                "t3": 0.9,
-                "t5": 0.9
-            },
-            "text": "Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t0",
-                            "t1",
+                            "t3",
                             "t2",
-                            "t3",
-                            "t4",
-                            "t5",
-                            "t6",
-                            "t7"
+                            "t0"
                         ]
                     }
                 ]
-            }
-        },
-        {
-            "color": {
-                "t3": "red"
             },
-            "opacity": {
-                "t3": 0.9
-            },
-            "text": "Start by <em>Simplifying</em> the <em class=\"red\">X</em>s.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t0",
-                            "t1",
-                            "t8",
-                            "t3",
-                            "t6",
-                            "t7"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "color": {
-                "t10": "red",
-                "t12": "red"
-            },
-            "opacity": {
-                "t10": 0.9,
-                "t12": 0.9
-            },
-            "text": "<em>Subtract</em> <em class=\"red\">13</em> from both sides.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t0",
-                            "t9",
-                            "t10",
-                            "t1",
-                            "t8",
-                            "t3",
-                            "t6",
-                            "t7",
-                            "t11",
-                            "t12"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "color": {
-                "t10": "red"
-            },
-            "text": "Simplify.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t8",
-                            "t3",
-                            "t6",
-                            "t7",
-                            "t11",
-                            "t12"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "text": "Simplify.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t8",
-                            "t3",
-                            "t6",
-                            "t13"
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "text": "<em>Divide</em> both sides by 3.",
-            "root": {
-                "type": "vbox",
-                "children": [
-                    {
-                        "type": "hbox",
-                        "children": [
-                            "t3",
-                            "t6",
-                            "t14"
-                        ]
-                    }
-                ]
-            }
+            "text": "SubSuper Test"
         }
     ]
 }
