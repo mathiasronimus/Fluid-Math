@@ -1,4 +1,4 @@
-define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../animation/TermLayoutState"], function (require, exports, Padding_1, consts_1, EqContent_1, TermLayoutState_1) {
+define(["require", "exports", "../main/consts", "./EqContent", "../animation/TermLayoutState"], function (require, exports, consts_1, EqContent_1, TermLayoutState_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Term extends EqContent_1.default {
@@ -25,10 +25,6 @@ define(["require", "exports", "./Padding", "../main/consts", "./EqContent", "../
         }
         draw(before, after, progress, ctx) {
             this.setupCtx(before, after, progress, ctx);
-            //Interpolate padding if it's changed
-            let padding = before.padding === after.padding
-                ? before.padding //No padding change, don't bother calculating
-                : Padding_1.default.between(before.padding, after.padding, progress); //Interpolate padding
             ctx.fillText(this.text, -this.halfInnerWidth, -this.halfInnerHeight + this.ascent);
         }
     }

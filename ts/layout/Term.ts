@@ -39,11 +39,6 @@ export default class Term extends EqContent<TermLayoutState> {
     
     draw(before: TermLayoutState, after: TermLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
         this.setupCtx(before, after, progress, ctx);
-
-        //Interpolate padding if it's changed
-        let padding = before.padding === after.padding 
-                        ? before.padding //No padding change, don't bother calculating
-                        : Padding.between(before.padding, after.padding, progress); //Interpolate padding
         ctx.fillText(this.text, -this.halfInnerWidth, -this.halfInnerHeight + this.ascent);
     }
 }

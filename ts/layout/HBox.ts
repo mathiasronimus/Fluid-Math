@@ -71,7 +71,7 @@ export default class HBox extends LinearContainer {
 
     addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
         if (clickedLayout.onLeft(x)) {
-            if (x - clickedLayout.tlx <= C.creatorHBoxPadding.left / 2) {
+            if (x - clickedLayout.tlx <= (C.creatorHBoxPadding.left / 2) * clickedLayout.scale) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {
@@ -88,7 +88,9 @@ export default class HBox extends LinearContainer {
             }
         } else {
             //On right
-            if (clickedLayout.tlx + clickedLayout.width - x <= C.creatorHBoxPadding.right / 2) {
+            if (    clickedLayout.tlx + clickedLayout.width - x 
+                    <= 
+                    (C.creatorHBoxPadding.right / 2) * clickedLayout.scale) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {

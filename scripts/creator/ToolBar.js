@@ -1,4 +1,4 @@
-define(["require", "exports", "../main/consts"], function (require, exports, consts_1) {
+define(["require", "exports", "../main/consts", "../layout/SubSuper", "../main/CanvasController"], function (require, exports, consts_1, SubSuper_1, CanvasController_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class ToolBar {
@@ -97,6 +97,60 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             opacityEl.className = 'tool-bar-icon material-icons';
             opacityEl.addEventListener('click', this.changeOpacity.bind(this));
             this.element.appendChild(opacityEl);
+            //For the subsuper container, add an option to change the alignment
+            if (this.selectedLayout.component instanceof SubSuper_1.default) {
+                let alignEl = document.createElement('span');
+                alignEl.innerHTML = 'vertical_align_top';
+                alignEl.className = 'tool-bar-icon material-icons';
+                alignEl.addEventListener('click', this.topAlign.bind(this));
+                this.element.appendChild(alignEl);
+            }
+        }
+        /**
+         * Bring up a dialog to change the top
+         * alignment of the selected SubSuper
+         * layout.
+         */
+        topAlign() {
+            let container = this.selectedLayout.component;
+            let canvas = this.controller.currCanvas;
+            let controller = this.controller;
+            let modalRoot = document.createElement('div');
+            modalRoot.style.padding = "10px";
+            let explainer = document.createElement('p');
+            explainer.innerHTML = "Use the tool below to change the vertical alignment of the exponent.";
+            modalRoot.appendChild(explainer);
+            let defaultPreset = document.createElement('div');
+            defaultPreset.innerHTML = "Reset";
+            defaultPreset.className = 'subsuper-reset-button';
+            let col = consts_1.default.colors.blue;
+            defaultPreset.style.backgroundColor = 'rgb(' + col[0] + "," + col[1] + ',' + col[2] + ')';
+            defaultPreset.addEventListener('click', function () {
+                setAlign(consts_1.default.defaultExpPortrusion + "");
+            });
+            modalRoot.appendChild(defaultPreset);
+            let slider = document.createElement('input');
+            slider.setAttribute("type", "range");
+            slider.setAttribute("min", "0");
+            slider.setAttribute("max", "1");
+            slider.setAttribute("step", "0.025");
+            slider.className = "slider";
+            modalRoot.appendChild(slider);
+            let previewContainer = document.createElement('div');
+            previewContainer.style.width = '600px';
+            modalRoot.appendChild(previewContainer);
+            let previewCanvas = new CanvasController_1.default(previewContainer, this.controller.currCanvas.getStepAsInstructions());
+            slider.oninput = function () {
+                setAlign(slider.value);
+            };
+            this.controller.modal(modalRoot);
+            function setAlign(newAlign) {
+                slider.value = newAlign;
+                container.setPortrusion(parseFloat(newAlign));
+                canvas.refresh();
+                previewContainer.innerHTML = "";
+                previewCanvas = new CanvasController_1.default(previewContainer, controller.currCanvas.getStepAsInstructions());
+            }
         }
         changeColor() {
             //Bring up a dialog to change color

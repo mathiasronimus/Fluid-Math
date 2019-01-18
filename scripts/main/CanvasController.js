@@ -445,7 +445,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 let top = new HBox_1.default(this.parseContainerChildren(containerObj.top), Padding_1.default.even(0));
                 let middle = new TightHBox_1.default(this.parseContainerChildren(containerObj.middle), Padding_1.default.even(0));
                 let bottom = new HBox_1.default(this.parseContainerChildren(containerObj.bottom), Padding_1.default.even(0));
-                return new SubSuper_1.default(top, middle, bottom, consts_1.default.defaultSubSuperPadding);
+                let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : consts_1.default.defaultExpPortrusion;
+                return new SubSuper_1.default(top, middle, bottom, portrusion, consts_1.default.defaultSubSuperPadding);
             }
             else if (type === undefined) {
                 throw "Invalid JSON File: Missing type attribute on container descriptor.";

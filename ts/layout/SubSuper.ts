@@ -19,6 +19,8 @@ export default class SubSuper extends EqContainer {
     private middle: HBox;
     private bottom: HBox;
 
+    //The proportion that the top and bottom portrude from the middle
+    private portrusionProportion: number;
     //The vertical amount the top portrudes from the middle
     private topPortrusion: number;
     //The amount of blank space above the top
@@ -30,14 +32,15 @@ export default class SubSuper extends EqContainer {
     //The vertical distance between the bottom of the top and the top of the bottom
     private rightMiddleHeight: number;
 
-    constructor(top: HBox, middle: HBox, bottom: HBox, padding: Padding) {
+    constructor(top: HBox, middle: HBox, bottom: HBox, portrusion: number, padding: Padding) {
         super(padding);
+        this.portrusionProportion = portrusion;
         this.top = top;
         this.middle = middle;
         this.bottom = bottom;
 
-        this.topPortrusion = this.top.getHeight() * C.expScale * C.expPortrusion;
-        this.bottomPortrusion = this.bottom.getHeight() * C.expScale * C.expPortrusion;
+        this.topPortrusion = this.top.getHeight() * C.expScale * this.portrusionProportion;
+        this.bottomPortrusion = this.bottom.getHeight() * C.expScale * this.portrusionProportion;
         if (this.topPortrusion > this.bottomPortrusion) {
             this.topBlank = 0;
             this.bottomBlank = this.topPortrusion - this.bottomPortrusion;
@@ -64,28 +67,29 @@ export default class SubSuper extends EqContainer {
     }
 
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
-        let layout = 
-            new LayoutState(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
-        
+        let layout = new LayoutState(   parentLayout, this, tlx, tly, 
+                                        this.getWidth() * currScale, 
+                                        this.getHeight() * currScale, 
+                                        currScale);
         //Add the middle
         let middleLayout = 
             this.middle.addLayout(  layout, layouts, 
-                                    tlx + this.padding.left, 
-                                    tly + this.topPortrusion + this.topBlank + this.padding.top, 
+                                    tlx + this.padding.left * currScale, 
+                                    tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, 
                                     currScale);
 
         let rightX = middleLayout.tlx + middleLayout.width;
 
         //Add the top
-        let topLayout = this.top.addLayout( layout, layouts,
-                                            rightX,
-                                            tly + this.padding.top + this.topBlank, 
-                                            currScale * C.expScale);
+        this.top.addLayout( layout, layouts,
+                            rightX,
+                            tly + (this.padding.top + this.topBlank) * currScale, 
+                            currScale * C.expScale);
 
         //Add the bottom
         this.bottom.addLayout(  layout, layouts,
                                 rightX, 
-                                tly + layout.height - this.padding.bottom - this.bottomBlank - this.bottom.getHeight() * C.expScale,
+                                tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * C.expScale) * currScale,
                                 currScale * C.expScale);
 
         //Add own
@@ -101,18 +105,21 @@ export default class SubSuper extends EqContainer {
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
+        let padLeft = this.padding.left * l.scale;
+        let padRight = this.padding.right * l.scale;
+
         //Draw inner dashed lines
         ctx.setLineDash(C.creatorLineDash);
         //Left line
-        line(   l.tlx + this.padding.left,
+        line(   l.tlx + padLeft,
                 l.tly,
-                l.tlx + this.padding.left,
+                l.tlx + padLeft,
                 l.tly + l.height,
                 ctx);
         //Right line
-        line(   l.tlx + l.width - this.padding.right,
+        line(   l.tlx + l.width - padRight,
                 l.tly,
-                l.tlx + l.width - this.padding.right,
+                l.tlx + l.width - padRight,
                 l.tly + l.height,
                 ctx);
 
@@ -120,10 +127,10 @@ export default class SubSuper extends EqContainer {
     }
 
     addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
-        if (x - clickedLayout.tlx < this.padding.left) {
+        if (x - clickedLayout.tlx < this.padding.left * clickedLayout.scale) {
             let container = clickedLayout.layoutParent.component as EqContainer;
             container.addClickOnChild(clickedLayout, x, y, toAdd);
-        } else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right) {
+        } else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right * clickedLayout.scale) {
             let container = clickedLayout.layoutParent.component as EqContainer;
             container.addClickOnChild(clickedLayout, x, y, toAdd);
         } else {
@@ -141,6 +148,9 @@ export default class SubSuper extends EqContainer {
         toReturn['top'] = EqContainer.childrenToStepLayout(this.top.getChildren(), controller);
         toReturn['middle'] = EqContainer.childrenToStepLayout(this.middle.getChildren(), controller);
         toReturn['bottom'] = EqContainer.childrenToStepLayout(this.bottom.getChildren(), controller);
+        if (this.portrusionProportion !== C.defaultExpPortrusion) {
+            toReturn['portrusion'] = this.portrusionProportion;
+        }
         return toReturn;
     }
 
@@ -152,5 +162,9 @@ export default class SubSuper extends EqContainer {
         this.top.forEachUnder(forEach);
         this.middle.forEachUnder(forEach);
         this.bottom.forEachUnder(forEach);
+    }
+
+    setPortrusion(newPortrusion: number) {
+        this.portrusionProportion = newPortrusion;
     }
 }

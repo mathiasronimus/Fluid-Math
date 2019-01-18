@@ -61,7 +61,8 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                 let top = new HBox_1.default(this.parseContainerChildren(containerObj.top), consts_1.default.creatorHBoxPadding);
                 let middle = new TightHBox_1.default(this.parseContainerChildren(containerObj.middle), consts_1.default.creatorTightHBoxPadding);
                 let bottom = new HBox_1.default(this.parseContainerChildren(containerObj.bottom), consts_1.default.creatorHBoxPadding);
-                return new SubSuper_1.default(top, middle, bottom, consts_1.default.creatorSubSuperPadding);
+                let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : consts_1.default.defaultExpPortrusion;
+                return new SubSuper_1.default(top, middle, bottom, portrusion, consts_1.default.creatorSubSuperPadding);
             }
             else if (type === undefined) {
                 throw "Invalid JSON File: Missing type attribute on container descriptor.";

@@ -2,6 +2,8 @@ import Controller from "./main";
 import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
 import C from '../main/consts';
+import SubSuper from "../layout/SubSuper";
+import CanvasController from "../main/CanvasController";
 
 export default class ToolBar {
 
@@ -119,6 +121,71 @@ export default class ToolBar {
         opacityEl.className = 'tool-bar-icon material-icons';
         opacityEl.addEventListener('click', this.changeOpacity.bind(this));
         this.element.appendChild(opacityEl);
+
+        //For the subsuper container, add an option to change the alignment
+        if (this.selectedLayout.component instanceof SubSuper) {
+            let alignEl = document.createElement('span');
+            alignEl.innerHTML = 'vertical_align_top';
+            alignEl.className = 'tool-bar-icon material-icons';
+            alignEl.addEventListener('click', this.topAlign.bind(this));
+            this.element.appendChild(alignEl);
+        }
+    }
+
+    /**
+     * Bring up a dialog to change the top
+     * alignment of the selected SubSuper
+     * layout.
+     */
+    private topAlign() {
+        let container = this.selectedLayout.component as SubSuper;
+        let canvas = this.controller.currCanvas;
+        let controller = this.controller;
+
+        let modalRoot = document.createElement('div');
+        modalRoot.style.padding = "10px";
+
+        let explainer = document.createElement('p');
+        explainer.innerHTML = "Use the tool below to change the vertical alignment of the exponent.";
+        modalRoot.appendChild(explainer);
+
+        let defaultPreset = document.createElement('div');
+        defaultPreset.innerHTML = "Reset";
+        defaultPreset.className = 'subsuper-reset-button';
+        let col = C.colors.blue;
+        defaultPreset.style.backgroundColor = 'rgb(' + col[0] + "," + col[1] + ',' + col[2] + ')';
+        defaultPreset.addEventListener('click', function() {
+            setAlign(C.defaultExpPortrusion + "");
+        });
+        modalRoot.appendChild(defaultPreset);
+
+        let slider = document.createElement('input');
+        slider.setAttribute("type", "range");
+        slider.setAttribute("min", "0");
+        slider.setAttribute("max", "1");
+        slider.setAttribute("step", "0.025");
+        slider.className = "slider";
+        modalRoot.appendChild(slider);
+
+        let previewContainer = document.createElement('div');
+        previewContainer.style.width = '600px';
+        modalRoot.appendChild(previewContainer);
+
+        let previewCanvas = new CanvasController(previewContainer, this.controller.currCanvas.getStepAsInstructions());
+
+        slider.oninput = function() {
+            setAlign(slider.value);
+        }
+
+        this.controller.modal(modalRoot);
+
+        function setAlign(newAlign: string) {
+            slider.value = newAlign;
+            container.setPortrusion(parseFloat(newAlign));
+            canvas.refresh();
+            previewContainer.innerHTML = "";
+            previewCanvas = new CanvasController(previewContainer, controller.currCanvas.getStepAsInstructions());
+        }
     }
 
     private changeColor() {

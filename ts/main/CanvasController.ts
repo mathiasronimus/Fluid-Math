@@ -531,7 +531,8 @@ export default class CanvasController {
                 this.parseContainerChildren(containerObj.bottom),
                 Padding.even(0)
             );
-            return new SubSuper(top, middle, bottom, C.defaultSubSuperPadding);
+            let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
+            return new SubSuper(top, middle, bottom, portrusion, C.defaultSubSuperPadding);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

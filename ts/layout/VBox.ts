@@ -29,13 +29,15 @@ export default class VBox extends LinearContainer {
     }
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
+        ctx.save();
         ctx.strokeStyle = C.creatorContainerStroke;
 
         //Outer border
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let pad = C.creatorVBoxPadding;
+        let padD = C.creatorVBoxPadding;
+        let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
 
         //Middle border, top and bottom
         ctx.setLineDash(C.creatorLineDash);
@@ -63,12 +65,12 @@ export default class VBox extends LinearContainer {
                 l.tly + l.height - pad.bottom, 
                 ctx);
 
-        ctx.strokeStyle = "#000";
+        ctx.restore();
     }
 
     addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
         if (clickedLayout.onTop(y)) {
-            if (y - clickedLayout.tly <= C.creatorVBoxPadding.top / 2) {
+            if (y - clickedLayout.tly <= (C.creatorVBoxPadding.top / 2) * clickedLayout.scale) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {
@@ -85,7 +87,9 @@ export default class VBox extends LinearContainer {
         }
         else {
             //On bottom
-            if (clickedLayout.tly + clickedLayout.height - y <= C.creatorVBoxPadding.bottom / 2) {
+            if (clickedLayout.tly + clickedLayout.height - y 
+                <= 
+                (C.creatorVBoxPadding.bottom / 2) * clickedLayout.scale) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {
@@ -121,16 +125,19 @@ export default class VBox extends LinearContainer {
     }
 
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
-        let state = new LayoutState(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
-        const innerWidth = this.getWidth() - this.padding.width();
-        let upToY = tly + this.padding.top;
+        let state = new LayoutState(parentLayout, this, tlx, tly, 
+                                    this.getWidth() * currScale, 
+                                    this.getHeight() * currScale, 
+                                    currScale);
+        const innerWidth = (this.getWidth() - this.padding.width()) * currScale;
+        let upToY = tly + this.padding.top * currScale;
 
         for (let i = 0; i < this.children.length; i++) {
             let currChild = this.children[i];
-            let childWidth = currChild.getWidth();
+            let childWidth = currChild.getWidth() * currScale;
 
             //Position child in the middle horizontally
-            let childTLX = (innerWidth - childWidth) / 2 + this.padding.left + tlx;
+            let childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
             upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
         }
 

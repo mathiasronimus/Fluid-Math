@@ -105,7 +105,8 @@ export default class CreatorCanvasController extends CanvasController {
                 this.parseContainerChildren(containerObj.bottom),
                 C.creatorHBoxPadding
             );
-            return new SubSuper(top, middle, bottom, C.creatorSubSuperPadding);
+            let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
+            return new SubSuper(top, middle, bottom, portrusion, C.creatorSubSuperPadding);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {
@@ -291,7 +292,7 @@ export default class CreatorCanvasController extends CanvasController {
      * Updates the controller to 
      * reflect the changes made.
      */
-    private refresh(): void {
+    refresh(): void {
         let root = this.currStates[this.currStates.length - 1].component as EqContainer;
         let newLayout = this.toStepLayout(root);
         this.onLayoutModified(this.controller.instructionsFromStep(newLayout));

@@ -40,7 +40,7 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
         }
         addClick(clickedLayout, x, y, toAdd) {
             if (clickedLayout.onLeft(x)) {
-                if (x - clickedLayout.tlx <= consts_1.default.creatorHBoxPadding.left / 2) {
+                if (x - clickedLayout.tlx <= (consts_1.default.creatorHBoxPadding.left / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
@@ -58,7 +58,9 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
             }
             else {
                 //On right
-                if (clickedLayout.tlx + clickedLayout.width - x <= consts_1.default.creatorHBoxPadding.right / 2) {
+                if (clickedLayout.tlx + clickedLayout.width - x
+                    <=
+                        (consts_1.default.creatorHBoxPadding.right / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {

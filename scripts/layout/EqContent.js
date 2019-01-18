@@ -34,7 +34,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
             ctx.translate(x + width / 2, y + height / 2);
             ctx.scale(scale, scale);
             this.setCtxStyle(ctx);
-            return [width, height, scale];
+            return [width, height];
         }
         /**
          * Sets a graphics context to have

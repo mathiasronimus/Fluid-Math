@@ -37,7 +37,7 @@ export default class Controller {
      * representing the entire
      * slideshow.
      */
-    private getFinalInstructions(): Object {
+    getFinalInstructions(): Object {
         let toJSON = {};
         this.contentManager.addJSON(toJSON);
         this.slideManager.addJSON(toJSON);

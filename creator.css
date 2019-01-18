@@ -10,6 +10,10 @@ body {
     height: 100vh;
 }
 
+p {
+    padding: 10px;
+}
+
 .border {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -94,6 +98,17 @@ body {
 .opacity-selector {
     padding: 10px;
     cursor: pointer;
+}
+
+.subsuper-reset-button {
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.slider {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 #main-column {

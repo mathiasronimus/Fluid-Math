@@ -7,13 +7,14 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
      * (bottom).
      */
     class SubSuper extends EqContainer_1.default {
-        constructor(top, middle, bottom, padding) {
+        constructor(top, middle, bottom, portrusion, padding) {
             super(padding);
+            this.portrusionProportion = portrusion;
             this.top = top;
             this.middle = middle;
             this.bottom = bottom;
-            this.topPortrusion = this.top.getHeight() * consts_1.default.expScale * consts_1.default.expPortrusion;
-            this.bottomPortrusion = this.bottom.getHeight() * consts_1.default.expScale * consts_1.default.expPortrusion;
+            this.topPortrusion = this.top.getHeight() * consts_1.default.expScale * this.portrusionProportion;
+            this.bottomPortrusion = this.bottom.getHeight() * consts_1.default.expScale * this.portrusionProportion;
             if (this.topPortrusion > this.bottomPortrusion) {
                 this.topBlank = 0;
                 this.bottomBlank = this.topPortrusion - this.bottomPortrusion;
@@ -38,14 +39,14 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
                 + this.padding.height();
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let layout = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale);
+            let layout = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             //Add the middle
-            let middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left, tly + this.topPortrusion + this.topBlank + this.padding.top, currScale);
+            let middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale);
             let rightX = middleLayout.tlx + middleLayout.width;
             //Add the top
-            let topLayout = this.top.addLayout(layout, layouts, rightX, tly + this.padding.top + this.topBlank, currScale * consts_1.default.expScale);
+            this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * consts_1.default.expScale);
             //Add the bottom
-            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - this.padding.bottom - this.bottomBlank - this.bottom.getHeight() * consts_1.default.expScale, currScale * consts_1.default.expScale);
+            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1.default.expScale) * currScale, currScale * consts_1.default.expScale);
             //Add own
             layouts.push(layout);
             return layout;
@@ -56,20 +57,22 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
             //Draw the outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
+            let padLeft = this.padding.left * l.scale;
+            let padRight = this.padding.right * l.scale;
             //Draw inner dashed lines
             ctx.setLineDash(consts_1.default.creatorLineDash);
             //Left line
-            helpers_1.line(l.tlx + this.padding.left, l.tly, l.tlx + this.padding.left, l.tly + l.height, ctx);
+            helpers_1.line(l.tlx + padLeft, l.tly, l.tlx + padLeft, l.tly + l.height, ctx);
             //Right line
-            helpers_1.line(l.tlx + l.width - this.padding.right, l.tly, l.tlx + l.width - this.padding.right, l.tly + l.height, ctx);
+            helpers_1.line(l.tlx + l.width - padRight, l.tly, l.tlx + l.width - padRight, l.tly + l.height, ctx);
             ctx.restore();
         }
         addClick(clickedLayout, x, y, toAdd) {
-            if (x - clickedLayout.tlx < this.padding.left) {
+            if (x - clickedLayout.tlx < this.padding.left * clickedLayout.scale) {
                 let container = clickedLayout.layoutParent.component;
                 container.addClickOnChild(clickedLayout, x, y, toAdd);
             }
-            else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right) {
+            else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right * clickedLayout.scale) {
                 let container = clickedLayout.layoutParent.component;
                 container.addClickOnChild(clickedLayout, x, y, toAdd);
             }
@@ -86,6 +89,9 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
             toReturn['top'] = EqContainer_1.default.childrenToStepLayout(this.top.getChildren(), controller);
             toReturn['middle'] = EqContainer_1.default.childrenToStepLayout(this.middle.getChildren(), controller);
             toReturn['bottom'] = EqContainer_1.default.childrenToStepLayout(this.bottom.getChildren(), controller);
+            if (this.portrusionProportion !== consts_1.default.defaultExpPortrusion) {
+                toReturn['portrusion'] = this.portrusionProportion;
+            }
             return toReturn;
         }
         delete(toDelete) {
@@ -95,6 +101,9 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
             this.top.forEachUnder(forEach);
             this.middle.forEachUnder(forEach);
             this.bottom.forEachUnder(forEach);
+        }
+        setPortrusion(newPortrusion) {
+            this.portrusionProportion = newPortrusion;
         }
     }
     exports.default = SubSuper;

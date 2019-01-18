@@ -5,23 +5,23 @@ define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"],
         //Font: size in px
         fontFamily: 'Roboto',
         fontWeight: '400',
-        fontSize: 30,
+        fontSize: 40,
         //Tuning variable, turn down for better
         //performance. Too low will give layout
         //innacuracies.
         testCanvasFontSizeMultiple: 5,
         //Layout:
-        defaultVBoxPadding: 6,
-        defaultHBoxPadding: 6,
+        defaultVBoxPadding: 0,
+        defaultHBoxPadding: 0,
         defaultTightHBoxPadding: 0,
         defaultSubSuperPadding: Padding_1.default.even(0),
-        termPadding: Padding_1.default.even(5),
+        termPadding: new Padding_1.default(10, 5, 10, 5),
         tightTermPadding: new Padding_1.default(5, 2, 5, 2),
-        hDividerPadding: new Padding_1.default(0, 5, 0, 5),
+        hDividerPadding: new Padding_1.default(0, 2, 0, 2),
         //The scaling of exponents and subscripts.
-        expScale: 0.6,
+        expScale: 0.5,
         //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
-        expPortrusion: 0.1,
+        defaultExpPortrusion: 0.1,
         //Creator
         creatorVBoxPadding: Padding_1.default.even(30),
         creatorHBoxPadding: Padding_1.default.even(30),
