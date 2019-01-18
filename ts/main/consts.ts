@@ -6,6 +6,7 @@ const constants = {
     fontFamily: 'Roboto',
     fontWeight: '400',
     fontSize: 40,
+    borderRadius: 5,
     //Tuning variable, turn down for better
     //performance. Too low will give layout
     //innacuracies.

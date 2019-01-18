@@ -26,6 +26,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
             this.container.appendChild(this.progressLine);
+            this.progressLine.style.left = consts_1.default.borderRadius + 'px';
             //Create area above canvas
             let upperArea = document.createElement("div");
             upperArea.className = "eqUpper";
@@ -89,7 +90,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 this.ctx.restore();
             });
             //Redraw the progress line
-            let widthPerSegment = this.container.clientWidth / (this.steps.length - 1);
+            let widthPerSegment = (this.container.clientWidth - consts_1.default.borderRadius * 2) / (this.steps.length - 1);
             this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
         }
         /**

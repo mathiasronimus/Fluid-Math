@@ -59,6 +59,7 @@ export default class CanvasController {
         this.progressLine = document.createElement('div');
         this.progressLine.className = "progressLine";
         this.container.appendChild(this.progressLine);
+        this.progressLine.style.left = C.borderRadius + 'px';
 
         //Create area above canvas
         let upperArea = document.createElement("div");
@@ -132,7 +133,7 @@ export default class CanvasController {
         });
 
         //Redraw the progress line
-        let widthPerSegment = this.container.clientWidth / (this.steps.length - 1);
+        let widthPerSegment = (this.container.clientWidth - C.borderRadius*2) / (this.steps.length - 1);
         this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
     }
 

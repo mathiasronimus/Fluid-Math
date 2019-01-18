@@ -29,7 +29,9 @@
 .progressLine {
     height: 1px;
     width: 0px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.15);
+    position: relative;
+    top: -1px;
 }
 
 em {
