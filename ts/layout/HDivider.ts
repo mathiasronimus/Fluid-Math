@@ -7,14 +7,13 @@ export default class HDivider extends EqContent<LayoutState> {
 
     constructor(padding: Padding) {
         super(padding);
-        this.fixedHeight = 1 + this.padding.height();
+        this.height = 1 + this.padding.height();
         //For layout purposes, the divider
         //has no width. It stretches to fill
         //its container.
-        this.fixedWidth = 0;
+        this.width = 0;
     }
 
-    //These won't be called due to fixed dimensions
     protected calcWidth(): number {return 0;}
     protected calcHeight(): number {return 0;}
 

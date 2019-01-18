@@ -8,31 +8,19 @@ define(["require", "exports"], function (require, exports) {
      */
     class EqComponent {
         constructor(padding) {
-            this.fixedWidth = -1;
-            this.fixedHeight = -1;
             this.padding = padding;
         }
-        setFixedWidth(newWidth) {
-            this.fixedWidth = newWidth;
+        setWidth(newWidth) {
+            this.width = newWidth;
         }
-        setFixedHeight(newHeight) {
-            this.fixedHeight = newHeight;
+        setHeight(newHeight) {
+            this.height = newHeight;
         }
         getWidth() {
-            if (this.fixedWidth < 0) {
-                return this.calcWidth();
-            }
-            else {
-                return this.fixedWidth;
-            }
+            return this.width;
         }
         getHeight() {
-            if (this.fixedHeight < 0) {
-                return this.calcHeight();
-            }
-            else {
-                return this.fixedHeight;
-            }
+            return this.height;
         }
     }
     exports.default = EqComponent;

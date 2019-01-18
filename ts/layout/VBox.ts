@@ -9,6 +9,12 @@ import CanvasController from '../main/CanvasController';
 
 export default class VBox extends LinearContainer {
 
+    constructor(children: EqComponent[], padding: Padding) {
+        super(children, padding);
+        this.width = this.calcWidth();
+        this.height = this.calcHeight();
+    }
+
     protected calcHeight(): number {
         let totalHeight = 0;
         for (let i = 0; i < this.children.length; i++) {

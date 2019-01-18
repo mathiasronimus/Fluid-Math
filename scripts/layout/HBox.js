@@ -2,6 +2,11 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class HBox extends LinearContainer_1.default {
+        constructor(children, padding) {
+            super(children, padding);
+            this.width = this.calcWidth();
+            this.height = this.calcHeight();
+        }
         calcHeight() {
             let maxHeight = 0;
             for (let i = 0; i < this.children.length; i++) {

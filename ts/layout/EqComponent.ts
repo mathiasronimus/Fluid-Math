@@ -8,36 +8,28 @@ import Padding from './Padding';
  */
 export default abstract class EqComponent {
 
-    protected fixedWidth: number = -1;
-    protected fixedHeight: number = -1;
+    protected width: number;
+    protected height: number;
     protected padding: Padding;
 
     constructor(padding) {
         this.padding = padding;
     }
 
-    setFixedWidth(newWidth: number) {
-        this.fixedWidth = newWidth;
+    setWidth(newWidth: number) {
+        this.width = newWidth;
     }
 
-    setFixedHeight(newHeight: number) {
-        this.fixedHeight = newHeight;
+    setHeight(newHeight: number) {
+        this.height = newHeight;
     }
 
     getWidth(): number {
-        if (this.fixedWidth < 0) {
-            return this.calcWidth();
-        } else {
-            return this.fixedWidth;
-        }
+        return this.width;
     }
 
     getHeight(): number {
-        if (this.fixedHeight < 0) {
-            return this.calcHeight();
-        } else {
-            return this.fixedHeight;
-        }
+        return this.height;
     }
 
     protected abstract calcWidth(): number;

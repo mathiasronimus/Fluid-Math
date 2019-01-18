@@ -2,6 +2,11 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class VBox extends LinearContainer_1.default {
+        constructor(children, padding) {
+            super(children, padding);
+            this.width = this.calcWidth();
+            this.height = this.calcHeight();
+        }
         calcHeight() {
             let totalHeight = 0;
             for (let i = 0; i < this.children.length; i++) {

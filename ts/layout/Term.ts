@@ -16,23 +16,23 @@ export default class Term extends EqContent<TermLayoutState> {
         super(C.termPadding);
         this.halfInnerWidth = width / 2;
         this.halfInnerHeight = height / 2;
-        this.fixedWidth = width + this.padding.width();
-        this.fixedHeight = height + this.padding.height();
+        this.width = width + this.padding.width();
+        this.height = height + this.padding.height();
         this.ascent = ascent;
         this.text = text;
     }
     
     protected calcHeight(): number {
-        return this.fixedHeight;
+        return this.height;
     }
     
     protected calcWidth(): number {
-        return this.fixedWidth;
+        return this.width;
     }
     
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): TermLayoutState {
         let state = 
-            new TermLayoutState(parentLayout, this, tlx, tly, this.fixedWidth * currScale, this.fixedHeight * currScale, currScale);
+            new TermLayoutState(parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale);
         layouts.push(state);
         return state;
     }

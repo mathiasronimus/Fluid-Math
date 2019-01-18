@@ -51,6 +51,8 @@ export default class SubSuper extends EqContainer {
         this.rightMiddleHeight = 
             this.middle.getHeight() + this.topPortrusion + this.bottomPortrusion
             - (this.top.getHeight() * C.expScale + this.bottom.getHeight() * C.expScale);
+        this.width = this.calcWidth();
+        this.height = this.calcHeight();
     }
 
     protected calcWidth(): number {

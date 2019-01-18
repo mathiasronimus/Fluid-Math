@@ -419,7 +419,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             //First create the structure of containers in memory
             let rootObj = this.steps[idx].root;
             let root = this.parseContainer(rootObj);
-            root.setFixedWidth(this.container.clientWidth);
+            root.setWidth(this.container.clientWidth);
             //Set the text
             if (this.textArea) {
                 this.textArea.innerHTML = this.steps[idx].text;

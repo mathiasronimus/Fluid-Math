@@ -4,13 +4,12 @@ define(["require", "exports", "./EqContent", "../animation/LayoutState", "../mai
     class HDivider extends EqContent_1.default {
         constructor(padding) {
             super(padding);
-            this.fixedHeight = 1 + this.padding.height();
+            this.height = 1 + this.padding.height();
             //For layout purposes, the divider
             //has no width. It stretches to fill
             //its container.
-            this.fixedWidth = 0;
+            this.width = 0;
         }
-        //These won't be called due to fixed dimensions
         calcWidth() { return 0; }
         calcHeight() { return 0; }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {

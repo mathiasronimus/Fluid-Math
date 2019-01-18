@@ -26,6 +26,8 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
             this.rightMiddleHeight =
                 this.middle.getHeight() + this.topPortrusion + this.bottomPortrusion
                     - (this.top.getHeight() * consts_1.default.expScale + this.bottom.getHeight() * consts_1.default.expScale);
+            this.width = this.calcWidth();
+            this.height = this.calcHeight();
         }
         calcWidth() {
             //Width of the right portion, ie the top and bottom
