@@ -1,4 +1,4 @@
-define(["require", "exports", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
+define(["require", "exports", "./EqContainer", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, EqContainer_1, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class VBox extends LinearContainer_1.default {
@@ -20,24 +20,24 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
             return maxWidth + this.padding.width();
         }
         creatorDraw(l, ctx) {
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.strokeStyle = consts_1.default.creatorContainerStroke;
             //Outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
             let pad = consts_1.default.creatorVBoxPadding;
             //Middle border, top and bottom
-            ctx.setLineDash([5]);
-            helpers_1.line(l.tlx, l.tly + pad / 2, l.tlx + l.width, l.tly + pad / 2, ctx);
-            helpers_1.line(l.tlx, l.tly + l.height - pad / 2, l.tlx + l.width, l.tly + l.height - pad / 2, ctx);
+            ctx.setLineDash(consts_1.default.creatorLineDash);
+            helpers_1.line(l.tlx, l.tly + pad.top / 2, l.tlx + l.width, l.tly + pad.top / 2, ctx);
+            helpers_1.line(l.tlx, l.tly + l.height - pad.bottom / 2, l.tlx + l.width, l.tly + l.height - pad.bottom / 2, ctx);
             //Inner border, top and bottom
             ctx.setLineDash([]);
-            helpers_1.line(l.tlx, l.tly + pad, l.tlx + l.width, l.tly + pad, ctx);
-            helpers_1.line(l.tlx, l.tly + l.height - pad, l.tlx + l.width, l.tly + l.height - pad, ctx);
+            helpers_1.line(l.tlx, l.tly + pad.top, l.tlx + l.width, l.tly + pad.top, ctx);
+            helpers_1.line(l.tlx, l.tly + l.height - pad.bottom, l.tlx + l.width, l.tly + l.height - pad.bottom, ctx);
             ctx.strokeStyle = "#000";
         }
         addClick(clickedLayout, x, y, toAdd) {
             if (clickedLayout.onTop(y)) {
-                if (y - clickedLayout.tly <= consts_1.default.creatorVBoxPadding / 2) {
+                if (y - clickedLayout.tly <= consts_1.default.creatorVBoxPadding.top / 2) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
@@ -55,7 +55,7 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
             }
             else {
                 //On bottom
-                if (clickedLayout.tly + clickedLayout.height - y <= consts_1.default.creatorVBoxPadding / 2) {
+                if (clickedLayout.tly + clickedLayout.height - y <= consts_1.default.creatorVBoxPadding.bottom / 2) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
@@ -85,7 +85,7 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
         toStepLayout(controller) {
             let toReturn = {};
             toReturn['type'] = 'vbox';
-            toReturn['children'] = this.childrentoStepLayout(controller);
+            toReturn['children'] = EqContainer_1.default.childrenToStepLayout(this.children, controller);
             return toReturn;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {

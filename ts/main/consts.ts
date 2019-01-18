@@ -25,10 +25,13 @@ const constants = {
     expPortrusion: 0.1,
 
     //Creator
-    creatorVBoxPadding: 30,
-    creatorHBoxPadding: 30,
-    creatorTightHBoxPadding: 30,
+    creatorVBoxPadding: Padding.even(30),
+    creatorHBoxPadding: Padding.even(30),
+    creatorTightHBoxPadding: Padding.even(30),
     creatorHDividerPadding: Padding.even(5),
+    creatorSubSuperPadding: Padding.even(15),
+    creatorContainerStroke: "rgba(0, 0, 0, 0.4)",
+    creatorLineDash: [5],
 
     //Animations: durations are in MS
     addDuration: 600,

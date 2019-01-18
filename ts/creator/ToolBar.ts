@@ -135,6 +135,7 @@ export default class ToolBar {
             colorEl.addEventListener('click', function(colorName: string) {
                 this.controller.removeModal();
                 this.controller.currCanvas.changeColor(this.selectedLayout.component, colorName);
+                this.unselect();
             }.bind(this, colorName));
             modalRoot.appendChild(colorEl);
         });
@@ -153,6 +154,7 @@ export default class ToolBar {
             el.addEventListener('click', function(opacity: number) {
                 this.controller.removeModal();
                 this.controller.currCanvas.changeOpacity(this.selectedLayout.component, opacity);
+                this.unselect();
             }.bind(this, opacity));
             modalRoot.appendChild(el);
         }.bind(this);

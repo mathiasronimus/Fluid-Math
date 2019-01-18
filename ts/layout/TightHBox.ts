@@ -4,6 +4,7 @@ import Term from "./Term";
 import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
 import CanvasController from '../main/CanvasController';
+import EqContainer from "./EqContainer";
 
 const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
 
@@ -13,7 +14,7 @@ export default class TightHBox extends HBox {
     toStepLayout(controller: CanvasController): Object {
         let toReturn = {};
         toReturn['type'] = 'tightHBox';
-        toReturn['children'] = this.childrentoStepLayout(controller);
+        toReturn['children'] = EqContainer.childrenToStepLayout(this.children, controller);
         return toReturn;
     }
 

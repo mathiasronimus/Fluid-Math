@@ -12,28 +12,6 @@ define(["require", "exports", "./EqContainer", "./EqContent"], function (require
             this.children = children;
         }
         /**
-         * Returns an array of children of this
-         * linear container as used in the step
-         * layout.
-         *
-         * @param controller The canvas controller possessing this container.
-         */
-        childrentoStepLayout(controller) {
-            let toReturn = [];
-            this.children.forEach(comp => {
-                if (comp instanceof EqContainer_1.default) {
-                    toReturn.push(comp.toStepLayout(controller));
-                }
-                else if (comp instanceof EqContent_1.default) {
-                    toReturn.push(controller.getContentReference(comp));
-                }
-                else {
-                    throw "unrecognized type " + typeof comp;
-                }
-            });
-            return toReturn;
-        }
-        /**
          * Add a child before another.
          *
          * @param toAdd The child to add.
@@ -69,6 +47,9 @@ define(["require", "exports", "./EqContainer", "./EqContent"], function (require
         }
         delete(toDelete) {
             this.children.splice(this.children.indexOf(toDelete), 1);
+        }
+        getChildren() {
+            return this.children;
         }
     }
     exports.default = LinearContainer;

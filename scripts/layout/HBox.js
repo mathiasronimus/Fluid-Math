@@ -1,4 +1,4 @@
-define(["require", "exports", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
+define(["require", "exports", "./EqContainer", "./Padding", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, EqContainer_1, Padding_1, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class HBox extends LinearContainer_1.default {
@@ -22,24 +22,25 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
             return totalWidth + this.padding.width();
         }
         creatorDraw(l, ctx) {
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.strokeStyle = consts_1.default.creatorContainerStroke;
             //Outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
-            let pad = consts_1.default.creatorHBoxPadding;
+            let padD = consts_1.default.creatorHBoxPadding;
+            let pad = new Padding_1.default(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
             //Middle border, top and bottom
-            ctx.setLineDash([5]);
-            helpers_1.line(l.tlx + pad / 2, l.tly, l.tlx + pad / 2, l.tly + l.height, ctx);
-            helpers_1.line(l.tlx + l.width - pad / 2, l.tly, l.tlx + l.width - pad / 2, l.tly + l.height, ctx);
+            ctx.setLineDash(consts_1.default.creatorLineDash);
+            helpers_1.line(l.tlx + pad.left / 2, l.tly, l.tlx + pad.left / 2, l.tly + l.height, ctx);
+            helpers_1.line(l.tlx + l.width - pad.right / 2, l.tly, l.tlx + l.width - pad.right / 2, l.tly + l.height, ctx);
             //Inner border, top and bottom
             ctx.setLineDash([]);
-            helpers_1.line(l.tlx + pad, l.tly, l.tlx + pad, l.tly + l.height, ctx);
-            helpers_1.line(l.tlx + l.width - pad, l.tly, l.tlx + l.width - pad, l.tly + l.height, ctx);
+            helpers_1.line(l.tlx + pad.left, l.tly, l.tlx + pad.left, l.tly + l.height, ctx);
+            helpers_1.line(l.tlx + l.width - pad.right, l.tly, l.tlx + l.width - pad.right, l.tly + l.height, ctx);
             ctx.strokeStyle = "#000";
         }
         addClick(clickedLayout, x, y, toAdd) {
             if (clickedLayout.onLeft(x)) {
-                if (x - clickedLayout.tlx <= consts_1.default.creatorHBoxPadding / 2) {
+                if (x - clickedLayout.tlx <= consts_1.default.creatorHBoxPadding.left / 2) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
@@ -57,7 +58,7 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
             }
             else {
                 //On right
-                if (clickedLayout.tlx + clickedLayout.width - x <= consts_1.default.creatorHBoxPadding / 2) {
+                if (clickedLayout.tlx + clickedLayout.width - x <= consts_1.default.creatorHBoxPadding.right / 2) {
                     //Outer border, add adjacent
                     let containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
@@ -87,7 +88,7 @@ define(["require", "exports", "../animation/LayoutState", "../main/consts", "../
         toStepLayout(controller) {
             let toReturn = {};
             toReturn['type'] = 'hbox';
-            toReturn['children'] = this.childrentoStepLayout(controller);
+            toReturn['children'] = EqContainer_1.default.childrenToStepLayout(this.children, controller);
             return toReturn;
         }
         addLayout(parentLayout, layouts, tlx, tly, currScale) {

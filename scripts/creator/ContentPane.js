@@ -201,6 +201,21 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
             }.bind(this);
             tightHbox.addEventListener('click', addTightHbox);
             this.containerEl.appendChild(tightHbox);
+            let subSuper = document.createElement('div');
+            subSuper.innerHTML = 'Pow/Subscript';
+            subSuper.className = 'content';
+            let addSubSuper = function () {
+                this.controller.currCanvas.setAdding({
+                    type: 'subSuper',
+                    top: [],
+                    middle: [],
+                    bottom: []
+                });
+                this.deselect();
+                this.select(subSuper);
+            }.bind(this);
+            subSuper.addEventListener('click', addSubSuper);
+            this.containerEl.appendChild(subSuper);
         }
         /**
          * Update the elements to cause

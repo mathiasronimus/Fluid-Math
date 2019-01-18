@@ -111,6 +111,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
                 colorEl.addEventListener('click', function (colorName) {
                     this.controller.removeModal();
                     this.controller.currCanvas.changeColor(this.selectedLayout.component, colorName);
+                    this.unselect();
                 }.bind(this, colorName));
                 modalRoot.appendChild(colorEl);
             });
@@ -127,6 +128,7 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
                 el.addEventListener('click', function (opacity) {
                     this.controller.removeModal();
                     this.controller.currCanvas.changeOpacity(this.selectedLayout.component, opacity);
+                    this.unselect();
                 }.bind(this, opacity));
                 modalRoot.appendChild(el);
             }.bind(this);

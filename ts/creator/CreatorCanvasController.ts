@@ -9,7 +9,7 @@ import C from '../main/consts';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
 import Controller from "./main";
-import Term from '../layout/Term';
+import SubSuper from '../layout/SubSuper';
 import HDivider from "../layout/HDivider";
 
 enum State {
@@ -82,16 +82,30 @@ export default class CreatorCanvasController extends CanvasController {
         if (type === "vbox") {
             return new VBox(
                 this.parseContainerChildren(containerObj.children),
-                Padding.even(C.creatorVBoxPadding));
+                C.creatorVBoxPadding);
         } else if (type === "hbox") {
             return new HBox(
                 this.parseContainerChildren(containerObj.children),
-                Padding.even(C.creatorHBoxPadding));
+                C.creatorHBoxPadding);
         } else if (type === "tightHBox") {
             return new TightHBox(
                 this.parseContainerChildren(containerObj.children),
-                Padding.even(C.creatorTightHBoxPadding)
+                C.creatorTightHBoxPadding
             );
+        } else if (type === 'subSuper') {
+            let top = new HBox(
+                this.parseContainerChildren(containerObj.top),
+                C.creatorHBoxPadding
+            );
+            let middle = new TightHBox(
+                this.parseContainerChildren(containerObj.middle),
+                C.creatorTightHBoxPadding
+            );
+            let bottom = new HBox(
+                this.parseContainerChildren(containerObj.bottom),
+                C.creatorHBoxPadding
+            );
+            return new SubSuper(top, middle, bottom, C.creatorSubSuperPadding);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

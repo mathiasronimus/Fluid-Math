@@ -1,4 +1,4 @@
-define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animation/LayoutState"], function (require, exports, HBox_1, consts_1, Term_1, LayoutState_1) {
+define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animation/LayoutState", "./EqContainer"], function (require, exports, HBox_1, consts_1, Term_1, LayoutState_1, EqContainer_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const widthDiff = consts_1.default.termPadding.width() - consts_1.default.tightTermPadding.width();
@@ -7,7 +7,7 @@ define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animatio
         toStepLayout(controller) {
             let toReturn = {};
             toReturn['type'] = 'tightHBox';
-            toReturn['children'] = this.childrentoStepLayout(controller);
+            toReturn['children'] = EqContainer_1.default.childrenToStepLayout(this.children, controller);
             return toReturn;
         }
         //Override to account for reduced width of tight terms.

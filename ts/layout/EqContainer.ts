@@ -64,4 +64,25 @@ export default abstract class EqContainer extends EqComponent {
      * @param forEach The function to run for content.
      */
     abstract forEachUnder(forEach: (content: EqContent<any>) => void);
+
+    /**
+     * Returns an array of children of a container
+     * as used in the step layout.
+     * 
+     * @param children The children array.
+     * @param controller The canvas controller possessing this container.
+     */
+    protected static childrenToStepLayout(children: EqComponent[], controller: CanvasController) {
+        let toReturn = [];
+        children.forEach(comp => {
+            if (comp instanceof EqContainer) {
+                toReturn.push(comp.toStepLayout(controller));
+            } else if (comp instanceof EqContent) {
+                toReturn.push(controller.getContentReference(comp));
+            } else {
+                throw "unrecognized type " + typeof comp;
+            }
+        });
+        return toReturn;
+    }
 }

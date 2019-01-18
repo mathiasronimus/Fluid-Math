@@ -29,7 +29,7 @@ export default class VBox extends LinearContainer {
     }
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.strokeStyle = C.creatorContainerStroke;
 
         //Outer border
         ctx.rect(l.tlx, l.tly, l.width, l.height);
@@ -38,21 +38,37 @@ export default class VBox extends LinearContainer {
         let pad = C.creatorVBoxPadding;
 
         //Middle border, top and bottom
-        ctx.setLineDash([5]);
-        line(l.tlx, l.tly + pad / 2, l.tlx + l.width, l.tly + pad / 2, ctx);
-        line(l.tlx, l.tly + l.height - pad / 2, l.tlx + l.width, l.tly + l.height - pad / 2, ctx);
+        ctx.setLineDash(C.creatorLineDash);
+        line(   l.tlx, 
+                l.tly + pad.top / 2, 
+                l.tlx + l.width, 
+                l.tly + pad.top / 2, 
+                ctx);
+        line(   l.tlx, 
+                l.tly + l.height - pad.bottom / 2, 
+                l.tlx + l.width, 
+                l.tly + l.height - pad.bottom / 2, 
+                ctx);
 
         //Inner border, top and bottom
         ctx.setLineDash([]);
-        line(l.tlx, l.tly + pad, l.tlx + l.width, l.tly + pad, ctx);
-        line(l.tlx, l.tly + l.height - pad, l.tlx + l.width, l.tly + l.height - pad, ctx);
+        line(   l.tlx, 
+                l.tly + pad.top, 
+                l.tlx + l.width, 
+                l.tly + pad.top, 
+                ctx);
+        line(   l.tlx, 
+                l.tly + l.height - pad.bottom, 
+                l.tlx + l.width,
+                l.tly + l.height - pad.bottom, 
+                ctx);
 
         ctx.strokeStyle = "#000";
     }
 
     addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
         if (clickedLayout.onTop(y)) {
-            if (y - clickedLayout.tly <= C.creatorVBoxPadding / 2) {
+            if (y - clickedLayout.tly <= C.creatorVBoxPadding.top / 2) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {
@@ -69,7 +85,7 @@ export default class VBox extends LinearContainer {
         }
         else {
             //On bottom
-            if (clickedLayout.tly + clickedLayout.height - y <= C.creatorVBoxPadding / 2) {
+            if (clickedLayout.tly + clickedLayout.height - y <= C.creatorVBoxPadding.bottom / 2) {
                 //Outer border, add adjacent
                 let containerLayout = clickedLayout.layoutParent;
                 if (containerLayout === undefined) {
@@ -100,7 +116,7 @@ export default class VBox extends LinearContainer {
     toStepLayout(controller: CanvasController): Object {
         let toReturn = {};
         toReturn['type'] = 'vbox';
-        toReturn['children'] = this.childrentoStepLayout(controller);
+        toReturn['children'] = EqContainer.childrenToStepLayout(this.children, controller);
         return toReturn;
     }
 

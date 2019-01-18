@@ -5,7 +5,7 @@
  */
 
 // These values are established by empiricism with tests (tradeoff: performance VS precision)
-var NEWTON_ITERATIONS = 4;
+var NEWTON_ITERATIONS = 10;
 var NEWTON_MIN_SLOPE = 0.001;
 var SUBDIVISION_PRECISION = 0.0000001;
 var SUBDIVISION_MAX_ITERATIONS = 10;
