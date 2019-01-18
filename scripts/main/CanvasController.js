@@ -15,7 +15,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param instructions The instructions.
          */
         constructor(container, instructions) {
-            this.currStep = -1;
+            this.currStep = 0;
             this.animating = false;
             this.lastHeight = 0;
             this.container = container;
@@ -62,7 +62,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.container.appendChild(this.canvas);
             //Initialize Components and display first step
             this.initContent(instructions);
-            this.nextStep();
+            this.recalc();
             //Bind next step to canvas/text click
             this.nextStep = this.nextStep.bind(this);
             this.canvas.addEventListener("click", this.nextStep);
@@ -97,7 +97,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          */
         recalc() {
             this.currStates = this.calcLayout(this.currStep);
-            this.fitSize(this.currStates[this.currStates.length - 1].height);
+            let height = this.currStates[this.currStates.length - 1].height;
+            this.fitSize(height);
+            this.lastHeight = height;
             this.redraw();
         }
         /**

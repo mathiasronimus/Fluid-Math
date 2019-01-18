@@ -32,7 +32,7 @@ export default class CanvasController {
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
 
-    protected currStep = -1;
+    protected currStep = 0;
     protected steps: any[];
 
     protected terms: Term[];
@@ -101,7 +101,7 @@ export default class CanvasController {
 
         //Initialize Components and display first step
         this.initContent(instructions);
-        this.nextStep();
+        this.recalc();
 
         //Bind next step to canvas/text click
         this.nextStep = this.nextStep.bind(this);
@@ -141,7 +141,9 @@ export default class CanvasController {
      */
     protected recalc() {
         this.currStates = this.calcLayout(this.currStep);
-        this.fitSize(this.currStates[this.currStates.length - 1].height);
+        let height = this.currStates[this.currStates.length - 1].height;
+        this.fitSize(height);
+        this.lastHeight = height;
         this.redraw();
     }
 
