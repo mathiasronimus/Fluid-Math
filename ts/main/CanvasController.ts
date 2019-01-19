@@ -9,7 +9,6 @@ import AnimationSet from '../animation/AnimationSet';
 import MoveAnimation from "../animation/MoveAnimation";
 import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
-import CanvasSizeAnimation from "../animation/CanvasSizeAnimation";
 import C from './consts';
 import EqContent from "../layout/EqContent";
 import ColorAnimation from "../animation/ColorAnimation";
