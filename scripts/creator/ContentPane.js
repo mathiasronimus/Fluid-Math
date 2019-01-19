@@ -1,4 +1,4 @@
-define(["require", "exports", "../main/consts"], function (require, exports, consts_1) {
+define(["require", "exports", "../main/consts", "../main/helpers"], function (require, exports, consts_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class ContentPane {
@@ -234,40 +234,47 @@ define(["require", "exports", "../main/consts"], function (require, exports, con
          * terms in this slideshow.
          */
         getMetrics() {
-            let metrics = {};
-            metrics['widths'] = [];
-            /* Look for the max ascent and
-               descent, which all terms will use. */
-            let maxAscent = 0;
-            let maxDescent = 0;
-            this.terms.forEach(term => {
-                let termMetrics = this.measureTerm(term);
-                if (termMetrics['ascent'] > maxAscent) {
-                    maxAscent = termMetrics['ascent'];
-                }
-                if (termMetrics['descent'] > maxDescent) {
-                    maxDescent = termMetrics['descent'];
-                }
-                //All terms have their own width
-                metrics['widths'].push(termMetrics['width']);
-            });
-            metrics['ascent'] = maxAscent;
-            metrics['height'] = maxAscent + maxDescent;
-            return metrics;
+            let metricsArr = [];
+            //Calculate a metrics object for each width tier
+            for (let i = 0; i < consts_1.default.widthTiers.length; i++) {
+                let metrics = {};
+                metricsArr.push(metrics);
+                metrics['widths'] = [];
+                /* Look for the max ascent and
+                   descent, which all terms will use. */
+                let maxAscent = 0;
+                let maxDescent = 0;
+                this.terms.forEach(term => {
+                    let termMetrics = this.measureTerm(term, i);
+                    if (termMetrics['ascent'] > maxAscent) {
+                        maxAscent = termMetrics['ascent'];
+                    }
+                    if (termMetrics['descent'] > maxDescent) {
+                        maxDescent = termMetrics['descent'];
+                    }
+                    //All terms have their own width
+                    metrics['widths'].push(termMetrics['width']);
+                });
+                metrics['ascent'] = maxAscent;
+                metrics['height'] = maxAscent + maxDescent;
+            }
+            return metricsArr;
         }
         /**
          * Measure the metrics for a term.
          *
          * @param term The term to measure.
+         * @param tier The width tier to measure this term for.
          */
-        measureTerm(term) {
+        measureTerm(term, tier) {
             let toReturn = {};
+            let fontSize = helpers_1.getFontSizeForTier(tier);
             //Create a canvas to measure with
             let testCanvas = document.createElement("canvas");
-            testCanvas.width = 400;
-            testCanvas.height = consts_1.default.fontSize * consts_1.default.testCanvasFontSizeMultiple;
+            testCanvas.width = consts_1.default.testCanvasWidth;
+            testCanvas.height = fontSize * consts_1.default.testCanvasFontSizeMultiple;
             let testCtx = testCanvas.getContext("2d");
-            testCtx.font = consts_1.default.fontSize + "px " + consts_1.default.fontFamily;
+            testCtx.font = fontSize + "px " + consts_1.default.fontFamily;
             //Get the width
             toReturn['width'] = testCtx.measureText(term).width;
             //Draw the text on the canvas to measure ascent and descent

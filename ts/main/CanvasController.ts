@@ -18,6 +18,7 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
+import { getFontSizeForTier } from "./helpers";
 
 /**
  * Responsible for managing a single canvas,
@@ -41,6 +42,7 @@ export default class CanvasController {
     protected currStates: LayoutState[];
     protected animating = false;
     protected lastHeight = 0;
+    protected fontSize;
 
     /**
      * Create a new Canvas Controller,
@@ -102,6 +104,7 @@ export default class CanvasController {
 
         //Initialize Components and display first step
         this.initContent(instructions);
+        this.updateFontSize();
         this.recalc();
 
         //Bind next step to canvas/text click
@@ -113,7 +116,12 @@ export default class CanvasController {
 
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
+        window.addEventListener('resize', this.updateFontSize.bind(this));
         window.addEventListener('resize', this.recalc);
+    }
+
+    protected updateFontSize() {
+        this.fontSize = getFontSizeForTier(window['currentWidthTier']);
     }
 
     /**
@@ -399,7 +407,7 @@ export default class CanvasController {
         this.canvas.width = w * pixelRatio;
         this.canvas.height = h * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
-        this.ctx.font = C.fontWeight + " " + C.fontSize + "px " + C.fontFamily;
+        this.ctx.font = C.fontWeight + " " + this.fontSize + "px " + C.fontFamily;
     }
 
     /**
@@ -411,11 +419,28 @@ export default class CanvasController {
      * @param instructions The instructions JSON Object.
      */
     protected initContent(instructions) {
+        let heights = [];
+        let ascents = [];
+
+        if (instructions.terms.length > 0) {
+            //Get the heights and ascents from each tier
+            for (let w = 0; w < C.widthTiers.length; w++) {
+                heights.push(instructions.metrics[w].height);
+                ascents.push(instructions.metrics[w].ascent);
+            }
+        }
+
         //Initialize all terms
-        for (let i = 0; i < instructions.terms.length; i++) {
-            let width = instructions.metrics.widths[i];
-            let text = instructions.terms[i];
-            let term = new Term(text, width, instructions.metrics.height, instructions.metrics.ascent);
+        for (let t = 0; t < instructions.terms.length; t++) {
+            let widths = [];
+
+            //Get the widths for each tier
+            for (let w = 0; w < C.widthTiers.length; w++) {
+                widths.push(instructions.metrics[w].widths[t]);
+            }
+
+            let text = instructions.terms[t];
+            let term = new Term(text, widths, heights, ascents);
             this.terms.push(term);
         }
         //Initialize h dividers

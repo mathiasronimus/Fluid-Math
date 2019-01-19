@@ -7,27 +7,46 @@ import TermLayoutState from '../animation/TermLayoutState';
 export default class Term extends EqContent<TermLayoutState> {
 
     private text: string;
+    private widths: number[];
+    private heights: number[];
+    private halfInnerWidths: number[];
+    private halfInnerHeights: number[];
+    private ascents: number[];
+
     private halfInnerWidth: number;
     private halfInnerHeight: number;
     private ascent: number;
 
-    constructor(text: string, width: number, height: number, ascent: number) {
+    constructor(text: string, widths: number[], heights: number[], ascents: number[]) {
         //At the time of term initialization, layout is unknown.
         super(C.termPadding);
-        this.halfInnerWidth = width / 2;
-        this.halfInnerHeight = height / 2;
-        this.width = width + this.padding.width();
-        this.height = height + this.padding.height();
-        this.ascent = ascent;
+        this.widths = widths;
+        this.heights = heights;
+        this.halfInnerWidths = this.widths.map(width => width / 2);
+        this.halfInnerHeights = this.heights.map(height => height / 2);
+        this.ascents = ascents; 
+        this.recalcDimensions();
+        window.addEventListener('resize', this.recalcDimensions.bind(this));
         this.text = text;
+    }
+
+    private recalcDimensions() {
+        this.height = this.calcHeight();
+        this.width = this.calcWidth();
+        let tier: number = window['currentWidthTier'];
+        this.halfInnerWidth = this.halfInnerWidths[tier];
+        this.halfInnerHeight = this.halfInnerHeights[tier];
+        this.ascent = this.ascents[tier];
     }
     
     protected calcHeight(): number {
-        return this.height;
+        let tier: number = window['currentWidthTier'];
+        return this.heights[tier] + this.padding.height();
     }
     
     protected calcWidth(): number {
-        return this.width;
+        let tier: number = window['currentWidthTier'];
+        return this.widths[tier] + this.padding.width();
     }
     
     addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): TermLayoutState {

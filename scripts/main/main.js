@@ -9,6 +9,17 @@ define(["require", "exports", "./CanvasController", "./consts", "./helpers"], fu
         inactive: function () { init(); }
     });
     function init() {
+        //Moto g5s: 360
+        //Moto g5s landscape: 592
+        //Pixel: 412
+        //Pixel landscape: 684
+        //My laptop: 1280
+        let test = document.createElement('p');
+        test.innerHTML = window.innerWidth + "";
+        document.body.appendChild(test);
+        window.addEventListener('resize', function () {
+            test.innerHTML = window.innerWidth + "";
+        });
         helpers_1.addStyleSheet();
         let containers = document.getElementsByClassName('eqContainer');
         //For each container, get its instructions from the server

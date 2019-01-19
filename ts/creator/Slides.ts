@@ -80,7 +80,7 @@ export default class Slides {
      * 
      * @param index The index of the slide.
      */
-    private setActiveSlide(index: number): void {
+    setActiveSlide(index: number): void {
         if (this.selectedEl) {
             this.selectedEl.classList.remove('selected');
         }

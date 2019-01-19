@@ -5,12 +5,17 @@ define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"],
         //Font: size in px
         fontFamily: 'Roboto',
         fontWeight: '400',
-        fontSize: 40,
+        fontSizes: [35, 30, 25, 20],
         borderRadius: 5,
+        //The tiers at which font size will change.
+        //More tiers means better layout but worse
+        //file size.
+        widthTiers: [670, 500, 350, 300],
         //Tuning variable, turn down for better
         //performance. Too low will give layout
         //innacuracies.
         testCanvasFontSizeMultiple: 5,
+        testCanvasWidth: 800,
         //Layout:
         defaultVBoxPadding: 0,
         defaultHBoxPadding: 0,

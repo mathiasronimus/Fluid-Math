@@ -120,8 +120,8 @@ export default class Controller {
             //To run when text entered
             let instructions = JSON.parse(textArea.value);
             this.contentManager.fromJSON(instructions);
-            this.currCanvas = undefined;
             this.slideManager.fromJSON(instructions);
+            this.slideManager.setActiveSlide(0);
             this.removeModal();
         }.bind(this));
         modalRoot.appendChild(ok);

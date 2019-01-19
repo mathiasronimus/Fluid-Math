@@ -71,4 +71,34 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
         ctx.stroke();
     }
     exports.line = line;
+    window['currentWidthTier'] = getWidthTier();
+    window.addEventListener('resize', function () {
+        window['currentWidthTier'] = getWidthTier();
+    });
+    /**
+     * Return the current width tier, as
+     * defined by consts.widthTiers. The
+     * returned number is the index of the
+     * consts.widthTiers array. If the window
+     * width is less than the minimum defined
+     * there, returns the index of the minimum
+     * width tier.
+     */
+    function getWidthTier() {
+        let currWidth = window.innerWidth;
+        for (let i = 0; i < consts_1.default.widthTiers.length; i++) {
+            if (currWidth > consts_1.default.widthTiers[i]) {
+                return i;
+            }
+        }
+        return consts_1.default.widthTiers.length - 1;
+    }
+    /**
+     * Calculates and returns the appropriate
+     * font size for a width tier.
+     */
+    function getFontSizeForTier(tier) {
+        return consts_1.default.fontSizes[tier];
+    }
+    exports.getFontSizeForTier = getFontSizeForTier;
 });

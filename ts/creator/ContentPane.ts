@@ -1,5 +1,6 @@
 import Controller from "./main";
 import C from '../main/consts';
+import { getFontSizeForTier } from "../main/helpers";
 
 export default class ContentPane {
 
@@ -279,43 +280,52 @@ export default class ContentPane {
      * terms in this slideshow.
      */
     getMetrics(): Object {
-        let metrics = {};
-        metrics['widths'] = [];
+        let metricsArr = [];
+        //Calculate a metrics object for each width tier
+        for (let i = 0; i < C.widthTiers.length; i++) {
+            let metrics = {};
+            metricsArr.push(metrics);
 
-        /* Look for the max ascent and
-           descent, which all terms will use. */
-        let maxAscent = 0;
-        let maxDescent = 0;
-        this.terms.forEach(term => {
-            let termMetrics = this.measureTerm(term);
-            if (termMetrics['ascent'] > maxAscent) {
-                maxAscent = termMetrics['ascent'];
-            }
-            if (termMetrics['descent'] > maxDescent) {
-                maxDescent = termMetrics['descent'];
-            }
-            //All terms have their own width
-            metrics['widths'].push(termMetrics['width']);
-        });
-        metrics['ascent'] = maxAscent;
-        metrics['height'] = maxAscent + maxDescent;
-        return metrics;
+            metrics['widths'] = [];
+    
+            /* Look for the max ascent and
+               descent, which all terms will use. */
+            let maxAscent = 0;
+            let maxDescent = 0;
+            this.terms.forEach(term => {
+                let termMetrics = this.measureTerm(term, i);
+                if (termMetrics['ascent'] > maxAscent) {
+                    maxAscent = termMetrics['ascent'];
+                }
+                if (termMetrics['descent'] > maxDescent) {
+                    maxDescent = termMetrics['descent'];
+                }
+                //All terms have their own width
+                metrics['widths'].push(termMetrics['width']);
+            });
+            metrics['ascent'] = maxAscent;
+            metrics['height'] = maxAscent + maxDescent;
+        }
+        return metricsArr;
     }
 
     /**
      * Measure the metrics for a term.
      * 
      * @param term The term to measure.
+     * @param tier The width tier to measure this term for.
      */
-    private measureTerm(term: string): object {
+    private measureTerm(term: string, tier: number): object {
         let toReturn = {};
+
+        let fontSize = getFontSizeForTier(tier);
 
         //Create a canvas to measure with
         let testCanvas = document.createElement("canvas");
-        testCanvas.width = 400;
-        testCanvas.height = C.fontSize * C.testCanvasFontSizeMultiple;
+        testCanvas.width = C.testCanvasWidth;
+        testCanvas.height = fontSize * C.testCanvasFontSizeMultiple;
         let testCtx = testCanvas.getContext("2d");
-        testCtx.font = C.fontSize + "px " + C.fontFamily;
+        testCtx.font = fontSize + "px " + C.fontFamily;
 
         //Get the width
         toReturn['width'] = testCtx.measureText(term).width;

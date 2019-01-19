@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -63,6 +63,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.container.appendChild(this.canvas);
             //Initialize Components and display first step
             this.initContent(instructions);
+            this.updateFontSize();
             this.recalc();
             //Bind next step to canvas/text click
             this.nextStep = this.nextStep.bind(this);
@@ -72,7 +73,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
             //Redraw when window size changes
             this.recalc = this.recalc.bind(this);
+            window.addEventListener('resize', this.updateFontSize.bind(this));
             window.addEventListener('resize', this.recalc);
+        }
+        updateFontSize() {
+            this.fontSize = helpers_1.getFontSizeForTier(window['currentWidthTier']);
         }
         /**
          * Redraw the current step without animating.
@@ -330,7 +335,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.canvas.width = w * pixelRatio;
             this.canvas.height = h * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
-            this.ctx.font = consts_1.default.fontWeight + " " + consts_1.default.fontSize + "px " + consts_1.default.fontFamily;
+            this.ctx.font = consts_1.default.fontWeight + " " + this.fontSize + "px " + consts_1.default.fontFamily;
         }
         /**
          * Uses the instructions to initialize all
@@ -341,11 +346,24 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param instructions The instructions JSON Object.
          */
         initContent(instructions) {
+            let heights = [];
+            let ascents = [];
+            if (instructions.terms.length > 0) {
+                //Get the heights and ascents from each tier
+                for (let w = 0; w < consts_1.default.widthTiers.length; w++) {
+                    heights.push(instructions.metrics[w].height);
+                    ascents.push(instructions.metrics[w].ascent);
+                }
+            }
             //Initialize all terms
-            for (let i = 0; i < instructions.terms.length; i++) {
-                let width = instructions.metrics.widths[i];
-                let text = instructions.terms[i];
-                let term = new Term_1.default(text, width, instructions.metrics.height, instructions.metrics.ascent);
+            for (let t = 0; t < instructions.terms.length; t++) {
+                let widths = [];
+                //Get the widths for each tier
+                for (let w = 0; w < consts_1.default.widthTiers.length; w++) {
+                    widths.push(instructions.metrics[w].widths[t]);
+                }
+                let text = instructions.terms[t];
+                let term = new Term_1.default(text, widths, heights, ascents);
                 this.terms.push(term);
             }
             //Initialize h dividers

@@ -67,3 +67,35 @@ export function line(x1, y1, x2, y2, ctx: CanvasRenderingContext2D) {
     ctx.lineTo(x2, y2);
     ctx.stroke();
 }
+
+window['currentWidthTier'] = getWidthTier();
+window.addEventListener('resize', function() {
+    window['currentWidthTier'] = getWidthTier();
+});
+
+/**
+ * Return the current width tier, as
+ * defined by consts.widthTiers. The
+ * returned number is the index of the
+ * consts.widthTiers array. If the window
+ * width is less than the minimum defined
+ * there, returns the index of the minimum
+ * width tier.
+ */
+function getWidthTier(): number {
+    let currWidth = window.innerWidth;
+    for (let i = 0; i < C.widthTiers.length; i++) {
+        if (currWidth > C.widthTiers[i]) {
+            return i;
+        }
+    }
+    return C.widthTiers.length - 1;
+}
+
+/**
+ * Calculates and returns the appropriate
+ * font size for a width tier.
+ */
+export function getFontSizeForTier(tier: number): number {
+    return C.fontSizes[tier];
+}
