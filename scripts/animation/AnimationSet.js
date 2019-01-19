@@ -4,11 +4,15 @@ define(["require", "exports"], function (require, exports) {
     /**
      * Plays a set of animations and provides
      * options for controlling them as a group.
+     * Also erases the canvas before each frame.
      */
     class AnimationSet {
-        constructor(done) {
+        constructor(done, ctx, clearWidth, clearHeight) {
             this.animations = [];
             this.done = done;
+            this.ctx = ctx;
+            this.clearWidth = clearWidth;
+            this.clearHeight = clearHeight;
         }
         addAnimation(anim) {
             this.animations.push(anim);
@@ -20,6 +24,7 @@ define(["require", "exports"], function (require, exports) {
             this.numRunning = this.animations.length;
             let this_ = this;
             let doAll = function (timestamp) {
+                this_.ctx.clearRect(0, 0, this_.clearWidth, this_.clearHeight);
                 this_.animations.forEach(a => {
                     a.run(timestamp);
                 });

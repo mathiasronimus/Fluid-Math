@@ -41,7 +41,6 @@ export default class CanvasController {
 
     protected currStates: LayoutState[];
     protected animating = false;
-    protected lastHeight = 0;
     protected fontSize;
 
     /**
@@ -56,7 +55,7 @@ export default class CanvasController {
         this.steps = instructions.steps;
         this.terms = [];
         this.hDividers = [];
-        this.fitSize = this.fitSize.bind(this);
+        this.setSize = this.setSize.bind(this);
 
         this.progressLine = document.createElement('div');
         this.progressLine.className = "progressLine";
@@ -98,9 +97,13 @@ export default class CanvasController {
         }
 
         //Create canvas
+        let canvasContainer = document.createElement('div');
+        canvasContainer.className = 'canvas-container';
+        this.container.appendChild(canvasContainer);
+
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.container.appendChild(this.canvas);
+        canvasContainer.appendChild(this.canvas);
 
         //Initialize Components and display first step
         this.initContent(instructions);
@@ -150,9 +153,7 @@ export default class CanvasController {
      */
     protected recalc() {
         this.currStates = this.calcLayout(this.currStep);
-        let height = this.currStates[this.currStates.length - 1].height;
-        this.fitSize(height);
-        this.lastHeight = height;
+        this.setSize(this.currStates);
         this.redraw();
     }
 
@@ -170,11 +171,8 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         this.currStates = this.calcLayout(this.currStep);
-
-        let rootLayout = this.currStates[this.currStates.length - 1];
-        let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height, this.currStep - 1, this.currStep);
-        this.lastHeight = height;
+        let dimens = this.setSize(this.currStates);
+        let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
         this.animating = true;
         anims.start();
     }
@@ -192,11 +190,8 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         this.currStates = this.calcLayout(this.currStep);
-
-        let rootLayout = this.currStates[this.currStates.length - 1];
-        let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height, this.currStep + 1, this.currStep);
-        this.lastHeight = height;
+        let dimens = this.setSize(this.currStates);        
+        let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
         this.animating = true;
         anims.start();
     }
@@ -215,11 +210,8 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         this.currStates = this.calcLayout(this.currStep);
-
-        let rootLayout = this.currStates[this.currStates.length - 1];
-        let height = rootLayout.height;
-        let anims = this.diff(oldStates, this.lastHeight, height, oldStep, 0);
-        this.lastHeight = height;
+        let dimens = this.setSize(this.currStates);
+        let anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
         this.animating = true;
         anims.start();
     }
@@ -279,14 +271,13 @@ export default class CanvasController {
      * @param cHeightBefore The height of the canvas before the animation.
      * @param cHeightAfter The height of the canvas after the animation.
      */
-    private diff(oldStates: LayoutState[], cHeightBefore: number, cHeightAfter: number, stepBefore: number, stepAfter: number): AnimationSet {
+    private diff(oldStates: LayoutState[], canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
 
         let set = new AnimationSet(() => {
             //When done
             this.animating = false;
-        });
+        }, this.ctx, canvasWidth, canvasHeight);
 
-        set.addAnimation(new CanvasSizeAnimation(cHeightBefore, cHeightAfter, this.fitSize, set));
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -380,34 +371,31 @@ export default class CanvasController {
     }
 
     /**
-     * Fit the width of the canvas to the container,
-     * but set the height.
+     * Sets the dimensions of the canvas based on
+     * a set of layout states, and also returns
+     * these dimensions.
      * 
-     * @param h The new height.
+     * @param states A set of layout states that will be used to determine the right dimensions.
      */
-    private fitSize(h: number) {
-        let contWidth = this.container.clientWidth;
-        this.setSize(contWidth, h);
-    }
-
-    /**
-     * Sets the size of the canvas and updates
-     * the pixel ratio.
-     * @param w The number of css pixels in width.
-     * @param h The number of css pixel in height.
-     */
-    private setSize(w: number, h: number) {
+    private setSize(states: LayoutState[]): [number, number] {
+        let root = states[states.length - 1];
+        let rootHeight = root.height;
+        let rootWidth = root.width;
+        let currWidth = this.container.clientWidth;
+        let newWidth = rootWidth > currWidth ? rootWidth : currWidth;
 
         //Update canvas css size
-        this.canvas.style.width = w + "px";
-        this.canvas.style.height = h + "px";
+        this.canvas.style.width = newWidth + "px";
+        this.canvas.style.height = rootHeight + "px";
 
         //Update canvas pixel size for HDPI
         let pixelRatio = window.devicePixelRatio || 1;
-        this.canvas.width = w * pixelRatio;
-        this.canvas.height = h * pixelRatio;
+        this.canvas.width = newWidth * pixelRatio;
+        this.canvas.height = rootHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
         this.ctx.font = C.fontWeight + " " + this.fontSize + "px " + C.fontFamily;
+
+        return [newWidth, rootHeight];
     }
 
     /**
@@ -514,7 +502,10 @@ export default class CanvasController {
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
         let root = this.parseContainer(rootObj);
-        root.setWidth(this.container.clientWidth);
+        //If content doesn't take up full width, center it
+        if (root.getWidth() < this.container.clientWidth) {
+            root.setWidth(this.container.clientWidth);
+        }
 
         //Set the text
         if (this.textArea) {

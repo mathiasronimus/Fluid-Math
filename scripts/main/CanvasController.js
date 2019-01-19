@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/CanvasSizeAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, CanvasSizeAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     /**
@@ -17,12 +17,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         constructor(container, instructions) {
             this.currStep = 0;
             this.animating = false;
-            this.lastHeight = 0;
             this.container = container;
             this.steps = instructions.steps;
             this.terms = [];
             this.hDividers = [];
-            this.fitSize = this.fitSize.bind(this);
+            this.setSize = this.setSize.bind(this);
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
             this.container.appendChild(this.progressLine);
@@ -58,9 +57,12 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 restButton.addEventListener("click", this.restart);
             }
             //Create canvas
+            let canvasContainer = document.createElement('div');
+            canvasContainer.className = 'canvas-container';
+            this.container.appendChild(canvasContainer);
             this.canvas = document.createElement("canvas");
             this.ctx = this.canvas.getContext("2d");
-            this.container.appendChild(this.canvas);
+            canvasContainer.appendChild(this.canvas);
             //Initialize Components and display first step
             this.initContent(instructions);
             this.updateFontSize();
@@ -103,9 +105,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          */
         recalc() {
             this.currStates = this.calcLayout(this.currStep);
-            let height = this.currStates[this.currStates.length - 1].height;
-            this.fitSize(height);
-            this.lastHeight = height;
+            this.setSize(this.currStates);
             this.redraw();
         }
         /**
@@ -120,10 +120,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStep++;
             let oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let rootLayout = this.currStates[this.currStates.length - 1];
-            let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height, this.currStep - 1, this.currStep);
-            this.lastHeight = height;
+            let dimens = this.setSize(this.currStates);
+            let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
             this.animating = true;
             anims.start();
         }
@@ -138,10 +136,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStep--;
             let oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let rootLayout = this.currStates[this.currStates.length - 1];
-            let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height, this.currStep + 1, this.currStep);
-            this.lastHeight = height;
+            let dimens = this.setSize(this.currStates);
+            let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
             this.animating = true;
             anims.start();
         }
@@ -157,10 +153,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStep = 0;
             let oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let rootLayout = this.currStates[this.currStates.length - 1];
-            let height = rootLayout.height;
-            let anims = this.diff(oldStates, this.lastHeight, height, oldStep, 0);
-            this.lastHeight = height;
+            let dimens = this.setSize(this.currStates);
+            let anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
             this.animating = true;
             anims.start();
         }
@@ -217,12 +211,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param cHeightBefore The height of the canvas before the animation.
          * @param cHeightAfter The height of the canvas after the animation.
          */
-        diff(oldStates, cHeightBefore, cHeightAfter, stepBefore, stepAfter) {
+        diff(oldStates, canvasWidth, canvasHeight, stepBefore, stepAfter) {
             let set = new AnimationSet_1.default(() => {
                 //When done
                 this.animating = false;
-            });
-            set.addAnimation(new CanvasSizeAnimation_1.default(cHeightBefore, cHeightAfter, this.fitSize, set));
+            }, this.ctx, canvasWidth, canvasHeight);
             set.addAnimation(new ProgressAnimation_1.default(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
             for (let i = 0; i < this.getNumContent(); i++) {
@@ -311,31 +304,28 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
         }
         /**
-         * Fit the width of the canvas to the container,
-         * but set the height.
+         * Sets the dimensions of the canvas based on
+         * a set of layout states, and also returns
+         * these dimensions.
          *
-         * @param h The new height.
+         * @param states A set of layout states that will be used to determine the right dimensions.
          */
-        fitSize(h) {
-            let contWidth = this.container.clientWidth;
-            this.setSize(contWidth, h);
-        }
-        /**
-         * Sets the size of the canvas and updates
-         * the pixel ratio.
-         * @param w The number of css pixels in width.
-         * @param h The number of css pixel in height.
-         */
-        setSize(w, h) {
+        setSize(states) {
+            let root = states[states.length - 1];
+            let rootHeight = root.height;
+            let rootWidth = root.width;
+            let currWidth = this.container.clientWidth;
+            let newWidth = rootWidth > currWidth ? rootWidth : currWidth;
             //Update canvas css size
-            this.canvas.style.width = w + "px";
-            this.canvas.style.height = h + "px";
+            this.canvas.style.width = newWidth + "px";
+            this.canvas.style.height = rootHeight + "px";
             //Update canvas pixel size for HDPI
             let pixelRatio = window.devicePixelRatio || 1;
-            this.canvas.width = w * pixelRatio;
-            this.canvas.height = h * pixelRatio;
+            this.canvas.width = newWidth * pixelRatio;
+            this.canvas.height = rootHeight * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
             this.ctx.font = consts_1.default.fontWeight + " " + this.fontSize + "px " + consts_1.default.fontFamily;
+            return [newWidth, rootHeight];
         }
         /**
          * Uses the instructions to initialize all
@@ -437,7 +427,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             //First create the structure of containers in memory
             let rootObj = this.steps[idx].root;
             let root = this.parseContainer(rootObj);
-            root.setWidth(this.container.clientWidth);
+            //If content doesn't take up full width, center it
+            if (root.getWidth() < this.container.clientWidth) {
+                root.setWidth(this.container.clientWidth);
+            }
             //Set the text
             if (this.textArea) {
                 this.textArea.innerHTML = this.steps[idx].text;
