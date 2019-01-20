@@ -5,12 +5,12 @@ const constants = {
     //Font: size in px
     fontFamily: 'Roboto',
     fontWeight: '400',
-    fontSizes: [35, 30, 25, 20],
+    fontSizes: [35, 30, 25],
     borderRadius: 5,
     //The tiers at which font size will change.
     //More tiers means better layout but worse
     //file size.
-    widthTiers: [670, 500, 350, 300],
+    widthTiers: [670, 500, 300],
     //Tuning variable, turn down for better
     //performance. Too low will give layout
     //innacuracies.
