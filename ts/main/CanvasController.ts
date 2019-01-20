@@ -40,7 +40,9 @@ export default class CanvasController {
 
     protected currStates: LayoutState[];
     protected animating = false;
-    protected fontSize;
+    protected fontSize: number;
+    protected lastHeight: number = 0;
+    protected lastWidth: number = 0;
 
     /**
      * Create a new Canvas Controller,
@@ -122,6 +124,11 @@ export default class CanvasController {
         window.addEventListener('resize', this.recalc);
     }
 
+    /**
+     * Updates the font size for this canvas.
+     * Should be called when the window size
+     * changes.
+     */
     protected updateFontSize() {
         this.fontSize = getFontSizeForTier(window['currentWidthTier']);
     }
@@ -383,6 +390,11 @@ export default class CanvasController {
         let currWidth = this.container.clientWidth;
         let newWidth = rootWidth > currWidth ? rootWidth : currWidth;
 
+        if (newWidth === this.lastWidth && rootHeight === this.lastHeight) {
+            //Early return, no need to change size
+            return [newWidth, rootHeight];
+        }
+
         //Update canvas css size
         this.canvas.style.width = newWidth + "px";
         this.canvas.style.height = rootHeight + "px";
@@ -393,6 +405,9 @@ export default class CanvasController {
         this.canvas.height = rootHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
         this.ctx.font = C.fontWeight + " " + this.fontSize + "px " + C.fontFamily;
+
+        this.lastHeight = rootHeight;
+        this.lastWidth = newWidth;
 
         return [newWidth, rootHeight];
     }

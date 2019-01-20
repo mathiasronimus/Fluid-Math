@@ -17,6 +17,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         function CanvasController(container, instructions) {
             this.currStep = 0;
             this.animating = false;
+            this.lastHeight = 0;
+            this.lastWidth = 0;
             this.container = container;
             this.steps = instructions.steps;
             this.terms = [];
@@ -78,6 +80,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             window.addEventListener('resize', this.updateFontSize.bind(this));
             window.addEventListener('resize', this.recalc);
         }
+        /**
+         * Updates the font size for this canvas.
+         * Should be called when the window size
+         * changes.
+         */
         CanvasController.prototype.updateFontSize = function () {
             this.fontSize = helpers_1.getFontSizeForTier(window['currentWidthTier']);
         };
@@ -318,6 +325,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var rootWidth = root.width;
             var currWidth = this.container.clientWidth;
             var newWidth = rootWidth > currWidth ? rootWidth : currWidth;
+            if (newWidth === this.lastWidth && rootHeight === this.lastHeight) {
+                //Early return, no need to change size
+                return [newWidth, rootHeight];
+            }
             //Update canvas css size
             this.canvas.style.width = newWidth + "px";
             this.canvas.style.height = rootHeight + "px";
@@ -327,6 +338,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.canvas.height = rootHeight * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
             this.ctx.font = consts_1["default"].fontWeight + " " + this.fontSize + "px " + consts_1["default"].fontFamily;
+            this.lastHeight = rootHeight;
+            this.lastWidth = newWidth;
             return [newWidth, rootHeight];
         };
         /**
