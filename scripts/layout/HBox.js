@@ -1,40 +1,52 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "./EqContainer", "./Padding", "../animation/LayoutState", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, EqContainer_1, Padding_1, LayoutState_1, consts_1, helpers_1, LinearContainer_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class HBox extends LinearContainer_1.default {
-        constructor(children, padding) {
-            super(children, padding);
-            this.width = this.calcWidth();
-            this.height = this.calcHeight();
+    exports.__esModule = true;
+    var HBox = (function (_super) {
+        __extends(HBox, _super);
+        function HBox(children, padding) {
+            var _this = _super.call(this, children, padding) || this;
+            _this.width = _this.calcWidth();
+            _this.height = _this.calcHeight();
+            return _this;
         }
-        calcHeight() {
-            let maxHeight = 0;
-            for (let i = 0; i < this.children.length; i++) {
-                let currChild = this.children[i];
-                let childHeight = currChild.getHeight();
+        HBox.prototype.calcHeight = function () {
+            var maxHeight = 0;
+            for (var i = 0; i < this.children.length; i++) {
+                var currChild = this.children[i];
+                var childHeight = currChild.getHeight();
                 if (childHeight > maxHeight) {
                     maxHeight = childHeight;
                 }
             }
             return maxHeight + this.padding.height();
-        }
-        calcWidth() {
-            let totalWidth = 0;
-            for (let i = 0; i < this.children.length; i++) {
-                let currChild = this.children[i];
+        };
+        HBox.prototype.calcWidth = function () {
+            var totalWidth = 0;
+            for (var i = 0; i < this.children.length; i++) {
+                var currChild = this.children[i];
                 totalWidth += currChild.getWidth();
             }
             return totalWidth + this.padding.width();
-        }
-        creatorDraw(l, ctx) {
-            ctx.strokeStyle = consts_1.default.creatorContainerStroke;
+        };
+        HBox.prototype.creatorDraw = function (l, ctx) {
+            ctx.strokeStyle = consts_1["default"].creatorContainerStroke;
             //Outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
-            let padD = consts_1.default.creatorHBoxPadding;
-            let pad = new Padding_1.default(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
+            var padD = consts_1["default"].creatorHBoxPadding;
+            var pad = new Padding_1["default"](padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
             //Middle border, top and bottom
-            ctx.setLineDash(consts_1.default.creatorLineDash);
+            ctx.setLineDash(consts_1["default"].creatorLineDash);
             helpers_1.line(l.tlx + pad.left / 2, l.tly, l.tlx + pad.left / 2, l.tly + l.height, ctx);
             helpers_1.line(l.tlx + l.width - pad.right / 2, l.tly, l.tlx + l.width - pad.right / 2, l.tly + l.height, ctx);
             //Inner border, top and bottom
@@ -42,17 +54,17 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
             helpers_1.line(l.tlx + pad.left, l.tly, l.tlx + pad.left, l.tly + l.height, ctx);
             helpers_1.line(l.tlx + l.width - pad.right, l.tly, l.tlx + l.width - pad.right, l.tly + l.height, ctx);
             ctx.strokeStyle = "#000";
-        }
-        addClick(clickedLayout, x, y, toAdd) {
+        };
+        HBox.prototype.addClick = function (clickedLayout, x, y, toAdd) {
             if (clickedLayout.onLeft(x)) {
-                if (x - clickedLayout.tlx <= (consts_1.default.creatorHBoxPadding.left / 2) * clickedLayout.scale) {
+                if (x - clickedLayout.tlx <= (consts_1["default"].creatorHBoxPadding.left / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
-                    let containerLayout = clickedLayout.layoutParent;
+                    var containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerLayout.component;
+                        var container = containerLayout.component;
                         container.addClickOnChild(clickedLayout, x, y, toAdd);
                     }
                 }
@@ -65,14 +77,14 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
                 //On right
                 if (clickedLayout.tlx + clickedLayout.width - x
                     <=
-                        (consts_1.default.creatorHBoxPadding.right / 2) * clickedLayout.scale) {
+                        (consts_1["default"].creatorHBoxPadding.right / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
-                    let containerLayout = clickedLayout.layoutParent;
+                    var containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerLayout.component;
+                        var container = containerLayout.component;
                         container.addClickOnChild(clickedLayout, x, y, toAdd);
                     }
                 }
@@ -81,8 +93,8 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
                     this.children.push(toAdd);
                 }
             }
-        }
-        addClickOnChild(clickedLayout, x, y, toAdd) {
+        };
+        HBox.prototype.addClickOnChild = function (clickedLayout, x, y, toAdd) {
             if (clickedLayout.onLeft(x)) {
                 //Add left
                 this.addBefore(toAdd, clickedLayout.component);
@@ -91,27 +103,28 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
                 //Add right
                 this.addAfter(toAdd, clickedLayout.component);
             }
-        }
-        toStepLayout(controller) {
-            let toReturn = {};
+        };
+        HBox.prototype.toStepLayout = function (controller) {
+            var toReturn = {};
             toReturn['type'] = 'hbox';
-            toReturn['children'] = EqContainer_1.default.childrenToStepLayout(this.children, controller);
+            toReturn['children'] = EqContainer_1["default"].childrenToStepLayout(this.children, controller);
             return toReturn;
-        }
-        addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
-            const innerHeight = (this.getHeight() - this.padding.height()) * currScale;
-            let upToX = tlx + this.padding.left * currScale;
-            for (let i = 0; i < this.children.length; i++) {
-                let currChild = this.children[i];
-                let childHeight = currChild.getHeight() * currScale;
+        };
+        HBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+            var state = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+            var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
+            var upToX = tlx + this.padding.left * currScale;
+            for (var i = 0; i < this.children.length; i++) {
+                var currChild = this.children[i];
+                var childHeight = currChild.getHeight() * currScale;
                 //Position child in the middle vertically
-                let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
+                var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
                 upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
             }
             layouts.push(state);
             return state;
-        }
-    }
-    exports.default = HBox;
+        };
+        return HBox;
+    }(LinearContainer_1["default"]));
+    exports["default"] = HBox;
 });

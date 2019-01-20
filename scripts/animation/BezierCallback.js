@@ -1,20 +1,20 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     /**
      * Animates by repeatedly calling a step
      * function whose completion over time is
      * determined by a bezier curve.
      */
-    class BezierCallback {
-        constructor(duration, easing, set) {
+    var BezierCallback = (function () {
+        function BezierCallback(duration, easing, set) {
             this.started = false;
             this.done = false;
             this.duration = duration;
             this.easing = easing;
             this.set = set;
         }
-        run(timestamp) {
+        BezierCallback.prototype.run = function (timestamp) {
             if (this.done)
                 return;
             if (!this.started) {
@@ -24,7 +24,7 @@ define(["require", "exports"], function (require, exports) {
                 this.step(0);
                 return;
             }
-            let elapsed = timestamp - this.tOffset;
+            var elapsed = timestamp - this.tOffset;
             if (elapsed >= this.duration) {
                 //Done
                 this.step(1);
@@ -34,7 +34,8 @@ define(["require", "exports"], function (require, exports) {
             else {
                 this.step(this.easing(elapsed / this.duration));
             }
-        }
-    }
-    exports.default = BezierCallback;
+        };
+        return BezierCallback;
+    }());
+    exports["default"] = BezierCallback;
 });

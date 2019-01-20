@@ -1,27 +1,28 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Padding {
-        constructor(top, left, bottom, right) {
+    exports.__esModule = true;
+    var Padding = (function () {
+        function Padding(top, left, bottom, right) {
             this.top = top;
             this.left = left;
             this.bottom = bottom;
             this.right = right;
         }
-        height() {
+        Padding.prototype.height = function () {
             return this.top + this.bottom;
-        }
-        width() {
+        };
+        Padding.prototype.width = function () {
             return this.left + this.right;
-        }
+        };
         /**
          * Return a new Padding with same insets on
          * each side.
          * @param amount The amount of inset on each side.
          */
-        static even(amount) {
+        Padding.even = function (amount) {
             return new Padding(amount, amount, amount, amount);
-        }
-    }
-    exports.default = Padding;
+        };
+        return Padding;
+    }());
+    exports["default"] = Padding;
 });

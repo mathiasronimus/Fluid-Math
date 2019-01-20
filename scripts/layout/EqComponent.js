@@ -1,27 +1,28 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     /**
      * Represents any component (container, content)
      * that takes up space and forms a part of the
      * layout of a step.
      */
-    class EqComponent {
-        constructor(padding) {
+    var EqComponent = (function () {
+        function EqComponent(padding) {
             this.padding = padding;
         }
-        setWidth(newWidth) {
+        EqComponent.prototype.setWidth = function (newWidth) {
             this.width = newWidth;
-        }
-        setHeight(newHeight) {
+        };
+        EqComponent.prototype.setHeight = function (newHeight) {
             this.height = newHeight;
-        }
-        getWidth() {
+        };
+        EqComponent.prototype.getWidth = function () {
             return this.width;
-        }
-        getHeight() {
+        };
+        EqComponent.prototype.getHeight = function () {
             return this.height;
-        }
-    }
-    exports.default = EqComponent;
+        };
+        return EqComponent;
+    }());
+    exports["default"] = EqComponent;
 });

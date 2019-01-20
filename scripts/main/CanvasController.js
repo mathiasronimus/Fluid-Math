@@ -1,12 +1,12 @@
 define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     /**
      * Responsible for managing a single canvas,
      * playing through the set of instructions
      * and animating.
      */
-    class CanvasController {
+    var CanvasController = (function () {
         /**
          * Create a new Canvas Controller,
          * setting up equation playback in the
@@ -14,7 +14,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param container The container.
          * @param instructions The instructions.
          */
-        constructor(container, instructions) {
+        function CanvasController(container, instructions) {
             this.currStep = 0;
             this.animating = false;
             this.container = container;
@@ -25,14 +25,14 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.progressLine = document.createElement('div');
             this.progressLine.className = "progressLine";
             this.container.appendChild(this.progressLine);
-            this.progressLine.style.left = consts_1.default.borderRadius + 'px';
+            this.progressLine.style.left = consts_1["default"].borderRadius + 'px';
             //Create area above canvas
-            let upperArea = document.createElement("div");
+            var upperArea = document.createElement("div");
             upperArea.className = "eqUpper";
             this.container.appendChild(upperArea);
             //Create back button, if needed
             if (this.steps.length > 1) {
-                let backButton = document.createElement("div");
+                var backButton = document.createElement("div");
                 backButton.className = "material-icons eqIcon";
                 backButton.innerHTML = "arrow_back";
                 upperArea.appendChild(backButton);
@@ -49,7 +49,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
             //Create restart button
             if (this.steps.length > 1) {
-                let restButton = document.createElement("div");
+                var restButton = document.createElement("div");
                 restButton.className = "material-icons eqIcon";
                 restButton.innerHTML = "replay";
                 upperArea.appendChild(restButton);
@@ -57,7 +57,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 restButton.addEventListener("click", this.restart);
             }
             //Create canvas
-            let canvasContainer = document.createElement('div');
+            var canvasContainer = document.createElement('div');
             canvasContainer.className = 'canvas-container';
             this.container.appendChild(canvasContainer);
             this.canvas = document.createElement("canvas");
@@ -78,111 +78,112 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             window.addEventListener('resize', this.updateFontSize.bind(this));
             window.addEventListener('resize', this.recalc);
         }
-        updateFontSize() {
+        CanvasController.prototype.updateFontSize = function () {
             this.fontSize = helpers_1.getFontSizeForTier(window['currentWidthTier']);
-        }
+        };
         /**
          * Redraw the current step without animating.
          * Does not recalculate layout.
          */
-        redraw() {
+        CanvasController.prototype.redraw = function () {
+            var _this = this;
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.currStates.forEach(f => {
-                this.ctx.save();
-                if (f.component instanceof EqContent_1.default) {
-                    f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
-                    f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
-                    f.component.draw(f, f, 0, this.ctx);
+            this.currStates.forEach(function (f) {
+                _this.ctx.save();
+                if (f.component instanceof EqContent_1["default"]) {
+                    f.component.setColor(_this.getColorForContent(_this.getContentReference(f.component)));
+                    f.component.setOpacity(_this.getOpacityForContent(_this.getContentReference(f.component)));
+                    f.component.draw(f, f, 0, _this.ctx);
                 }
-                this.ctx.restore();
+                _this.ctx.restore();
             });
             //Redraw the progress line
-            let widthPerSegment = (this.container.clientWidth - consts_1.default.borderRadius * 2) / (this.steps.length - 1);
+            var widthPerSegment = (this.container.clientWidth - consts_1["default"].borderRadius * 2) / (this.steps.length - 1);
             this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
-        }
+        };
         /**
          * Recalculates and redraws the current step.
          */
-        recalc() {
+        CanvasController.prototype.recalc = function () {
             this.currStates = this.calcLayout(this.currStep);
             this.setSize(this.currStates);
             this.redraw();
-        }
+        };
         /**
          * If possible, animate to the next step
          * in the sequence.
          */
-        nextStep() {
+        CanvasController.prototype.nextStep = function () {
             if (this.currStep + 1 >= this.steps.length || this.animating) {
                 //Can't go to next step
                 return;
             }
             this.currStep++;
-            let oldStates = this.currStates;
+            var oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let dimens = this.setSize(this.currStates);
-            let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
+            var dimens = this.setSize(this.currStates);
+            var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
             this.animating = true;
             anims.start();
-        }
+        };
         /**
          * If possible, animate to the previous step.
          */
-        prevStep() {
+        CanvasController.prototype.prevStep = function () {
             if (this.currStep - 1 < 0 || this.animating) {
                 //Can't go to next step
                 return;
             }
             this.currStep--;
-            let oldStates = this.currStates;
+            var oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let dimens = this.setSize(this.currStates);
-            let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
+            var dimens = this.setSize(this.currStates);
+            var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
             this.animating = true;
             anims.start();
-        }
+        };
         /**
          * Return to the first step.
          */
-        restart() {
+        CanvasController.prototype.restart = function () {
             if (this.animating) {
                 //Can't go to next step
                 return;
             }
-            let oldStep = this.currStep;
+            var oldStep = this.currStep;
             this.currStep = 0;
-            let oldStates = this.currStates;
+            var oldStates = this.currStates;
             this.currStates = this.calcLayout(this.currStep);
-            let dimens = this.setSize(this.currStates);
-            let anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
+            var dimens = this.setSize(this.currStates);
+            var anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
             this.animating = true;
             anims.start();
-        }
+        };
         /**
          * Returns the total amount of content
          * in this slideshow.
          */
-        getNumContent() {
+        CanvasController.prototype.getNumContent = function () {
             return this.terms.length + this.hDividers.length;
-        }
+        };
         /**
          * Returns whether the concatenated
          * index belongs to a term.
          *
          * @param i The index.
          */
-        inTermRange(i) {
+        CanvasController.prototype.inTermRange = function (i) {
             return i >= 0 && i < this.terms.length;
-        }
+        };
         /**
          * Returns whether the concatenated
          * index belongs to an h divider.
          *
          * @param i The index.
          */
-        inHDividerRange(i) {
+        CanvasController.prototype.inHDividerRange = function (i) {
             return i >= this.terms.length && i < this.terms.length + this.hDividers.length;
-        }
+        };
         /**
          * Returns the content for a particular
          * index. This is used when looping through
@@ -190,7 +191,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param i The index of the content to get.
          */
-        getContent(i) {
+        CanvasController.prototype.getContent = function (i) {
             if (this.inTermRange(i)) {
                 return this.terms[i];
             }
@@ -200,7 +201,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             else {
                 throw "content out of bounds";
             }
-        }
+        };
         /**
          * Calculates and returns a set of animations
          * to play between the current and old step.
@@ -211,55 +212,56 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * @param cHeightBefore The height of the canvas before the animation.
          * @param cHeightAfter The height of the canvas after the animation.
          */
-        diff(oldStates, canvasWidth, canvasHeight, stepBefore, stepAfter) {
-            let set = new AnimationSet_1.default(() => {
+        CanvasController.prototype.diff = function (oldStates, canvasWidth, canvasHeight, stepBefore, stepAfter) {
+            var _this = this;
+            var set = new AnimationSet_1["default"](function () {
                 //When done
-                this.animating = false;
+                _this.animating = false;
             }, this.ctx, canvasWidth, canvasHeight);
-            set.addAnimation(new ProgressAnimation_1.default(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
+            set.addAnimation(new ProgressAnimation_1["default"](stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
-            for (let i = 0; i < this.getNumContent(); i++) {
-                let content = this.getContent(i);
-                let stateBefore = undefined;
+            for (var i = 0; i < this.getNumContent(); i++) {
+                var content = this.getContent(i);
+                var stateBefore = undefined;
                 //We may be initilizing, where there are no old frames and everything is added
                 if (oldStates !== undefined)
-                    for (let o = 0; o < oldStates.length; o++) {
-                        let oldState = oldStates[o];
+                    for (var o = 0; o < oldStates.length; o++) {
+                        var oldState = oldStates[o];
                         if (oldState.component === content) {
                             stateBefore = oldState;
                             break;
                         }
                     }
-                let stateAfter = undefined;
-                for (let n = 0; n < this.currStates.length; n++) {
-                    let newState = this.currStates[n];
+                var stateAfter = undefined;
+                for (var n = 0; n < this.currStates.length; n++) {
+                    var newState = this.currStates[n];
                     if (newState.component === content) {
                         stateAfter = newState;
                         break;
                     }
                 }
-                let contentRef = this.getContentRefFromIndex(i);
-                let colorAfter = this.getColorForContent(contentRef);
-                let opacityAfter = this.getOpacityForContent(contentRef);
+                var contentRef = this.getContentRefFromIndex(i);
+                var colorAfter = this.getColorForContent(contentRef);
+                var opacityAfter = this.getOpacityForContent(contentRef);
                 if (stateBefore && stateAfter) {
                     //If color has changed, animate it
                     if (content.hasDifferentColor(colorAfter)) {
-                        set.addAnimation(new ColorAnimation_1.default(content.getColor(), colorAfter, set, content));
+                        set.addAnimation(new ColorAnimation_1["default"](content.getColor(), colorAfter, set, content));
                     }
                     //If opacity has changed, animate it
                     if (content.getOpacity() !== opacityAfter) {
-                        set.addAnimation(new OpacityAnimation_1.default(content.getOpacity(), opacityAfter, content, set));
+                        set.addAnimation(new OpacityAnimation_1["default"](content.getOpacity(), opacityAfter, content, set));
                     }
                     //Content has just moved
-                    set.addAnimation(new MoveAnimation_1.default(stateBefore, stateAfter, set, this.ctx));
+                    set.addAnimation(new MoveAnimation_1["default"](stateBefore, stateAfter, set, this.ctx));
                 }
                 else if (stateBefore) {
                     //Doesn't exist after, has been removed
-                    set.addAnimation(new RemoveAnimation_1.default(stateBefore, set, this.ctx));
+                    set.addAnimation(new RemoveAnimation_1["default"](stateBefore, set, this.ctx));
                 }
                 else if (stateAfter) {
                     //Doesn't exist before, has been added
-                    set.addAnimation(new AddAnimation_1.default(stateAfter, set, this.ctx));
+                    set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
                     //Set the color immediately
                     content.setColor(colorAfter);
                     //Set the opacity immediately
@@ -267,7 +269,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 }
             }
             return set;
-        }
+        };
         /**
          * Given a piece of content, determine
          * what color it should be for the current
@@ -275,34 +277,34 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param contentRef The reference of the content to find the color for.
          */
-        getColorForContent(contentRef) {
-            let stepColors = this.steps[this.currStep]['color'];
+        CanvasController.prototype.getColorForContent = function (contentRef) {
+            var stepColors = this.steps[this.currStep]['color'];
             if (stepColors !== undefined && stepColors[contentRef] !== undefined) {
                 //A color is specified
-                return consts_1.default.colors[stepColors[contentRef]];
+                return consts_1["default"].colors[stepColors[contentRef]];
             }
             else {
                 //A color isn't specified, use default
-                return consts_1.default.colors['default'];
+                return consts_1["default"].colors['default'];
             }
-        }
+        };
         /**
          * Gets the opacity for a piece of content
          * at the current step.
          *
          * @param contentRef The reference of the content to find the opacity of.
          */
-        getOpacityForContent(contentRef) {
-            let stepOpacity = this.steps[this.currStep]['opacity'];
+        CanvasController.prototype.getOpacityForContent = function (contentRef) {
+            var stepOpacity = this.steps[this.currStep]['opacity'];
             if (stepOpacity !== undefined && stepOpacity[contentRef] !== undefined) {
                 //Opacity specified
                 return stepOpacity[contentRef];
             }
             else {
                 //No opacity specified
-                return consts_1.default.normalOpacity;
+                return consts_1["default"].normalOpacity;
             }
-        }
+        };
         /**
          * Sets the dimensions of the canvas based on
          * a set of layout states, and also returns
@@ -310,23 +312,23 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param states A set of layout states that will be used to determine the right dimensions.
          */
-        setSize(states) {
-            let root = states[states.length - 1];
-            let rootHeight = root.height;
-            let rootWidth = root.width;
-            let currWidth = this.container.clientWidth;
-            let newWidth = rootWidth > currWidth ? rootWidth : currWidth;
+        CanvasController.prototype.setSize = function (states) {
+            var root = states[states.length - 1];
+            var rootHeight = root.height;
+            var rootWidth = root.width;
+            var currWidth = this.container.clientWidth;
+            var newWidth = rootWidth > currWidth ? rootWidth : currWidth;
             //Update canvas css size
             this.canvas.style.width = newWidth + "px";
             this.canvas.style.height = rootHeight + "px";
             //Update canvas pixel size for HDPI
-            let pixelRatio = window.devicePixelRatio || 1;
+            var pixelRatio = window.devicePixelRatio || 1;
             this.canvas.width = newWidth * pixelRatio;
             this.canvas.height = rootHeight * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
-            this.ctx.font = consts_1.default.fontWeight + " " + this.fontSize + "px " + consts_1.default.fontFamily;
+            this.ctx.font = consts_1["default"].fontWeight + " " + this.fontSize + "px " + consts_1["default"].fontFamily;
             return [newWidth, rootHeight];
-        }
+        };
         /**
          * Uses the instructions to initialize all
          * content that will be used in the
@@ -335,32 +337,32 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param instructions The instructions JSON Object.
          */
-        initContent(instructions) {
-            let heights = [];
-            let ascents = [];
+        CanvasController.prototype.initContent = function (instructions) {
+            var heights = [];
+            var ascents = [];
             if (instructions.terms.length > 0) {
                 //Get the heights and ascents from each tier
-                for (let w = 0; w < consts_1.default.widthTiers.length; w++) {
+                for (var w = 0; w < consts_1["default"].widthTiers.length; w++) {
                     heights.push(instructions.metrics[w].height);
                     ascents.push(instructions.metrics[w].ascent);
                 }
             }
             //Initialize all terms
-            for (let t = 0; t < instructions.terms.length; t++) {
-                let widths = [];
+            for (var t = 0; t < instructions.terms.length; t++) {
+                var widths = [];
                 //Get the widths for each tier
-                for (let w = 0; w < consts_1.default.widthTiers.length; w++) {
+                for (var w = 0; w < consts_1["default"].widthTiers.length; w++) {
                     widths.push(instructions.metrics[w].widths[t]);
                 }
-                let text = instructions.terms[t];
-                let term = new Term_1.default(text, widths, heights, ascents);
+                var text = instructions.terms[t];
+                var term = new Term_1["default"](text, widths, heights, ascents);
                 this.terms.push(term);
             }
             //Initialize h dividers
-            for (let i = 0; i < instructions.hDividers; i++) {
-                this.hDividers.push(new HDivider_1.default(consts_1.default.hDividerPadding));
+            for (var i = 0; i < instructions.hDividers; i++) {
+                this.hDividers.push(new HDivider_1["default"](consts_1["default"].hDividerPadding));
             }
-        }
+        };
         /**
          * Given a piece of content, get the
          * string used to reference it in the
@@ -368,17 +370,17 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param content The content to find a reference for.
          */
-        getContentReference(content) {
-            if (content instanceof Term_1.default) {
+        CanvasController.prototype.getContentReference = function (content) {
+            if (content instanceof Term_1["default"]) {
                 return 't' + this.terms.indexOf(content);
             }
-            else if (content instanceof HDivider_1.default) {
+            else if (content instanceof HDivider_1["default"]) {
                 return 'h' + this.hDividers.indexOf(content);
             }
             else {
                 throw "unrecognized content type";
             }
-        }
+        };
         /**
          * Given the concatenated index of
          * some content, get the reference
@@ -386,7 +388,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param index The concatenated index of the content.
          */
-        getContentRefFromIndex(index) {
+        CanvasController.prototype.getContentRefFromIndex = function (index) {
             if (this.inTermRange(index)) {
                 return 't' + index;
             }
@@ -396,7 +398,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             else {
                 throw "unrecognized content type";
             }
-        }
+        };
         /**
          * Returns the content for a particular
          * content reference as used in the JSON
@@ -404,9 +406,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          *
          * @param ref The content reference.
          */
-        getContentFromRef(ref) {
-            let contentType = ref.substring(0, 1);
-            let contentIndex = parseFloat(ref.substring(1, ref.length));
+        CanvasController.prototype.getContentFromRef = function (ref) {
+            var contentType = ref.substring(0, 1);
+            var contentIndex = parseFloat(ref.substring(1, ref.length));
             if (contentType === 't') {
                 return this.terms[contentIndex];
             }
@@ -416,17 +418,17 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             else {
                 throw "unrecognized content type";
             }
-        }
+        };
         /**
          * Calculate and return the layout for
          * a particular step.
          *
          * @param idx The step number.
          */
-        calcLayout(idx) {
+        CanvasController.prototype.calcLayout = function (idx) {
             //First create the structure of containers in memory
-            let rootObj = this.steps[idx].root;
-            let root = this.parseContainer(rootObj);
+            var rootObj = this.steps[idx].root;
+            var root = this.parseContainer(rootObj);
             //If content doesn't take up full width, center it
             if (root.getWidth() < this.container.clientWidth) {
                 root.setWidth(this.container.clientWidth);
@@ -435,32 +437,32 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             if (this.textArea) {
                 this.textArea.innerHTML = this.steps[idx].text;
             }
-            let toReturn = [];
+            var toReturn = [];
             root.addLayout(undefined, toReturn, 0, 0, 1);
             return toReturn;
-        }
+        };
         /**
          * Parse a container from the JSON Object.
          *
          * @param containerObj The JSON Object representing the container.
          */
-        parseContainer(containerObj) {
-            let type = containerObj.type;
+        CanvasController.prototype.parseContainer = function (containerObj) {
+            var type = containerObj.type;
             if (type === "vbox") {
-                return new VBox_1.default(this.parseContainerChildren(containerObj.children), Padding_1.default.even(consts_1.default.defaultVBoxPadding));
+                return new VBox_1["default"](this.parseContainerChildren(containerObj.children), Padding_1["default"].even(consts_1["default"].defaultVBoxPadding));
             }
             else if (type === "hbox") {
-                return new HBox_1.default(this.parseContainerChildren(containerObj.children), Padding_1.default.even(consts_1.default.defaultHBoxPadding));
+                return new HBox_1["default"](this.parseContainerChildren(containerObj.children), Padding_1["default"].even(consts_1["default"].defaultHBoxPadding));
             }
             else if (type === "tightHBox") {
-                return new TightHBox_1.default(this.parseContainerChildren(containerObj.children), Padding_1.default.even(consts_1.default.defaultTightHBoxPadding));
+                return new TightHBox_1["default"](this.parseContainerChildren(containerObj.children), Padding_1["default"].even(consts_1["default"].defaultTightHBoxPadding));
             }
             else if (type === 'subSuper') {
-                let top = new HBox_1.default(this.parseContainerChildren(containerObj.top), Padding_1.default.even(0));
-                let middle = new TightHBox_1.default(this.parseContainerChildren(containerObj.middle), Padding_1.default.even(0));
-                let bottom = new HBox_1.default(this.parseContainerChildren(containerObj.bottom), Padding_1.default.even(0));
-                let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : consts_1.default.defaultExpPortrusion;
-                return new SubSuper_1.default(top, middle, bottom, portrusion, consts_1.default.defaultSubSuperPadding);
+                var top_1 = new HBox_1["default"](this.parseContainerChildren(containerObj.top), Padding_1["default"].even(0));
+                var middle = new TightHBox_1["default"](this.parseContainerChildren(containerObj.middle), Padding_1["default"].even(0));
+                var bottom = new HBox_1["default"](this.parseContainerChildren(containerObj.bottom), Padding_1["default"].even(0));
+                var portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : consts_1["default"].defaultExpPortrusion;
+                return new SubSuper_1["default"](top_1, middle, bottom, portrusion, consts_1["default"].defaultSubSuperPadding);
             }
             else if (type === undefined) {
                 throw "Invalid JSON File: Missing type attribute on container descriptor.";
@@ -468,28 +470,30 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             else {
                 throw "Invalid JSON File: Unrecognized type: " + type;
             }
-        }
+        };
         /**
          * Parse the children attribute of a container
          * JSON Object.
          *
          * @param children The children array.
          */
-        parseContainerChildren(children) {
-            let toReturn = [];
-            children.forEach(child => {
+        CanvasController.prototype.parseContainerChildren = function (children) {
+            var _this = this;
+            var toReturn = [];
+            children.forEach(function (child) {
                 if (typeof child === 'object') {
-                    toReturn.push(this.parseContainer(child));
+                    toReturn.push(_this.parseContainer(child));
                 }
                 else if (typeof child === 'string') {
-                    toReturn.push(this.getContentFromRef(child));
+                    toReturn.push(_this.getContentFromRef(child));
                 }
                 else {
                     throw "Invalid type of child in JSON file.";
                 }
             });
             return toReturn;
-        }
-    }
-    exports.default = CanvasController;
+        };
+        return CanvasController;
+    }());
+    exports["default"] = CanvasController;
 });

@@ -1,39 +1,51 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Padding", "../main/consts", "../main/helpers", "./LinearContainer"], function (require, exports, EqContainer_1, LayoutState_1, Padding_1, consts_1, helpers_1, LinearContainer_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class VBox extends LinearContainer_1.default {
-        constructor(children, padding) {
-            super(children, padding);
-            this.width = this.calcWidth();
-            this.height = this.calcHeight();
+    exports.__esModule = true;
+    var VBox = (function (_super) {
+        __extends(VBox, _super);
+        function VBox(children, padding) {
+            var _this = _super.call(this, children, padding) || this;
+            _this.width = _this.calcWidth();
+            _this.height = _this.calcHeight();
+            return _this;
         }
-        calcHeight() {
-            let totalHeight = 0;
-            for (let i = 0; i < this.children.length; i++) {
+        VBox.prototype.calcHeight = function () {
+            var totalHeight = 0;
+            for (var i = 0; i < this.children.length; i++) {
                 totalHeight += this.children[i].getHeight();
             }
             return totalHeight + this.padding.height();
-        }
-        calcWidth() {
-            let maxWidth = 0;
-            for (let i = 0; i < this.children.length; i++) {
-                let childWidth = this.children[i].getWidth();
+        };
+        VBox.prototype.calcWidth = function () {
+            var maxWidth = 0;
+            for (var i = 0; i < this.children.length; i++) {
+                var childWidth = this.children[i].getWidth();
                 if (childWidth > maxWidth) {
                     maxWidth = childWidth;
                 }
             }
             return maxWidth + this.padding.width();
-        }
-        creatorDraw(l, ctx) {
+        };
+        VBox.prototype.creatorDraw = function (l, ctx) {
             ctx.save();
-            ctx.strokeStyle = consts_1.default.creatorContainerStroke;
+            ctx.strokeStyle = consts_1["default"].creatorContainerStroke;
             //Outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
-            let padD = consts_1.default.creatorVBoxPadding;
-            let pad = new Padding_1.default(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
+            var padD = consts_1["default"].creatorVBoxPadding;
+            var pad = new Padding_1["default"](padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
             //Middle border, top and bottom
-            ctx.setLineDash(consts_1.default.creatorLineDash);
+            ctx.setLineDash(consts_1["default"].creatorLineDash);
             helpers_1.line(l.tlx, l.tly + pad.top / 2, l.tlx + l.width, l.tly + pad.top / 2, ctx);
             helpers_1.line(l.tlx, l.tly + l.height - pad.bottom / 2, l.tlx + l.width, l.tly + l.height - pad.bottom / 2, ctx);
             //Inner border, top and bottom
@@ -41,17 +53,17 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
             helpers_1.line(l.tlx, l.tly + pad.top, l.tlx + l.width, l.tly + pad.top, ctx);
             helpers_1.line(l.tlx, l.tly + l.height - pad.bottom, l.tlx + l.width, l.tly + l.height - pad.bottom, ctx);
             ctx.restore();
-        }
-        addClick(clickedLayout, x, y, toAdd) {
+        };
+        VBox.prototype.addClick = function (clickedLayout, x, y, toAdd) {
             if (clickedLayout.onTop(y)) {
-                if (y - clickedLayout.tly <= (consts_1.default.creatorVBoxPadding.top / 2) * clickedLayout.scale) {
+                if (y - clickedLayout.tly <= (consts_1["default"].creatorVBoxPadding.top / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
-                    let containerLayout = clickedLayout.layoutParent;
+                    var containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerLayout.component;
+                        var container = containerLayout.component;
                         container.addClickOnChild(clickedLayout, x, y, toAdd);
                     }
                 }
@@ -64,14 +76,14 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
                 //On bottom
                 if (clickedLayout.tly + clickedLayout.height - y
                     <=
-                        (consts_1.default.creatorVBoxPadding.bottom / 2) * clickedLayout.scale) {
+                        (consts_1["default"].creatorVBoxPadding.bottom / 2) * clickedLayout.scale) {
                     //Outer border, add adjacent
-                    let containerLayout = clickedLayout.layoutParent;
+                    var containerLayout = clickedLayout.layoutParent;
                     if (containerLayout === undefined) {
                         throw "no containing frame";
                     }
                     else {
-                        let container = containerLayout.component;
+                        var container = containerLayout.component;
                         container.addClickOnChild(clickedLayout, x, y, toAdd);
                     }
                 }
@@ -80,8 +92,8 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
                     this.children.push(toAdd);
                 }
             }
-        }
-        addClickOnChild(clickedLayout, x, y, toAdd) {
+        };
+        VBox.prototype.addClickOnChild = function (clickedLayout, x, y, toAdd) {
             if (clickedLayout.onTop(y)) {
                 //Add top
                 this.addBefore(toAdd, clickedLayout.component);
@@ -90,27 +102,28 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
                 //Add bottom
                 this.addAfter(toAdd, clickedLayout.component);
             }
-        }
-        toStepLayout(controller) {
-            let toReturn = {};
+        };
+        VBox.prototype.toStepLayout = function (controller) {
+            var toReturn = {};
             toReturn['type'] = 'vbox';
-            toReturn['children'] = EqContainer_1.default.childrenToStepLayout(this.children, controller);
+            toReturn['children'] = EqContainer_1["default"].childrenToStepLayout(this.children, controller);
             return toReturn;
-        }
-        addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let state = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
-            const innerWidth = (this.getWidth() - this.padding.width()) * currScale;
-            let upToY = tly + this.padding.top * currScale;
-            for (let i = 0; i < this.children.length; i++) {
-                let currChild = this.children[i];
-                let childWidth = currChild.getWidth() * currScale;
+        };
+        VBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+            var state = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+            var innerWidth = (this.getWidth() - this.padding.width()) * currScale;
+            var upToY = tly + this.padding.top * currScale;
+            for (var i = 0; i < this.children.length; i++) {
+                var currChild = this.children[i];
+                var childWidth = currChild.getWidth() * currScale;
                 //Position child in the middle horizontally
-                let childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
+                var childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
                 upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
             }
             layouts.push(state);
             return state;
-        }
-    }
-    exports.default = VBox;
+        };
+        return VBox;
+    }(LinearContainer_1["default"]));
+    exports["default"] = VBox;
 });

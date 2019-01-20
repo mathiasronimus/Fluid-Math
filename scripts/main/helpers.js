@@ -1,14 +1,14 @@
 define(["require", "exports", "./consts"], function (require, exports, consts_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     /**
      * Add styles based on the contents of consts
      */
     function addStyleSheet() {
-        let styleEl = document.createElement('style');
-        let styleText = "";
-        Object.keys(consts_1.default.colors).forEach(colorName => {
-            let colorVal = consts_1.default.colors[colorName];
+        var styleEl = document.createElement('style');
+        var styleText = "";
+        Object.keys(consts_1["default"].colors).forEach(function (colorName) {
+            var colorVal = consts_1["default"].colors[colorName];
             styleText += '.' + colorName + " { color: " + 'rgb(' + colorVal[0] + ',' + colorVal[1] + "," + colorVal[2] + ")}";
         });
         styleEl.appendChild(document.createTextNode(styleText));
@@ -22,19 +22,19 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
      * @param toClone The object to clone.
      */
     function deepClone(toClone) {
-        let cloneTo = {};
+        var cloneTo = {};
         recDeepClone(toClone, cloneTo);
         return cloneTo;
     }
     exports.deepClone = deepClone;
     function recDeepClone(toClone, cloneTo) {
-        Object.keys(toClone).forEach(key => {
-            let val = toClone[key];
+        Object.keys(toClone).forEach(function (key) {
+            var val = toClone[key];
             if (typeof val === 'object') {
                 if (Array.isArray(val)) {
                     //Clone array
                     cloneTo[key] = [];
-                    for (let i = 0; i < val.length; i++) {
+                    for (var i = 0; i < val.length; i++) {
                         if (typeof val[i] === 'object') {
                             cloneTo[key][i] = {};
                             recDeepClone(val[i], cloneTo[key][i]);
@@ -85,20 +85,20 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
      * width tier.
      */
     function getWidthTier() {
-        let currWidth = window.innerWidth;
-        for (let i = 0; i < consts_1.default.widthTiers.length; i++) {
-            if (currWidth > consts_1.default.widthTiers[i]) {
+        var currWidth = window.innerWidth;
+        for (var i = 0; i < consts_1["default"].widthTiers.length; i++) {
+            if (currWidth > consts_1["default"].widthTiers[i]) {
                 return i;
             }
         }
-        return consts_1.default.widthTiers.length - 1;
+        return consts_1["default"].widthTiers.length - 1;
     }
     /**
      * Calculates and returns the appropriate
      * font size for a width tier.
      */
     function getFontSizeForTier(tier) {
-        return consts_1.default.fontSizes[tier];
+        return consts_1["default"].fontSizes[tier];
     }
     exports.getFontSizeForTier = getFontSizeForTier;
 });

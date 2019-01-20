@@ -1,112 +1,125 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "./EqContainer", "../main/consts", "../animation/LayoutState", "../main/helpers"], function (require, exports, EqContainer_1, consts_1, LayoutState_1, helpers_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     /**
      * Lays out components in a way that
      * enables exponents (top) and subscripts
      * (bottom).
      */
-    class SubSuper extends EqContainer_1.default {
-        constructor(top, middle, bottom, portrusion, padding) {
-            super(padding);
-            this.portrusionProportion = portrusion;
-            this.top = top;
-            this.middle = middle;
-            this.bottom = bottom;
-            this.topPortrusion = this.top.getHeight() * consts_1.default.expScale * this.portrusionProportion;
-            this.bottomPortrusion = this.bottom.getHeight() * consts_1.default.expScale * this.portrusionProportion;
-            if (this.topPortrusion > this.bottomPortrusion) {
-                this.topBlank = 0;
-                this.bottomBlank = this.topPortrusion - this.bottomPortrusion;
+    var SubSuper = (function (_super) {
+        __extends(SubSuper, _super);
+        function SubSuper(top, middle, bottom, portrusion, padding) {
+            var _this = _super.call(this, padding) || this;
+            _this.portrusionProportion = portrusion;
+            _this.top = top;
+            _this.middle = middle;
+            _this.bottom = bottom;
+            _this.topPortrusion = _this.top.getHeight() * consts_1["default"].expScale * _this.portrusionProportion;
+            _this.bottomPortrusion = _this.bottom.getHeight() * consts_1["default"].expScale * _this.portrusionProportion;
+            if (_this.topPortrusion > _this.bottomPortrusion) {
+                _this.topBlank = 0;
+                _this.bottomBlank = _this.topPortrusion - _this.bottomPortrusion;
             }
             else {
-                this.bottomBlank = 0;
-                this.topBlank = this.bottomPortrusion - this.topPortrusion;
+                _this.bottomBlank = 0;
+                _this.topBlank = _this.bottomPortrusion - _this.topPortrusion;
             }
-            this.rightMiddleHeight =
-                this.middle.getHeight() + this.topPortrusion + this.bottomPortrusion
-                    - (this.top.getHeight() * consts_1.default.expScale + this.bottom.getHeight() * consts_1.default.expScale);
-            this.width = this.calcWidth();
-            this.height = this.calcHeight();
+            _this.rightMiddleHeight =
+                _this.middle.getHeight() + _this.topPortrusion + _this.bottomPortrusion
+                    - (_this.top.getHeight() * consts_1["default"].expScale + _this.bottom.getHeight() * consts_1["default"].expScale);
+            _this.width = _this.calcWidth();
+            _this.height = _this.calcHeight();
+            return _this;
         }
-        calcWidth() {
+        SubSuper.prototype.calcWidth = function () {
             //Width of the right portion, ie the top and bottom
-            let rightWidth = Math.max(this.top.getWidth() * consts_1.default.expScale, this.bottom.getWidth() * consts_1.default.expScale);
+            var rightWidth = Math.max(this.top.getWidth() * consts_1["default"].expScale, this.bottom.getWidth() * consts_1["default"].expScale);
             return this.middle.getWidth() + rightWidth + this.padding.width();
-        }
-        calcHeight() {
+        };
+        SubSuper.prototype.calcHeight = function () {
             return this.middle.getHeight()
                 + this.topPortrusion + this.topBlank
                 + this.bottomPortrusion + this.bottomBlank
                 + this.padding.height();
-        }
-        addLayout(parentLayout, layouts, tlx, tly, currScale) {
-            let layout = new LayoutState_1.default(parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        };
+        SubSuper.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+            var layout = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             //Add the middle
-            let middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale);
-            let rightX = middleLayout.tlx + middleLayout.width;
+            var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale);
+            var rightX = middleLayout.tlx + middleLayout.width;
             //Add the top
-            this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * consts_1.default.expScale);
+            this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * consts_1["default"].expScale);
             //Add the bottom
-            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1.default.expScale) * currScale, currScale * consts_1.default.expScale);
+            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1["default"].expScale) * currScale, currScale * consts_1["default"].expScale);
             //Add own
             layouts.push(layout);
             return layout;
-        }
-        creatorDraw(l, ctx) {
+        };
+        SubSuper.prototype.creatorDraw = function (l, ctx) {
             ctx.save();
-            ctx.strokeStyle = consts_1.default.creatorContainerStroke;
+            ctx.strokeStyle = consts_1["default"].creatorContainerStroke;
             //Draw the outer border
             ctx.rect(l.tlx, l.tly, l.width, l.height);
             ctx.stroke();
-            let padLeft = this.padding.left * l.scale;
-            let padRight = this.padding.right * l.scale;
+            var padLeft = this.padding.left * l.scale;
+            var padRight = this.padding.right * l.scale;
             //Draw inner dashed lines
-            ctx.setLineDash(consts_1.default.creatorLineDash);
+            ctx.setLineDash(consts_1["default"].creatorLineDash);
             //Left line
             helpers_1.line(l.tlx + padLeft, l.tly, l.tlx + padLeft, l.tly + l.height, ctx);
             //Right line
             helpers_1.line(l.tlx + l.width - padRight, l.tly, l.tlx + l.width - padRight, l.tly + l.height, ctx);
             ctx.restore();
-        }
-        addClick(clickedLayout, x, y, toAdd) {
+        };
+        SubSuper.prototype.addClick = function (clickedLayout, x, y, toAdd) {
             if (x - clickedLayout.tlx < this.padding.left * clickedLayout.scale) {
-                let container = clickedLayout.layoutParent.component;
+                var container = clickedLayout.layoutParent.component;
                 container.addClickOnChild(clickedLayout, x, y, toAdd);
             }
             else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right * clickedLayout.scale) {
-                let container = clickedLayout.layoutParent.component;
+                var container = clickedLayout.layoutParent.component;
                 container.addClickOnChild(clickedLayout, x, y, toAdd);
             }
             else {
                 throw "Can't add inside a SubSuper container.";
             }
-        }
-        addClickOnChild(clickedLayout, x, y, toAdd) {
+        };
+        SubSuper.prototype.addClickOnChild = function (clickedLayout, x, y, toAdd) {
             throw "Can't add more children to a SubSuper container.";
-        }
-        toStepLayout(controller) {
-            let toReturn = {};
+        };
+        SubSuper.prototype.toStepLayout = function (controller) {
+            var toReturn = {};
             toReturn['type'] = 'subSuper';
-            toReturn['top'] = EqContainer_1.default.childrenToStepLayout(this.top.getChildren(), controller);
-            toReturn['middle'] = EqContainer_1.default.childrenToStepLayout(this.middle.getChildren(), controller);
-            toReturn['bottom'] = EqContainer_1.default.childrenToStepLayout(this.bottom.getChildren(), controller);
-            if (this.portrusionProportion !== consts_1.default.defaultExpPortrusion) {
+            toReturn['top'] = EqContainer_1["default"].childrenToStepLayout(this.top.getChildren(), controller);
+            toReturn['middle'] = EqContainer_1["default"].childrenToStepLayout(this.middle.getChildren(), controller);
+            toReturn['bottom'] = EqContainer_1["default"].childrenToStepLayout(this.bottom.getChildren(), controller);
+            if (this.portrusionProportion !== consts_1["default"].defaultExpPortrusion) {
                 toReturn['portrusion'] = this.portrusionProportion;
             }
             return toReturn;
-        }
-        delete(toDelete) {
+        };
+        SubSuper.prototype["delete"] = function (toDelete) {
             throw "Can't delete children from a SubSuper container.";
-        }
-        forEachUnder(forEach) {
+        };
+        SubSuper.prototype.forEachUnder = function (forEach) {
             this.top.forEachUnder(forEach);
             this.middle.forEachUnder(forEach);
             this.bottom.forEachUnder(forEach);
-        }
-        setPortrusion(newPortrusion) {
+        };
+        SubSuper.prototype.setPortrusion = function (newPortrusion) {
             this.portrusionProportion = newPortrusion;
-        }
-    }
-    exports.default = SubSuper;
+        };
+        return SubSuper;
+    }(EqContainer_1["default"]));
+    exports["default"] = SubSuper;
 });

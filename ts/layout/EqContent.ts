@@ -79,7 +79,7 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
     }
 
     setColor(newColor: number[]): void {
-        this.color = newColor;
+        this.color = [Math.round(newColor[0]), Math.round(newColor[1]), Math.round(newColor[2])];
     }
 
     getColor(): number[] {

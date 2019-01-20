@@ -5,7 +5,7 @@
  */
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.__esModule = true;
     // These values are established by empiricism with tests (tradeoff: performance VS precision)
     var NEWTON_ITERATIONS = 10;
     var NEWTON_MIN_SLOPE = 0.001;
@@ -93,6 +93,6 @@ define(["require", "exports"], function (require, exports) {
             return calcBezier(getTForX(x), mY1, mY2);
         };
     }
-    exports.default = bezier;
+    exports["default"] = bezier;
     ;
 });
