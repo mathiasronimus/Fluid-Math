@@ -38,6 +38,7 @@ const constants = {
     creatorSubSuperPadding: Padding.even(15),
     creatorContainerStroke: "rgba(0, 0, 0, 0.4)",
     creatorLineDash: [5],
+    creatorErrorTimeout: 5000,
 
     //Animations: durations are in MS
     addDuration: 600,

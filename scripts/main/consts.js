@@ -36,6 +36,7 @@ define(["require", "exports", "../animation/BezierEasing", "../layout/Padding"],
         creatorSubSuperPadding: Padding_1["default"].even(15),
         creatorContainerStroke: "rgba(0, 0, 0, 0.4)",
         creatorLineDash: [5],
+        creatorErrorTimeout: 5000,
         //Animations: durations are in MS
         addDuration: 600,
         addEasing: BezierEasing_1["default"](0.0, 0.0, 0.2, 1),

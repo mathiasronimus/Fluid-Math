@@ -89,9 +89,11 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                 return new SubSuper_1["default"](top_1, middle, bottom, portrusion, consts_1["default"].creatorSubSuperPadding);
             }
             else if (type === undefined) {
+                this.controller.error("Invalid JSON File");
                 throw "Invalid JSON File: Missing type attribute on container descriptor.";
             }
             else {
+                this.controller.error("Invalid JSON File");
                 throw "Invalid JSON File: Unrecognized type: " + type;
             }
         };
@@ -208,6 +210,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         CreatorCanvasController.prototype.addClick = function (x, y) {
             //Check if the content is already on the canvas
             if (this.onCanvas()) {
+                this.controller.error("Can't add duplicate content.");
                 throw "duplicate content not allowed";
             }
             var clickedLayout = this.getClickedLayout(x, y);

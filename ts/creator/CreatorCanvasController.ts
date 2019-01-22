@@ -118,8 +118,10 @@ export default class CreatorCanvasController extends CanvasController {
             let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.creatorSubSuperPadding);
         } else if (type === undefined) {
+            this.controller.error("Invalid JSON File");
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {
+            this.controller.error("Invalid JSON File");
             throw "Invalid JSON File: Unrecognized type: " + type;
         }
     }
@@ -239,6 +241,7 @@ export default class CreatorCanvasController extends CanvasController {
     private addClick(x: number, y: number) {
         //Check if the content is already on the canvas
         if (this.onCanvas()) {
+            this.controller.error("Can't add duplicate content.");
             throw "duplicate content not allowed";
         }
         let clickedLayout: LayoutState = this.getClickedLayout(x, y);

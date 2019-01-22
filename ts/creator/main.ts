@@ -13,6 +13,10 @@ export default class Controller {
     currCanvas: CreatorCanvasController;
 
     private modalEl: HTMLElement;
+    private errorEl: HTMLElement = document.getElementById('error');
+    private errorTextEl: HTMLElement = document.getElementById('error-text');
+    private errorCloseEl: HTMLElement = document.getElementById('close-error');
+    private timeoutID = 0;
 
     toolBar: ToolBar;
     contentManager: ContentPane;
@@ -29,6 +33,7 @@ export default class Controller {
         this.contentManager = new ContentPane(this);
         this.slideManager = new Slides(this);
         this.slideManager.addNewSlide();
+        this.errorCloseEl.addEventListener('click', this.hideError.bind(this));
         addStyleSheet();
     }
 
@@ -215,6 +220,27 @@ export default class Controller {
      */
     removeModal() {
         document.body.removeChild(this.modalEl);
+    }
+
+    /**
+     * Inform the user of an error.
+     * 
+     * @param message The error message.
+     */
+    error(message: string) {
+        this.errorTextEl.innerHTML = message;
+        this.errorEl.style.display = 'flex';
+        if (this.timeoutID) {
+            clearInterval(this.timeoutID);
+        }
+        this.timeoutID = setInterval(this.hideError.bind(this), C.creatorErrorTimeout);
+    }
+
+    /**
+     * Hide the error box.
+     */
+    hideError() {
+        this.errorEl.style.display = 'none';
     }
 }
 

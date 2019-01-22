@@ -1,9 +1,13 @@
-define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "./ContentPane", "./Slides", "../main/CanvasController", "../main/helpers"], function (require, exports, ToolBar_1, CreatorCanvasController_1, ContentPane_1, Slides_1, CanvasController_1, helpers_1) {
+define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "../main/consts", "./ContentPane", "./Slides", "../main/CanvasController", "../main/helpers"], function (require, exports, ToolBar_1, CreatorCanvasController_1, consts_1, ContentPane_1, Slides_1, CanvasController_1, helpers_1) {
     "use strict";
     exports.__esModule = true;
     var Controller = (function () {
         function Controller() {
             this.centreEl = document.getElementById('central-area');
+            this.errorEl = document.getElementById('error');
+            this.errorTextEl = document.getElementById('error-text');
+            this.errorCloseEl = document.getElementById('close-error');
+            this.timeoutID = 0;
             this.load = this.load.bind(this);
             this.save = this.save.bind(this);
             this.play = this.play.bind(this);
@@ -14,6 +18,7 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "./Conte
             this.contentManager = new ContentPane_1["default"](this);
             this.slideManager = new Slides_1["default"](this);
             this.slideManager.addNewSlide();
+            this.errorCloseEl.addEventListener('click', this.hideError.bind(this));
             helpers_1.addStyleSheet();
         }
         /**
@@ -177,6 +182,25 @@ define(["require", "exports", "./ToolBar", "./CreatorCanvasController", "./Conte
          */
         Controller.prototype.removeModal = function () {
             document.body.removeChild(this.modalEl);
+        };
+        /**
+         * Inform the user of an error.
+         *
+         * @param message The error message.
+         */
+        Controller.prototype.error = function (message) {
+            this.errorTextEl.innerHTML = message;
+            this.errorEl.style.display = 'flex';
+            if (this.timeoutID) {
+                clearInterval(this.timeoutID);
+            }
+            this.timeoutID = setInterval(this.hideError.bind(this), consts_1["default"].creatorErrorTimeout);
+        };
+        /**
+         * Hide the error box.
+         */
+        Controller.prototype.hideError = function () {
+            this.errorEl.style.display = 'none';
         };
         return Controller;
     }());

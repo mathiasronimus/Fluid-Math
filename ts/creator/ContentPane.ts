@@ -435,12 +435,11 @@ export default class ContentPane {
      */
     delete() {
         if (this.selected === undefined) {
-            throw "select content to delete";
-        }
-        if (this.selected.parentElement === this.element) {
-            throw "can't delete that";
+            this.controller.error("Select content to delete");
+            throw "Select content to delete";
         }
         if (this.selected.parentElement === this.containerEl) {
+            this.controller.error("Can't delete containers.");
             throw "can't delete that";
         }
         //Look through content to see if selected is there

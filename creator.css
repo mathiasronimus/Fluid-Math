@@ -8,6 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    overflow: hidden;
 }
 
 p {
@@ -154,4 +155,25 @@ p {
     flex-direction: row;
     flex-wrap: nowrap;
     flex-shrink: 0;
+}
+
+#close-error {
+    cursor: pointer;
+}
+
+#error-text {
+    padding: 5px;
+}
+
+#error {
+    position: fixed;
+    padding: 10px;
+    bottom: 30px;
+    right: 30px;
+    background-color: black;
+    color: rgba(229,57,53,0.95);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    display: none;
 }
