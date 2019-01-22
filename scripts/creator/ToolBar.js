@@ -200,6 +200,8 @@ define(["require", "exports", "../main/consts", "../layout/SubSuper", "../main/C
             this.selectedLayout = undefined;
             this.element.classList.remove('selected');
             this.element.innerHTML = "";
+            this.controller.currCanvas.emptySelected();
+            this.controller.contentManager.deEmphasize();
             this.setDefaultContent();
         };
         /**

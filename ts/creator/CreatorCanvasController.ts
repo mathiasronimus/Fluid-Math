@@ -4,7 +4,6 @@ import HBox from "../layout/HBox";
 import TightHBox from '../layout/TightHBox';
 import EqContainer from '../layout/EqContainer';
 import EqContent from '../layout/EqContent';
-import Padding from '../layout/Padding';
 import C from '../main/consts';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from "../layout/EqComponent";
@@ -31,6 +30,11 @@ export default class CreatorCanvasController extends CanvasController {
     //If content, is string.
     private adding: string | Object;
 
+    //The layouts to display as selected.
+    //Under normal usage, there should
+    //only be one layout in here.
+    private selected: LayoutState[] = [];
+
     //Called when the canvas is clicked and something done
     //Is passed the layout for the single step the controller posseses
     private onLayoutModified: (Object) => void;
@@ -54,7 +58,7 @@ export default class CreatorCanvasController extends CanvasController {
         this.textField.cols = 70;
         this.textField.value = this.steps[0].text;
         this.container.appendChild(this.textField);
-        let confirm = this.controller.getOkButton(function() {
+        let confirm = this.controller.getOkButton(function () {
             this.steps[0].text = this.textField.value;
             this.refresh();
         }.bind(this));
@@ -64,6 +68,12 @@ export default class CreatorCanvasController extends CanvasController {
 
     protected redraw() {
         super.redraw();
+        if (this.selected) this.selected.forEach(s => {
+            this.ctx.save();
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            this.ctx.fillRect(s.tlx, s.tly, s.width, s.height);
+            this.ctx.restore();
+        });
         this.currStates.forEach(f => {
             if (f.component instanceof EqContainer) {
                 f.component.creatorDraw(f, this.ctx);
@@ -149,7 +159,6 @@ export default class CreatorCanvasController extends CanvasController {
         switch (this.state) {
             case State.Adding:
                 this.addClick(canvasX, canvasY);
-                this.refresh();
                 break;
             case State.Selecting:
                 this.selectClick(canvasX, canvasY);
@@ -172,6 +181,14 @@ export default class CreatorCanvasController extends CanvasController {
             throw "click wasn't on any frame";
         } else {
             this.controller.select(clickedLayout);
+            this.selected = [];
+            this.selected.push(clickedLayout);
+            this.controller.contentManager.deEmphasize();
+            if (clickedLayout.component instanceof EqContent) {
+                //Highlight clicked content in the content pane
+                this.controller.contentManager.showSelected(this.getContentReference(clickedLayout.component as EqContent<any>));
+            }
+            this.redraw();
         }
     }
 
@@ -238,6 +255,8 @@ export default class CreatorCanvasController extends CanvasController {
         else {
             throw "unrecognized frame type";
         }
+        this.refresh();
+        this.controller.contentManager.startSelecting();
     }
 
     /**
@@ -286,6 +305,31 @@ export default class CreatorCanvasController extends CanvasController {
             text: this.steps[0].text,
             root: root.toStepLayout(this)
         }
+    }
+
+    /**
+     * Show some content piece as
+     * selected.
+     * 
+     * @param ref Reference of the content to be selected. 
+     */
+    showAsSelected(ref: string) {
+        let content = this.getContentFromRef(ref);
+        //Find the layout state for that content
+        let state = this.currStates.filter(s => s.component === content)[0];
+        if (state) {
+            this.selected.push(state);
+        }
+        this.redraw();
+    }
+
+    /**
+     * Stop showing any components as
+     * selected.
+     */
+    emptySelected() {
+        this.selected = [];
+        this.redraw();
     }
 
     /**
@@ -359,7 +403,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.applyColor(selected, colorName);
         } else if (selected instanceof EqContainer) {
             //Apply to all inside container
-            selected.forEachUnder(function(content) {
+            selected.forEachUnder(function (content) {
                 this.applyColor(content, colorName);
             }.bind(this));
         }
@@ -380,7 +424,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.applyOpacity(selected, opacity);
         } else if (selected instanceof EqContainer) {
             //Apply to all inside the container
-            selected.forEachUnder(function(content) {
+            selected.forEachUnder(function (content) {
                 this.applyOpacity(content, opacity);
             }.bind(this));
         }

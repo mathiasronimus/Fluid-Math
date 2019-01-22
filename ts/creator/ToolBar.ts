@@ -241,6 +241,8 @@ export default class ToolBar {
         this.selectedLayout = undefined;
         this.element.classList.remove('selected');
         this.element.innerHTML = "";
+        this.controller.currCanvas.emptySelected();
+        this.controller.contentManager.deEmphasize();
         this.setDefaultContent();
     }
 

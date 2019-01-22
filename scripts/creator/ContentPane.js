@@ -7,16 +7,11 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
             this.terms = [];
             this.controller = controller;
             //Selection
-            var select = document.createElement('div');
-            select.innerHTML = 'Select';
-            select.className = 'content';
-            select.addEventListener('click', function () {
-                //Select the clicked selection element
-                this.select(select);
-                //Tell the canvas to start selecting
-                this.controller.currCanvas.select();
-            }.bind(this));
-            this.element.appendChild(select);
+            this.selectEl = document.createElement('div');
+            this.selectEl.innerHTML = 'Select';
+            this.selectEl.className = 'content';
+            this.selectEl.addEventListener('click', this.startSelecting.bind(this));
+            this.element.appendChild(this.selectEl);
             //Containers
             var containerTitle = document.createElement('div');
             containerTitle.className = 'title';
@@ -51,6 +46,17 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
             addDivider.addEventListener('click', this.addDivider.bind(this));
             this.element.appendChild(addDivider);
         }
+        /**
+         * Tells the current canvas to start
+         * selecting.s
+         */
+        ContentPane.prototype.startSelecting = function () {
+            //Select the clicked selection element
+            this.select(this.selectEl);
+            //Tell the canvas to start selecting
+            this.controller.currCanvas.select();
+            this.controller.currCanvas.emptySelected();
+        };
         /**
          * Bring up a dialog to add a term.
          */
@@ -105,6 +111,8 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                 this.deselect();
                 this.select(el);
                 this.controller.currCanvas.setAdding('t' + index);
+                this.controller.currCanvas.emptySelected();
+                this.controller.currCanvas.showAsSelected('t' + index);
             }.bind(this));
             return el;
         };
@@ -132,6 +140,8 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                     this.deselect();
                     this.select(select);
                     this.controller.currCanvas.setAdding('h' + index);
+                    this.controller.currCanvas.emptySelected();
+                    this.controller.currCanvas.showAsSelected('h' + index);
                 }.bind(this, el, i));
                 els.push(el);
             }
@@ -172,6 +182,7 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                 this.deselect();
                 this.select(vbox);
                 vbox.classList.add('selected');
+                this.controller.currCanvas.emptySelected();
             }.bind(this);
             vbox.addEventListener('click', addVbox.bind(this));
             this.containerEl.appendChild(vbox);
@@ -185,6 +196,7 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                 });
                 this.deselect();
                 this.select(hbox);
+                this.controller.currCanvas.emptySelected();
             }.bind(this);
             hbox.addEventListener('click', addHbox);
             this.containerEl.appendChild(hbox);
@@ -198,6 +210,7 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                 });
                 this.deselect();
                 this.select(tightHbox);
+                this.controller.currCanvas.emptySelected();
             }.bind(this);
             tightHbox.addEventListener('click', addTightHbox);
             this.containerEl.appendChild(tightHbox);
@@ -213,6 +226,7 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
                 });
                 this.deselect();
                 this.select(subSuper);
+                this.controller.currCanvas.emptySelected();
             }.bind(this);
             subSuper.addEventListener('click', addSubSuper);
             this.containerEl.appendChild(subSuper);
@@ -228,6 +242,16 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
             for (var i = 0; i < this.terms.length; i++) {
                 this.termEl.appendChild(this.newTermEl(i));
             }
+        };
+        /**
+         * Show some content on the current
+         * canvas.
+         *
+         * @param toShow The reference of the content to show.
+         */
+        ContentPane.prototype.showOnCanvas = function (toShow) {
+            this.controller.currCanvas.emptySelected();
+            this.controller.currCanvas.showAsSelected(toShow);
         };
         /**
          * Get the font metrics object for the
@@ -368,6 +392,46 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
             this.deleteContent(ref);
             //Remove the content from all steps
             this.controller.slideManager.removeContent(ref);
+        };
+        /**
+         * Emphasize the component that is
+         * currently selected on the canvas.
+         *
+         * @param ref The reference string of the selected component.
+         */
+        ContentPane.prototype.showSelected = function (ref) {
+            var type = ref.substring(0, 1);
+            var index = ref.substring(1, ref.length);
+            switch (type) {
+                case 't':
+                    this.emphasize(this.termEl.children[index]);
+                    break;
+                case 'h':
+                    this.emphasize(this.hDividerEl.children[index]);
+                    break;
+                default:
+                    throw "unrecognized content type";
+            }
+        };
+        /**
+         * Emphasize an Element by adding a
+         * border to it.
+         *
+         * @param el The element to emphasize.
+         */
+        ContentPane.prototype.emphasize = function (el) {
+            this.deEmphasize();
+            this.emphasized = el;
+            this.emphasized.classList.add('border');
+        };
+        /**
+         * Remove emphasis from the currently
+         * emphasized element.
+         */
+        ContentPane.prototype.deEmphasize = function () {
+            if (this.emphasized) {
+                this.emphasized.classList.remove('border');
+            }
         };
         ContentPane.prototype.getTerms = function () {
             return this.terms;

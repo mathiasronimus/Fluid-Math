@@ -14,7 +14,7 @@ export default class Controller {
 
     private modalEl: HTMLElement;
 
-    private toolBar: ToolBar;
+    toolBar: ToolBar;
     contentManager: ContentPane;
     slideManager: Slides;
 

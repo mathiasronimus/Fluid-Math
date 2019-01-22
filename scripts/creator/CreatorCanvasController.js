@@ -25,6 +25,10 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         __extends(CreatorCanvasController, _super);
         function CreatorCanvasController(container, instructions, onLayoutModified, controller) {
             var _this = _super.call(this, container, instructions) || this;
+            //The layouts to display as selected.
+            //Under normal usage, there should
+            //only be one layout in here.
+            _this.selected = [];
             _this.state = State.Idle;
             _this.controller = controller;
             _this.recalc();
@@ -48,6 +52,13 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         CreatorCanvasController.prototype.redraw = function () {
             var _this = this;
             _super.prototype.redraw.call(this);
+            if (this.selected)
+                this.selected.forEach(function (s) {
+                    _this.ctx.save();
+                    _this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    _this.ctx.fillRect(s.tlx, s.tly, s.width, s.height);
+                    _this.ctx.restore();
+                });
             this.currStates.forEach(function (f) {
                 if (f.component instanceof EqContainer_1["default"]) {
                     f.component.creatorDraw(f, _this.ctx);
@@ -119,7 +130,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             switch (this.state) {
                 case State.Adding:
                     this.addClick(canvasX, canvasY);
-                    this.refresh();
                     break;
                 case State.Selecting:
                     this.selectClick(canvasX, canvasY);
@@ -142,6 +152,14 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }
             else {
                 this.controller.select(clickedLayout);
+                this.selected = [];
+                this.selected.push(clickedLayout);
+                this.controller.contentManager.deEmphasize();
+                if (clickedLayout.component instanceof EqContent_1["default"]) {
+                    //Highlight clicked content in the content pane
+                    this.controller.contentManager.showSelected(this.getContentReference(clickedLayout.component));
+                }
+                this.redraw();
             }
         };
         /**
@@ -206,6 +224,8 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             else {
                 throw "unrecognized frame type";
             }
+            this.refresh();
+            this.controller.contentManager.startSelecting();
         };
         /**
          * Adds content when the click was on a
@@ -251,6 +271,29 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                 text: this.steps[0].text,
                 root: root.toStepLayout(this)
             };
+        };
+        /**
+         * Show some content piece as
+         * selected.
+         *
+         * @param ref Reference of the content to be selected.
+         */
+        CreatorCanvasController.prototype.showAsSelected = function (ref) {
+            var content = this.getContentFromRef(ref);
+            //Find the layout state for that content
+            var state = this.currStates.filter(function (s) { return s.component === content; })[0];
+            if (state) {
+                this.selected.push(state);
+            }
+            this.redraw();
+        };
+        /**
+         * Stop showing any components as
+         * selected.
+         */
+        CreatorCanvasController.prototype.emptySelected = function () {
+            this.selected = [];
+            this.redraw();
         };
         /**
          * Updates the controller to
