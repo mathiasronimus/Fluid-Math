@@ -34,6 +34,7 @@ export default class CanvasController {
 
     protected currStep = 0;
     protected steps: any[];
+    protected stepOptions: any[];
 
     protected terms: Term[];
     protected hDividers: HDivider[];
@@ -53,7 +54,8 @@ export default class CanvasController {
      */
     constructor(container: Element, instructions) {
         this.container = container;
-        this.steps = instructions.steps;
+        this.steps = instructions['steps'];
+        this.stepOptions = instructions['stepOpts'];
         this.terms = [];
         this.hDividers = [];
         this.setSize = this.setSize.bind(this);
@@ -284,6 +286,18 @@ export default class CanvasController {
             this.animating = false;
         }, this.ctx, canvasWidth, canvasHeight);
 
+        let stepOptions;
+        let reverseStep: boolean;
+        if (stepBefore < stepAfter) {
+            //Going forward
+            stepOptions = this.getStepOptions(stepBefore, stepAfter);
+            reverseStep = false;
+        } else {
+            //Going backwards
+            stepOptions = this.getStepOptions(stepAfter, stepBefore);
+            reverseStep = true;
+        }
+
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -503,6 +517,28 @@ export default class CanvasController {
         } else {
             throw "unrecognized content type";
         }
+    }
+
+    /**
+     * Return the step options object for the
+     * transition between two steps. Returns
+     * undefined if there are no step options
+     * for that transition. Step2 must be greater
+     * than Step1.
+     * 
+     * @param step1 The first step.
+     * @param step2 The second step.
+     */
+    protected getStepOptions(step1: number, step2: number): any {
+        if (!this.stepOptions) {
+            //No step options defined
+            return undefined;
+        }
+        if (step2 - step1 !== 1) {
+            //Steps are seperated or in the wrong order
+            return undefined;
+        }
+        return this.stepOptions[step2 - 1];
     }
 
     /**
