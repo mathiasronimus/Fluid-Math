@@ -3,7 +3,7 @@ import EqComponent from './EqComponent';
 import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
 import C from '../main/consts';
-import { line } from '../main/helpers';
+import { line, Map } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 
@@ -131,7 +131,7 @@ export default class HBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
         let state = 
             new LayoutState(parentLayout, this, 
                             tlx, tly, 
@@ -150,7 +150,7 @@ export default class HBox extends LinearContainer {
             upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
         }
 
-        layouts.push(state);
+        layouts.set(this, state);
 
         return state;
     }

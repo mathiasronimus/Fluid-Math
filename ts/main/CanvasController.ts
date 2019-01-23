@@ -17,7 +17,7 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier } from "./helpers";
+import { getFontSizeForTier, Map, newMap } from "./helpers";
 
 /**
  * Responsible for managing a single canvas,
@@ -39,7 +39,7 @@ export default class CanvasController {
     protected terms: Term[];
     protected hDividers: HDivider[];
 
-    protected currStates: LayoutState[];
+    protected currStates: Map<EqComponent, LayoutState>;
     protected animating = false;
     protected fontSize: number;
     protected lastHeight: number = 0;
@@ -160,8 +160,9 @@ export default class CanvasController {
      * Recalculates and redraws the current step.
      */
     protected recalc() {
-        this.currStates = this.calcLayout(this.currStep);
-        this.setSize(this.currStates);
+        let rootLayout;
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        this.setSize(rootLayout);
         this.redraw();
     }
 
@@ -178,8 +179,9 @@ export default class CanvasController {
         this.currStep++;
 
         let oldStates = this.currStates;
-        this.currStates = this.calcLayout(this.currStep);
-        let dimens = this.setSize(this.currStates);
+        let rootLayout
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        let dimens = this.setSize(rootLayout);
         let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
         this.animating = true;
         anims.start();
@@ -197,8 +199,9 @@ export default class CanvasController {
         this.currStep--;
 
         let oldStates = this.currStates;
-        this.currStates = this.calcLayout(this.currStep);
-        let dimens = this.setSize(this.currStates);        
+        let rootLayout;
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        let dimens = this.setSize(rootLayout);        
         let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
         this.animating = true;
         anims.start();
@@ -217,8 +220,9 @@ export default class CanvasController {
         this.currStep = 0;
 
         let oldStates = this.currStates;
-        this.currStates = this.calcLayout(this.currStep);
-        let dimens = this.setSize(this.currStates);
+        let rootLayout;
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        let dimens = this.setSize(rootLayout);
         let anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
         this.animating = true;
         anims.start();
@@ -279,13 +283,14 @@ export default class CanvasController {
      * @param cHeightBefore The height of the canvas before the animation.
      * @param cHeightAfter The height of the canvas after the animation.
      */
-    private diff(oldStates: LayoutState[], canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
+    private diff(oldStates: Map<EqComponent, LayoutState>, canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
 
         let set = new AnimationSet(() => {
             //When done
             this.animating = false;
         }, this.ctx, canvasWidth, canvasHeight);
 
+        //Get the step options for this transition
         let stepOptions;
         let reverseStep: boolean;
         if (stepBefore < stepAfter) {
@@ -298,6 +303,7 @@ export default class CanvasController {
             reverseStep = true;
         }
 
+        //Animate the progress bar
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -306,22 +312,9 @@ export default class CanvasController {
 
             let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
-            if (oldStates !== undefined) for (let o = 0; o < oldStates.length; o++) {
-                let oldState = oldStates[o];
-                if (oldState.component === content) {
-                    stateBefore = oldState;
-                    break;
-                }
-            }
+            if (oldStates !== undefined) stateBefore = oldStates.get(content);
 
-            let stateAfter: LayoutState = undefined;
-            for (let n = 0; n < this.currStates.length; n++) {
-                let newState = this.currStates[n];
-                if (newState.component === content) {
-                    stateAfter = newState;
-                    break;
-                }
-            }
+            let stateAfter: LayoutState = this.currStates.get(content);
 
             let contentRef = this.getContentRefFromIndex(i);
             let colorAfter: number[] = this.getColorForContent(contentRef);
@@ -395,10 +388,9 @@ export default class CanvasController {
      * a set of layout states, and also returns
      * these dimensions.
      * 
-     * @param states A set of layout states that will be used to determine the right dimensions.
+     * @param root The layout state of the root container.
      */
-    private setSize(states: LayoutState[]): [number, number] {
-        let root = states[states.length - 1];
+    protected setSize(root: LayoutState): [number, number] {
         let rootHeight = root.height;
         let rootWidth = root.width;
         let currWidth = this.container.clientWidth;
@@ -547,7 +539,7 @@ export default class CanvasController {
      * 
      * @param idx The step number.
      */
-    protected calcLayout(idx): LayoutState[] {
+    protected calcLayout(idx): [Map<EqComponent, LayoutState>, LayoutState] {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
@@ -562,9 +554,9 @@ export default class CanvasController {
             this.textArea.innerHTML = this.steps[idx].text;
         }
 
-        let toReturn: LayoutState[] = [];
-        root.addLayout(undefined, toReturn, 0, 0, 1);
-        return toReturn;
+        let allLayouts = newMap();
+        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1);
+        return [allLayouts, rootLayout];
     }
 
     /**

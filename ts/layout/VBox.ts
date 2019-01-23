@@ -3,7 +3,7 @@ import EqComponent from './EqComponent';
 import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 import C from '../main/consts';
-import { line } from '../main/helpers';
+import { line, Map } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 
@@ -130,7 +130,7 @@ export default class VBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly, 
                                     this.getWidth() * currScale, 
                                     this.getHeight() * currScale, 
@@ -147,7 +147,7 @@ export default class VBox extends LinearContainer {
             upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
         }
 
-        layouts.push(state);
+        layouts.set(this, state);
 
         return state;
     }

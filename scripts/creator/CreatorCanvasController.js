@@ -31,7 +31,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             _this.selected = [];
             _this.state = State.Idle;
             _this.controller = controller;
-            _this.recalc();
             _this.onLayoutModified = onLayoutModified;
             _this.canvas.removeEventListener('click', _this.nextStep);
             _this.canvas.addEventListener('click', _this.editClick.bind(_this));
@@ -65,9 +64,21 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                 }
             });
         };
+        /**
+         * Recalculates and redraws the current step.
+         * Override to store the root layout for later.
+         */
+        CreatorCanvasController.prototype.recalc = function () {
+            var rootLayout;
+            _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
+            this.rootContainer = rootLayout.component;
+            this.setSize(rootLayout);
+            this.redraw();
+            var _a;
+        };
         CreatorCanvasController.prototype.nextStep = function () {
             //Override to not animate
-            this.currStates = this.calcLayout(++this.currStep);
+            this.currStates = this.calcLayout(++this.currStep)[0];
         };
         //Override to change padding
         CreatorCanvasController.prototype.parseContainer = function (containerObj) {
@@ -253,12 +264,11 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param y Y-ordinate on the canvas.
          */
         CreatorCanvasController.prototype.getClickedLayout = function (x, y) {
-            for (var i = 0; i < this.currStates.length; i++) {
-                var currState = this.currStates[i];
+            this.currStates.forEach(function (currState) {
                 if (currState.contains(x, y)) {
                     return currState;
                 }
-            }
+            });
             return undefined;
         };
         /**
@@ -284,7 +294,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         CreatorCanvasController.prototype.showAsSelected = function (ref) {
             var content = this.getContentFromRef(ref);
             //Find the layout state for that content
-            var state = this.currStates.filter(function (s) { return s.component === content; })[0];
+            var state = this.currStates.get(content);
             if (state) {
                 this.selected.push(state);
             }
@@ -303,8 +313,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * reflect the changes made.
          */
         CreatorCanvasController.prototype.refresh = function () {
-            var root = this.currStates[this.currStates.length - 1].component;
-            var newLayout = this.toStepLayout(root);
+            var newLayout = this.toStepLayout(this.rootContainer);
             this.onLayoutModified(this.controller.instructionsFromStep(newLayout));
         };
         /**

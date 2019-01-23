@@ -62,7 +62,7 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
             //Add the bottom
             this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1["default"].expScale) * currScale, currScale * consts_1["default"].expScale);
             //Add own
-            layouts.push(layout);
+            layouts.set(this, layout);
             return layout;
         };
         SubSuper.prototype.creatorDraw = function (l, ctx) {

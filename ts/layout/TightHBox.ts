@@ -5,6 +5,8 @@ import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
 import CanvasController from '../main/CanvasController';
 import EqContainer from "./EqContainer";
+import EqComponent from "./EqComponent";
+import { Map } from '../main/helpers';
 
 const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
 
@@ -33,7 +35,7 @@ export default class TightHBox extends HBox {
     }
 
     //Override to reduce term padding.
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
         let state = new LayoutState(
                             parentLayout, this, tlx, tly, 
                             this.getWidth() * currScale, 
@@ -56,7 +58,7 @@ export default class TightHBox extends HBox {
         }
 
 
-        layouts.push(state);
+        layouts.set(this, state);
 
         return state;
     }

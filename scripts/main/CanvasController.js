@@ -20,7 +20,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.lastHeight = 0;
             this.lastWidth = 0;
             this.container = container;
-            this.steps = instructions.steps;
+            this.steps = instructions['steps'];
+            this.stepOptions = instructions['stepOpts'];
             this.terms = [];
             this.hDividers = [];
             this.setSize = this.setSize.bind(this);
@@ -112,9 +113,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * Recalculates and redraws the current step.
          */
         CanvasController.prototype.recalc = function () {
-            this.currStates = this.calcLayout(this.currStep);
-            this.setSize(this.currStates);
+            var rootLayout;
+            _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
+            this.setSize(rootLayout);
             this.redraw();
+            var _a;
         };
         /**
          * If possible, animate to the next step
@@ -127,11 +130,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
             this.currStep++;
             var oldStates = this.currStates;
-            this.currStates = this.calcLayout(this.currStep);
-            var dimens = this.setSize(this.currStates);
+            var rootLayout;
+            _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
+            var dimens = this.setSize(rootLayout);
             var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
             this.animating = true;
             anims.start();
+            var _a;
         };
         /**
          * If possible, animate to the previous step.
@@ -143,11 +148,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
             this.currStep--;
             var oldStates = this.currStates;
-            this.currStates = this.calcLayout(this.currStep);
-            var dimens = this.setSize(this.currStates);
+            var rootLayout;
+            _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
+            var dimens = this.setSize(rootLayout);
             var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
             this.animating = true;
             anims.start();
+            var _a;
         };
         /**
          * Return to the first step.
@@ -160,11 +167,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var oldStep = this.currStep;
             this.currStep = 0;
             var oldStates = this.currStates;
-            this.currStates = this.calcLayout(this.currStep);
-            var dimens = this.setSize(this.currStates);
+            var rootLayout;
+            _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
+            var dimens = this.setSize(rootLayout);
             var anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
             this.animating = true;
             anims.start();
+            var _a;
         };
         /**
          * Returns the total amount of content
@@ -225,6 +234,20 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 //When done
                 _this.animating = false;
             }, this.ctx, canvasWidth, canvasHeight);
+            //Get the step options for this transition
+            var stepOptions;
+            var reverseStep;
+            if (stepBefore < stepAfter) {
+                //Going forward
+                stepOptions = this.getStepOptions(stepBefore, stepAfter);
+                reverseStep = false;
+            }
+            else {
+                //Going backwards
+                stepOptions = this.getStepOptions(stepAfter, stepBefore);
+                reverseStep = true;
+            }
+            //Animate the progress bar
             set.addAnimation(new ProgressAnimation_1["default"](stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
             for (var i = 0; i < this.getNumContent(); i++) {
@@ -232,21 +255,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 var stateBefore = undefined;
                 //We may be initilizing, where there are no old frames and everything is added
                 if (oldStates !== undefined)
-                    for (var o = 0; o < oldStates.length; o++) {
-                        var oldState = oldStates[o];
-                        if (oldState.component === content) {
-                            stateBefore = oldState;
-                            break;
-                        }
-                    }
-                var stateAfter = undefined;
-                for (var n = 0; n < this.currStates.length; n++) {
-                    var newState = this.currStates[n];
-                    if (newState.component === content) {
-                        stateAfter = newState;
-                        break;
-                    }
-                }
+                    stateBefore = oldStates.get(content);
+                var stateAfter = this.currStates.get(content);
                 var contentRef = this.getContentRefFromIndex(i);
                 var colorAfter = this.getColorForContent(contentRef);
                 var opacityAfter = this.getOpacityForContent(contentRef);
@@ -317,10 +327,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
          * a set of layout states, and also returns
          * these dimensions.
          *
-         * @param states A set of layout states that will be used to determine the right dimensions.
+         * @param root The layout state of the root container.
          */
-        CanvasController.prototype.setSize = function (states) {
-            var root = states[states.length - 1];
+        CanvasController.prototype.setSize = function (root) {
             var rootHeight = root.height;
             var rootWidth = root.width;
             var currWidth = this.container.clientWidth;
@@ -433,6 +442,27 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             }
         };
         /**
+         * Return the step options object for the
+         * transition between two steps. Returns
+         * undefined if there are no step options
+         * for that transition. Step2 must be greater
+         * than Step1.
+         *
+         * @param step1 The first step.
+         * @param step2 The second step.
+         */
+        CanvasController.prototype.getStepOptions = function (step1, step2) {
+            if (!this.stepOptions) {
+                //No step options defined
+                return undefined;
+            }
+            if (step2 - step1 !== 1) {
+                //Steps are seperated or in the wrong order
+                return undefined;
+            }
+            return this.stepOptions[step2 - 1];
+        };
+        /**
          * Calculate and return the layout for
          * a particular step.
          *
@@ -450,9 +480,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             if (this.textArea) {
                 this.textArea.innerHTML = this.steps[idx].text;
             }
-            var toReturn = [];
-            root.addLayout(undefined, toReturn, 0, 0, 1);
-            return toReturn;
+            var allLayouts = helpers_1.newMap();
+            var rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1);
+            return [allLayouts, rootLayout];
         };
         /**
          * Parse a container from the JSON Object.

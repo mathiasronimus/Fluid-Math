@@ -45,7 +45,7 @@ define(["require", "exports", "../main/consts", "./EqContent", "../animation/Ter
         };
         Term.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
             var state = new TermLayoutState_1["default"](parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale);
-            layouts.push(state);
+            layouts.set(this, state);
             return state;
         };
         Term.prototype.draw = function (before, after, progress, ctx) {

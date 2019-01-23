@@ -1,5 +1,6 @@
 import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
+import { Map } from '../main/helpers';
 
 /**
  * Represents any component (container, content)
@@ -40,10 +41,10 @@ export default abstract class EqComponent {
      * related components such as children of a container.
      * 
      * @param parentLayout The frame of the container containing this component.
-     * @param layouts The array of drawables to add to.
+     * @param layouts The map of layouts to add to.
      * @param tlx The left x of this component.
      * @param tly The top y of this component.
      * @param currScale The current canvas scaling factor.
      */
-    abstract addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState;
+    abstract addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState;
 }

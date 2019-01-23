@@ -43,11 +43,12 @@ export default class CreatorCanvasController extends CanvasController {
 
     private controller: Controller;
 
+    private rootContainer: EqComponent;
+
     constructor(container: Element, instructions, onLayoutModified: (Object) => void, controller: Controller) {
         super(container, instructions);
         this.state = State.Idle;
         this.controller = controller;
-        this.recalc();
         this.onLayoutModified = onLayoutModified;
         this.canvas.removeEventListener('click', this.nextStep);
         this.canvas.addEventListener('click', this.editClick.bind(this));
@@ -81,9 +82,21 @@ export default class CreatorCanvasController extends CanvasController {
         });
     }
 
+    /**
+     * Recalculates and redraws the current step.
+     * Override to store the root layout for later.
+     */
+    protected recalc() {
+        let rootLayout;
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        this.rootContainer = rootLayout.component;
+        this.setSize(rootLayout);
+        this.redraw();
+    }
+
     protected nextStep() {
         //Override to not animate
-        this.currStates = this.calcLayout(++this.currStep);
+        this.currStates = this.calcLayout(++this.currStep)[0];
     }
 
     //Override to change padding
@@ -286,12 +299,11 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate on the canvas.
      */
     private getClickedLayout(x: number, y: number): LayoutState {
-        for (let i = 0; i < this.currStates.length; i++) {
-            let currState = this.currStates[i];
+        this.currStates.forEach(currState => {
             if (currState.contains(x, y)) {
                 return currState;
             }
-        }
+        });
         return undefined;
     }
 
@@ -319,7 +331,7 @@ export default class CreatorCanvasController extends CanvasController {
     showAsSelected(ref: string) {
         let content = this.getContentFromRef(ref);
         //Find the layout state for that content
-        let state = this.currStates.filter(s => s.component === content)[0];
+        let state = this.currStates.get(content);
         if (state) {
             this.selected.push(state);
         }
@@ -340,8 +352,7 @@ export default class CreatorCanvasController extends CanvasController {
      * reflect the changes made.
      */
     refresh(): void {
-        let root = this.currStates[this.currStates.length - 1].component as EqContainer;
-        let newLayout = this.toStepLayout(root);
+        let newLayout = this.toStepLayout(this.rootContainer as EqContainer);
         this.onLayoutModified(this.controller.instructionsFromStep(newLayout));
     }
 

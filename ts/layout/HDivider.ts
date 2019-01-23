@@ -2,6 +2,8 @@ import EqContent from "./EqContent";
 import LayoutState from '../animation/LayoutState';
 import { line } from '../main/helpers';
 import Padding from "./Padding";
+import { Map } from '../main/helpers';
+import EqComponent from "./EqComponent";
 
 export default class HDivider extends EqContent<LayoutState> {
 
@@ -17,13 +19,13 @@ export default class HDivider extends EqContent<LayoutState> {
     protected calcWidth(): number {return 0;}
     protected calcHeight(): number {return 0;}
 
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
         //Set x to align left with parent
         let x = parentLayout.tlx;
         let width = parentLayout.width;
         let height = this.getHeight();
         let state = new LayoutState(parentLayout, this, x, tly, width, height, currScale);
-        layouts.push(state);
+        layouts.set(this, state);
         return state;
     }
 

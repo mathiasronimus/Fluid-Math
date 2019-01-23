@@ -121,7 +121,7 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
                 var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
                 upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
             }
-            layouts.push(state);
+            layouts.set(this, state);
             return state;
         };
         return HBox;

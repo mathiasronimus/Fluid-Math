@@ -1,8 +1,9 @@
-import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
 import C from '../main/consts';
 import EqContent from './EqContent';
 import TermLayoutState from '../animation/TermLayoutState';
+import { Map } from '../main/helpers';
+import EqComponent from './EqComponent';
 
 export default class Term extends EqContent<TermLayoutState> {
 
@@ -49,10 +50,10 @@ export default class Term extends EqContent<TermLayoutState> {
         return this.widths[tier] + this.padding.width();
     }
     
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): TermLayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): TermLayoutState {
         let state = 
             new TermLayoutState(parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale);
-        layouts.push(state);
+        layouts.set(this, state);
         return state;
     }
     

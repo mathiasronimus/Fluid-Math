@@ -120,7 +120,7 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
                 var childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
                 upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
             }
-            layouts.push(state);
+            layouts.set(this, state);
             return state;
         };
         return VBox;

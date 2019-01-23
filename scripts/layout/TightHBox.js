@@ -53,7 +53,7 @@ define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animatio
                 }
                 upToX += childLayout.width;
             }
-            layouts.push(state);
+            layouts.set(this, state);
             return state;
         };
         return TightHBox;

@@ -6,7 +6,7 @@ import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import EqContent from './EqContent';
 import CanvasController from '../main/CanvasController';
-import { line } from "../main/helpers";
+import { line, Map } from "../main/helpers";
 
 /**
  * Lays out components in a way that
@@ -68,7 +68,7 @@ export default class SubSuper extends EqContainer {
                 + this.padding.height();
     }
 
-    addLayout(parentLayout: LayoutState, layouts: LayoutState[], tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
         let layout = new LayoutState(   parentLayout, this, tlx, tly, 
                                         this.getWidth() * currScale, 
                                         this.getHeight() * currScale, 
@@ -95,7 +95,7 @@ export default class SubSuper extends EqContainer {
                                 currScale * C.expScale);
 
         //Add own
-        layouts.push(layout);
+        layouts.set(this, layout);
         return layout;
     }
 

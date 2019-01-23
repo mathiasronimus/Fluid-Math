@@ -30,7 +30,7 @@ define(["require", "exports", "./EqContent", "../animation/LayoutState", "../mai
             var width = parentLayout.width;
             var height = this.getHeight();
             var state = new LayoutState_1["default"](parentLayout, this, x, tly, width, height, currScale);
-            layouts.push(state);
+            layouts.set(this, state);
             return state;
         };
         HDivider.prototype.draw = function (before, after, progress, ctx) {
