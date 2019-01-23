@@ -264,12 +264,13 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param y Y-ordinate on the canvas.
          */
         CreatorCanvasController.prototype.getClickedLayout = function (x, y) {
+            var clicked = undefined;
             this.currStates.forEach(function (currState) {
-                if (currState.contains(x, y)) {
-                    return currState;
+                if (!clicked && currState.contains(x, y)) {
+                    clicked = currState;
                 }
             });
-            return undefined;
+            return clicked;
         };
         /**
          * Start the conversion to a step

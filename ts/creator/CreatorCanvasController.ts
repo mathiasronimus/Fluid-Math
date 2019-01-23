@@ -299,12 +299,13 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate on the canvas.
      */
     private getClickedLayout(x: number, y: number): LayoutState {
+        let clicked = undefined;
         this.currStates.forEach(currState => {
-            if (currState.contains(x, y)) {
-                return currState;
+            if (!clicked && currState.contains(x, y)) {
+                clicked = currState;
             }
         });
-        return undefined;
+        return clicked;
     }
 
     /**
