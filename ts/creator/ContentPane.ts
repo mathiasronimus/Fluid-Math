@@ -98,7 +98,12 @@ export default class ContentPane {
         termCont.appendChild(textBox);
         
         function close() {
-            this.newTerm(textBox.value);
+            let termText = textBox.value.trim();
+            if (termText === '') {
+                this.controller.error("Empty terms are not allowed.");
+            } else {
+                this.newTerm(termText);
+            }
             this.controller.removeModal();
             document.removeEventListener('keydown', onKey);
         };

@@ -67,7 +67,13 @@ define(["require", "exports", "../main/consts", "../main/helpers"], function (re
             textBox.cols = 50;
             termCont.appendChild(textBox);
             function close() {
-                this.newTerm(textBox.value);
+                var termText = textBox.value.trim();
+                if (termText === '') {
+                    this.controller.error("Empty terms are not allowed.");
+                }
+                else {
+                    this.newTerm(termText);
+                }
                 this.controller.removeModal();
                 document.removeEventListener('keydown', onKey);
             }
