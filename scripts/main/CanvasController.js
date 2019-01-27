@@ -278,11 +278,35 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 }
                 else if (stateAfter) {
                     //Doesn't exist before, has been added
-                    set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
-                    //Set the color immediately
-                    content.setColor(colorAfter);
-                    //Set the opacity immediately
-                    content.setOpacity(opacityAfter);
+                    if (stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                        //Do a clone animation
+                        var cloneFromRef = stepOptions['clones'][contentRef];
+                        var cloneFrom = this.getContentFromRef(cloneFromRef);
+                        var cloneFromOldState = oldStates.get(cloneFrom);
+                        set.addAnimation(new MoveAnimation_1["default"](cloneFromOldState, stateAfter, set, this.ctx));
+                        //Animate color and opacity if necessary
+                        if (cloneFrom.hasDifferentColor(colorAfter)) {
+                            set.addAnimation(new ColorAnimation_1["default"](cloneFrom.getColor(), colorAfter, set, content));
+                        }
+                        else {
+                            //Hasn't changed
+                            content.setColor(colorAfter);
+                        }
+                        if (cloneFrom.getOpacity() !== opacityAfter) {
+                            set.addAnimation(new OpacityAnimation_1["default"](cloneFrom.getOpacity(), opacityAfter, content, set));
+                        }
+                        else {
+                            //Hasn't changed
+                            content.setOpacity(opacityAfter);
+                        }
+                    }
+                    else {
+                        set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
+                        //Set the color immediately
+                        content.setColor(colorAfter);
+                        //Set the opacity immediately
+                        content.setOpacity(opacityAfter);
+                    }
                 }
             }
             return set;

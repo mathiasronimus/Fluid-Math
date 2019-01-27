@@ -14,7 +14,7 @@ define(["require", "exports", "./Animation", "../main/consts"], function (requir
     var MoveAnimation = (function (_super) {
         __extends(MoveAnimation, _super);
         function MoveAnimation(start, end, set, ctx) {
-            return _super.call(this, consts_1["default"].moveDuration, consts_1["default"].moveEasing, set, start, end, start.component, ctx) || this;
+            return _super.call(this, consts_1["default"].moveDuration, consts_1["default"].moveEasing, set, start, end, end.component, ctx) || this;
         }
         return MoveAnimation;
     }(Animation_1["default"]));

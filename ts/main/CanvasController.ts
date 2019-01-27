@@ -336,11 +336,32 @@ export default class CanvasController {
                 set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
             } else if (stateAfter) {
                 //Doesn't exist before, has been added
-                set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
-                //Set the color immediately
-                content.setColor(colorAfter);
-                //Set the opacity immediately
-                content.setOpacity(opacityAfter);
+                if (stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                    //Do a clone animation
+                    let cloneFromRef = stepOptions['clones'][contentRef];
+                    let cloneFrom = this.getContentFromRef(cloneFromRef);
+                    let cloneFromOldState = oldStates.get(cloneFrom);
+                    set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+                    //Animate color and opacity if necessary
+                    if (cloneFrom.hasDifferentColor(colorAfter)) {
+                        set.addAnimation(new ColorAnimation(cloneFrom.getColor(), colorAfter, set, content));
+                    } else {
+                        //Hasn't changed
+                        content.setColor(colorAfter);
+                    }
+                    if (cloneFrom.getOpacity() !== opacityAfter) {
+                        set.addAnimation(new OpacityAnimation(cloneFrom.getOpacity(), opacityAfter, content, set));
+                    } else {
+                        //Hasn't changed
+                        content.setOpacity(opacityAfter);
+                    }
+                } else {
+                    set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
+                    //Set the color immediately
+                    content.setColor(colorAfter);
+                    //Set the opacity immediately
+                    content.setOpacity(opacityAfter);
+                }
             }
 
         }
