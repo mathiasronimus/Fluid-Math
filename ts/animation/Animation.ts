@@ -8,10 +8,10 @@ import EqContent from "../layout/EqContent";
  */
 export default class Animation extends BezierCallback {
 
-    private before: LayoutState;
-    private after: LayoutState;
-    private component: EqContent<any>;
-    private ctx: CanvasRenderingContext2D;
+    protected before: LayoutState;
+    protected after: LayoutState;
+    protected component: EqContent<any>;
+    protected ctx: CanvasRenderingContext2D;
 
     constructor(duration, easing, set, 
                 before: LayoutState, after: LayoutState, 

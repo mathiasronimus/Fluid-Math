@@ -274,7 +274,17 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 }
                 else if (stateBefore) {
                     //Doesn't exist after, has been removed
-                    set.addAnimation(new RemoveAnimation_1["default"](stateBefore, set, this.ctx));
+                    if (stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                        //Do a merge animation
+                        var mergeToRef = stepOptions['merges'][contentRef];
+                        var mergeTo = this.getContentFromRef(mergeToRef);
+                        var mergeToNewState = this.currStates.get(mergeTo);
+                        set.addAnimation(new MoveAnimation_1["default"](stateBefore, mergeToNewState, set, this.ctx));
+                    }
+                    else {
+                        //Do a regular remove animation
+                        set.addAnimation(new RemoveAnimation_1["default"](stateBefore, set, this.ctx));
+                    }
                 }
                 else if (stateAfter) {
                     //Doesn't exist before, has been added

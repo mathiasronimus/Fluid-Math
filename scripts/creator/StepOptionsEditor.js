@@ -1,6 +1,10 @@
 define(["require", "exports", "./StepOptionsCanvasController", "./SelectionStrategy", "../main/CanvasController", "../main/consts"], function (require, exports, StepOptionsCanvasController_1, SelectionStrategy_1, CanvasController_1, consts_1) {
     "use strict";
     exports.__esModule = true;
+    /**
+     * Controls the window for editing the
+     * options for a transition.
+     */
     var StepOptionsEditor = (function () {
         function StepOptionsEditor(step1, options, step2, controller) {
             this.controller = controller;

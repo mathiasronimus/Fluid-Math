@@ -333,7 +333,16 @@ export default class CanvasController {
                 set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
             } else if (stateBefore) {
                 //Doesn't exist after, has been removed
-                set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
+                if (stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                    //Do a merge animation
+                    let mergeToRef = stepOptions['merges'][contentRef];
+                    let mergeTo = this.getContentFromRef(mergeToRef);
+                    let mergeToNewState = this.currStates.get(mergeTo);
+                    set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
+                } else {
+                    //Do a regular remove animation
+                    set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
+                }
             } else if (stateAfter) {
                 //Doesn't exist before, has been added
                 if (stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
