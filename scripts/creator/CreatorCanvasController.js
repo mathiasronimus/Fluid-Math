@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../layout/HBox", "../layout/TightHBox", "../layout/EqContainer", "../layout/EqContent", "../main/consts", "../layout/SubSuper", "../layout/HDivider"], function (require, exports, CanvasController_1, VBox_1, HBox_1, TightHBox_1, EqContainer_1, EqContent_1, consts_1, SubSuper_1, HDivider_1) {
+define(["require", "exports", "../layout/VBox", "../layout/HBox", "../layout/TightHBox", "../layout/EqContainer", "../layout/EqContent", "../main/consts", "../layout/SubSuper", "./SelectableCanvasController"], function (require, exports, VBox_1, HBox_1, TightHBox_1, EqContainer_1, EqContent_1, consts_1, SubSuper_1, SelectableCanvasController_1) {
     "use strict";
     exports.__esModule = true;
     var State;
@@ -25,10 +25,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         __extends(CreatorCanvasController, _super);
         function CreatorCanvasController(container, instructions, onLayoutModified, controller) {
             var _this = _super.call(this, container, instructions) || this;
-            //The layouts to display as selected.
-            //Under normal usage, there should
-            //only be one layout in here.
-            _this.selected = [];
             _this.state = State.Idle;
             _this.controller = controller;
             _this.onLayoutModified = onLayoutModified;
@@ -51,13 +47,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
         CreatorCanvasController.prototype.redraw = function () {
             var _this = this;
             _super.prototype.redraw.call(this);
-            if (this.selected)
-                this.selected.forEach(function (s) {
-                    _this.ctx.save();
-                    _this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-                    _this.ctx.fillRect(s.tlx, s.tly, s.width, s.height);
-                    _this.ctx.restore();
-                });
             this.currStates.forEach(function (f) {
                 if (f.component instanceof EqContainer_1["default"]) {
                     f.component.creatorDraw(f, _this.ctx);
@@ -108,14 +97,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
                 throw "Invalid JSON File: Unrecognized type: " + type;
             }
         };
-        //Override to give h dividers some padding
-        CreatorCanvasController.prototype.initContent = function (instructions) {
-            _super.prototype.initContent.call(this, instructions);
-            this.hDividers = [];
-            for (var i = 0; i < instructions['hDividers']; i++) {
-                this.hDividers.push(new HDivider_1["default"](consts_1["default"].creatorHDividerPadding));
-            }
-        };
         /**
          * Returns the thing to add as a component.
          */
@@ -138,8 +119,8 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
          * @param e Event detailing the mouse click.
          */
         CreatorCanvasController.prototype.editClick = function (e) {
-            var canvasX = e.pageX - this.canvas.offsetLeft;
-            var canvasY = e.pageY - this.canvas.offsetTop + this.container.scrollTop;
+            var canvasX = e.offsetX;
+            var canvasY = e.offsetY;
             switch (this.state) {
                 case State.Adding:
                     this.addClick(canvasX, canvasY);
@@ -256,23 +237,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             container.addClickOnChild(clickedLayout, x, y, this.getAddComponent());
         };
         /**
-         * Given clicked coordinates, find
-         * the frame that was clicked. If not
-         * found, returns undefined.
-         *
-         * @param x X-ordinate on the canvas.
-         * @param y Y-ordinate on the canvas.
-         */
-        CreatorCanvasController.prototype.getClickedLayout = function (x, y) {
-            var clicked = undefined;
-            this.currStates.forEach(function (currState) {
-                if (!clicked && currState.contains(x, y)) {
-                    clicked = currState;
-                }
-            });
-            return clicked;
-        };
-        /**
          * Start the conversion to a step
          * layout object.
          *
@@ -299,14 +263,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             if (state) {
                 this.selected.push(state);
             }
-            this.redraw();
-        };
-        /**
-         * Stop showing any components as
-         * selected.
-         */
-        CreatorCanvasController.prototype.emptySelected = function () {
-            this.selected = [];
             this.redraw();
         };
         /**
@@ -467,6 +423,6 @@ define(["require", "exports", "../main/CanvasController", "../layout/VBox", "../
             }
         };
         return CreatorCanvasController;
-    }(CanvasController_1["default"]));
+    }(SelectableCanvasController_1["default"]));
     exports["default"] = CreatorCanvasController;
 });

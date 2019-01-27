@@ -1,4 +1,4 @@
-define(["require", "exports", "../main/helpers"], function (require, exports, helpers_1) {
+define(["require", "exports", "../main/helpers", "./StepOptionsEditor"], function (require, exports, helpers_1, StepOptionsEditor_1) {
     "use strict";
     exports.__esModule = true;
     var Slides = (function () {
@@ -6,6 +6,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             this.element = document.getElementById('bottom-row');
             this.slideEls = [];
             this.slideInstructions = [];
+            this.slideOptions = [];
             this.controller = controller;
             this.slidesEl = document.createElement('div');
             this.slidesEl.className = 'slides';
@@ -22,8 +23,8 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
         Slides.prototype.addNewSlide = function () {
             //Create the instructions
             var index = this.selectedEl ?
-                this.slideEls.indexOf(this.selectedEl) + 1 :
-                this.slideEls.length;
+                (this.slideEls.indexOf(this.selectedEl) / 2) + 1 :
+                this.slideInstructions.length;
             var instructions;
             if (index > 0) {
                 //Copy from previous slide
@@ -39,6 +40,9 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
                 };
             }
             this.slideInstructions.splice(index, 0, instructions);
+            if (index > 0) {
+                this.slideOptions.splice(index - 1, 0, {});
+            }
             this.setSlideEls();
             this.setActiveSlide(index);
         };
@@ -46,6 +50,9 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             this.slideEls = [];
             for (var i = 0; i < this.slideInstructions.length; i++) {
                 this.slideEls.push(this.newSlideEl(i));
+                if (i < this.slideInstructions.length - 1) {
+                    this.slideEls.push(this.newOptionsEl(i));
+                }
             }
             this.controller.fillEl(this.slidesEl, this.slideEls);
         };
@@ -63,6 +70,19 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             return newSlide;
         };
         /**
+         * Get a new element for editing
+         * step options for a transition.
+         *
+         * @param index The index of step options.
+         */
+        Slides.prototype.newOptionsEl = function (index) {
+            var el = document.createElement('div');
+            el.className = 'stepOption material-icons';
+            el.innerHTML = "linear_scale";
+            el.addEventListener('click', StepOptionsEditor_1["default"].editStep.bind(undefined, index, this.slideOptions[index], index + 1, this.controller));
+            return el;
+        };
+        /**
          * Select a slide and display its editor
          * on the screen.
          *
@@ -72,7 +92,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
             if (this.selectedEl) {
                 this.selectedEl.classList.remove('selected');
             }
-            this.selectedEl = this.slideEls[index];
+            this.selectedEl = this.slideEls[index * 2];
             this.selectedEl.classList.add('selected');
             var instructions = this.controller.instructionsFromStep(this.slideInstructions[index]);
             this.controller.setDisplayCanvas(instructions);
@@ -86,8 +106,26 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
          * @param step The step reflecting new changes.
          */
         Slides.prototype.stepChanged = function (step) {
-            var index = this.slideEls.indexOf(this.selectedEl);
+            var index = this.slideEls.indexOf(this.selectedEl) / 2;
             this.slideInstructions[index] = step['steps'][0];
+        };
+        /**
+         * Return the instructions for a particular
+         * index.
+         *
+         * @param idx The index.
+         */
+        Slides.prototype.getSlide = function (idx) {
+            return this.slideInstructions[idx];
+        };
+        /**
+         * Return the slide options for a particular
+         * index.
+         *
+         * @param idx The index.
+         */
+        Slides.prototype.getOptions = function (idx) {
+            return this.slideOptions[idx];
         };
         /**
          * When content is removed,
@@ -111,7 +149,7 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
                 }
             });
             //Re-select the current slide to refresh
-            this.setActiveSlide(this.slideEls.indexOf(this.selectedEl));
+            this.setActiveSlide(this.slideEls.indexOf(this.selectedEl) / 2);
             //Looks through the keys of an object to
             //find deleted references.
             function removeDeletedKeys(deleteIn) {
@@ -172,9 +210,19 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
                 return; //Not allowed to be empty
             }
             //Remove from arrays
-            var index = this.slideEls.indexOf(this.selectedEl);
+            var index = this.slideEls.indexOf(this.selectedEl) / 2;
+            //Remove step options
+            if (index === 0) {
+                this.slideOptions.splice(0, 1);
+            }
+            else {
+                this.slideOptions.splice(index - 1, 1);
+                if (index !== this.slideInstructions.length - 1) {
+                    //Surrounded by options on both sides, both are invalid
+                    this.slideOptions[index - 1] = {};
+                }
+            }
             this.slideInstructions.splice(index, 1);
-            this.slideEls.splice(index, 1);
             this.selectedEl = undefined;
             this.setSlideEls();
             //Select the next one over
@@ -193,6 +241,26 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
          */
         Slides.prototype.addJSON = function (toJSON) {
             toJSON['steps'] = this.slideInstructions;
+            //Add step options, removing empty objects and strings
+            var stepOptions = {};
+            for (var i = 0; i < this.slideOptions.length; i++) {
+                var stepOpt = this.slideOptions[i];
+                removeEmptyString(stepOpt);
+                if (Object.keys(stepOpt).length > 0) {
+                    stepOptions[i] = stepOpt;
+                }
+            }
+            function removeEmptyString(obj) {
+                Object.keys(obj).forEach(function (key) {
+                    if (typeof obj[key] === 'object') {
+                        removeEmptyString(obj[key]);
+                    }
+                    if (key === '' || obj[key] === '') {
+                        delete obj[key];
+                    }
+                });
+            }
+            toJSON['stepOpts'] = stepOptions;
         };
         /**
          * Load the slides from an instructions
@@ -203,9 +271,19 @@ define(["require", "exports", "../main/helpers"], function (require, exports, he
         Slides.prototype.fromJSON = function (instructions) {
             this.selectedEl = undefined;
             this.slideInstructions = [];
+            this.slideOptions = [];
             for (var i = 0; i < instructions['steps'].length; i++) {
                 var currStep = instructions['steps'][i];
                 this.slideInstructions.push(currStep);
+                if (i < instructions['steps'].length - 1) {
+                    //A step option is valid for this index
+                    if (instructions['stepOpts'] && instructions['stepOpts'][i]) {
+                        this.slideOptions.push(instructions['stepOpts'][i]);
+                    }
+                    else {
+                        this.slideOptions.push({});
+                    }
+                }
             }
             this.setSlideEls();
         };

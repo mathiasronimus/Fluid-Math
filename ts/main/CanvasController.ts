@@ -556,7 +556,8 @@ export default class CanvasController {
 
     /**
      * Calculate and return the layout for
-     * a particular step.
+     * a particular step. Returns [all layouts, root layout].
+     * 
      * 
      * @param idx The step number.
      */
@@ -566,8 +567,9 @@ export default class CanvasController {
         let rootObj = this.steps[idx].root;
         let root = this.parseContainer(rootObj);
         //If content doesn't take up full width, center it
-        if (root.getWidth() < this.container.clientWidth) {
-            root.setWidth(this.container.clientWidth);
+        let width = this.container.clientWidth;
+        if (root.getWidth() < width) {
+            root.setWidth(width);
         }
 
         //Set the text

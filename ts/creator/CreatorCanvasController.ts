@@ -10,6 +10,7 @@ import EqComponent from "../layout/EqComponent";
 import Controller from "./main";
 import SubSuper from '../layout/SubSuper';
 import HDivider from "../layout/HDivider";
+import SelectableCanvasController from "./SelectableCanvasController";
 
 enum State {
     Adding,
@@ -21,7 +22,7 @@ enum State {
  * Overrides methods of the canvas controller to
  * provide editing functionality.
  */
-export default class CreatorCanvasController extends CanvasController {
+export default class CreatorCanvasController extends SelectableCanvasController {
 
     private state: State;
 
@@ -29,11 +30,6 @@ export default class CreatorCanvasController extends CanvasController {
     //If container, is object.
     //If content, is string.
     private adding: string | Object;
-
-    //The layouts to display as selected.
-    //Under normal usage, there should
-    //only be one layout in here.
-    private selected: LayoutState[] = [];
 
     //Called when the canvas is clicked and something done
     //Is passed the layout for the single step the controller posseses
@@ -69,12 +65,6 @@ export default class CreatorCanvasController extends CanvasController {
 
     protected redraw() {
         super.redraw();
-        if (this.selected) this.selected.forEach(s => {
-            this.ctx.save();
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-            this.ctx.fillRect(s.tlx, s.tly, s.width, s.height);
-            this.ctx.restore();
-        });
         this.currStates.forEach(f => {
             if (f.component instanceof EqContainer) {
                 f.component.creatorDraw(f, this.ctx);
@@ -139,15 +129,6 @@ export default class CreatorCanvasController extends CanvasController {
         }
     }
 
-    //Override to give h dividers some padding
-    protected initContent(instructions) {
-        super.initContent(instructions);
-        this.hDividers = [];
-        for (let i = 0; i < instructions['hDividers']; i++) {
-            this.hDividers.push(new HDivider(C.creatorHDividerPadding));
-        }
-    }
-
     /**
      * Returns the thing to add as a component.
      */
@@ -169,8 +150,8 @@ export default class CreatorCanvasController extends CanvasController {
      * @param e Event detailing the mouse click. 
      */
     private editClick(e: MouseEvent) {
-        let canvasX = e.pageX - this.canvas.offsetLeft;
-        let canvasY = e.pageY - this.canvas.offsetTop + this.container.scrollTop;
+        let canvasX = e.offsetX;
+        let canvasY = e.offsetY;
         switch (this.state) {
             case State.Adding:
                 this.addClick(canvasX, canvasY);
@@ -291,24 +272,6 @@ export default class CreatorCanvasController extends CanvasController {
     }
 
     /**
-     * Given clicked coordinates, find
-     * the frame that was clicked. If not
-     * found, returns undefined.
-     * 
-     * @param x X-ordinate on the canvas.
-     * @param y Y-ordinate on the canvas.
-     */
-    private getClickedLayout(x: number, y: number): LayoutState {
-        let clicked = undefined;
-        this.currStates.forEach(currState => {
-            if (!clicked && currState.contains(x, y)) {
-                clicked = currState;
-            }
-        });
-        return clicked;
-    }
-
-    /**
      * Start the conversion to a step
      * layout object.
      * 
@@ -336,15 +299,6 @@ export default class CreatorCanvasController extends CanvasController {
         if (state) {
             this.selected.push(state);
         }
-        this.redraw();
-    }
-
-    /**
-     * Stop showing any components as
-     * selected.
-     */
-    emptySelected() {
-        this.selected = [];
         this.redraw();
     }
 

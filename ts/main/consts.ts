@@ -39,6 +39,12 @@ const constants = {
     creatorContainerStroke: "rgba(0, 0, 0, 0.4)",
     creatorLineDash: [5],
     creatorErrorTimeout: 5000,
+    //The delay before initializing a canvas in
+    //the creator in MS. Too small gives weird layout,
+    //too large is annoying. This is a workaround for
+    //the clientWidth property taking time to be accurate
+    //when inside a fixed container.
+    creatorCanvasInitDelay: 500,
 
     //Animations: durations are in MS
     addDuration: 600,

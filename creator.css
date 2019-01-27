@@ -60,6 +60,59 @@ p {
     flex-shrink: 0;    
 }
 
+.stepOption {
+    height: 100px;
+    cursor: pointer;
+    padding: 5px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.stepOptContainer {
+    height: 400px;
+    width: 700px;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.stepOptTitle {
+    font-size: 26px;
+    padding: 10px;
+}
+
+.customAnimationOption {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.customAnimationContainer {
+    padding: 10px 20px 10px 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
+.removeCustomAnim {
+    cursor: pointer;
+}
+
+.customAnimationContainer p {
+    padding: 10px;
+}
+
+.customAnimationUpper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .background {
     position: fixed;
     top: 0px;

@@ -1,5 +1,6 @@
 import Controller from "./main";
 import { deepClone } from '../main/helpers';
+import StepOptionsEditor from "./StepOptionsEditor";
 
 export default class Slides {
     private controller: Controller;
@@ -9,6 +10,7 @@ export default class Slides {
     private selectedEl: HTMLElement;
     private slideEls: HTMLElement[] = [];
     private slideInstructions: Object[] = [];
+    private slideOptions: Object[] = [];
 
     constructor(controller: Controller) {
         this.controller = controller;
@@ -30,8 +32,8 @@ export default class Slides {
     addNewSlide(): void {
         //Create the instructions
         let index = this.selectedEl ?
-            this.slideEls.indexOf(this.selectedEl) + 1 :
-            this.slideEls.length;
+            (this.slideEls.indexOf(this.selectedEl) / 2) + 1 :
+            this.slideInstructions.length;
         let instructions;
         if (index > 0) {
             //Copy from previous slide
@@ -48,6 +50,9 @@ export default class Slides {
             };
         }
         this.slideInstructions.splice(index, 0, instructions);
+        if (index > 0) {
+            this.slideOptions.splice(index - 1, 0, {});
+        }
         this.setSlideEls();
         this.setActiveSlide(index);
     }
@@ -56,6 +61,9 @@ export default class Slides {
         this.slideEls = [];
         for (let i = 0; i < this.slideInstructions.length; i++) {
             this.slideEls.push(this.newSlideEl(i));
+            if (i < this.slideInstructions.length - 1) {
+                this.slideEls.push(this.newOptionsEl(i));
+            }
         }
         this.controller.fillEl(this.slidesEl, this.slideEls);
     }
@@ -75,6 +83,24 @@ export default class Slides {
     }
 
     /**
+     * Get a new element for editing
+     * step options for a transition.
+     * 
+     * @param index The index of step options.
+     */
+    private newOptionsEl(index: number): HTMLElement {
+        let el = document.createElement('div');
+        el.className = 'stepOption material-icons';
+        el.innerHTML = "linear_scale";
+        el.addEventListener('click', 
+        StepOptionsEditor.editStep.bind(undefined,  index, 
+                                                    this.slideOptions[index], 
+                                                    index + 1,
+                                                    this.controller));
+        return el;
+    }
+ 
+    /**
      * Select a slide and display its editor
      * on the screen.
      * 
@@ -84,7 +110,7 @@ export default class Slides {
         if (this.selectedEl) {
             this.selectedEl.classList.remove('selected');
         }
-        this.selectedEl = this.slideEls[index];
+        this.selectedEl = this.slideEls[index * 2];
         this.selectedEl.classList.add('selected');
         let instructions = this.controller.instructionsFromStep(this.slideInstructions[index]);
         this.controller.setDisplayCanvas(instructions);
@@ -99,8 +125,28 @@ export default class Slides {
      * @param step The step reflecting new changes.
      */
     stepChanged(step: Object) {
-        let index = this.slideEls.indexOf(this.selectedEl);
+        let index = this.slideEls.indexOf(this.selectedEl) / 2;
         this.slideInstructions[index] = step['steps'][0];
+    }
+
+    /**
+     * Return the instructions for a particular
+     * index.
+     * 
+     * @param idx The index.
+     */
+    getSlide(idx: number) {
+        return this.slideInstructions[idx];
+    }
+
+    /**
+     * Return the slide options for a particular
+     * index.
+     * 
+     * @param idx The index. 
+     */
+    getOptions(idx: number) {
+        return this.slideOptions[idx];
     }
 
     /**
@@ -125,7 +171,7 @@ export default class Slides {
             }
         });
         //Re-select the current slide to refresh
-        this.setActiveSlide(this.slideEls.indexOf(this.selectedEl));
+        this.setActiveSlide(this.slideEls.indexOf(this.selectedEl) / 2);
 
         //Looks through the keys of an object to
         //find deleted references.
@@ -187,9 +233,18 @@ export default class Slides {
         }
 
         //Remove from arrays
-        let index = this.slideEls.indexOf(this.selectedEl);
+        let index = this.slideEls.indexOf(this.selectedEl) / 2;
+        //Remove step options
+        if (index === 0) {
+            this.slideOptions.splice(0, 1);
+        } else {
+            this.slideOptions.splice(index - 1, 1);
+            if (index !== this.slideInstructions.length - 1) {
+                //Surrounded by options on both sides, both are invalid
+                this.slideOptions[index - 1] = {};
+            }
+        }
         this.slideInstructions.splice(index, 1);
-        this.slideEls.splice(index, 1);
         this.selectedEl = undefined;
         this.setSlideEls();
 
@@ -209,6 +264,29 @@ export default class Slides {
      */
     addJSON(toJSON: Object): void {
         toJSON['steps'] = this.slideInstructions;
+
+        //Add step options, removing empty objects and strings
+        let stepOptions = {};
+        for (let i = 0; i < this.slideOptions.length; i++) {
+            let stepOpt = this.slideOptions[i];
+            removeEmptyString(stepOpt);
+            if (Object.keys(stepOpt).length > 0) {
+                stepOptions[i] = stepOpt;
+            }
+        }
+
+        function removeEmptyString(obj: Object) {
+            Object.keys(obj).forEach(key => {
+                if (typeof obj[key] === 'object') {
+                    removeEmptyString(obj[key]);
+                }
+                if (key === '' || obj[key] === '') {
+                    delete obj[key];
+                }
+            });
+        }
+
+        toJSON['stepOpts'] = stepOptions;
     }
 
     /**
@@ -221,10 +299,19 @@ export default class Slides {
 
         this.selectedEl = undefined;
         this.slideInstructions = [];
+        this.slideOptions = [];
 
         for (let i = 0; i < instructions['steps'].length; i++) {
             let currStep = instructions['steps'][i];
             this.slideInstructions.push(currStep);
+            if (i < instructions['steps'].length - 1) {
+                //A step option is valid for this index
+                if (instructions['stepOpts'] && instructions['stepOpts'][i]) {
+                    this.slideOptions.push(instructions['stepOpts'][i]);
+                } else {
+                    this.slideOptions.push({});
+                }
+            }
         }
 
         this.setSlideEls();

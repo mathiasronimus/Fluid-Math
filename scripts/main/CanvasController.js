@@ -488,7 +488,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         };
         /**
          * Calculate and return the layout for
-         * a particular step.
+         * a particular step. Returns [all layouts, root layout].
+         *
          *
          * @param idx The step number.
          */
@@ -497,8 +498,9 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var rootObj = this.steps[idx].root;
             var root = this.parseContainer(rootObj);
             //If content doesn't take up full width, center it
-            if (root.getWidth() < this.container.clientWidth) {
-                root.setWidth(this.container.clientWidth);
+            var width = this.container.clientWidth;
+            if (root.getWidth() < width) {
+                root.setWidth(width);
             }
             //Set the text
             if (this.textArea) {
