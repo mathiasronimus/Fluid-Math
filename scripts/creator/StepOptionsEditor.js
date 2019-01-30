@@ -52,7 +52,13 @@ define(["require", "exports", "./StepOptionsCanvasController", "./SelectionStrat
             addClone.innerHTML = 'Clone';
             addClone.addEventListener('click', this.addClone.bind(this));
             this.el.appendChild(addClone);
+            var addMerge = document.createElement('div');
+            addMerge.className = 'customAnimationOption';
+            addMerge.innerHTML = 'Merge';
+            addMerge.addEventListener('click', this.addMerge.bind(this));
+            this.el.appendChild(addMerge);
             this.renderClone();
+            this.renderMerge();
             setTimeout(function () {
                 _this.el.scrollTop = lastScrollY;
             }, consts_1["default"].creatorCanvasInitDelay + 100);
@@ -123,6 +129,71 @@ define(["require", "exports", "./StepOptionsCanvasController", "./SelectionStrat
             }
         };
         /**
+         * Insert the appropriate merging controls
+         * into the element.
+         */
+        StepOptionsEditor.prototype.renderMerge = function () {
+            var _this = this;
+            if (this.options['merges']) {
+                var title = document.createElement('div');
+                title.className = 'stepOptTitle';
+                title.innerHTML = 'Merges.';
+                this.el.appendChild(title);
+                Object.keys(this.options['merges']).forEach(function (mergeFrom) {
+                    var mergeTo = _this.options['merges'][mergeFrom];
+                    //Create an element for each merge
+                    var mergeEl = document.createElement('div');
+                    mergeEl.className = 'customAnimationContainer';
+                    _this.el.appendChild(mergeEl);
+                    var upper = document.createElement('div');
+                    upper.className = 'customAnimationUpper';
+                    mergeEl.appendChild(upper);
+                    var fromEl = document.createElement('p');
+                    fromEl.innerHTML = 'FROM';
+                    upper.appendChild(fromEl);
+                    var removeEl = document.createElement('span');
+                    removeEl.className = 'removeCustomAnim material-icons';
+                    removeEl.innerHTML = 'clear';
+                    //Remove custom animation by deleting the key in the object
+                    removeEl.addEventListener('click', function () {
+                        delete this.options['merges'][mergeFrom];
+                        this.render();
+                    }.bind(_this));
+                    upper.appendChild(removeEl);
+                    //Show canvas for step1, aka 'from'.
+                    var fromChange = function (refs) {
+                        delete this.options['merges'][mergeFrom];
+                        this.options['merges'][refs[0]] = mergeTo;
+                        this.render();
+                    }.bind(_this);
+                    var step1Cont = document.createElement('div');
+                    step1Cont.className = 'eqContainer';
+                    mergeEl.appendChild(step1Cont);
+                    setTimeout(function () {
+                        new StepOptionsCanvasController_1["default"](step1Cont, _this.controller.instructionsFromStep(_this.controller.slideManager.getSlide(_this.step1Idx)), fromChange, new SelectionStrategy_1.OneOnlySelectionStrategy(), 
+                        //Empty string used to mean nothing selected.
+                        mergeFrom === '' ? [] : [mergeFrom]);
+                    }, consts_1["default"].creatorCanvasInitDelay);
+                    var toEl = document.createElement('p');
+                    toEl.innerHTML = 'TO';
+                    mergeEl.appendChild(toEl);
+                    //Show canvas for step2, aka 'to'.
+                    var toChange = function (refs) {
+                        this.options['merges'][mergeFrom] = refs[0];
+                        this.render();
+                    }.bind(_this);
+                    var step2Cont = document.createElement('div');
+                    step2Cont.className = 'eqContainer';
+                    mergeEl.appendChild(step2Cont);
+                    setTimeout(function () {
+                        new StepOptionsCanvasController_1["default"](step2Cont, _this.controller.instructionsFromStep(_this.controller.slideManager.getSlide(_this.step2Idx)), toChange, new SelectionStrategy_1.OneOnlySelectionStrategy(), 
+                        //Empty string used to mean nothing selected.
+                        mergeTo === '' ? [] : [mergeTo]);
+                    }, consts_1["default"].creatorCanvasInitDelay);
+                });
+            }
+        };
+        /**
          * Add a clone animation to this
          * step.
          */
@@ -132,6 +203,19 @@ define(["require", "exports", "./StepOptionsCanvasController", "./SelectionStrat
             }
             if (!this.options['clones']['']) {
                 this.options['clones'][''] = '';
+            }
+            this.render();
+        };
+        /**
+         * Add a merge animation to this
+         * step.
+         */
+        StepOptionsEditor.prototype.addMerge = function () {
+            if (!this.options['merges']) {
+                this.options['merges'] = {};
+            }
+            if (!this.options['merges']['']) {
+                this.options['merges'][''] = '';
             }
             this.render();
         };
