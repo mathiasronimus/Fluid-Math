@@ -84,7 +84,10 @@ export default class StepOptionsEditor {
 
     /**
      * Insert the appropriate cloning controls
-     * into the element.
+     * into the element. For a clone to valid,
+     * the cloned element must be present in the
+     * later step AND not present in the previous
+     * step.
      */
     private renderClone() {
         if (this.options['clones']) {
@@ -143,6 +146,11 @@ export default class StepOptionsEditor {
 
                 //Show canvas for step2, aka 'to'.
                 let toChange = function(refs: string[]) {
+                    if (this.layoutContainsRef(this.controller.slideManager.getSlide(this.step1Idx), refs[0])) {
+                        this.controller.error("Cloned item must not already exist.");
+                        this.render();
+                        return;
+                    }
                     delete this.options['clones'][cloneTo];
                     this.options['clones'][refs[0]] = cloneFrom;
                     this.render();
@@ -164,8 +172,32 @@ export default class StepOptionsEditor {
     }
 
     /**
+     * Whether a layout contains a 
+     * particular content reference.
+     * 
+     * @param layout The layout to search in.
+     * @param ref The reference to search for.
+     */
+    private layoutContainsRef(layout: Object, ref: string): boolean {
+        let keys = Object.keys(layout);
+        for (let i = 0; i < keys.length; i++) {
+            let val = layout[keys[i]];
+            let found = false;
+            if (typeof val === 'object') {
+                found = this.layoutContainsRef(val, ref);
+            } else if (typeof val === 'string') {
+                found = val === ref;
+            }
+            if (found) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Insert the appropriate merging controls
-     * into the element.
+     * into the element. 
      */
     private renderMerge() {
         if (this.options['merges']) {
@@ -202,6 +234,11 @@ export default class StepOptionsEditor {
 
                 //Show canvas for step1, aka 'from'.
                 let fromChange = function(refs: string[]) {
+                    if (this.layoutContainsRef(this.controller.slideManager.getSlide(this.step2Idx), refs[0])) {
+                        this.controller.error("Merging item musn't exist after the transition.");
+                        this.render();
+                        return;
+                    }
                     delete this.options['merges'][mergeFrom];
                     this.options['merges'][refs[0]] = mergeTo;
                     this.render();

@@ -220,6 +220,7 @@ p {
 
 #error {
     position: fixed;
+    z-index: 2;
     padding: 10px;
     bottom: 30px;
     right: 30px;
