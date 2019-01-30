@@ -13,10 +13,10 @@ define(["require", "exports", "../main/consts", "./EqContent", "../animation/Ter
     exports.__esModule = true;
     var Term = (function (_super) {
         __extends(Term, _super);
-        function Term(text, widths, heights, ascents) {
+        function Term(text, widths, heights, ascents, ref) {
             var _this = 
             //At the time of term initialization, layout is unknown.
-            _super.call(this, consts_1["default"].termPadding) || this;
+            _super.call(this, consts_1["default"].termPadding, ref) || this;
             _this.widths = widths;
             _this.heights = heights;
             _this.halfInnerWidths = _this.widths.map(function (width) { return width / 2; });
@@ -43,8 +43,8 @@ define(["require", "exports", "../main/consts", "./EqContent", "../animation/Ter
             var tier = window['currentWidthTier'];
             return this.widths[tier] + this.padding.width();
         };
-        Term.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
-            var state = new TermLayoutState_1["default"](parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale);
+        Term.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj) {
+            var state = new TermLayoutState_1["default"](parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj));
             layouts.set(this, state);
             return state;
         };

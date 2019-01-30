@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "./consts", "../layout/EqContent", "../animation/ColorAnimation", "../animation/OpacityAnimation", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, consts_1, EqContent_1, ColorAnimation_1, OpacityAnimation_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "./consts", "../layout/EqContent", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, consts_1, EqContent_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
     exports.__esModule = true;
     /**
@@ -99,8 +99,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             this.currStates.forEach(function (f) {
                 _this.ctx.save();
                 if (f.component instanceof EqContent_1["default"]) {
-                    f.component.setColor(_this.getColorForContent(_this.getContentReference(f.component)));
-                    f.component.setOpacity(_this.getOpacityForContent(_this.getContentReference(f.component)));
+                    f.component.interpColorOff();
                     f.component.draw(f, f, 0, _this.ctx);
                 }
                 _this.ctx.restore();
@@ -258,17 +257,7 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                     stateBefore = oldStates.get(content);
                 var stateAfter = this.currStates.get(content);
                 var contentRef = this.getContentRefFromIndex(i);
-                var colorAfter = this.getColorForContent(contentRef);
-                var opacityAfter = this.getOpacityForContent(contentRef);
                 if (stateBefore && stateAfter) {
-                    //If color has changed, animate it
-                    if (content.hasDifferentColor(colorAfter)) {
-                        set.addAnimation(new ColorAnimation_1["default"](content.getColor(), colorAfter, set, content));
-                    }
-                    //If opacity has changed, animate it
-                    if (content.getOpacity() !== opacityAfter) {
-                        set.addAnimation(new OpacityAnimation_1["default"](content.getOpacity(), opacityAfter, content, set));
-                    }
                     //Content has just moved
                     set.addAnimation(new MoveAnimation_1["default"](stateBefore, stateAfter, set, this.ctx));
                 }
@@ -294,67 +283,13 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         var cloneFrom = this.getContentFromRef(cloneFromRef);
                         var cloneFromOldState = oldStates.get(cloneFrom);
                         set.addAnimation(new MoveAnimation_1["default"](cloneFromOldState, stateAfter, set, this.ctx));
-                        //Animate color and opacity if necessary
-                        if (cloneFrom.hasDifferentColor(colorAfter)) {
-                            set.addAnimation(new ColorAnimation_1["default"](cloneFrom.getColor(), colorAfter, set, content));
-                        }
-                        else {
-                            //Hasn't changed
-                            content.setColor(colorAfter);
-                        }
-                        if (cloneFrom.getOpacity() !== opacityAfter) {
-                            set.addAnimation(new OpacityAnimation_1["default"](cloneFrom.getOpacity(), opacityAfter, content, set));
-                        }
-                        else {
-                            //Hasn't changed
-                            content.setOpacity(opacityAfter);
-                        }
                     }
                     else {
                         set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
-                        //Set the color immediately
-                        content.setColor(colorAfter);
-                        //Set the opacity immediately
-                        content.setOpacity(opacityAfter);
                     }
                 }
             }
             return set;
-        };
-        /**
-         * Given a piece of content, determine
-         * what color it should be for the current
-         * step.
-         *
-         * @param contentRef The reference of the content to find the color for.
-         */
-        CanvasController.prototype.getColorForContent = function (contentRef) {
-            var stepColors = this.steps[this.currStep]['color'];
-            if (stepColors !== undefined && stepColors[contentRef] !== undefined) {
-                //A color is specified
-                return consts_1["default"].colors[stepColors[contentRef]];
-            }
-            else {
-                //A color isn't specified, use default
-                return consts_1["default"].colors['default'];
-            }
-        };
-        /**
-         * Gets the opacity for a piece of content
-         * at the current step.
-         *
-         * @param contentRef The reference of the content to find the opacity of.
-         */
-        CanvasController.prototype.getOpacityForContent = function (contentRef) {
-            var stepOpacity = this.steps[this.currStep]['opacity'];
-            if (stepOpacity !== undefined && stepOpacity[contentRef] !== undefined) {
-                //Opacity specified
-                return stepOpacity[contentRef];
-            }
-            else {
-                //No opacity specified
-                return consts_1["default"].normalOpacity;
-            }
         };
         /**
          * Sets the dimensions of the canvas based on
@@ -411,12 +346,12 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                     widths.push(instructions.metrics[w].widths[t]);
                 }
                 var text = instructions.terms[t];
-                var term = new Term_1["default"](text, widths, heights, ascents);
+                var term = new Term_1["default"](text, widths, heights, ascents, 't' + t);
                 this.terms.push(term);
             }
             //Initialize h dividers
             for (var i = 0; i < instructions.hDividers; i++) {
-                this.hDividers.push(new HDivider_1["default"](consts_1["default"].hDividerPadding));
+                this.hDividers.push(new HDivider_1["default"](consts_1["default"].hDividerPadding, 'h' + i));
             }
         };
         /**
@@ -516,8 +451,11 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             if (this.textArea) {
                 this.textArea.innerHTML = this.steps[idx].text;
             }
+            //Get the color info
+            var colorsObj = this.steps[idx]['color'];
+            var opacityObj = this.steps[idx]['opacity'];
             var allLayouts = helpers_1.newMap();
-            var rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1);
+            var rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj);
             return [allLayouts, rootLayout];
         };
         /**

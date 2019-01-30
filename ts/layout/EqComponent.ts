@@ -45,6 +45,10 @@ export default abstract class EqComponent {
      * @param tlx The left x of this component.
      * @param tly The top y of this component.
      * @param currScale The current canvas scaling factor.
+     * @param opacityObj The object storing opacity info for this step.
+     * @param colorsObj The object storing color info for this step.
      */
-    abstract addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState;
+    abstract addLayout( parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+                        tlx: number, tly: number, currScale: number,
+                        opacityObj: Object, colorsObj: Object): LayoutState;
 }

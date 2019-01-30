@@ -131,7 +131,9 @@ export default class HBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+                tlx: number, tly: number, currScale: number,
+                opacityObj: Object, colorObj: Object): LayoutState {
         let state = 
             new LayoutState(parentLayout, this, 
                             tlx, tly, 
@@ -147,7 +149,7 @@ export default class HBox extends LinearContainer {
 
             //Position child in the middle vertically
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
+            upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorObj).width;
         }
 
         layouts.set(this, state);

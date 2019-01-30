@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./LayoutState", "../main/consts"], function (require, exports, LayoutState_1, consts_1) {
+define(["require", "exports", "../main/consts", "./ContentLayoutState"], function (require, exports, consts_1, ContentLayoutState_1) {
     "use strict";
     exports.__esModule = true;
     var TermLayoutState = (function (_super) {
@@ -35,9 +35,9 @@ define(["require", "exports", "./LayoutState", "../main/consts"], function (requ
          * as this one, but with a scaling of 0.
          */
         TermLayoutState.prototype.withZeroScale = function () {
-            return new TermLayoutState(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, 0);
+            return new TermLayoutState(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, 0, this.color, 0);
         };
         return TermLayoutState;
-    }(LayoutState_1["default"]));
+    }(ContentLayoutState_1["default"]));
     exports["default"] = TermLayoutState;
 });

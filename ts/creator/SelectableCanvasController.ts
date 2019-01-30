@@ -45,7 +45,7 @@ export default class SelectableCanvasController extends CanvasController {
         super.initContent(instructions);
         this.hDividers = [];
         for (let i = 0; i < instructions['hDividers']; i++) {
-            this.hDividers.push(new HDivider(C.creatorHDividerPadding));
+            this.hDividers.push(new HDivider(C.creatorHDividerPadding, 'h' + i));
         }
     }
 

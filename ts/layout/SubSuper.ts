@@ -68,31 +68,40 @@ export default class SubSuper extends EqContainer {
                 + this.padding.height();
     }
 
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+                tlx: number, tly: number, currScale: number,
+                opacityObj: Object, colorsObj: Object): LayoutState {
         let layout = new LayoutState(   parentLayout, this, tlx, tly, 
                                         this.getWidth() * currScale, 
                                         this.getHeight() * currScale, 
                                         currScale);
         //Add the middle
-        let middleLayout = 
-            this.middle.addLayout(  layout, layouts, 
-                                    tlx + this.padding.left * currScale, 
-                                    tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, 
-                                    currScale);
-
+        let middleLayout = this.middle.addLayout(  
+            layout, layouts, 
+            tlx + this.padding.left * currScale, 
+            tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, 
+            currScale,
+            opacityObj, colorsObj
+        );
         let rightX = middleLayout.tlx + middleLayout.width;
 
         //Add the top
-        this.top.addLayout( layout, layouts,
-                            rightX,
-                            tly + (this.padding.top + this.topBlank) * currScale, 
-                            currScale * C.expScale);
+        this.top.addLayout( 
+            layout, layouts,
+            rightX,
+            tly + (this.padding.top + this.topBlank) * currScale, 
+            currScale * C.expScale,
+            opacityObj, colorsObj
+        );
 
         //Add the bottom
-        this.bottom.addLayout(  layout, layouts,
-                                rightX, 
-                                tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * C.expScale) * currScale,
-                                currScale * C.expScale);
+        this.bottom.addLayout(  
+            layout, layouts,
+            rightX, 
+            tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * C.expScale) * currScale,
+            currScale * C.expScale,
+            opacityObj, colorsObj
+        );
 
         //Add own
         layouts.set(this, layout);

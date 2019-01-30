@@ -18,9 +18,9 @@ export default class Term extends EqContent<TermLayoutState> {
     private halfInnerHeight: number;
     private ascent: number;
 
-    constructor(text: string, widths: number[], heights: number[], ascents: number[]) {
+    constructor(text: string, widths: number[], heights: number[], ascents: number[], ref: string) {
         //At the time of term initialization, layout is unknown.
-        super(C.termPadding);
+        super(C.termPadding, ref);
         this.widths = widths;
         this.heights = heights;
         this.halfInnerWidths = this.widths.map(width => width / 2);
@@ -50,9 +50,14 @@ export default class Term extends EqContent<TermLayoutState> {
         return this.widths[tier] + this.padding.width();
     }
     
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): TermLayoutState {
-        let state = 
-            new TermLayoutState(parentLayout, this, tlx, tly, this.width * currScale, this.height * currScale, currScale);
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+              tlx: number, tly: number, currScale: number,
+              opacityObj: Object, colorsObj: Object): TermLayoutState {
+        let state = new TermLayoutState(
+                parentLayout, this, 
+                tlx, tly, this.width * currScale, this.height * currScale, currScale,
+                this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj)
+        );
         layouts.set(this, state);
         return state;
     }

@@ -38,7 +38,7 @@ define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animatio
             return totalWidth + this.padding.width() - numTerms * widthDiff;
         };
         //Override to reduce term padding.
-        TightHBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+        TightHBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj) {
             var state = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
             var upToX = tlx + this.padding.left * currScale;
@@ -47,7 +47,7 @@ define(["require", "exports", "./HBox", "../main/consts", "./Term", "../animatio
                 var childHeight = currChild.getHeight() * currScale;
                 //Position child in the middle vertically
                 var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-                var childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale);
+                var childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorsObj);
                 if (currChild instanceof Term_1["default"]) {
                     childLayout.tighten(widthDiff * currScale);
                 }

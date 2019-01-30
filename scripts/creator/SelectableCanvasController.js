@@ -56,7 +56,7 @@ define(["require", "exports", "../main/CanvasController", "../layout/HDivider", 
             _super.prototype.initContent.call(this, instructions);
             this.hDividers = [];
             for (var i = 0; i < instructions['hDividers']; i++) {
-                this.hDividers.push(new HDivider_1["default"](consts_1["default"].creatorHDividerPadding));
+                this.hDividers.push(new HDivider_1["default"](consts_1["default"].creatorHDividerPadding, 'h' + i));
             }
         };
         /**

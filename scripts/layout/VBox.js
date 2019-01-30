@@ -109,7 +109,7 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
             toReturn['children'] = EqContainer_1["default"].childrenToStepLayout(this.children, controller);
             return toReturn;
         };
-        VBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+        VBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj) {
             var state = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             var innerWidth = (this.getWidth() - this.padding.width()) * currScale;
             var upToY = tly + this.padding.top * currScale;
@@ -118,7 +118,7 @@ define(["require", "exports", "./EqContainer", "../animation/LayoutState", "./Pa
                 var childWidth = currChild.getWidth() * currScale;
                 //Position child in the middle horizontally
                 var childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
-                upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
+                upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale, opacityObj, colorsObj).height;
             }
             layouts.set(this, state);
             return state;

@@ -1,8 +1,9 @@
 import LayoutState from "./LayoutState";
 import Padding from "../layout/Padding";
 import C from '../main/consts';
+import ContentLayoutState from "./ContentLayoutState";
 
-export default class TermLayoutState extends LayoutState {
+export default class TermLayoutState extends ContentLayoutState {
     
     padding: Padding = C.termPadding;
 
@@ -23,13 +24,15 @@ export default class TermLayoutState extends LayoutState {
      * Returns a new Layout State the same
      * as this one, but with a scaling of 0.
      */
-    withZeroScale(): LayoutState {
+    withZeroScale(): TermLayoutState {
         return new TermLayoutState( this.layoutParent, 
                                 this.component,
                                 this.tlx,
                                 this.tly,
                                 this.width, 
                                 this.height,
+                                0,
+                                this.color,
                                 0);
     }
 }

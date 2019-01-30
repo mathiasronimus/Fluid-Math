@@ -110,7 +110,7 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
             toReturn['children'] = EqContainer_1["default"].childrenToStepLayout(this.children, controller);
             return toReturn;
         };
-        HBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+        HBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorObj) {
             var state = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
             var upToX = tlx + this.padding.left * currScale;
@@ -119,7 +119,7 @@ define(["require", "exports", "./EqContainer", "./Padding", "../animation/Layout
                 var childHeight = currChild.getHeight() * currScale;
                 //Position child in the middle vertically
                 var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-                upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale).width;
+                upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorObj).width;
             }
             layouts.set(this, state);
             return state;

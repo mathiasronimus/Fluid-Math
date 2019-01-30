@@ -8,13 +8,13 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "./EqContent", "../animation/LayoutState", "../main/helpers"], function (require, exports, EqContent_1, LayoutState_1, helpers_1) {
+define(["require", "exports", "./EqContent", "../animation/ContentLayoutState", "../main/helpers"], function (require, exports, EqContent_1, ContentLayoutState_1, helpers_1) {
     "use strict";
     exports.__esModule = true;
     var HDivider = (function (_super) {
         __extends(HDivider, _super);
-        function HDivider(padding) {
-            var _this = _super.call(this, padding) || this;
+        function HDivider(padding, ref) {
+            var _this = _super.call(this, padding, ref) || this;
             _this.height = 1 + _this.padding.height();
             //For layout purposes, the divider
             //has no width. It stretches to fill
@@ -24,12 +24,12 @@ define(["require", "exports", "./EqContent", "../animation/LayoutState", "../mai
         }
         HDivider.prototype.calcWidth = function () { return 0; };
         HDivider.prototype.calcHeight = function () { return 0; };
-        HDivider.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+        HDivider.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj) {
             //Set x to align left with parent
             var x = parentLayout.tlx;
             var width = parentLayout.width;
             var height = this.getHeight();
-            var state = new LayoutState_1["default"](parentLayout, this, x, tly, width, height, currScale);
+            var state = new ContentLayoutState_1["default"](parentLayout, this, x, tly, width, height, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj));
             layouts.set(this, state);
             return state;
         };

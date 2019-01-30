@@ -130,7 +130,9 @@ export default class VBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+                tlx: number, tly: number, currScale: number,
+                opacityObj: Object, colorsObj: Object): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly, 
                                     this.getWidth() * currScale, 
                                     this.getHeight() * currScale, 
@@ -144,7 +146,7 @@ export default class VBox extends LinearContainer {
 
             //Position child in the middle horizontally
             let childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
-            upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale).height;
+            upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale, opacityObj, colorsObj).height;
         }
 
         layouts.set(this, state);

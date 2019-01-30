@@ -1,17 +1,18 @@
 import EqComponent from "./EqComponent";
 import Padding from "./Padding";
 import C from '../main/consts';
-import LayoutState from "../animation/LayoutState";
+import ContentLayoutState from "../animation/ContentLayoutState";
 
-export default abstract class EqContent<L extends LayoutState> extends EqComponent {
+export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent {
 
-    private color: number[];
-    private opacity: number;
+    protected ref: string;
+    //Whether to interpolate color and opacity
+    //during the current animation.
+    protected interpColor = true;
 
-    constructor(padding: Padding) {
+    constructor(padding: Padding, ref: string) {
         super(padding);
-        this.color = C.colors['default'];
-        this.opacity = C.normalOpacity;
+        this.ref = ref;
     }
 
     /**
@@ -31,7 +32,7 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
      *                 from 0-1.
      * @param ctx The rendering context.
      */
-    setupCtx(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
+    protected setupCtx(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
         let invProg = 1 - progress;
         let x = before.tlx * invProg + after.tlx * progress;
         let y = before.tly * invProg + after.tly * progress;
@@ -40,7 +41,28 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
         let scale = before.scale * invProg + after.scale * progress;
         ctx.translate(x + width / 2, y + height / 2);
         ctx.scale(scale, scale);
-        this.setCtxStyle(ctx);
+
+        if (progress === 0) {
+            //Check whether to interpolate color at start of animation
+            let colB = before.color;
+            let colA = after.color;
+            this.interpColor =  colB[0] !== colA[0] ||
+                                colB[1] !== colA[1] ||
+                                colB[2] !== colA[2] ||
+                                before.opacity !== after.opacity;
+        }
+        let color = before.color;
+        let opacity = before.opacity;
+        if (this.interpColor) {
+            let r = before.color[0] * invProg + after.color[0] * progress;
+            let g = before.color[1] * invProg + after.color[1] * progress;
+            let b = before.color[2] * invProg + after.color[2] * progress;
+            let a = before.opacity * invProg + after.opacity * progress;
+            color = [r, g, b];
+            opacity = a;
+        }
+
+        this.setCtxStyle(ctx, color, opacity);
         return [width, height];
     }
 
@@ -56,41 +78,55 @@ export default abstract class EqContent<L extends LayoutState> extends EqCompone
 
     /**
      * Sets a graphics context to have
-     * the color and opacity of this content.
+     * a certain color and opacity.
      * 
      * @param ctx The graphics context.
+     * @param color The color.
+     * @param opacity The opacity.
      */
-    protected setCtxStyle(ctx: CanvasRenderingContext2D) {
-        let style = "rgba(" + this.color[0] + "," + this.color[1] + "," + this.color[2] + "," + this.opacity + ")";
+    protected setCtxStyle(ctx: CanvasRenderingContext2D, color: number[], opacity: number) {
+        let style = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + opacity + ")";
         ctx.fillStyle = style;
         ctx.strokeStyle = style;
     }
 
     /**
-     * Checks if this content has a different
-     * color to the argument.
+     * Given a colors object, determine what
+     * color this content should be.
      * 
-     * @param newColor The color to check.
+     * @param colorObj The colors object for a step.
      */
-    hasDifferentColor(newColor: number[]): boolean {
-        return  newColor[0] !== this.color[0] ||
-                newColor[1] !== this.color[1] ||
-                newColor[2] !== this.color[2];
+    protected getColorForContent(colorObj: Object): number[] {
+        if (colorObj !== undefined && colorObj[this.ref] !== undefined) {
+            //A color is specified
+            return C.colors[colorObj[this.ref]];
+        } else {
+            //A color isn't specified, use default
+            return C.colors['default'];
+        }
     }
 
-    setColor(newColor: number[]): void {
-        this.color = [Math.round(newColor[0]), Math.round(newColor[1]), Math.round(newColor[2])];
+    /**
+     * Gets the opacity for this content
+     * at a step.
+     * 
+     * @param opacityObj The opacities object for a step.
+     */
+    protected getOpacityForContent(opacityObj: Object): number {
+        if (opacityObj !== undefined && opacityObj[this.ref] !== undefined) {
+            //Opacity specified
+            return opacityObj[this.ref];
+        } else {
+            //No opacity specified
+            return C.normalOpacity;
+        }
     }
 
-    getColor(): number[] {
-        return this.color;
-    }
-
-    setOpacity(newOpacity: number): void {
-        this.opacity = newOpacity;
-    }
-
-    getOpacity(): number {
-        return this.opacity;
+    /**
+     * Set the content to not interpolate color
+     * until setupCtx is called with progress = 0.
+     */
+    interpColorOff() {
+        this.interpColor = false;
     }
 }

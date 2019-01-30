@@ -35,7 +35,9 @@ export default class TightHBox extends HBox {
     }
 
     //Override to reduce term padding.
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, tlx: number, tly: number, currScale: number): LayoutState {
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+                tlx: number, tly: number, currScale: number,
+                opacityObj: Object, colorsObj: Object): LayoutState {
         let state = new LayoutState(
                             parentLayout, this, tlx, tly, 
                             this.getWidth() * currScale, 
@@ -50,7 +52,7 @@ export default class TightHBox extends HBox {
 
             //Position child in the middle vertically
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            let childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale);
+            let childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorsObj);
             if (currChild instanceof Term) {
                 (childLayout as TermLayoutState).tighten(widthDiff * currScale);
             }

@@ -52,15 +52,15 @@ define(["require", "exports", "./EqContainer", "../main/consts", "../animation/L
                 + this.bottomPortrusion + this.bottomBlank
                 + this.padding.height();
         };
-        SubSuper.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale) {
+        SubSuper.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj) {
             var layout = new LayoutState_1["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
             //Add the middle
-            var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale);
+            var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale, opacityObj, colorsObj);
             var rightX = middleLayout.tlx + middleLayout.width;
             //Add the top
-            this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * consts_1["default"].expScale);
+            this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * consts_1["default"].expScale, opacityObj, colorsObj);
             //Add the bottom
-            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1["default"].expScale) * currScale, currScale * consts_1["default"].expScale);
+            this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * consts_1["default"].expScale) * currScale, currScale * consts_1["default"].expScale, opacityObj, colorsObj);
             //Add own
             layouts.set(this, layout);
             return layout;

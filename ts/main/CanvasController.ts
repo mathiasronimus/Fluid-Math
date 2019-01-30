@@ -11,8 +11,6 @@ import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
 import C from './consts';
 import EqContent from "../layout/EqContent";
-import ColorAnimation from "../animation/ColorAnimation";
-import OpacityAnimation from "../animation/OpacityAnimation";
 import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
@@ -144,8 +142,7 @@ export default class CanvasController {
         this.currStates.forEach(f => {
             this.ctx.save();
             if (f.component instanceof EqContent) {
-                f.component.setColor(this.getColorForContent(this.getContentReference(f.component)));
-                f.component.setOpacity(this.getOpacityForContent(this.getContentReference(f.component)));
+                f.component.interpColorOff();
                 f.component.draw(f, f, 0, this.ctx);
             }
             this.ctx.restore();
@@ -317,18 +314,8 @@ export default class CanvasController {
             let stateAfter: LayoutState = this.currStates.get(content);
 
             let contentRef = this.getContentRefFromIndex(i);
-            let colorAfter: number[] = this.getColorForContent(contentRef);
-            let opacityAfter: number = this.getOpacityForContent(contentRef);
 
             if (stateBefore && stateAfter) {
-                //If color has changed, animate it
-                if (content.hasDifferentColor(colorAfter)) {
-                    set.addAnimation(new ColorAnimation(content.getColor(), colorAfter, set, content));
-                }
-                //If opacity has changed, animate it
-                if (content.getOpacity() !== opacityAfter) {
-                    set.addAnimation(new OpacityAnimation(content.getOpacity(), opacityAfter, content, set));
-                }
                 //Content has just moved
                 set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
             } else if (stateBefore) {
@@ -351,66 +338,14 @@ export default class CanvasController {
                     let cloneFrom = this.getContentFromRef(cloneFromRef);
                     let cloneFromOldState = oldStates.get(cloneFrom);
                     set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
-                    //Animate color and opacity if necessary
-                    if (cloneFrom.hasDifferentColor(colorAfter)) {
-                        set.addAnimation(new ColorAnimation(cloneFrom.getColor(), colorAfter, set, content));
-                    } else {
-                        //Hasn't changed
-                        content.setColor(colorAfter);
-                    }
-                    if (cloneFrom.getOpacity() !== opacityAfter) {
-                        set.addAnimation(new OpacityAnimation(cloneFrom.getOpacity(), opacityAfter, content, set));
-                    } else {
-                        //Hasn't changed
-                        content.setOpacity(opacityAfter);
-                    }
                 } else {
                     set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
-                    //Set the color immediately
-                    content.setColor(colorAfter);
-                    //Set the opacity immediately
-                    content.setOpacity(opacityAfter);
                 }
             }
 
         }
 
         return set;
-    }
-
-    /**
-     * Given a piece of content, determine
-     * what color it should be for the current
-     * step.
-     * 
-     * @param contentRef The reference of the content to find the color for.
-     */
-    private getColorForContent(contentRef: string): number[] {
-        let stepColors = this.steps[this.currStep]['color'];
-        if (stepColors !== undefined && stepColors[contentRef] !== undefined) {
-            //A color is specified
-            return C.colors[stepColors[contentRef]];
-        } else {
-            //A color isn't specified, use default
-            return C.colors['default'];
-        }
-    }
-
-    /**
-     * Gets the opacity for a piece of content
-     * at the current step.
-     * 
-     * @param contentRef The reference of the content to find the opacity of.
-     */
-    private getOpacityForContent(contentRef: string): number {
-        let stepOpacity = this.steps[this.currStep]['opacity'];
-        if (stepOpacity !== undefined && stepOpacity[contentRef] !== undefined) {
-            //Opacity specified
-            return stepOpacity[contentRef];
-        } else {
-            //No opacity specified
-            return C.normalOpacity;
-        }
     }
 
     /**
@@ -478,12 +413,12 @@ export default class CanvasController {
             }
 
             let text = instructions.terms[t];
-            let term = new Term(text, widths, heights, ascents);
+            let term = new Term(text, widths, heights, ascents, 't' + t);
             this.terms.push(term);
         }
         //Initialize h dividers
         for (let i = 0; i < instructions.hDividers; i++) {
-            this.hDividers.push(new HDivider(C.hDividerPadding));
+            this.hDividers.push(new HDivider(C.hDividerPadding, 'h' + i));
         }
     }
 
@@ -586,8 +521,12 @@ export default class CanvasController {
             this.textArea.innerHTML = this.steps[idx].text;
         }
 
+        //Get the color info
+        let colorsObj = this.steps[idx]['color'];
+        let opacityObj = this.steps[idx]['opacity'];
+
         let allLayouts = newMap();
-        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1);
+        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj);
         return [allLayouts, rootLayout];
     }
 
