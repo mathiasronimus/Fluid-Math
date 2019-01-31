@@ -80,7 +80,8 @@ export default class CreatorCanvasController extends SelectableCanvasController 
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         this.rootContainer = rootLayout.component;
-        this.setSize(rootLayout);
+        let [width, height] = this.getSize(rootLayout);
+        this.setSize(width, height);
         this.redraw();
     }
 

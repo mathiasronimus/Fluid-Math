@@ -61,7 +61,8 @@ define(["require", "exports", "../layout/VBox", "../layout/HBox", "../layout/Tig
             var rootLayout;
             _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
             this.rootContainer = rootLayout.component;
-            this.setSize(rootLayout);
+            var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
+            this.setSize(width, height);
             this.redraw();
             var _a;
         };

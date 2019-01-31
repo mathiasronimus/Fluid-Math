@@ -159,7 +159,8 @@ export default class CanvasController {
     protected recalc() {
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
-        this.setSize(rootLayout);
+        let [width, height] = this.getSize(rootLayout);
+        this.setSize(width, height);
         this.redraw();
     }
 
@@ -178,8 +179,8 @@ export default class CanvasController {
         let oldStates = this.currStates;
         let rootLayout
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
-        let dimens = this.setSize(rootLayout);
-        let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
+        let [width, height] = this.getSize(rootLayout);
+        let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep);
         this.animating = true;
         anims.start();
     }
@@ -198,8 +199,8 @@ export default class CanvasController {
         let oldStates = this.currStates;
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
-        let dimens = this.setSize(rootLayout);        
-        let anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
+        let [width, height] = this.getSize(rootLayout);        
+        let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep);
         this.animating = true;
         anims.start();
     }
@@ -219,8 +220,8 @@ export default class CanvasController {
         let oldStates = this.currStates;
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
-        let dimens = this.setSize(rootLayout);
-        let anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
+        let [width, height] = this.getSize(rootLayout);
+        let anims = this.diff(oldStates, width, height, oldStep, 0);
         this.animating = true;
         anims.start();
     }
@@ -273,19 +274,30 @@ export default class CanvasController {
     /**
      * Calculates and returns a set of animations
      * to play between the current and old step. 
-     * Also animates the canvas height to
-     * accomodate the new layout.
+     * Also changes the canvas dimensions to
+     * accommodate the new layout.
      * 
-     * @param oldStates The set of layouts from the previous step.
-     * @param cHeightBefore The height of the canvas before the animation.
-     * @param cHeightAfter The height of the canvas after the animation.
+     * @param oldStates The Map of layouts from the previous step.
+     * @param canvasWidth The width the canvas should be as of the current step.
+     * @param canvasHeight The height the canvas should be as of the current step.
+     * @param stepBefore The old step number.
+     * @param stepAfter The current step number.
      */
     private diff(oldStates: Map<EqComponent, LayoutState>, canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
 
+        let updateDimenAfter = canvasHeight < this.lastHeight;
+        if (!updateDimenAfter) {
+            this.setSize(canvasWidth, canvasHeight);
+        }
+
         let set = new AnimationSet(() => {
             //When done
+            if (updateDimenAfter) {
+                this.setSize(canvasWidth, canvasHeight);
+                this.redraw();
+            }
             this.animating = false;
-        }, this.ctx, canvasWidth, canvasHeight);
+        }, this.ctx, this.lastWidth, this.lastHeight);
 
         //Get the step options for this transition
         let stepOptions;
@@ -326,6 +338,13 @@ export default class CanvasController {
                     let mergeTo = this.getContentFromRef(mergeToRef);
                     let mergeToNewState = this.currStates.get(mergeTo);
                     set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
+                } else if (reverseStep && stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                    //Do a reverse clone, aka merge.
+                    //Cloning is "to": "from", need to work backwards
+                    let mergeToRef = stepOptions['clones'][contentRef];
+                    let mergeTo = this.getContentFromRef(mergeToRef);
+                    let mergeToNewState = this.currStates.get(mergeTo);
+                    set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
                 } else {
                     //Do a regular remove animation
                     set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
@@ -335,6 +354,13 @@ export default class CanvasController {
                 if (stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
                     //Do a clone animation
                     let cloneFromRef = stepOptions['clones'][contentRef];
+                    let cloneFrom = this.getContentFromRef(cloneFromRef);
+                    let cloneFromOldState = oldStates.get(cloneFrom);
+                    set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+                } else if (reverseStep && stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                    //Do a reverse merge, aka clone.
+                    //Merging is "from": "to", need to work backwards.
+                    let cloneFromRef = stepOptions['merges'][contentRef];
                     let cloneFrom = this.getContentFromRef(cloneFromRef);
                     let cloneFromOldState = oldStates.get(cloneFrom);
                     set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
@@ -349,38 +375,44 @@ export default class CanvasController {
     }
 
     /**
-     * Sets the dimensions of the canvas based on
-     * a set of layout states, and also returns
-     * these dimensions.
+     * Gets the dimensions of the canvas based on
+     * the root layout state.
      * 
      * @param root The layout state of the root container.
      */
-    protected setSize(root: LayoutState): [number, number] {
+    protected getSize(root: LayoutState): [number, number] {
         let rootHeight = root.height;
         let rootWidth = root.width;
         let currWidth = this.container.clientWidth;
         let newWidth = rootWidth > currWidth ? rootWidth : currWidth;
+        return [newWidth, rootHeight];
+    }
 
-        if (newWidth === this.lastWidth && rootHeight === this.lastHeight) {
+    /**
+     * Sets the dimensions of the canvas.
+     * 
+     * @param newWidth The new width.
+     * @param newHeight The new height.
+     */
+    protected setSize(newWidth: number, newHeight: number) {
+        if (newWidth === this.lastWidth && newHeight === this.lastHeight) {
             //Early return, no need to change size
-            return [newWidth, rootHeight];
+            return;
         }
 
         //Update canvas css size
         this.canvas.style.width = newWidth + "px";
-        this.canvas.style.height = rootHeight + "px";
+        this.canvas.style.height = newHeight + "px";
 
         //Update canvas pixel size for HDPI
         let pixelRatio = window.devicePixelRatio || 1;
         this.canvas.width = newWidth * pixelRatio;
-        this.canvas.height = rootHeight * pixelRatio;
+        this.canvas.height = newHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
         this.ctx.font = C.fontWeight + " " + this.fontSize + "px " + C.fontFamily;
 
-        this.lastHeight = rootHeight;
+        this.lastHeight = newHeight;
         this.lastWidth = newWidth;
-
-        return [newWidth, rootHeight];
     }
 
     /**

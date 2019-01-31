@@ -114,7 +114,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         CanvasController.prototype.recalc = function () {
             var rootLayout;
             _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
-            this.setSize(rootLayout);
+            var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
+            this.setSize(width, height);
             this.redraw();
             var _a;
         };
@@ -131,8 +132,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var oldStates = this.currStates;
             var rootLayout;
             _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
-            var dimens = this.setSize(rootLayout);
-            var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep - 1, this.currStep);
+            var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
+            var anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep);
             this.animating = true;
             anims.start();
             var _a;
@@ -149,8 +150,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var oldStates = this.currStates;
             var rootLayout;
             _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
-            var dimens = this.setSize(rootLayout);
-            var anims = this.diff(oldStates, dimens[0], dimens[1], this.currStep + 1, this.currStep);
+            var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
+            var anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep);
             this.animating = true;
             anims.start();
             var _a;
@@ -168,8 +169,8 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var oldStates = this.currStates;
             var rootLayout;
             _a = this.calcLayout(this.currStep), this.currStates = _a[0], rootLayout = _a[1];
-            var dimens = this.setSize(rootLayout);
-            var anims = this.diff(oldStates, dimens[0], dimens[1], oldStep, 0);
+            var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
+            var anims = this.diff(oldStates, width, height, oldStep, 0);
             this.animating = true;
             anims.start();
             var _a;
@@ -220,19 +221,29 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
         /**
          * Calculates and returns a set of animations
          * to play between the current and old step.
-         * Also animates the canvas height to
-         * accomodate the new layout.
+         * Also changes the canvas dimensions to
+         * accommodate the new layout.
          *
-         * @param oldStates The set of layouts from the previous step.
-         * @param cHeightBefore The height of the canvas before the animation.
-         * @param cHeightAfter The height of the canvas after the animation.
+         * @param oldStates The Map of layouts from the previous step.
+         * @param canvasWidth The width the canvas should be as of the current step.
+         * @param canvasHeight The height the canvas should be as of the current step.
+         * @param stepBefore The old step number.
+         * @param stepAfter The current step number.
          */
         CanvasController.prototype.diff = function (oldStates, canvasWidth, canvasHeight, stepBefore, stepAfter) {
             var _this = this;
+            var updateDimenAfter = canvasHeight < this.lastHeight;
+            if (!updateDimenAfter) {
+                this.setSize(canvasWidth, canvasHeight);
+            }
             var set = new AnimationSet_1["default"](function () {
                 //When done
+                if (updateDimenAfter) {
+                    _this.setSize(canvasWidth, canvasHeight);
+                    _this.redraw();
+                }
                 _this.animating = false;
-            }, this.ctx, canvasWidth, canvasHeight);
+            }, this.ctx, this.lastWidth, this.lastHeight);
             //Get the step options for this transition
             var stepOptions;
             var reverseStep;
@@ -270,6 +281,14 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         var mergeToNewState = this.currStates.get(mergeTo);
                         set.addAnimation(new MoveAnimation_1["default"](stateBefore, mergeToNewState, set, this.ctx));
                     }
+                    else if (reverseStep && stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                        //Do a reverse clone, aka merge.
+                        //Cloning is "to": "from", need to work backwards
+                        var mergeToRef = stepOptions['clones'][contentRef];
+                        var mergeTo = this.getContentFromRef(mergeToRef);
+                        var mergeToNewState = this.currStates.get(mergeTo);
+                        set.addAnimation(new MoveAnimation_1["default"](stateBefore, mergeToNewState, set, this.ctx));
+                    }
                     else {
                         //Do a regular remove animation
                         set.addAnimation(new RemoveAnimation_1["default"](stateBefore, set, this.ctx));
@@ -284,6 +303,14 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         var cloneFromOldState = oldStates.get(cloneFrom);
                         set.addAnimation(new MoveAnimation_1["default"](cloneFromOldState, stateAfter, set, this.ctx));
                     }
+                    else if (reverseStep && stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                        //Do a reverse merge, aka clone.
+                        //Merging is "from": "to", need to work backwards.
+                        var cloneFromRef = stepOptions['merges'][contentRef];
+                        var cloneFrom = this.getContentFromRef(cloneFromRef);
+                        var cloneFromOldState = oldStates.get(cloneFrom);
+                        set.addAnimation(new MoveAnimation_1["default"](cloneFromOldState, stateAfter, set, this.ctx));
+                    }
                     else {
                         set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
                     }
@@ -292,33 +319,40 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             return set;
         };
         /**
-         * Sets the dimensions of the canvas based on
-         * a set of layout states, and also returns
-         * these dimensions.
+         * Gets the dimensions of the canvas based on
+         * the root layout state.
          *
          * @param root The layout state of the root container.
          */
-        CanvasController.prototype.setSize = function (root) {
+        CanvasController.prototype.getSize = function (root) {
             var rootHeight = root.height;
             var rootWidth = root.width;
             var currWidth = this.container.clientWidth;
             var newWidth = rootWidth > currWidth ? rootWidth : currWidth;
-            if (newWidth === this.lastWidth && rootHeight === this.lastHeight) {
+            return [newWidth, rootHeight];
+        };
+        /**
+         * Sets the dimensions of the canvas.
+         *
+         * @param newWidth The new width.
+         * @param newHeight The new height.
+         */
+        CanvasController.prototype.setSize = function (newWidth, newHeight) {
+            if (newWidth === this.lastWidth && newHeight === this.lastHeight) {
                 //Early return, no need to change size
-                return [newWidth, rootHeight];
+                return;
             }
             //Update canvas css size
             this.canvas.style.width = newWidth + "px";
-            this.canvas.style.height = rootHeight + "px";
+            this.canvas.style.height = newHeight + "px";
             //Update canvas pixel size for HDPI
             var pixelRatio = window.devicePixelRatio || 1;
             this.canvas.width = newWidth * pixelRatio;
-            this.canvas.height = rootHeight * pixelRatio;
+            this.canvas.height = newHeight * pixelRatio;
             this.ctx.scale(pixelRatio, pixelRatio);
             this.ctx.font = consts_1["default"].fontWeight + " " + this.fontSize + "px " + consts_1["default"].fontFamily;
-            this.lastHeight = rootHeight;
+            this.lastHeight = newHeight;
             this.lastWidth = newWidth;
-            return [newWidth, rootHeight];
         };
         /**
          * Uses the instructions to initialize all
