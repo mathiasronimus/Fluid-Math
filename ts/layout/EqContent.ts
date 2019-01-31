@@ -58,7 +58,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
             let g = before.color[1] * invProg + after.color[1] * progress;
             let b = before.color[2] * invProg + after.color[2] * progress;
             let a = before.opacity * invProg + after.opacity * progress;
-            color = [r, g, b];
+            color = [Math.round(r), Math.round(g), Math.round(b)];
             opacity = a;
         }
 

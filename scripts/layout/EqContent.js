@@ -63,7 +63,7 @@ define(["require", "exports", "./EqComponent", "../main/consts"], function (requ
                 var g = before.color[1] * invProg + after.color[1] * progress;
                 var b = before.color[2] * invProg + after.color[2] * progress;
                 var a = before.opacity * invProg + after.opacity * progress;
-                color = [r, g, b];
+                color = [Math.round(r), Math.round(g), Math.round(b)];
                 opacity = a;
             }
             this.setCtxStyle(ctx, color, opacity);
