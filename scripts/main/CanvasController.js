@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "./consts", "../layout/EqContent", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, consts_1, EqContent_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/EvalAnimation", "./consts", "../layout/EqContent", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, EvalAnimation_1, consts_1, EqContent_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
     exports.__esModule = true;
     /**
@@ -275,6 +275,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var cloneExists = function (ref) {
                 return stepOptions && stepOptions['clones'] && stepOptions['clones'][ref];
             };
+            //Whether an eval animation exists for this step
+            var evalExists = function (ref) {
+                return stepOptions && stepOptions['evals'] && stepOptions['evals'][ref];
+            };
             //Add a merge animation
             var addMerge = function (mergeToRef, stateBefore) {
                 var mergeTo = this.getContentFromRef(mergeToRef);
@@ -286,6 +290,12 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 var cloneFrom = this.getContentFromRef(cloneFromRef);
                 var cloneFromOldState = oldStates.get(cloneFrom);
                 set.addAnimation(new MoveAnimation_1["default"](cloneFromOldState, stateAfter, set, this.ctx));
+            }.bind(this);
+            //Add an eval animation
+            var addEval = function (evalToRef, stateBefore) {
+                var evalTo = this.getContentFromRef(evalToRef);
+                var evalToNewState = this.currStates.get(evalTo);
+                set.addAnimation(new EvalAnimation_1["default"](stateBefore, evalToNewState, set, this.ctx));
             }.bind(this);
             //Animate the progress bar
             set.addAnimation(new ProgressAnimation_1["default"](stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
@@ -307,6 +317,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                     if (mergeExists(contentRef)) {
                         //Do a merge animation
                         addMerge(stepOptions['merges'][contentRef], stateBefore);
+                    }
+                    else if (evalExists(contentRef)) {
+                        //Do an eval animation
+                        addEval(stepOptions['evals'][contentRef], stateBefore);
                     }
                     else if (reverseStep && cloneExists(contentRef)) {
                         //Do a reverse clone, aka merge.

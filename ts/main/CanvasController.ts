@@ -9,6 +9,7 @@ import AnimationSet from '../animation/AnimationSet';
 import MoveAnimation from "../animation/MoveAnimation";
 import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
+import EvalAnimation from '../animation/EvalAnimation';
 import C from './consts';
 import EqContent from "../layout/EqContent";
 import ProgressAnimation from "../animation/ProgressAnimation";
@@ -329,6 +330,10 @@ export default class CanvasController {
         let cloneExists = (ref: string) => {
             return stepOptions && stepOptions['clones'] && stepOptions['clones'][ref];
         };
+        //Whether an eval animation exists for this step
+        let evalExists = (ref: string) => {
+            return stepOptions && stepOptions['evals'] && stepOptions['evals'][ref];
+        };
         //Add a merge animation
         let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
             let mergeTo = this.getContentFromRef(mergeToRef);
@@ -340,6 +345,12 @@ export default class CanvasController {
             let cloneFrom = this.getContentFromRef(cloneFromRef);
             let cloneFromOldState = oldStates.get(cloneFrom);
             set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+        }.bind(this);
+        //Add an eval animation
+        let addEval = function(evalToRef: string, stateBefore: LayoutState) {
+            let evalTo = this.getContentFromRef(evalToRef);
+            let evalToNewState = this.currStates.get(evalTo);
+            set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx));
         }.bind(this);
 
         //Animate the progress bar
@@ -364,6 +375,9 @@ export default class CanvasController {
                 if (mergeExists(contentRef)) {
                     //Do a merge animation
                     addMerge(stepOptions['merges'][contentRef], stateBefore);
+                } else if (evalExists(contentRef)) {
+                    //Do an eval animation
+                    addEval(stepOptions['evals'][contentRef], stateBefore);
                 } else if (reverseStep && cloneExists(contentRef)) {
                     //Do a reverse clone, aka merge.
                     //Cloning is "to": "from", need to work backwards
