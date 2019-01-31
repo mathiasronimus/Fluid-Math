@@ -293,7 +293,6 @@ export default class CanvasController {
             redraw immediately to avoid flash of blank.
             */
             if (isIE) {
-                console.log('uip');
                 let actualCurrStates = this.currStates;
                 this.currStates = oldStates;
                 this.redraw();
@@ -322,6 +321,26 @@ export default class CanvasController {
             stepOptions = this.getStepOptions(stepAfter, stepBefore);
             reverseStep = true;
         }
+        //Whether a merge animation exists for this step
+        let mergeExists = (ref: string) => {
+            return stepOptions && stepOptions['merges'] && stepOptions['merges'][ref];
+        };
+        //Whether a clone animation exists for this step
+        let cloneExists = (ref: string) => {
+            return stepOptions && stepOptions['clones'] && stepOptions['clones'][ref];
+        };
+        //Add a merge animation
+        let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
+            let mergeTo = this.getContentFromRef(mergeToRef);
+            let mergeToNewState = this.currStates.get(mergeTo);
+            set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
+        }.bind(this);
+        //Add a clone animation
+        let addClone = function(cloneFromRef: string, stateAfter: LayoutState) {
+            let cloneFrom = this.getContentFromRef(cloneFromRef);
+            let cloneFromOldState = oldStates.get(cloneFrom);
+            set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+        }.bind(this);
 
         //Animate the progress bar
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
@@ -333,48 +352,36 @@ export default class CanvasController {
             let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
             if (oldStates !== undefined) stateBefore = oldStates.get(content);
-
             let stateAfter: LayoutState = this.currStates.get(content);
-
             let contentRef = this.getContentRefFromIndex(i);
 
             if (stateBefore && stateAfter) {
                 //Content has just moved
                 set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
+
             } else if (stateBefore) {
                 //Doesn't exist after, has been removed
-                if (stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                if (mergeExists(contentRef)) {
                     //Do a merge animation
-                    let mergeToRef = stepOptions['merges'][contentRef];
-                    let mergeTo = this.getContentFromRef(mergeToRef);
-                    let mergeToNewState = this.currStates.get(mergeTo);
-                    set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
-                } else if (reverseStep && stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                    addMerge(stepOptions['merges'][contentRef], stateBefore);
+                } else if (reverseStep && cloneExists(contentRef)) {
                     //Do a reverse clone, aka merge.
                     //Cloning is "to": "from", need to work backwards
-                    let mergeToRef = stepOptions['clones'][contentRef];
-                    let mergeTo = this.getContentFromRef(mergeToRef);
-                    let mergeToNewState = this.currStates.get(mergeTo);
-                    set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
+                    addMerge(stepOptions['clones'][contentRef], stateBefore);
                 } else {
                     //Do a regular remove animation
                     set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
                 }
+
             } else if (stateAfter) {
                 //Doesn't exist before, has been added
-                if (stepOptions && stepOptions['clones'] && stepOptions['clones'][contentRef]) {
+                if (cloneExists(contentRef)) {
                     //Do a clone animation
-                    let cloneFromRef = stepOptions['clones'][contentRef];
-                    let cloneFrom = this.getContentFromRef(cloneFromRef);
-                    let cloneFromOldState = oldStates.get(cloneFrom);
-                    set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
-                } else if (reverseStep && stepOptions && stepOptions['merges'] && stepOptions['merges'][contentRef]) {
+                    addClone(stepOptions['clones'][contentRef], stateAfter);
+                } else if (reverseStep && mergeExists(contentRef)) {
                     //Do a reverse merge, aka clone.
                     //Merging is "from": "to", need to work backwards.
-                    let cloneFromRef = stepOptions['merges'][contentRef];
-                    let cloneFrom = this.getContentFromRef(cloneFromRef);
-                    let cloneFromOldState = oldStates.get(cloneFrom);
-                    set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+                    addClone(stepOptions['merges'][contentRef], stateAfter);
                 } else {
                     set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
                 }
