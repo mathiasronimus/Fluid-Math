@@ -10,6 +10,7 @@ import MoveAnimation from "../animation/MoveAnimation";
 import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
 import EvalAnimation from '../animation/EvalAnimation';
+import ReverseEvalAnimation from '../animation/ReverseEvalAnimation';
 import C from './consts';
 import EqContent from "../layout/EqContent";
 import ProgressAnimation from "../animation/ProgressAnimation";
@@ -352,6 +353,12 @@ export default class CanvasController {
             let evalToNewState = this.currStates.get(evalTo);
             set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx));
         }.bind(this);
+        //Add a reverse eval
+        let addRevEval = function(evalToRef: string, stateAfter: LayoutState) {
+            let evalTo = this.getContentFromRef(evalToRef);
+            let evalToOldState = oldStates.get(evalTo);
+            set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx));
+        }.bind(this);
 
         //Animate the progress bar
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
@@ -396,6 +403,9 @@ export default class CanvasController {
                     //Do a reverse merge, aka clone.
                     //Merging is "from": "to", need to work backwards.
                     addClone(stepOptions['merges'][contentRef], stateAfter);
+                } else if (reverseStep && evalExists(contentRef)) {
+                    //Do a reverse eval
+                    addRevEval(stepOptions['evals'][contentRef], stateAfter);
                 } else {
                     set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
                 }

@@ -1,4 +1,4 @@
-define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/EvalAnimation", "./consts", "../layout/EqContent", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, EvalAnimation_1, consts_1, EqContent_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
+define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Padding", "../layout/VBox", "../animation/AnimationSet", "../animation/MoveAnimation", "../animation/RemoveAnimation", "../animation/AddAnimation", "../animation/EvalAnimation", "../animation/ReverseEvalAnimation", "./consts", "../layout/EqContent", "../animation/ProgressAnimation", "../layout/HDivider", "../layout/TightHBox", "../layout/SubSuper", "./helpers"], function (require, exports, Term_1, HBox_1, Padding_1, VBox_1, AnimationSet_1, MoveAnimation_1, RemoveAnimation_1, AddAnimation_1, EvalAnimation_1, ReverseEvalAnimation_1, consts_1, EqContent_1, ProgressAnimation_1, HDivider_1, TightHBox_1, SubSuper_1, helpers_1) {
     "use strict";
     exports.__esModule = true;
     /**
@@ -297,6 +297,12 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                 var evalToNewState = this.currStates.get(evalTo);
                 set.addAnimation(new EvalAnimation_1["default"](stateBefore, evalToNewState, set, this.ctx));
             }.bind(this);
+            //Add a reverse eval
+            var addRevEval = function (evalToRef, stateAfter) {
+                var evalTo = this.getContentFromRef(evalToRef);
+                var evalToOldState = oldStates.get(evalTo);
+                set.addAnimation(new ReverseEvalAnimation_1["default"](evalToOldState, stateAfter, set, this.ctx));
+            }.bind(this);
             //Animate the progress bar
             set.addAnimation(new ProgressAnimation_1["default"](stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
             //Look through content to see what has happened to it (avoiding containers)
@@ -342,6 +348,10 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
                         //Do a reverse merge, aka clone.
                         //Merging is "from": "to", need to work backwards.
                         addClone(stepOptions['merges'][contentRef], stateAfter);
+                    }
+                    else if (reverseStep && evalExists(contentRef)) {
+                        //Do a reverse eval
+                        addRevEval(stepOptions['evals'][contentRef], stateAfter);
                     }
                     else {
                         set.addAnimation(new AddAnimation_1["default"](stateAfter, set, this.ctx));
