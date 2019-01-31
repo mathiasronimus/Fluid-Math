@@ -235,6 +235,17 @@ define(["require", "exports", "../layout/Term", "../layout/HBox", "../layout/Pad
             var updateDimenAfter = canvasHeight < this.lastHeight;
             if (!updateDimenAfter) {
                 this.setSize(canvasWidth, canvasHeight);
+                /*
+                IE Workaround: Setting size erases canvas,
+                redraw immediately to avoid flash of blank.
+                */
+                if (helpers_1.isIE) {
+                    console.log('uip');
+                    var actualCurrStates = this.currStates;
+                    this.currStates = oldStates;
+                    this.redraw();
+                    this.currStates = actualCurrStates;
+                }
             }
             var set = new AnimationSet_1["default"](function () {
                 //When done

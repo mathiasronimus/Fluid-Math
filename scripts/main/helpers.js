@@ -15,6 +15,11 @@ define(["require", "exports", "./consts"], function (require, exports, consts_1)
         document.head.appendChild(styleEl);
     }
     exports.addStyleSheet = addStyleSheet;
+    //Detects if the browser is ie
+    var userAgent = window.navigator.userAgent;
+    exports.isIE = userAgent.indexOf('MSIE ') > -1 ||
+        userAgent.indexOf('Trident/') > -1 ||
+        userAgent.indexOf('Edge/') > -1;
     /**
      * Deeply clones an object, ie clones it
      * and all of its child objects.

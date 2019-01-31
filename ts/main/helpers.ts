@@ -14,6 +14,12 @@ export function addStyleSheet() {
     document.head.appendChild(styleEl);
 }
 
+//Detects if the browser is ie
+let userAgent = window.navigator.userAgent;
+export const isIE = userAgent.indexOf('MSIE ') > -1 || 
+                    userAgent.indexOf('Trident/') > -1 ||
+                    userAgent.indexOf('Edge/') > -1;
+
 /**
  * Deeply clones an object, ie clones it
  * and all of its child objects.

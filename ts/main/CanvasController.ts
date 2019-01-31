@@ -15,7 +15,7 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier, Map, newMap } from "./helpers";
+import { getFontSizeForTier, Map, newMap, isIE } from "./helpers";
 
 /**
  * Responsible for managing a single canvas,
@@ -288,6 +288,17 @@ export default class CanvasController {
         let updateDimenAfter = canvasHeight < this.lastHeight;
         if (!updateDimenAfter) {
             this.setSize(canvasWidth, canvasHeight);
+            /*
+            IE Workaround: Setting size erases canvas,
+            redraw immediately to avoid flash of blank.
+            */
+            if (isIE) {
+                console.log('uip');
+                let actualCurrStates = this.currStates;
+                this.currStates = oldStates;
+                this.redraw();
+                this.currStates = actualCurrStates;
+            }
         }
 
         let set = new AnimationSet(() => {
