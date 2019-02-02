@@ -75,8 +75,15 @@ export default class StepOptionsEditor {
         addMerge.addEventListener('click', this.addMerge.bind(this));
         this.el.appendChild(addMerge);
 
+        let addEval = document.createElement('div');
+        addEval.className = 'customAnimationOption';
+        addEval.innerHTML = 'Evaluation';
+        addEval.addEventListener('click', this.addEval.bind(this));
+        this.el.appendChild(addEval);
+
         this.renderClone();
         this.renderMerge();
+        this.renderEval();
         setTimeout(() => {
             this.el.scrollTop = lastScrollY;
         }, C.creatorCanvasInitDelay + 100);
@@ -282,6 +289,92 @@ export default class StepOptionsEditor {
     }
 
     /**
+     * Insert the appropriate eval controls
+     * into the element. 
+     */
+    private renderEval() {
+        if (this.options['evals']) {
+            let title = document.createElement('div');
+            title.className = 'stepOptTitle';
+            title.innerHTML = 'Evaluations.';
+            this.el.appendChild(title);
+
+            Object.keys(this.options['evals']).forEach((evalFrom: string) => {
+                let evalTo = this.options['evals'][evalFrom];
+
+                //Create an element for each eval
+                let evalEl = document.createElement('div');
+                evalEl.className = 'customAnimationContainer';
+                this.el.appendChild(evalEl);
+
+                let upper = document.createElement('div');
+                upper.className = 'customAnimationUpper';
+                evalEl.appendChild(upper);
+
+                let fromEl = document.createElement('p');
+                fromEl.innerHTML = 'FROM';
+                upper.appendChild(fromEl);
+                
+                let removeEl = document.createElement('span');
+                removeEl.className = 'removeCustomAnim material-icons';
+                removeEl.innerHTML = 'clear';
+                //Remove custom animation by deleting the key in the object
+                removeEl.addEventListener('click', function() {
+                    delete this.options['evals'][evalFrom];
+                    this.render();
+                }.bind(this));
+                upper.appendChild(removeEl);
+
+                //Show canvas for step1, aka 'from'.
+                let fromChange = function(refs: string[]) {
+                    if (this.layoutContainsRef(this.controller.slideManager.getSlide(this.step2Idx), refs[0])) {
+                        this.controller.error("Evaluating item musn't exist after the transition.");
+                        this.render();
+                        return;
+                    }
+                    delete this.options['evals'][evalFrom];
+                    this.options['evals'][refs[0]] = evalTo;
+                    this.render();
+                }.bind(this);
+
+                let step1Cont = document.createElement('div');
+                step1Cont.className = 'eqContainer';
+                evalEl.appendChild(step1Cont);
+                setTimeout(() => {
+                    new StepOptionsCanvasController(step1Cont,
+                        this.controller.instructionsFromStep(this.controller.slideManager.getSlide(this.step1Idx)),
+                        fromChange,
+                        new OneOnlySelectionStrategy(),
+                        //Empty string used to mean nothing selected.
+                        evalFrom === '' ? [] : [evalFrom]);
+                }, C.creatorCanvasInitDelay);
+
+                let toEl = document.createElement('p');
+                toEl.innerHTML = 'TO';
+                evalEl.appendChild(toEl);
+
+                //Show canvas for step2, aka 'to'.
+                let toChange = function(refs: string[]) {
+                    this.options['evals'][evalFrom] = refs[0];
+                    this.render();
+                }.bind(this);
+
+                let step2Cont = document.createElement('div');
+                step2Cont.className = 'eqContainer';
+                evalEl.appendChild(step2Cont);
+                setTimeout(() => {
+                    new StepOptionsCanvasController(step2Cont,
+                        this.controller.instructionsFromStep(this.controller.slideManager.getSlide(this.step2Idx)),
+                        toChange,
+                        new OneOnlySelectionStrategy(),
+                        //Empty string used to mean nothing selected.
+                        evalTo === '' ? [] : [evalTo]);
+                }, C.creatorCanvasInitDelay);
+            });
+        }
+    }
+
+    /**
      * Add a clone animation to this
      * step.
      */
@@ -305,6 +398,20 @@ export default class StepOptionsEditor {
         }
         if (!this.options['merges']['']) {
             this.options['merges'][''] = '';
+        }
+        this.render();
+    }
+
+    /**
+     * Add an eval animation to this
+     * step.
+     */
+    private addEval() {
+        if (!this.options['evals']) {
+            this.options['evals'] = {};
+        }
+        if (!this.options['evals']['']) {
+            this.options['evals'][''] = '';
         }
         this.render();
     }
