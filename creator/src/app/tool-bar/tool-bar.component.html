@@ -1,1 +1,5 @@
-<div id="outer">Tool Bar</div>
+<div id="outer">
+    <div class="icon material-icons" (click)="icon.onClick()" *ngFor="let icon of icons">
+        {{ icon.name }}
+    </div>
+</div>

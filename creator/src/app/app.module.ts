@@ -13,7 +13,7 @@ import { StepsComponent } from './steps/steps.component';
     ToolBarComponent,
     ContentPaneComponent,
     CentralAreaComponent,
-    StepsComponent
+    StepsComponent,
   ],
   imports: [
     BrowserModule

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import Icon from '../Icon';
 
 @Component({
   selector: 'app-tool-bar',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolBarComponent implements OnInit {
 
-  constructor() { }
+  @Input() icons: Icon[];
+
+  constructor() {}
 
   ngOnInit() {
   }
