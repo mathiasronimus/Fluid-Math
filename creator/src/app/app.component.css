@@ -1,0 +1,13 @@
+#main-column {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100vh;
+}
+
+#middle-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+}
