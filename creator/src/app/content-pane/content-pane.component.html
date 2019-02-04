@@ -1,12 +1,23 @@
-<div id="outer">
+<div id="outer" (click)="deselect()">
   <div id="inner">
     <div class="title">CONTAINERS</div>
-    <span class="selector" *ngFor="let container of containers">
+    <span class="selector" 
+          *ngFor="let container of containers; let cIndex = index;"
+          (click)="select('c' + cIndex, $event)"
+          [ngClass]="{'selected': selectedRef === 'c' + cIndex}">
       {{ container.name }}
     </span>
     <div class="title">TERMS</div>
-    <span class="selector" *ngFor="let term of terms">
+    <span class="selector" 
+          *ngFor="let term of terms; let tIndex = index;"
+          (click)="select('t' + tIndex, $event)"
+          [ngClass]="{'selected': selectedRef === 't' + tIndex}">
       {{ term }}
+      <span *ngIf="selectedRef === 't' + tIndex"
+            class="material-icons"
+            (click)="delete()">
+          delete
+      </span>
     </span>
     <span class="selector material-icons color" 
           (click)="addTerm()"
@@ -20,5 +31,20 @@
               #termInput>
     </span>
     <div class="title">HORIZONTAL DIVIDERS</div>
+    <span class="selector" 
+          *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
+          (click)="select('h' + hIndex, $event)"
+          [ngClass]="{'selected': selectedRef === 'h' + hIndex}">
+      {{ hDivider }}
+      <span *ngIf="selectedRef === 'h' + hIndex"
+            class="material-icons"
+            (click)="delete()">
+          delete
+      </span>
+    </span>
+    <span class="selector material-icons color" 
+          (click)="addHDivider()">
+          add
+    </span>
   </div>
 </div>

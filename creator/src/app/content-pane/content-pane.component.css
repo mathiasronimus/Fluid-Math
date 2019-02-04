@@ -2,7 +2,7 @@
     width: 250px;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     height: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 #inner {
@@ -28,6 +28,20 @@
     line-height: 22px;
 }
 
+.selector span {
+    line-height: 22px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.selector span:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 .color {
     border: 1px solid #2196F3;
+}
+
+.selected {
+    background-color: rgba(0, 0, 0, 0.1);
 }
