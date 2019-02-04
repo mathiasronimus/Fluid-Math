@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, AfterViewInit } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
 
@@ -23,7 +23,9 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
       new ContainerSelector('Tight Horizontal'),
       new ContainerSelector('Exponent/Subscript')
     ];
-    this.terms = [];
+    this.updateState = this.updateState.bind(this);
+    undoRedo.subscribe(this.updateState);
+    this.updateState(undoRedo.getState());
   }
 
   ngOnInit() {
@@ -64,24 +66,34 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    * Typing the term is finished, add it to the state.
    */
   finishAddingTerm() {
+    if (!this.addingTerm) {
+      // Caused by input being removed activating blur
+      return;
+    }
     const termText = this.lastTermAddText.trim();
     if (termText === '') {
       throw new Error('blank text not allowed');
     }
-    this.terms.push(new TermSelector(termText));
+    const newState: any = this.undoRedo.getStateClone();
+    if (!newState.terms) {
+      newState.terms = [];
+    }
+    newState.terms.push(termText);
+    this.undoRedo.publishChange(newState);
     this.lastTermAddText = '';
     this.addingTerm = false;
+  }
+
+  /**
+   * Update the view when the state changes.
+   * @param newState The new state.
+   */
+  updateState(newState: any) {
+    this.terms = newState.terms ? newState.terms : [];
   }
 }
 
 class ContainerSelector {
-  name: string;
-  constructor(name) {
-    this.name = name;
-  }
-}
-
-class TermSelector {
   name: string;
   constructor(name) {
     this.name = name;

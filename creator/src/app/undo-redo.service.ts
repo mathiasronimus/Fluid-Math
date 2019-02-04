@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { deepClone } from './helpers';
 
 // The total amount of objects that may be stored
 const MAX_SIZE = 100;
@@ -113,5 +114,13 @@ export class UndoRedoService {
    */
   getState(): object {
     return this.history[this.currentStateIdx];
+  }
+
+  /**
+   * Get a deep clone of the current state.
+   * Useful for making changes then publishing.
+   */
+  getStateClone(): object {
+    return deepClone(this.getState());
   }
 }
