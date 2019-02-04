@@ -131,9 +131,94 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   /**
    * Delete the currently selected content.
+   * @param e The Mouse event.
    */
-  delete() {
-    console.log(this.selectedRef);
+  delete(e: MouseEvent) {
+    e.stopPropagation();
+    const newState: any = this.undoRedo.getStateClone();
+    const type = this.selectedRef.charAt(0);
+    const index = parseInt(this.selectedRef.substring(1, this.selectedRef.length), 10);
+    switch (type) {
+      case 't':
+        newState.terms.splice(index, 1);
+        break;
+      case 'h':
+        newState.hDividers--;
+        break;
+      default:
+        throw new Error('Undefined content type.');
+    }
+
+    // We've just removed the content from the arrays,
+    // so now any reference to content later in the
+    // array will be incorrect.
+
+    // Recursively look for any numbers in the step hierarchy
+    if (newState.steps) {
+      newState.steps.forEach(step => {
+        recursiveRemove(step.root);
+        if (step.color) {
+          removeDeletedKeys(step.color);
+        }
+        if (step.opacity) {
+          removeDeletedKeys(step.opacity);
+        }
+      });
+    }
+
+    this.selectedRef = '';
+    this.undoRedo.publishChange(newState);
+
+    // Looks through the keys of an object to
+    // find deleted references.
+    function removeDeletedKeys(deleteIn: object) {
+      Object.keys(deleteIn).forEach(key => {
+        const val = deleteIn[key];
+        if (key.charAt(0) === type) {
+          // Same content type
+          const keyIndex = parseFloat(key.substring(1, key.length));
+          if (keyIndex === index) {
+            // Reference to deleted content, delete it
+            delete deleteIn[key];
+          } else if (keyIndex > index) {
+            // Deletion affected array, shift this key index down
+            const newKey = key.charAt(0) + (keyIndex - 1);
+            delete deleteIn[key];
+            deleteIn[newKey] = val;
+          }
+        }
+      });
+    }
+
+    // Looks through an objects properties to
+    // remove a certain index.
+    function recursiveRemove(lookIn: object) {
+      Object.keys(lookIn).forEach(key => {
+        const value = lookIn[key];
+        if (typeof value === 'object') {
+          recursiveRemove(value);
+          if (Array.isArray(value)) {
+            /* Treating the array like an object
+               leaves empty values. Clear these
+               out. */
+            lookIn[key] = value.filter(el => el !== null);
+          }
+        } else if (typeof value === 'string') {
+          // If > index, decrement to account for
+          // shifting in array, otherwise remove
+          if (value.charAt(0) === type) {
+            // Value refers to same content type
+            const valIndex: number = parseFloat(value.substring(1, value.length));
+            if (valIndex === index) {
+              delete lookIn[key];
+            } else if (valIndex > index) {
+              lookIn[key] = value.charAt(0) + (valIndex - 1);
+            }
+          }
+        }
+      });
+    }
+
   }
 
   /**
