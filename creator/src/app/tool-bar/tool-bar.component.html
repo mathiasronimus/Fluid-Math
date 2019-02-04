@@ -1,5 +1,8 @@
 <div id="outer">
-    <div class="icon material-icons" (click)="icon.onClick()" *ngFor="let icon of icons">
+    <div    class="icon material-icons" 
+            (click)="icon.onClick()" 
+            *ngFor="let icon of icons"
+            [ngClass]="{'active': icon.isActive()}">
         {{ icon.name }}
     </div>
 </div>

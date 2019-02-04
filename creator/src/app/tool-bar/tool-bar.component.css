@@ -9,4 +9,9 @@
 .icon {
     cursor: pointer;
     padding: 5px 10px 5px 10px;
+    color: rgba(0, 0, 0, 0.2);
+}
+
+.active {
+    color: rgba(0, 0, 0, 1);
 }

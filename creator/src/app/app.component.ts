@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import Icon from './Icon';
+import { UndoRedoService } from './undo-redo.service';
 
 @Component({
   selector: 'app-root',
@@ -7,11 +8,17 @@ import Icon from './Icon';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  icons = [
-    new Icon('save', this.save),
-    new Icon('get_app', this.load),
-    new Icon('play_arrow', this.play)
-  ];
+  icons: Icon[];
+
+  constructor(private undoRedo: UndoRedoService) {
+    this.icons = [
+      new Icon('save', this.save, () => true),
+      new Icon('get_app', this.load, () => true),
+      new Icon('play_arrow', this.play, () => true),
+      new Icon('undo', this.undoRedo.undo, this.undoRedo.canUndo),
+      new Icon('redo', this.undoRedo.redo, this.undoRedo.canRedo)
+    ];
+  }
 
   /**
    * Save the current state to a file.
