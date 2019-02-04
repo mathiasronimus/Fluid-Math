@@ -107,4 +107,11 @@ export class UndoRedoService {
     this.currentStateIdx = newIdx;
     this.notifySubscribers();
   }
+
+  /**
+   * Get the current state.
+   */
+  getState(): object {
+    return this.history[this.currentStateIdx];
+  }
 }

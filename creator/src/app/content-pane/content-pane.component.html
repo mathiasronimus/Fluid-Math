@@ -1,5 +1,24 @@
 <div id="outer">
   <div id="inner">
-    Content Pane
+    <div class="title">CONTAINERS</div>
+    <span class="selector" *ngFor="let container of containers">
+      {{ container.name }}
+    </span>
+    <div class="title">TERMS</div>
+    <span class="selector" *ngFor="let term of terms">
+      {{ term.name }}
+    </span>
+    <span class="selector material-icons color" 
+          (click)="addTerm()"
+          *ngIf="!addingTerm">
+          add
+    </span>
+    <span class="selector color" *ngIf="addingTerm">
+      <input  type="text" 
+              (keyup)="addTermTyped($event)" 
+              (blur)="finishAddingTerm()"
+              #termInput>
+    </span>
+    <div class="title">HORIZONTAL DIVIDERS</div>
   </div>
 </div>

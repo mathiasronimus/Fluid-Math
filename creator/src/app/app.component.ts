@@ -18,6 +18,7 @@ export class AppComponent {
       new Icon('undo', this.undoRedo.undo, this.undoRedo.canUndo),
       new Icon('redo', this.undoRedo.redo, this.undoRedo.canRedo)
     ];
+    this.undoRedo.publishChange({});
   }
 
   /**
