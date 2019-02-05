@@ -18,7 +18,22 @@ export class AppComponent {
       new Icon('undo', this.undoRedo.undo, this.undoRedo.canUndo),
       new Icon('redo', this.undoRedo.redo, this.undoRedo.canRedo)
     ];
-    this.undoRedo.publishChange({});
+    this.undoRedo.publishChange(this.getDefaultInitialState());
+  }
+
+  /**
+   * Get the state displayed when the creator
+   * is first loaded.
+   */
+  private getDefaultInitialState(): any {
+    return {
+      steps: {
+        root: {
+          type: 'vbox',
+          children: []
+        }
+      }
+    };
   }
 
   /**

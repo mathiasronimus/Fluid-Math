@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChildren, AfterViewInit } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
+import C from '../../../../ts/main/consts';
+import { getFontSizeForTier } from '../../../../ts/main/helpers';
 
 @Component({
   selector: 'app-content-pane',
@@ -83,6 +85,7 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
       newState.terms = [];
     }
     newState.terms.push(termText);
+    newState.metrics = this.getMetrics(newState);
     this.undoRedo.publishChange(newState);
     this.lastTermAddText = '';
     this.addingTerm = false;
@@ -167,6 +170,7 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
     }
 
     this.selectedRef = '';
+    newState.metrics = this.getMetrics(newState);
     this.undoRedo.publishChange(newState);
 
     // Looks through the keys of an object to
@@ -219,6 +223,85 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
       });
     }
 
+  }
+
+  /**
+   * Get the font metrics object for a state.
+   * @param state The state to get the metrics for.
+   */
+  getMetrics(state): object[] {
+    const metricsArr = [];
+    // Calculate a metrics object for each width tier
+    for (let i = 0; i < C.widthTiers.length; i++) {
+      const metrics: any = {};
+      metricsArr.push(metrics);
+
+      metrics.widths = [];
+
+      /* Look for the max ascent and
+         descent, which all terms will use. */
+      let maxAscent = 0;
+      let maxDescent = 0;
+      state.terms.forEach(term => {
+        const termMetrics: any = this.measureTerm(term, i);
+        if (termMetrics.ascent > maxAscent) {
+          maxAscent = termMetrics.ascent;
+        }
+        if (termMetrics.descent > maxDescent) {
+          maxDescent = termMetrics.descent;
+        }
+        // All terms have their own width
+        metrics.widths.push(termMetrics.width);
+      });
+      metrics.ascent = maxAscent;
+      metrics.height = maxAscent + maxDescent;
+    }
+    return metricsArr;
+  }
+
+  /**
+   * Measure the metrics for a term.
+   * @param term The term to measure.
+   * @param tier The width tier to measure this term for.
+   */
+  private measureTerm(term: string, tier: number): object {
+    const toReturn: any = {};
+
+    const fontSize = getFontSizeForTier(tier);
+
+    // Create a canvas to measure with
+    const testCanvas = document.createElement('canvas');
+    testCanvas.width = C.testCanvasWidth;
+    testCanvas.height = fontSize * C.testCanvasFontSizeMultiple;
+    const testCtx = testCanvas.getContext('2d');
+    testCtx.font = fontSize + 'px ' + C.fontFamily;
+
+    // Get the width
+    toReturn.width = testCtx.measureText(term).width;
+
+    // Draw the text on the canvas to measure ascent and descent
+    testCtx.fillStyle = 'white';
+    testCtx.fillRect(0, 0, testCanvas.width, testCanvas.height);
+    testCtx.fillStyle = 'black';
+    testCtx.fillText(term, 0, testCanvas.height / 2);
+
+    const image = testCtx.getImageData(0, 0, toReturn.width, testCanvas.height);
+    const imageData = image.data;
+
+    // Go down until we find text
+    let i = 0;
+    while (++i < imageData.length && imageData[i] === 255) {}
+    const ascent = i / (image.width * 4);
+
+    // Go up until we find text
+    i = imageData.length - 1;
+    while (--i > 0 && imageData[i] === 255) {}
+    const descent = i / (image.width * 4);
+
+    toReturn.ascent = testCanvas.height / 2 - ascent;
+    toReturn.descent = descent - testCanvas.height / 2;
+
+    return toReturn;
   }
 
   /**
