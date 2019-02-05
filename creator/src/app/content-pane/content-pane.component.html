@@ -1,17 +1,21 @@
 <div id="outer" (click)="deselect()">
+  <p>Click to Select.</p>
   <div id="inner">
     <div class="title">CONTAINERS</div>
-    <span class="selector" 
+    <span class="selector grab" 
           *ngFor="let container of containers; let cIndex = index;"
           (click)="select('c' + cIndex, $event)"
-          [ngClass]="{'selected': selectedRef === 'c' + cIndex}">
+          [ngClass]="{'selected': selectedRef === 'c' + cIndex}"
+          draggable="true">
       {{ container.name }}
     </span>
     <div class="title">TERMS</div>
-    <span class="selector" 
+    <span class="selector grab" 
           *ngFor="let term of terms; let tIndex = index;"
           (click)="select('t' + tIndex, $event)"
-          [ngClass]="{'selected': selectedRef === 't' + tIndex}">
+          [ngClass]="{'selected': selectedRef === 't' + tIndex}"
+          draggable="true"
+          (dragstart)="deselect()">
       {{ term }}
       <span *ngIf="selectedRef === 't' + tIndex"
             class="material-icons"
@@ -31,10 +35,11 @@
               #termInput>
     </span>
     <div class="title">HORIZONTAL DIVIDERS</div>
-    <span class="selector" 
+    <span class="selector grab" 
           *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
-          [ngClass]="{'selected': selectedRef === 'h' + hIndex}">
+          [ngClass]="{'selected': selectedRef === 'h' + hIndex}"
+          draggable="true">
       {{ hDivider }}
       <span *ngIf="selectedRef === 'h' + hIndex"
             class="material-icons"

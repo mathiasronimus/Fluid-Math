@@ -9,6 +9,13 @@
     padding: 10px;
 }
 
+p {
+    font-size: 10px;
+    color: rgba(0,0,0,0.6);
+    text-align: center;
+    padding-top: 10px;
+}
+
 .title {
     font-size: 18px;
     padding: 10px;
@@ -44,4 +51,8 @@
 
 .selected {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.grab {
+    cursor: grab;
 }
