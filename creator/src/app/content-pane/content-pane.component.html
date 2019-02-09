@@ -5,6 +5,7 @@
     <span class="selector grab" 
           *ngFor="let container of containers; let cIndex = index;"
           (click)="select('c' + cIndex, $event)"
+          (dragstart)="deselect(); setAdding(container.getObj());"
           [ngClass]="{'selected': selectedRef === 'c' + cIndex}"
           draggable="true">
       {{ container.name }}
@@ -15,7 +16,7 @@
           (click)="select('t' + tIndex, $event)"
           [ngClass]="{'selected': selectedRef === 't' + tIndex}"
           draggable="true"
-          (dragstart)="deselect()">
+          (dragstart)="deselect(); setAdding('t' + tIndex);">
       {{ term }}
       <span *ngIf="selectedRef === 't' + tIndex"
             class="material-icons"
@@ -38,9 +39,10 @@
     <span class="selector grab" 
           *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
+          (dragstart)="deselect(); setAdding('h' + hIndex);"
           [ngClass]="{'selected': selectedRef === 'h' + hIndex}"
           draggable="true">
-      {{ hDivider }}
+      {{ hIndex }}
       <span *ngIf="selectedRef === 'h' + hIndex"
             class="material-icons"
             (click)="delete($event)">
@@ -48,7 +50,7 @@
       </span>
     </span>
     <span class="selector material-icons color" 
-          (click)="addHDivider()">
+          (click)="addHDivider($event)">
           add
     </span>
   </div>

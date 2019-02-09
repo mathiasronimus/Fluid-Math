@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import Icon from './Icon';
 import { UndoRedoService } from './undo-redo.service';
+import { CentralAreaComponent } from './central-area/central-area.component';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,9 @@ import { UndoRedoService } from './undo-redo.service';
 })
 export class AppComponent {
   icons: Icon[];
+
+  @ViewChild(CentralAreaComponent)
+  centre: CentralAreaComponent;
 
   constructor(private undoRedo: UndoRedoService) {
     this.icons = [
@@ -19,6 +23,7 @@ export class AppComponent {
       new Icon('redo', this.undoRedo.redo, this.undoRedo.canRedo)
     ];
     this.undoRedo.publishChange(this.getDefaultInitialState());
+    this.setAdding = this.setAdding.bind(this);
   }
 
   /**
@@ -27,13 +32,28 @@ export class AppComponent {
    */
   private getDefaultInitialState(): any {
     return {
-      steps: {
+      steps: [{
         root: {
           type: 'vbox',
           children: []
         }
-      }
+      }],
+      terms: []
     };
+  }
+
+  /**
+   * Start adding to the canvas.
+   */
+  setAdding(toAdd: string | object) {
+    this.centre.controller.setAdding(toAdd);
+  }
+
+  /**
+   * Redraw the canvas.
+   */
+  redraw() {
+    this.centre.controller.redraw();
   }
 
   /**

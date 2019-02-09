@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChildren, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, AfterViewInit, Input } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
-import C from '../../../../ts/main/consts';
-import { getFontSizeForTier } from '../../../../ts/main/helpers';
+import C from '@shared/main/consts';
+import { getFontSizeForTier } from '@shared/main/helpers';
 
 @Component({
   selector: 'app-content-pane',
@@ -10,6 +10,9 @@ import { getFontSizeForTier } from '../../../../ts/main/helpers';
   styleUrls: ['./content-pane.component.css']
 })
 export class ContentPaneComponent implements OnInit, AfterViewInit {
+
+  // Function called to tell canvas to expect an add
+  @Input() setAdding: (toAdd: string | object) => void;
 
   containers: ContainerSelector[];
 
@@ -24,10 +27,32 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   constructor(private undoRedo: UndoRedoService) {
     this.containers = [
-      new ContainerSelector('Horizontal'),
-      new ContainerSelector('Vertical'),
-      new ContainerSelector('Tight Horizontal'),
-      new ContainerSelector('Exponent/Subscript')
+      new ContainerSelector('Horizontal', () => {
+        return {
+          type: 'hbox',
+          children: []
+        };
+      }),
+      new ContainerSelector('Vertical', () => {
+        return {
+          type: 'vbox',
+          children: []
+        };
+      }),
+      new ContainerSelector('Tight Horizontal', () => {
+        return {
+          type: 'tightHBox',
+          children: []
+        };
+      }),
+      new ContainerSelector('Exponent/Subscript', () => {
+        return {
+          type: 'subSuper',
+          top: [],
+          middle: [],
+          bottom: []
+        };
+      })
     ];
     this.updateState = this.updateState.bind(this);
     undoRedo.subscribe(this.updateState);
@@ -84,11 +109,13 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
     if (!newState.terms) {
       newState.terms = [];
     }
+    const newIndex = newState.terms.length;
     newState.terms.push(termText);
     newState.metrics = this.getMetrics(newState);
     this.undoRedo.publishChange(newState);
     this.lastTermAddText = '';
     this.addingTerm = false;
+    this.select('t' + newIndex, undefined);
   }
 
   /**
@@ -104,12 +131,16 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   /**
    * Add a new hDivider.
+   * @param e The mouse event.
    */
-  addHDivider() {
+  addHDivider(e: MouseEvent) {
+    e.stopPropagation();
     const newState: any = this.undoRedo.getStateClone();
     if (!newState.hDividers) {
       newState.hDividers = 0;
     }
+    const newIndex = newState.hDividers;
+    this.select('h' + newIndex, undefined);
     newState.hDividers++;
     this.undoRedo.publishChange(newState);
   }
@@ -122,7 +153,10 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    */
   select(ref: string, e: MouseEvent) {
     this.selectedRef = ref;
-    e.stopPropagation();
+    this.setAdding(ref);
+    if (e) {
+      e.stopPropagation();
+    }
   }
 
   /**
@@ -316,7 +350,9 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
 class ContainerSelector {
   name: string;
-  constructor(name) {
+  getObj: () => object;
+  constructor(name, getObj: () => object) {
     this.name = name;
+    this.getObj = getObj;
   }
 }
