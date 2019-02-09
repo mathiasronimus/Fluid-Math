@@ -3,6 +3,7 @@ import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
 import C from '@shared/main/consts';
 import { getFontSizeForTier } from '@shared/main/helpers';
+import { ContentSelectionService } from '../content-selection.service';
 
 @Component({
   selector: 'app-content-pane',
@@ -11,10 +12,7 @@ import { getFontSizeForTier } from '@shared/main/helpers';
 })
 export class ContentPaneComponent implements OnInit, AfterViewInit {
 
-  // Function called to tell canvas to expect an add
-  @Input() setAdding: (toAdd: string | object) => void;
-
-  containers: ContainerSelector[];
+  containers: string[];
 
   addingTerm: boolean;
   lastTermAddText = '';
@@ -23,36 +21,14 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   hDividers = 0;
 
-  selectedRef = '';
+  dragging = false;
 
-  constructor(private undoRedo: UndoRedoService) {
+  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
     this.containers = [
-      new ContainerSelector('Horizontal', () => {
-        return {
-          type: 'hbox',
-          children: []
-        };
-      }),
-      new ContainerSelector('Vertical', () => {
-        return {
-          type: 'vbox',
-          children: []
-        };
-      }),
-      new ContainerSelector('Tight Horizontal', () => {
-        return {
-          type: 'tightHBox',
-          children: []
-        };
-      }),
-      new ContainerSelector('Exponent/Subscript', () => {
-        return {
-          type: 'subSuper',
-          top: [],
-          middle: [],
-          bottom: []
-        };
-      })
+      'Horizontal',
+      'Vertical',
+      'Tight Horizontal',
+      'Exponent/Subscript'
     ];
     this.updateState = this.updateState.bind(this);
     undoRedo.subscribe(this.updateState);
@@ -152,7 +128,6 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    * @param e The mouse event.
    */
   select(ref: string, e: MouseEvent) {
-    this.selectedRef = ref;
     this.setAdding(ref);
     if (e) {
       e.stopPropagation();
@@ -163,7 +138,11 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    * Deselect whatever is selected.
    */
   deselect() {
-    this.selectedRef = '';
+    this.selection.adding = undefined;
+  }
+
+  setAdding(toAdd: string) {
+    this.selection.adding = toAdd;
   }
 
   /**
@@ -173,8 +152,10 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
   delete(e: MouseEvent) {
     e.stopPropagation();
     const newState: any = this.undoRedo.getStateClone();
-    const type = this.selectedRef.charAt(0);
-    const index = parseInt(this.selectedRef.substring(1, this.selectedRef.length), 10);
+    // We know it's a string, delete button only shows up for content
+    const ref = this.selection.adding as string;
+    const type = ref.charAt(0);
+    const index = parseInt(ref.substring(1, ref.length), 10);
     switch (type) {
       case 't':
         newState.terms.splice(index, 1);
@@ -203,7 +184,7 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
       });
     }
 
-    this.selectedRef = '';
+    this.deselect();
     newState.metrics = this.getMetrics(newState);
     this.undoRedo.publishChange(newState);
 
@@ -345,14 +326,5 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
   updateState(newState: any) {
     this.terms = newState.terms ? newState.terms : [];
     this.hDividers = newState.hDividers ? newState.hDividers : 0;
-  }
-}
-
-class ContainerSelector {
-  name: string;
-  getObj: () => object;
-  constructor(name, getObj: () => object) {
-    this.name = name;
-    this.getObj = getObj;
   }
 }

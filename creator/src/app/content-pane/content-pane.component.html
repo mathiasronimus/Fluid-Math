@@ -5,20 +5,20 @@
     <span class="selector grab" 
           *ngFor="let container of containers; let cIndex = index;"
           (click)="select('c' + cIndex, $event)"
-          (dragstart)="deselect(); setAdding(container.getObj());"
-          [ngClass]="{'selected': selectedRef === 'c' + cIndex}"
+          (dragstart)="deselect(); setAdding('c' + cIndex);"
+          [ngClass]="{'selected': selection.adding === 'c' + cIndex}"
           draggable="true">
-      {{ container.name }}
+      {{ container }}
     </span>
     <div class="title">TERMS</div>
     <span class="selector grab" 
           *ngFor="let term of terms; let tIndex = index;"
           (click)="select('t' + tIndex, $event)"
-          [ngClass]="{'selected': selectedRef === 't' + tIndex}"
+          [ngClass]="{'selected': selection.adding === 't' + tIndex}"
           draggable="true"
-          (dragstart)="deselect(); setAdding('t' + tIndex);">
+          (dragstart)="deselect(); dragging = true; setAdding('t' + tIndex);">
       {{ term }}
-      <span *ngIf="selectedRef === 't' + tIndex"
+      <span *ngIf="selection.adding === 't' + tIndex && !dragging"
             class="material-icons"
             (click)="delete($event)">
           delete
@@ -39,11 +39,11 @@
     <span class="selector grab" 
           *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
-          (dragstart)="deselect(); setAdding('h' + hIndex);"
-          [ngClass]="{'selected': selectedRef === 'h' + hIndex}"
+          (dragstart)="deselect(); dragging = true; setAdding('h' + hIndex);"
+          [ngClass]="{'selected': selection.adding === 'h' + hIndex}"
           draggable="true">
-      {{ hIndex }}
-      <span *ngIf="selectedRef === 'h' + hIndex"
+      {{ hDivider }}
+      <span *ngIf="selection.adding === 'h' + hIndex && !dragging"
             class="material-icons"
             (click)="delete($event)">
           delete

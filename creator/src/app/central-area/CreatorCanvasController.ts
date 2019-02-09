@@ -10,23 +10,21 @@ import LayoutState from '@shared/animation/LayoutState';
 import EqContent from '@shared/layout/EqContent';
 import { deepClone } from '../helpers';
 import { UndoRedoService } from '../undo-redo.service';
+import { ContentSelectionService } from '../content-selection.service';
 
 export default class CreatorCanvasController extends CanvasController {
-
-    // The thing to add when clicked.
-    // If container, is object.
-    // If content, is string.
-    private adding: string | object;
 
     private originalInstructions;
 
     private rootContainer: EqContainer;
 
     private undoRedo: UndoRedoService;
+    private selection: ContentSelectionService;
 
-    constructor(container, instructions, editingStep, undoRedo) {
+    constructor(container, instructions, editingStep, undoRedo, selection) {
         super(container, instructions);
         this.undoRedo = undoRedo;
+        this.selection = selection;
         this.currStep = editingStep;
         this.recalc();
         // Don't allow going to next step
@@ -55,7 +53,7 @@ export default class CreatorCanvasController extends CanvasController {
     private onMoveOver(e: MouseEvent) {
         e.preventDefault();
         e.stopPropagation();
-        if (this.adding) {
+        if (this.selection.adding) {
             this.previewAdd(e.offsetX, e.offsetY);
         }
     }
@@ -65,7 +63,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param e The mouse event.
      */
     private onMouseUp(e: MouseEvent) {
-        if (this.adding) {
+        if (this.selection.adding) {
             this.finalizeAdd(e.offsetX, e.offsetY);
         } else {
             this.select(e.offsetX, e.offsetY);
@@ -139,6 +137,7 @@ export default class CreatorCanvasController extends CanvasController {
      */
     private finalizeAdd(x: number, y: number) {
         this.undoRedo.publishChange(this.getChangedLayout(x, y));
+        this.selection.adding = undefined;
     }
 
     /**
@@ -221,7 +220,7 @@ export default class CreatorCanvasController extends CanvasController {
      */
     private onCanvas(): boolean {
         // Duplicate containers allowed
-        if (typeof this.adding === 'object') {
+        if (this.selection.addingContainer()) {
             return false;
         }
 
@@ -243,7 +242,7 @@ export default class CreatorCanvasController extends CanvasController {
                     found = true;
                 }
             } else if (typeof value === 'string') {
-                if (value === this.adding) {
+                if (value === this.selection.adding) {
                     found = true;
                 }
             }
@@ -264,21 +263,11 @@ export default class CreatorCanvasController extends CanvasController {
      * Returns the thing to add as a component.
      */
     private getAddComponent(): EqComponent {
-        if (typeof this.adding === 'object') {
+        if (this.selection.addingContainer()) {
             // Adding a container
-            return this.parseContainer(this.adding);
-        } else if (typeof this.adding === 'string') {
-            return this.getContentFromRef(this.adding);
+            return this.parseContainer(this.selection.getContainer());
         } else {
-            throw new Error('bad add type');
+            return this.getContentFromRef(this.selection.adding);
         }
-    }
-
-    /**
-     * Start adding someting.
-     * @param toAdd The reference, or container structure to add.
-     */
-    setAdding(toAdd: string | object) {
-        this.adding = toAdd;
     }
 }

@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import Icon from './Icon';
 import { UndoRedoService } from './undo-redo.service';
 import { CentralAreaComponent } from './central-area/central-area.component';
+import { ContentSelectionService } from './content-selection.service';
+import { ContentPaneComponent } from './content-pane/content-pane.component';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,10 @@ export class AppComponent {
   @ViewChild(CentralAreaComponent)
   centre: CentralAreaComponent;
 
-  constructor(private undoRedo: UndoRedoService) {
+  @ViewChild(ContentPaneComponent)
+  content: ContentPaneComponent;
+
+  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
     this.icons = [
       new Icon('save', this.save, () => true),
       new Icon('get_app', this.load, () => true),
@@ -23,7 +28,6 @@ export class AppComponent {
       new Icon('redo', this.undoRedo.redo, this.undoRedo.canRedo)
     ];
     this.undoRedo.publishChange(this.getDefaultInitialState());
-    this.setAdding = this.setAdding.bind(this);
   }
 
   /**
@@ -43,17 +47,21 @@ export class AppComponent {
   }
 
   /**
-   * Start adding to the canvas.
-   */
-  setAdding(toAdd: string | object) {
-    this.centre.controller.setAdding(toAdd);
-  }
-
-  /**
    * Redraw the canvas.
    */
   redraw() {
     this.centre.controller.redraw();
+  }
+
+  /**
+   * When a component is dropped not on the
+   * canvas, stop the adding behavior.
+   * @param e The drag event.
+   */
+  stopDrag(e: DragEvent) {
+    e.preventDefault();
+    this.selection.adding = undefined;
+    this.content.dragging = false;
   }
 
   /**

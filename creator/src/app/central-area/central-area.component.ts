@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import CreatorCanvasController from './CreatorCanvasController';
+import { ContentSelectionService } from '../content-selection.service';
 
 @Component({
   selector: 'app-central-area',
@@ -13,7 +14,7 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
 
   controller: CreatorCanvasController;
 
-  constructor(private undoRedo: UndoRedoService) {
+  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
     this.undoRedo.subscribe(this.updateState.bind(this));
   }
 
@@ -30,7 +31,7 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
    */
   updateState(newState: any) {
     this.containerEl.nativeElement.innerHTML = '';
-    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo);
+    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection);
   }
 
 }
