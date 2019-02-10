@@ -39,9 +39,40 @@ export class ContentSelectionService {
   // is not valid in the context of the player.
   // addingContainer() and getContainer() must be used
   // to check for this.
-  adding: string;
+  private addingVar: string;
+
+  // The listeners that will be run when the above
+  // variable
+  private addingListeners: (() => void)[] = [];
 
   constructor() { }
+
+  get adding() {
+    return this.addingVar;
+  }
+
+  set adding(newAdding: string) {
+    this.addingVar = newAdding;
+    this.addingListeners.forEach(listener => {
+      listener();
+    });
+  }
+
+  /**
+   * Add a new listener that will be run when the
+   * 'adding' variable changes.
+   * @param listener The new listener.
+   */
+  addAddListener(listener: () => void) {
+    this.addingListeners.push(listener);
+  }
+
+  /**
+   * Remove all current add listeners.
+   */
+  resetAddListeners() {
+    this.addingListeners = [];
+  }
 
   /**
    * Returns whether we are adding a container.

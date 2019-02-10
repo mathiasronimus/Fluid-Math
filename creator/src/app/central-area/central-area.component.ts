@@ -31,6 +31,7 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
    */
   updateState(newState: any) {
     this.containerEl.nativeElement.innerHTML = '';
+    this.selection.resetAddListeners();
     this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection);
   }
 

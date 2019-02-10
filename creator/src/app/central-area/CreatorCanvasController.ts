@@ -25,6 +25,7 @@ export default class CreatorCanvasController extends CanvasController {
         super(container, instructions);
         this.undoRedo = undoRedo;
         this.selection = selection;
+        this.selection.addAddListener(this.redraw.bind(this));
         this.currStep = editingStep;
         this.recalc();
         // Don't allow going to next step
@@ -75,6 +76,15 @@ export default class CreatorCanvasController extends CanvasController {
         this.currStates.forEach(f => {
             if (f.component instanceof EqContainer) {
                 f.component.creatorDraw(f, this.ctx);
+            } else if ( f.component instanceof EqContent &&
+                        this.selection &&
+                        this.getContentReference(f.component) === this.selection.adding) {
+                // Highlight what's selected on the content pane.
+                this.ctx.save();
+                this.ctx.strokeStyle = '#2196F3';
+                this.ctx.rect(f.tlx, f.tly, f.width, f.height);
+                this.ctx.stroke();
+                this.ctx.restore();
             }
         });
     }
