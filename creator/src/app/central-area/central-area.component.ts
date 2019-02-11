@@ -30,9 +30,11 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
    * @param newState The new state to show.
    */
   updateState(newState: any) {
+    const scrollBefore = this.containerEl.nativeElement.scrollTop;
     this.containerEl.nativeElement.innerHTML = '';
     this.selection.resetAddListeners();
     this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection);
+    this.containerEl.nativeElement.scrollTop = scrollBefore;
   }
 
 }

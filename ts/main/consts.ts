@@ -31,13 +31,13 @@ const constants = {
     defaultExpPortrusion: 0.1,
 
     //Creator
-    creatorVBoxPadding: Padding.even(30),
-    creatorHBoxPadding: Padding.even(30),
-    creatorTightHBoxPadding: Padding.even(30),
-    creatorHDividerPadding: Padding.even(5),
-    creatorSubSuperPadding: Padding.even(15),
-    creatorContainerStroke: "rgba(0, 0, 0, 0.4)",
-    creatorLineDash: [5],
+    creatorContainerPadding: Padding.even(30),
+    creatorHDividerPadding: new Padding(5, 15, 5, 15),
+    creatorContainerStroke: "rgb(225, 225, 225)",
+    creatorCaretFillStyle: '#444',
+    creatorCaretFillStyleLighter: '#999',
+    creatorCaretSize: 5,
+    creatorLineDash: [2],
     creatorErrorTimeout: 5000,
     //The delay before initializing a canvas in
     //the creator in MS. Too small gives weird layout,

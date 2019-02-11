@@ -3,7 +3,7 @@ import EqComponent from './EqComponent';
 import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
 import C from '../main/consts';
-import { line, Map } from '../main/helpers';
+import { Map, tri, line } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 
@@ -36,81 +36,89 @@ export default class HBox extends LinearContainer {
         return totalWidth + this.padding.width();
     }
 
+    addVertically() {
+        return false;
+    }
+
+    addHorizontally() {
+        return true;
+    }
+
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
+        ctx.save();
         ctx.strokeStyle = C.creatorContainerStroke;
 
         //Outer border
+        ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let padD = C.creatorHBoxPadding;
+        let padD = C.creatorContainerPadding;
         let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
 
-        //Middle border, top and bottom
-        ctx.setLineDash(C.creatorLineDash);
-        line(   l.tlx + pad.left / 2, 
-                l.tly, 
-                l.tlx + pad.left / 2, 
-                l.tly + l.height, 
-                ctx);
-        line(   l.tlx + l.width - pad.right / 2, 
-                l.tly, 
-                l.tlx + l.width - pad.right / 2, 
-                l.tly + l.height, 
-                ctx);
+        //Horizontal lines
+        let x1 = l.tlx + pad.left / 2;
+        let x2 = l.tlx + l.width - pad.right / 2;
+        let y1 = l.tly + pad.top / 2;
+        let y2 = l.tly + l.height - pad.bottom / 2;
+        line(x1, y1, x2, y1, ctx);
+        line(x1, y2, x2, y2, ctx);
 
-        //Inner border, top and bottom
-        ctx.setLineDash([]);
-        line(   l.tlx + pad.left, 
-                l.tly, 
-                l.tlx + pad.left, 
-                l.tly + l.height, 
-                ctx);
-        line(   l.tlx + l.width - pad.right, 
-                l.tly, 
-                l.tlx + l.width - pad.right, 
-                l.tly + l.height, 
-                ctx);
+        //Carets
+        ctx.fillStyle = C.creatorCaretFillStyle;
 
-        ctx.strokeStyle = "#000";
+        ctx.save();
+        ctx.translate(l.tlx + pad.left * 0.75, l.tly + l.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(l.tlx + l.width - pad.right * 0.75, l.tly + l.height / 2);
+        ctx.rotate(Math.PI / 2);
+        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        ctx.restore();
+
+        //Carets that depend on parent
+        super.creatorDraw(l, ctx);
+
+        ctx.restore();
     }
 
-    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
-        if (clickedLayout.onLeft(x)) {
-            if (x - clickedLayout.tlx <= (C.creatorHBoxPadding.left / 2) * clickedLayout.scale) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    container.addClickOnChild(clickedLayout, x, y, toAdd);
-                }
-            }
-            else {
-                //Inner border, add inside
-                this.children.unshift(toAdd);
-            }
+    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        let pad = new Padding(
+            C.creatorContainerPadding.top * l.scale,
+            C.creatorContainerPadding.left * l.scale,
+            C.creatorContainerPadding.bottom * l.scale,
+            C.creatorContainerPadding.right * l.scale
+        );
+        // Make fake layout states to use like rectangles
+        let innerLeft = new LayoutState(
+            undefined,
+            undefined,
+            l.tlx + pad.left / 2,
+            l.tly + pad.top / 2,
+            pad.width() / 4,
+            pad.height() / 2,
+            1
+        );
+        let innerRight = new LayoutState(
+            undefined,
+            undefined,
+            l.tlx + l.width / 2,
+            l.tly + pad.top / 2,
+            pad.width() / 4,
+            pad.height() / 2,
+            1
+        );
+        if (innerLeft.contains(x, y)) {
+            // Add at start
+            this.children.unshift(toAdd);
+        } else if (innerRight.contains(x, y)) {
+            // Add at end
+            this.children.push(toAdd);
         } else {
-            //On right
-            if (    clickedLayout.tlx + clickedLayout.width - x 
-                    <= 
-                    (C.creatorHBoxPadding.right / 2) * clickedLayout.scale) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    container.addClickOnChild(clickedLayout, x, y, toAdd);
-                }
-            }
-            else {
-                //Inner border, add inside
-                this.children.push(toAdd);
-            }
+            super.addClick(l, x, y, toAdd);
         }
     }
 

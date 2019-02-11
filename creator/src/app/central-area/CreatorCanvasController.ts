@@ -8,6 +8,7 @@ import SubSuper from '@shared/layout/SubSuper';
 import EqComponent from '@shared/layout/EqComponent';
 import LayoutState from '@shared/animation/LayoutState';
 import EqContent from '@shared/layout/EqContent';
+import HDivider from '@shared/layout/HDivider';
 import { deepClone } from '../helpers';
 import { UndoRedoService } from '../undo-redo.service';
 import { ContentSelectionService } from '../content-selection.service';
@@ -39,7 +40,6 @@ export default class CreatorCanvasController extends CanvasController {
             this.onMouseUp(e);
             e.preventDefault();
         });
-        this.canvas.addEventListener('mousemove', this.onMoveOver);
         this.canvas.addEventListener('dragover', this.onMoveOver);
         this.canvas.addEventListener('dragenter', (e) => {
             e.preventDefault();
@@ -108,31 +108,31 @@ export default class CreatorCanvasController extends CanvasController {
         if (type === 'vbox') {
             return new VBox(
                 this.parseContainerChildren(containerObj.children),
-                C.creatorVBoxPadding);
+                C.creatorContainerPadding);
         } else if (type === 'hbox') {
             return new HBox(
                 this.parseContainerChildren(containerObj.children),
-                C.creatorHBoxPadding);
+                C.creatorContainerPadding);
         } else if (type === 'tightHBox') {
             return new TightHBox(
                 this.parseContainerChildren(containerObj.children),
-                C.creatorTightHBoxPadding
+                C.creatorContainerPadding
             );
         } else if (type === 'subSuper') {
             const top = new HBox(
                 this.parseContainerChildren(containerObj.top),
-                C.creatorHBoxPadding
+                C.creatorContainerPadding
             );
             const middle = new TightHBox(
                 this.parseContainerChildren(containerObj.middle),
-                C.creatorTightHBoxPadding
+                C.creatorContainerPadding
             );
             const bottom = new HBox(
                 this.parseContainerChildren(containerObj.bottom),
-                C.creatorHBoxPadding
+                C.creatorContainerPadding
             );
             const portrusion = containerObj.portrusion ? containerObj.portrusion : C.defaultExpPortrusion;
-            return new SubSuper(top, middle, bottom, portrusion, C.creatorSubSuperPadding);
+            return new SubSuper(top, middle, bottom, portrusion, C.creatorContainerPadding);
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
         } else {
@@ -172,25 +172,29 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y The y-ordinate of the mouse.
      */
     private getChangedLayout(x: number, y: number): object {
+        const parseLayout = () => {
+            const newStepLayout = this.rootContainer.toStepLayout(this);
+            const origInstructionsClone: any = deepClone(this.originalInstructions);
+            origInstructionsClone.steps[this.currStep].root = newStepLayout;
+            return origInstructionsClone;
+        };
+
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
-            throw new Error('duplicate content not allowed');
+            return parseLayout();
         }
         const clickedLayout: LayoutState = this.getClickedLayout(x, y);
         if (clickedLayout === undefined) {
             // Didn't click on anything
-            throw new Error('click was not on anything.');
+            return parseLayout();
         } else if (clickedLayout.component instanceof EqContent) {
             this.addClickOnComponent(clickedLayout, x, y);
         } else if (clickedLayout.component instanceof EqContainer) {
             clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
         } else {
-            throw new Error('unrecognized frame type');
+            return parseLayout();
         }
-        const newStepLayout = this.rootContainer.toStepLayout(this);
-        const origInstructionsClone: any = deepClone(this.originalInstructions);
-        origInstructionsClone.steps[this.currStep].root = newStepLayout;
-        return origInstructionsClone;
+        return parseLayout();
     }
 
     /**
@@ -278,6 +282,15 @@ export default class CreatorCanvasController extends CanvasController {
             return this.parseContainer(this.selection.getContainer());
         } else {
             return this.getContentFromRef(this.selection.adding);
+        }
+    }
+
+    // Override to give h dividers some padding
+    protected initContent(instructions) {
+        super.initContent(instructions);
+        this.hDividers = [];
+        for (let i = 0; i < instructions.hDividers; i++) {
+            this.hDividers.push(new HDivider(C.creatorHDividerPadding, 'h' + i));
         }
     }
 }

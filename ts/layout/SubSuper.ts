@@ -108,33 +108,33 @@ export default class SubSuper extends EqContainer {
         return layout;
     }
 
+    addVertically() {
+        return false;
+    }
+
+    addHorizontally() {
+        return false;
+    }
+
+    addBefore(e: EqComponent, b: EqComponent) {
+        return;
+    }
+
+    addAfter(e: EqComponent, b: EqComponent) {
+        return;
+    }
+
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.strokeStyle = C.creatorContainerStroke;
 
-        //Draw the outer border
+        //Outer border
+        ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let padLeft = this.padding.left * l.scale;
-        let padRight = this.padding.right * l.scale;
-
-        //Draw inner dashed lines
-        ctx.setLineDash(C.creatorLineDash);
-        //Left line
-        line(   l.tlx + padLeft,
-                l.tly,
-                l.tlx + padLeft,
-                l.tly + l.height,
-                ctx);
-        //Right line
-        line(   l.tlx + l.width - padRight,
-                l.tly,
-                l.tlx + l.width - padRight,
-                l.tly + l.height,
-                ctx);
-
         ctx.restore();
+        super.creatorDraw(l, ctx);
     }
 
     addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
@@ -145,12 +145,12 @@ export default class SubSuper extends EqContainer {
             let container = clickedLayout.layoutParent.component as EqContainer;
             container.addClickOnChild(clickedLayout, x, y, toAdd);
         } else {
-            throw "Can't add inside a SubSuper container.";
+            return;
         }
     }
 
     addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
-        throw "Can't add more children to a SubSuper container.";
+        return;
     }
 
     toStepLayout(controller: CanvasController): Object {

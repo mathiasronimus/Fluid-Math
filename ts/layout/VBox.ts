@@ -3,7 +3,7 @@ import EqComponent from './EqComponent';
 import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 import C from '../main/consts';
-import { line, Map } from '../main/helpers';
+import { line, Map, tri } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 
@@ -34,82 +34,86 @@ export default class VBox extends LinearContainer {
         return maxWidth + this.padding.width();
     }
 
+    protected addHorizontally() {
+        return false;
+    }
+
+    protected addVertically() {
+        return true;
+    }
+
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.strokeStyle = C.creatorContainerStroke;
 
         //Outer border
+        ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let padD = C.creatorVBoxPadding;
-        let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
+        let padD = C.creatorContainerPadding;
+        let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);     
+        
+        //Vertical lines
+        let y1 = l.tly + pad.top / 2;
+        let y2 = l.tly + l.height - pad.bottom / 2;
+        let x1 = l.tlx + pad.left / 2;
+        let x2 = l.tlx + l.width - pad.right / 2;
+        line(x1, y1, x1, y2, ctx);
+        line(x2, y1, x2, y2, ctx);
 
-        //Middle border, top and bottom
-        ctx.setLineDash(C.creatorLineDash);
-        line(   l.tlx, 
-                l.tly + pad.top / 2, 
-                l.tlx + l.width, 
-                l.tly + pad.top / 2, 
-                ctx);
-        line(   l.tlx, 
-                l.tly + l.height - pad.bottom / 2, 
-                l.tlx + l.width, 
-                l.tly + l.height - pad.bottom / 2, 
-                ctx);
+        //Carets
+        ctx.fillStyle = C.creatorCaretFillStyle;
 
-        //Inner border, top and bottom
-        ctx.setLineDash([]);
-        line(   l.tlx, 
-                l.tly + pad.top, 
-                l.tlx + l.width, 
-                l.tly + pad.top, 
-                ctx);
-        line(   l.tlx, 
-                l.tly + l.height - pad.bottom, 
-                l.tlx + l.width,
-                l.tly + l.height - pad.bottom, 
-                ctx);
+        tri(l.tlx + l.width / 2, l.tly + pad.top * 0.75, C.creatorCaretSize, C.creatorCaretSize, ctx);
+
+        ctx.save();
+        ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.top * 0.75);
+        ctx.rotate(Math.PI);
+        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        ctx.restore();
+
+        //Carets that depend on parent
+        super.creatorDraw(l, ctx);
 
         ctx.restore();
     }
 
-    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
-        if (clickedLayout.onTop(y)) {
-            if (y - clickedLayout.tly <= (C.creatorVBoxPadding.top / 2) * clickedLayout.scale) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    container.addClickOnChild(clickedLayout, x, y, toAdd);
-                }
-            } else {
-                //Inside border, add inside
-                this.children.unshift(toAdd);
-            }
-        }
-        else {
-            //On bottom
-            if (clickedLayout.tly + clickedLayout.height - y 
-                <= 
-                (C.creatorVBoxPadding.bottom / 2) * clickedLayout.scale) {
-                //Outer border, add adjacent
-                let containerLayout = clickedLayout.layoutParent;
-                if (containerLayout === undefined) {
-                    throw "no containing frame";
-                }
-                else {
-                    let container = containerLayout.component as EqContainer;
-                    container.addClickOnChild(clickedLayout, x, y, toAdd);
-                }
-            }
-            else {
-                //Inner border, add inside
-                this.children.push(toAdd);
-            }
+    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        let scl = l.scale;
+        let realPad = new Padding(
+            C.creatorContainerPadding.top * scl,
+            C.creatorContainerPadding.left * scl,
+            C.creatorContainerPadding.bottom * scl,
+            C.creatorContainerPadding.right * scl
+        );
+        // Create mock layout states to use like rectangles
+        let innerTop = new LayoutState(
+            undefined, undefined, 
+            l.tlx + realPad.left / 2, 
+            l.tly + realPad.top / 2, 
+            l.width - realPad.width() / 2, 
+            realPad.height() / 4, 
+            1
+        );
+        let innerBot = new LayoutState(
+            undefined, undefined, 
+            l.tlx + realPad.left / 2, 
+            l.tly + l.height - realPad.bottom, 
+            l.width - realPad.width() / 2, 
+            realPad.height() / 4, 
+            1
+        );
+
+        if (innerTop.contains(x, y)) {
+            // Add at start
+            this.children.unshift(toAdd);
+        } else if (innerBot.contains(x, y)) {
+            // Add at end
+            this.children.push(toAdd);
+        } else {
+            // Click wasn't on inner part, add adjacent to parent container.
+            super.addClick(l, x, y, toAdd);
         }
     }
 

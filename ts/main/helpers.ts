@@ -36,6 +36,26 @@ export function line(x1, y1, x2, y2, ctx: CanvasRenderingContext2D) {
     ctx.stroke();
 }
 
+/**
+ * Draws an equilateral stroked triangle based
+ * on its center and width.
+ * @param centX The X-ordinate of the center of the triangle.
+ * @param centY The Y-ordinate of the center of the triangle.
+ * @param width The width of the triangle.
+ * @param height The height of the triangle.
+ * @param ctx The context to render to.
+ */
+export function tri(centX: number, centY: number, width: number, height: number, ctx: CanvasRenderingContext2D) {
+    let tlx = centX - width / 2;
+    let tly = centY - height / 2;
+    ctx.beginPath();
+    ctx.moveTo(tlx, tly);
+    ctx.lineTo(tlx + width, tly);
+    ctx.lineTo(centX, tly + height);
+    ctx.lineTo(tlx, tly);
+    ctx.fill();
+}
+
 window['currentWidthTier'] = getWidthTier();
 window.addEventListener('resize', function () {
     window['currentWidthTier'] = getWidthTier();
