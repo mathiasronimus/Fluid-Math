@@ -4,6 +4,8 @@ import { UndoRedoService } from './undo-redo.service';
 import { CentralAreaComponent } from './central-area/central-area.component';
 import { ContentSelectionService } from './content-selection.service';
 import { ContentPaneComponent } from './content-pane/content-pane.component';
+import { ModalDirective } from './modal.directive';
+import { ModalService } from './modal.service';
 
 @Component({
   selector: 'app-root',
@@ -23,10 +25,18 @@ export class AppComponent {
   @ViewChild(ContentPaneComponent)
   content: ContentPaneComponent;
 
-  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
+  @ViewChild(ModalDirective)
+  modalHost: ModalDirective;
+
+  displayingModal = true;
+
+  constructor(private undoRedo: UndoRedoService,
+              private selection: ContentSelectionService,
+              private modal: ModalService) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.deselect = this.deselect.bind(this);
+    this.modal.appComponent = this;
     this.defaultLeftIcons = [];
     this.defaultRightIcons = [
       new Icon('save', this.save, () => true),

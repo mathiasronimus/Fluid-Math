@@ -6,6 +6,8 @@ import { ToolBarComponent } from './tool-bar/tool-bar.component';
 import { ContentPaneComponent } from './content-pane/content-pane.component';
 import { CentralAreaComponent } from './central-area/central-area.component';
 import { StepsComponent } from './steps/steps.component';
+import { ModalDirective } from './modal.directive';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
 
 @NgModule({
   declarations: [
@@ -14,11 +16,16 @@ import { StepsComponent } from './steps/steps.component';
     ContentPaneComponent,
     CentralAreaComponent,
     StepsComponent,
+    ModalDirective,
+    ColorPickerComponent,
   ],
   imports: [
     BrowserModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    
+  ]
 })
 export class AppModule { }

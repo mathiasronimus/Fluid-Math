@@ -9,4 +9,11 @@
         <app-content-pane></app-content-pane>
     </div>
     <app-steps></app-steps>
+    <div    id="background" 
+            *ngIf="displayingModal"
+            (click)="modal.remove();">
+        <div id="modal-inner">
+            <ng-template appModalHost></ng-template>
+        </div>
+    </div>
 </div>

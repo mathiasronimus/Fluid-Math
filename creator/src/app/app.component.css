@@ -11,3 +11,22 @@
     flex-wrap: nowrap;
     flex-grow: 1;
 }
+
+#background {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#modal-inner {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    background-color: white;
+    width: 400px;
+    height: 400px;
+}
