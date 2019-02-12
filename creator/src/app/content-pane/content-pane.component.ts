@@ -139,6 +139,7 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    */
   deselect() {
     this.selection.adding = undefined;
+    this.selection.selectedOnCanvas = undefined;
   }
 
   setAdding(toAdd: string) {

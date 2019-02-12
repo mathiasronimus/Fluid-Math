@@ -1,6 +1,9 @@
 #outer {
     padding: 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.flex {
     display: flex;
     flex-direction: row;
     align-items: center;

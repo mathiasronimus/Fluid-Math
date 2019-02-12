@@ -99,16 +99,16 @@ export default class HBox extends LinearContainer {
             l.tlx + pad.left / 2,
             l.tly + pad.top / 2,
             pad.width() / 4,
-            pad.height() / 2,
+            l.height - pad.height() / 2,
             1
         );
         let innerRight = new LayoutState(
             undefined,
             undefined,
-            l.tlx + l.width / 2,
+            l.tlx + l.width - pad.right,
             l.tly + pad.top / 2,
             pad.width() / 4,
-            pad.height() / 2,
+            l.height - pad.height() / 2,
             1
         );
         if (innerLeft.contains(x, y)) {

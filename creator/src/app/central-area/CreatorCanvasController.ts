@@ -22,11 +22,22 @@ export default class CreatorCanvasController extends CanvasController {
     private undoRedo: UndoRedoService;
     private selection: ContentSelectionService;
 
+    private selectedLayout: LayoutState;
+
     constructor(container, instructions, editingStep, undoRedo, selection) {
         super(container, instructions);
         this.undoRedo = undoRedo;
         this.selection = selection;
-        this.selection.addAddListener(this.redraw.bind(this));
+        this.redraw = this.redraw.bind(this);
+        this.delete = this.delete.bind(this);
+        this.selection.addAddListener(this.redraw);
+        this.selection.addSelectedOnCanvasListener(() => {
+            if (this.selection.selectedOnCanvas === undefined) {
+                this.selectedLayout = undefined;
+            }
+            this.redraw();
+        });
+        this.selection.canvasInstance = this;
         this.currStep = editingStep;
         this.recalc();
         // Don't allow going to next step
@@ -35,7 +46,7 @@ export default class CreatorCanvasController extends CanvasController {
         // Whether dragging or clicking, mouse up could mean add
         this.onMoveOver = this.onMoveOver.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
-        this.canvas.addEventListener('mouseup', this.onMouseUp);
+        this.canvas.addEventListener('click', this.onMouseUp);
         this.canvas.addEventListener('drop', (e) => {
             this.onMouseUp(e);
             e.preventDefault();
@@ -64,6 +75,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param e The mouse event.
      */
     private onMouseUp(e: MouseEvent) {
+        e.stopPropagation();
         if (this.selection.adding) {
             this.finalizeAdd(e.offsetX, e.offsetY);
         } else {
@@ -73,18 +85,25 @@ export default class CreatorCanvasController extends CanvasController {
 
     redraw() {
         super.redraw();
-        this.currStates.forEach(f => {
-            if (f.component instanceof EqContainer) {
-                f.component.creatorDraw(f, this.ctx);
-            } else if ( f.component instanceof EqContent &&
-                        this.selection &&
-                        this.getContentReference(f.component) === this.selection.adding) {
-                // Highlight what's selected on the content pane.
-                this.ctx.save();
-                this.ctx.strokeStyle = '#2196F3';
-                this.ctx.rect(f.tlx, f.tly, f.width, f.height);
-                this.ctx.stroke();
-                this.ctx.restore();
+        this.currStates.forEach(l => {
+            if (l.component instanceof EqContainer) {
+                l.component.creatorDraw(l, this.ctx);
+            }
+            if (this.selection) {
+                if (l.component instanceof EqContent &&
+                    this.getContentReference(l.component) === this.selection.adding) {
+                    // Highlight what's selected on the content pane.
+                    this.ctx.save();
+                    this.ctx.strokeStyle = '#2196F3';
+                    this.ctx.rect(l.tlx, l.tly, l.width, l.height);
+                    this.ctx.stroke();
+                    this.ctx.restore();
+                } else if (l === this.selectedLayout) {
+                    this.ctx.save();
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    this.ctx.fillRect(l.tlx, l.tly, l.width, l.height);
+                    this.ctx.restore();
+                }
             }
         });
     }
@@ -94,6 +113,12 @@ export default class CreatorCanvasController extends CanvasController {
      * Override to store the root layout for later.
      */
     protected recalc() {
+        // Whenever we recalc, the selection becomes invalid as we have new
+        // layout states.
+        if (this.selection) {
+            this.selection.selectedOnCanvas = undefined;
+            this.selectedLayout = undefined;
+        }
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         this.rootContainer = rootLayout.component;
@@ -172,29 +197,33 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y The y-ordinate of the mouse.
      */
     private getChangedLayout(x: number, y: number): object {
-        const parseLayout = () => {
-            const newStepLayout = this.rootContainer.toStepLayout(this);
-            const origInstructionsClone: any = deepClone(this.originalInstructions);
-            origInstructionsClone.steps[this.currStep].root = newStepLayout;
-            return origInstructionsClone;
-        };
-
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
-            return parseLayout();
+            return this.getLayoutForPublish();
         }
         const clickedLayout: LayoutState = this.getClickedLayout(x, y);
         if (clickedLayout === undefined) {
             // Didn't click on anything
-            return parseLayout();
+            return this.getLayoutForPublish();
         } else if (clickedLayout.component instanceof EqContent) {
             this.addClickOnComponent(clickedLayout, x, y);
         } else if (clickedLayout.component instanceof EqContainer) {
             clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
         } else {
-            return parseLayout();
+            return this.getLayoutForPublish();
         }
-        return parseLayout();
+        return this.getLayoutForPublish();
+    }
+
+    /**
+     * Get the current layout in the format
+     * that can be published.
+     */
+    private getLayoutForPublish(): object {
+        const newStepLayout = this.rootContainer.toStepLayout(this);
+        const origInstructionsClone: any = deepClone(this.originalInstructions);
+        origInstructionsClone.steps[this.currStep].root = newStepLayout;
+        return origInstructionsClone;
     }
 
     /**
@@ -270,7 +299,50 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate of mouse.
      */
     private select(x: number, y: number) {
+        const selectedLayout = this.getClickedLayout(x, y);
+        if (!selectedLayout) {
+            return;
+        }
+        const selectedComponent = selectedLayout.component;
+        const select = (ref: string) => {
+            this.selectedLayout = selectedLayout;
+            this.selection.selectedOnCanvas = ref;
+        };
+        if (selectedComponent instanceof EqContainer) {
+            if (selectedComponent instanceof TightHBox) {
+                select('c2');
+            } else if (selectedComponent instanceof HBox) {
+                select('c0');
+            } else if (selectedComponent instanceof VBox) {
+                select('c1');
+            } else if (selectedComponent instanceof SubSuper) {
+                select('c3');
+            } else {
+                throw new Error('Unrecognized container selected.');
+            }
+        } else if (selectedComponent instanceof EqContent) {
+            select(this.getContentReference(selectedComponent));
+        }
+    }
 
+    /**
+     * Delete the currently selected component.
+     * @param state The layout state generated by a component.
+     */
+    delete() {
+        const parent = (this.selectedLayout.layoutParent.component as EqContainer);
+        parent.delete(this.selectedLayout.component);
+        this.undoRedo.publishChange(this.getLayoutForPublish());
+    }
+
+    /**
+     * Return whether something is selected
+     * and it can be deleted.
+     */
+    canDelete() {
+        return  this.selectedLayout &&
+                this.selectedLayout.layoutParent &&
+                !(this.selectedLayout.layoutParent.component instanceof SubSuper);
     }
 
     /**

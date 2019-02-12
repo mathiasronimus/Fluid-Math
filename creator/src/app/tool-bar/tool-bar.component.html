@@ -1,8 +1,19 @@
-<div id="outer">
-    <div    class="icon material-icons" 
-            (click)="icon.onClick()" 
-            *ngFor="let icon of icons"
-            [ngClass]="{'active': icon.isActive()}">
-        {{ icon.name }}
+<div id="outer" class="flex">
+    <div class="flex">
+        <div    class="icon material-icons" 
+                (click)="icon.onClick($event)" 
+                *ngFor="let icon of leftIcons" 
+                [ngClass]="{'active': icon.isActive()}">
+            {{ icon.name }}
+        </div>
     </div>
+    <div style="flex-grow: 1"></div>
+    <div class="flex">
+            <div    class="icon material-icons" 
+                    (click)="icon.onClick($event)" 
+                    *ngFor="let icon of rightIcons" 
+                    [ngClass]="{'active': icon.isActive()}">
+                {{ icon.name }}
+            </div>
+        </div>
 </div>

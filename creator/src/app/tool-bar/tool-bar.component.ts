@@ -8,7 +8,8 @@ import Icon from '../Icon';
 })
 export class ToolBarComponent implements OnInit {
 
-  @Input() icons: Icon[];
+  @Input() leftIcons: Icon[];
+  @Input() rightIcons: Icon[];
 
   constructor() {}
 

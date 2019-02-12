@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import CreatorCanvasController from './central-area/CreatorCanvasController';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,27 @@ export class ContentSelectionService {
   // variable
   private addingListeners: (() => void)[] = [];
 
+  // The reference of what is selected on the canvas,
+  // with the same 'c' prefix for containers as above.
+  private selectedOnCanvasVar: string;
+
+  private selectedOnCanvasListeners: (() => void)[] = [];
+
+  // The singleton instance of CreatorCanvasController.
+  canvasInstance: CreatorCanvasController;
+
   constructor() { }
+
+  get selectedOnCanvas() {
+    return this.selectedOnCanvasVar;
+  }
+
+  set selectedOnCanvas(newSelectedOnCanvas: string) {
+    this.selectedOnCanvasVar = newSelectedOnCanvas;
+    this.selectedOnCanvasListeners.forEach(listener => {
+      listener();
+    });
+  }
 
   get adding() {
     return this.addingVar;
@@ -53,6 +74,7 @@ export class ContentSelectionService {
 
   set adding(newAdding: string) {
     this.addingVar = newAdding;
+    this.selectedOnCanvas = undefined;
     this.addingListeners.forEach(listener => {
       listener();
     });
@@ -71,6 +93,22 @@ export class ContentSelectionService {
    * Remove all current add listeners.
    */
   resetAddListeners() {
+    this.addingListeners = [];
+  }
+
+  /**
+   * Add a new listener that will be run when the
+   * 'selectedOnCanvas' variable changes.
+   * @param listener The new listener.
+   */
+  addSelectedOnCanvasListener(listener: () => void) {
+    this.selectedOnCanvasListeners.push(listener);
+  }
+
+  /**
+   * Remove all current selected on canvas listeners.
+   */
+  resetSelectedOnCanvasListeners() {
     this.addingListeners = [];
   }
 

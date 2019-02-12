@@ -1,8 +1,9 @@
 <div    id="main-column" 
         (dragenter)="$event.preventDefault()"
         (dragover)="$event.preventDefault(); redraw();"
-        (drop)="stopDrag($event)">
-    <app-tool-bar [icons]="icons"></app-tool-bar>
+        (drop)="stopDrag($event)"
+        (click)="deselect();">
+    <app-tool-bar [leftIcons]="getLeftIcons()" [rightIcons]="getRightIcons()"></app-tool-bar>
     <div id="middle-row">
         <app-central-area style="flex-grow: 1;"></app-central-area>
         <app-content-pane></app-content-pane>

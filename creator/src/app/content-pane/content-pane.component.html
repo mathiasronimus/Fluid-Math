@@ -1,4 +1,4 @@
-<div id="outer" (click)="deselect()">
+<div id="outer">
   <p>Click to Select.</p>
   <div id="inner">
     <div class="title">CONTAINERS</div>
@@ -6,7 +6,8 @@
           *ngFor="let container of containers; let cIndex = index;"
           (click)="select('c' + cIndex, $event)"
           (dragstart)="deselect(); setAdding('c' + cIndex);"
-          [ngClass]="{'selected': selection.adding === 'c' + cIndex}"
+          [ngClass]="{'selected': selection.adding === 'c' + cIndex,
+                      'color': selection.selectedOnCanvas === 'c' + cIndex}"
           draggable="true">
       {{ container }}
     </span>
@@ -14,7 +15,8 @@
     <span class="selector grab" 
           *ngFor="let term of terms; let tIndex = index;"
           (click)="select('t' + tIndex, $event)"
-          [ngClass]="{'selected': selection.adding === 't' + tIndex}"
+          [ngClass]="{'selected': selection.adding === 't' + tIndex,
+                      'color': selection.selectedOnCanvas === 't' + tIndex}"
           draggable="true"
           (dragstart)="deselect(); dragging = true; setAdding('t' + tIndex);">
       {{ term }}
@@ -40,7 +42,8 @@
           *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
           (dragstart)="deselect(); dragging = true; setAdding('h' + hIndex);"
-          [ngClass]="{'selected': selection.adding === 'h' + hIndex}"
+          [ngClass]="{'selected': selection.adding === 'h' + hIndex,
+                      'color': selection.selectedOnCanvas === 'h' + hIndex}"
           draggable="true">
       {{ hDivider }}
       <span *ngIf="selection.adding === 'h' + hIndex && !dragging"
