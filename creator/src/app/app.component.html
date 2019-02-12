@@ -12,7 +12,7 @@
     <div    id="background" 
             *ngIf="displayingModal"
             (click)="modal.remove();">
-        <div id="modal-inner">
+        <div id="modal-inner" (click)="$event.stopPropagation();">
             <ng-template appModalHost></ng-template>
         </div>
     </div>

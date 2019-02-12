@@ -3,6 +3,8 @@
     flex-direction: column;
     flex-wrap: nowrap;
     height: 100vh;
+    position: relative;
+    z-index: 1;
 }
 
 #middle-row {
@@ -28,5 +30,6 @@
     position: fixed;
     background-color: white;
     width: 400px;
-    height: 400px;
+    max-height: 100vh;
+    padding: 10px;
 }

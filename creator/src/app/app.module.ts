@@ -25,7 +25,7 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    
+    ColorPickerComponent
   ]
 })
 export class AppModule { }

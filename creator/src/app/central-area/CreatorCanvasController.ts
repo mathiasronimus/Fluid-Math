@@ -365,4 +365,75 @@ export default class CreatorCanvasController extends CanvasController {
             this.hDividers.push(new HDivider(C.creatorHDividerPadding, 'h' + i));
         }
     }
+
+    /**
+     * Apply color and opacity to the currently
+     * selected component. If content is selected,
+     * just applies to that content. If a container
+     * is selected, applies to all content contained
+     * within it.
+     * @param opacity The opacity to apply.
+     * @param colorName The name of the color to apply.
+     */
+    applyColorAndOpacity(opacity: number, colorName: string) {
+        const selected = this.selectedLayout.component;
+        const newState: any = this.undoRedo.getStateClone();
+        const step = newState.steps[this.currStep];
+        if (selected instanceof EqContent) {
+            this.applyColor(selected, colorName, step);
+            this.applyOpacity(selected, opacity, step);
+        } else if (selected instanceof EqContainer) {
+            selected.forEachUnder((content) => {
+                this.applyColor(content, colorName, step);
+                this.applyOpacity(content, opacity, step);
+            });
+        }
+        this.undoRedo.publishChange(newState);
+    }
+
+    /**
+     * Applies color to a particular piece of content.
+     * @param content The content to apply color to.
+     * @param colorName The name of the color.
+     * @param stepObj The step object to apply to.
+     */
+    private applyColor(content: EqContent<any>, colorName: string, stepObj) {
+        if (stepObj.color === undefined) {
+            stepObj.color = {};
+        }
+        const ref = this.getContentReference(content);
+        if (colorName === 'default') {
+            // Remove any color already set for this content
+            delete stepObj.color[ref];
+            if (Object.keys(stepObj.color).length === 0) {
+                // Empty colors, delete as well
+                delete stepObj.color;
+            }
+        } else {
+            stepObj.color[ref] = colorName;
+        }
+    }
+
+    /**
+     * Applies opacity to a particular piece of content.
+     * @param content The content to apply opacity to.
+     * @param opacity The opacity to apply.
+     * @param stepObj The step object to apply to.
+     */
+    private applyOpacity(content: EqContent<any>, opacity: number, stepObj) {
+        if (stepObj.opacity === undefined) {
+            stepObj.opacity = {};
+        }
+        const ref = this.getContentReference(content);
+        if (opacity === C.normalOpacity) {
+            // Remove any opacity already set for this content
+            delete stepObj.opacity[ref];
+            if (Object.keys(stepObj.opacity).length === 0) {
+                // Empty opacity, delete as well
+                delete stepObj.opacity;
+            }
+        } else {
+            stepObj.opacity[ref] = opacity;
+        }
+    }
 }

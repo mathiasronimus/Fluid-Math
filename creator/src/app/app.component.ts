@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import Icon from './Icon';
 import { UndoRedoService } from './undo-redo.service';
 import { CentralAreaComponent } from './central-area/central-area.component';
@@ -6,6 +6,7 @@ import { ContentSelectionService } from './content-selection.service';
 import { ContentPaneComponent } from './content-pane/content-pane.component';
 import { ModalDirective } from './modal.directive';
 import { ModalService } from './modal.service';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
 
 @Component({
   selector: 'app-root',
@@ -25,14 +26,18 @@ export class AppComponent {
   @ViewChild(ContentPaneComponent)
   content: ContentPaneComponent;
 
-  @ViewChild(ModalDirective)
-  modalHost: ModalDirective;
-
-  displayingModal = true;
+  private modalHostVar: ModalDirective;
+  displayingModal = false;
+  // Function called when the modal is shown,
+  // passed a directive with a ViewContainerRef
+  // of the inner modal container.
+  // once set, only called once.
+  onModalShow: (modalHost: ModalDirective) => void;
 
   constructor(private undoRedo: UndoRedoService,
               private selection: ContentSelectionService,
-              private modal: ModalService) {
+              private modal: ModalService,
+              public cd: ChangeDetectorRef) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.deselect = this.deselect.bind(this);
@@ -52,9 +57,24 @@ export class AppComponent {
       new Icon('delete', () => {
         this.selection.canvasInstance.delete();
       }, () => this.selection.canvasInstance.canDelete()),
-      new Icon('palette', undefined, () => true)
+      new Icon('palette', () => {
+        this.modal.show(ColorPickerComponent);
+      }, () => true)
     ];
     this.undoRedo.publishChange(this.getDefaultInitialState());
+  }
+
+  @ViewChild(ModalDirective)
+  set modalHost(newModalHost: ModalDirective) {
+    this.modalHostVar = newModalHost;
+    if (this.onModalShow) {
+      this.onModalShow(this.modalHostVar);
+    }
+    this.onModalShow = undefined;
+  }
+
+  get modalHost() {
+    return this.modalHostVar;
   }
 
   /**

@@ -131,4 +131,12 @@ export class ContentSelectionService {
     const idx = parseFloat(this.adding.substring(1, this.adding.length));
     return this.containerObjGetters[idx]();
   }
+
+  /**
+   * Whether a container is selected on the
+   * canvas.
+   */
+  containerSelected(): boolean {
+    return this.selectedOnCanvas.charAt(0) === 'c';
+  }
 }

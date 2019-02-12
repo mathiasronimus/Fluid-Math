@@ -1,3 +1,21 @@
-<p>
-  color-picker works!
-</p>
+<div class="title">OPACITY</div>
+<div>
+  <span class="selector" *ngFor="let data of opacityData; let idx = index;" [style.color]="data.color" (click)="selectO(idx)">
+    <span *ngIf="selectedOpacityIdx === idx" class="material-icons tick black">
+      check_circle_outline
+    </span>
+    {{ data.text }}
+  </span>
+</div>
+<div class="title">COLOR</div>
+<div>
+  <span class="selector white" *ngFor="let data of colorData; let idx = index;" [style.backgroundColor]="data.color" (click)="selectC(idx)">
+    <span *ngIf="selectedColorIdx === idx" class="material-icons tick white">
+      check_circle_outline
+    </span>
+    {{ data.text }}
+  </span>
+</div>
+<div id="bottom-row">
+  <div class="apply" (click)="apply();">Apply</div>
+</div>

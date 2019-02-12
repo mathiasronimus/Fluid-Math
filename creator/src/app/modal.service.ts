@@ -1,6 +1,7 @@
-import { Injectable, ComponentFactoryResolver } from '@angular/core';
+import { Injectable, ComponentFactoryResolver, ChangeDetectorRef, ComponentRef } from '@angular/core';
 import { AppComponent } from './app.component';
 import { Component } from '@angular/compiler/src/core';
+import { ModalDirective } from './modal.directive';
 
 /**
  * Provides methods for any component to
@@ -13,6 +14,7 @@ import { Component } from '@angular/compiler/src/core';
 export class ModalService {
 
   private appComponentVar: AppComponent;
+  private innerComponentRef: ComponentRef<any>;
 
   constructor(private compFactRes: ComponentFactoryResolver) { }
 
@@ -26,16 +28,21 @@ export class ModalService {
    * @param The TYPE of the component to display.
    */
   show(component) {
-    const factory = this.compFactRes.resolveComponentFactory(component);
-    const viewContainer = this.appComponentVar.modalHost.viewContainerRef;
-    viewContainer.clear();
-    viewContainer.createComponent(factory);
+    this.appComponentVar.onModalShow = (modalHost: ModalDirective) => {
+      const factory = this.compFactRes.resolveComponentFactory(component);
+      const viewContainer = modalHost.viewContainerRef;
+      viewContainer.clear();
+      this.innerComponentRef = viewContainer.createComponent(factory);
+      this.appComponentVar.cd.detectChanges();
+    };
+    this.appComponentVar.displayingModal = true;
   }
 
   /**
    * Remove the modal.
    */
   remove() {
+    this.innerComponentRef.destroy();
     this.appComponentVar.modalHost.viewContainerRef.clear();
     this.appComponentVar.displayingModal = false;
   }
