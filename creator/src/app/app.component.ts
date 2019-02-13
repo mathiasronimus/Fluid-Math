@@ -7,6 +7,7 @@ import { ContentPaneComponent } from './content-pane/content-pane.component';
 import { ModalDirective } from './modal.directive';
 import { ModalService } from './modal.service';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { LoadComponent } from './load/load.component';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +41,7 @@ export class AppComponent {
               public cd: ChangeDetectorRef) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
+    this.load = this.load.bind(this);
     this.deselect = this.deselect.bind(this);
     this.modal.appComponent = this;
     this.defaultLeftIcons = [];
@@ -171,7 +173,7 @@ export class AppComponent {
    * Load from a file.
    */
   load() {
-    console.log('load');
+    this.modal.show(LoadComponent);
   }
 
   /**

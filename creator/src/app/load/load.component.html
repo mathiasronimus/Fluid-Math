@@ -1,0 +1,8 @@
+<div class="title">FILE</div>
+<input #input type="file" accept=".json">
+<div class="title">PASTE</div>
+<textarea #textArea rows="6" cols="55"></textarea>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <p>Loading will erase the current project! If you want to keep it, save first.</p>
+  <span class="button" (click)="load();">Load</span>
+</div>

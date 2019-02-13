@@ -123,4 +123,12 @@ export class UndoRedoService {
   getStateClone(): object {
     return deepClone(this.getState());
   }
+
+  /**
+   * Remove all stored states.
+   */
+  erase(): void {
+    this.history = [];
+    this.currentStateIdx = -1;
+  }
 }

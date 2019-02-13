@@ -8,6 +8,7 @@ import { CentralAreaComponent } from './central-area/central-area.component';
 import { StepsComponent } from './steps/steps.component';
 import { ModalDirective } from './modal.directive';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { LoadComponent } from './load/load.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
     StepsComponent,
     ModalDirective,
     ColorPickerComponent,
+    LoadComponent,
   ],
   imports: [
     BrowserModule
@@ -25,7 +27,8 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    ColorPickerComponent
+    ColorPickerComponent,
+    LoadComponent
   ]
 })
 export class AppModule { }
