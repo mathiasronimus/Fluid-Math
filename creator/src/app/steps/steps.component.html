@@ -1,3 +1,18 @@
 <div id="outer">
-  Steps
+  <div  *ngFor="let s of Arr(numSteps).fill(1); let stepIdx = index;" 
+        class="step"
+        [ngClass]="{'selected': step.selected === stepIdx}">
+    <div class="step-left"
+        (mouseenter)="showThumbnail[stepIdx] = true;"
+        (mouseleave)="showThumbnail[stepIdx] = false;"
+        (click)="select(stepIdx)">
+      {{ showThumbnail[stepIdx] ? '' : stepIdx }}
+      <canvas #canvas class="thumbnail" [ngClass]="{'show': showThumbnail[stepIdx]}"></canvas>
+    </div>
+    <div class="step-right" *ngIf="step.selected === stepIdx">
+      <span class="material-icons" (click)="add();">add</span>
+      <span class="material-icons" (click)="delete()">delete</span>
+      <span class="material-icons">settings</span>
+    </div>
+  </div>
 </div>

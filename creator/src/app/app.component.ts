@@ -37,9 +37,9 @@ export class AppComponent {
   onModalShow: (modalHost: ModalDirective) => void;
 
   constructor(private undoRedo: UndoRedoService,
-              private selection: ContentSelectionService,
-              private modal: ModalService,
-              public cd: ChangeDetectorRef) {
+    private selection: ContentSelectionService,
+    private modal: ModalService,
+    public cd: ChangeDetectorRef) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.load = this.load.bind(this);

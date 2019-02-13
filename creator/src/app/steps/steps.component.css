@@ -1,4 +1,52 @@
 #outer {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.thumbnail {
+    opacity: 0;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.step-left {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    line-height: 100px;
+    text-align: center;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.step-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.step {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+}
+
+.show {
+    opacity: 1;
+}
+
+.selected {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.material-icons {
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
+    line-height: 20px;
 }

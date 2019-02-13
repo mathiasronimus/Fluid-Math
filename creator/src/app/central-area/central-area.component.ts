@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { UndoRedoService } from '../undo-redo.service';
 import CreatorCanvasController from './CreatorCanvasController';
 import { ContentSelectionService } from '../content-selection.service';
+import { SelectedStepService } from '../selected-step.service';
 
 @Component({
   selector: 'app-central-area',
@@ -14,7 +15,9 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
 
   controller: CreatorCanvasController;
 
-  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
+  constructor(private undoRedo: UndoRedoService,
+              private selection: ContentSelectionService,
+              private step: SelectedStepService) {
     this.undoRedo.subscribe(this.updateState.bind(this));
   }
 
@@ -34,7 +37,8 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
     this.containerEl.nativeElement.innerHTML = '';
     this.selection.resetAddListeners();
     this.selection.resetSelectedOnCanvasListeners();
-    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection);
+    this.step.resetSubscriptions();
+    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection, this.step);
     this.containerEl.nativeElement.scrollTop = scrollBefore;
   }
 

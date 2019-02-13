@@ -12,6 +12,7 @@ import HDivider from '@shared/layout/HDivider';
 import { deepClone } from '../helpers';
 import { UndoRedoService } from '../undo-redo.service';
 import { ContentSelectionService } from '../content-selection.service';
+import { SelectedStepService } from '../selected-step.service';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -21,13 +22,15 @@ export default class CreatorCanvasController extends CanvasController {
 
     private undoRedo: UndoRedoService;
     private selection: ContentSelectionService;
+    private step: SelectedStepService;
 
     private selectedLayout: LayoutState;
 
-    constructor(container, instructions, editingStep, undoRedo, selection) {
+    constructor(container, instructions, editingStep, undoRedo, selection, step) {
         super(container, instructions);
         this.undoRedo = undoRedo;
         this.selection = selection;
+        this.step = step;
         this.redraw = this.redraw.bind(this);
         this.delete = this.delete.bind(this);
         this.selection.addAddListener(this.redraw);
@@ -38,6 +41,10 @@ export default class CreatorCanvasController extends CanvasController {
             this.redraw();
         });
         this.selection.canvasInstance = this;
+        this.step.subscribe(newStep => {
+            this.currStep = newStep;
+            this.recalc();
+        });
         this.currStep = editingStep;
         this.recalc();
         // Don't allow going to next step
