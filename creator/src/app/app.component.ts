@@ -8,6 +8,7 @@ import { ModalDirective } from './modal.directive';
 import { ModalService } from './modal.service';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
+import { SaveComponent } from './save/save.component';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ export class AppComponent {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.load = this.load.bind(this);
+    this.save = this.save.bind(this);
     this.deselect = this.deselect.bind(this);
     this.modal.appComponent = this;
     this.defaultLeftIcons = [];
@@ -166,7 +168,7 @@ export class AppComponent {
    * Save the current state to a file.
    */
   save() {
-    console.log('save');
+    this.modal.show(SaveComponent);
   }
 
   /**

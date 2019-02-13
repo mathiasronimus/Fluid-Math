@@ -1,0 +1,6 @@
+<div id="outer">
+  <a class="button" download="anim0.json" [href]="downloadHref">Download</a>
+  <span class="button" (click)="copy();">Copy to clipboard</span>
+  <p *ngIf="copied">Copied!</p>
+  <textarea #textArea rows="6" cols="55" [ngClass]="{'margin-top': !copied}"></textarea>
+</div>

@@ -9,6 +9,7 @@ import { StepsComponent } from './steps/steps.component';
 import { ModalDirective } from './modal.directive';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
+import { SaveComponent } from './save/save.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { LoadComponent } from './load/load.component';
     ModalDirective,
     ColorPickerComponent,
     LoadComponent,
+    SaveComponent,
   ],
   imports: [
     BrowserModule
@@ -28,7 +30,8 @@ import { LoadComponent } from './load/load.component';
   bootstrap: [AppComponent],
   entryComponents: [
     ColorPickerComponent,
-    LoadComponent
+    LoadComponent,
+    SaveComponent
   ]
 })
 export class AppModule { }
