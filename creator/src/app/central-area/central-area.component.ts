@@ -11,7 +11,8 @@ import { SelectedStepService } from '../selected-step.service';
 })
 export class CentralAreaComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('outer') containerEl: ElementRef;
+  @ViewChild('eqContainer')
+  containerEl: ElementRef;
 
   controller: CreatorCanvasController;
 
@@ -19,6 +20,9 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
               private selection: ContentSelectionService,
               private step: SelectedStepService) {
     this.undoRedo.subscribe(this.updateState.bind(this));
+    this.step.subscribe(newStep => {
+      this.controller.showStep(newStep);
+    });
   }
 
   ngOnInit() {
@@ -37,7 +41,6 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
     this.containerEl.nativeElement.innerHTML = '';
     this.selection.resetAddListeners();
     this.selection.resetSelectedOnCanvasListeners();
-    this.step.resetSubscriptions();
     this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection, this.step);
     this.containerEl.nativeElement.scrollTop = scrollBefore;
   }

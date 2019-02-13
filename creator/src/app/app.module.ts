@@ -11,6 +11,7 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
+import { StepTextComponent } from './step-text/step-text.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { PreviewComponent } from './preview/preview.component';
     LoadComponent,
     SaveComponent,
     PreviewComponent,
+    StepTextComponent,
   ],
   imports: [
     BrowserModule

@@ -26,8 +26,11 @@ export default class CreatorCanvasController extends CanvasController {
 
     private selectedLayout: LayoutState;
 
-    constructor(container, instructions, editingStep, undoRedo, selection, step) {
+    constructor(container: HTMLElement, instructions, editingStep, undoRedo, selection, step) {
         super(container, instructions);
+        // Remove progress line and upper area
+        container.removeChild(container.firstChild);
+        container.removeChild(container.firstChild);
         this.undoRedo = undoRedo;
         this.selection = selection;
         this.step = step;
@@ -41,10 +44,6 @@ export default class CreatorCanvasController extends CanvasController {
             this.redraw();
         });
         this.selection.canvasInstance = this;
-        this.step.subscribe(newStep => {
-            this.currStep = newStep;
-            this.recalc();
-        });
         this.currStep = editingStep;
         this.recalc();
         // Don't allow going to next step
@@ -442,5 +441,14 @@ export default class CreatorCanvasController extends CanvasController {
         } else {
             stepObj.opacity[ref] = opacity;
         }
+    }
+
+    /**
+     * Change the currently showing step.
+     * @param newStep The new step to show.
+     */
+    showStep(newStep: number) {
+        this.currStep = newStep;
+        this.recalc();
     }
 }

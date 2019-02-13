@@ -1,0 +1,15 @@
+#outer {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    align-items: center;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.material-icons {
+    cursor: pointer;
+    padding: 5px;
+}
