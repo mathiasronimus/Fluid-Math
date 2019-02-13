@@ -10,6 +10,7 @@ import { ModalDirective } from './modal.directive';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
+import { PreviewComponent } from './preview/preview.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SaveComponent } from './save/save.component';
     ColorPickerComponent,
     LoadComponent,
     SaveComponent,
+    PreviewComponent,
   ],
   imports: [
     BrowserModule
@@ -31,7 +33,8 @@ import { SaveComponent } from './save/save.component';
   entryComponents: [
     ColorPickerComponent,
     LoadComponent,
-    SaveComponent
+    SaveComponent,
+    PreviewComponent
   ]
 })
 export class AppModule { }

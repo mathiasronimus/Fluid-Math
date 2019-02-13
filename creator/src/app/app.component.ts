@@ -9,6 +9,7 @@ import { ModalService } from './modal.service';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
+import { PreviewComponent } from './preview/preview.component';
 
 @Component({
   selector: 'app-root',
@@ -37,13 +38,14 @@ export class AppComponent {
   onModalShow: (modalHost: ModalDirective) => void;
 
   constructor(private undoRedo: UndoRedoService,
-    private selection: ContentSelectionService,
-    private modal: ModalService,
-    public cd: ChangeDetectorRef) {
+              private selection: ContentSelectionService,
+              private modal: ModalService,
+              public cd: ChangeDetectorRef) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.load = this.load.bind(this);
     this.save = this.save.bind(this);
+    this.play = this.play.bind(this);
     this.deselect = this.deselect.bind(this);
     this.modal.appComponent = this;
     this.defaultLeftIcons = [];
@@ -182,6 +184,6 @@ export class AppComponent {
    * Play the current state.
    */
   play() {
-    console.log('play');
+    this.modal.show(PreviewComponent);
   }
 }
