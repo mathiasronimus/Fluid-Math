@@ -26,7 +26,7 @@ export default class CreatorCanvasController extends CanvasController {
 
     private selectedLayout: LayoutState;
 
-    constructor(container: HTMLElement, instructions, editingStep, undoRedo, selection, step) {
+    constructor(container: HTMLElement, instructions, undoRedo, selection, step: SelectedStepService) {
         super(container, instructions);
         // Remove progress line and upper area
         container.removeChild(container.firstChild);
@@ -44,7 +44,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.redraw();
         });
         this.selection.canvasInstance = this;
-        this.currStep = editingStep;
+        this.currStep = step.selected;
         this.recalc();
         // Don't allow going to next step
         this.canvas.removeEventListener('click', this.nextStep);

@@ -12,6 +12,7 @@ import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
 import { StepTextComponent } from './step-text/step-text.component';
+import { TextEditorComponent } from './text-editor/text-editor.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { StepTextComponent } from './step-text/step-text.component';
     SaveComponent,
     PreviewComponent,
     StepTextComponent,
+    TextEditorComponent,
   ],
   imports: [
     BrowserModule
@@ -36,7 +38,8 @@ import { StepTextComponent } from './step-text/step-text.component';
     ColorPickerComponent,
     LoadComponent,
     SaveComponent,
-    PreviewComponent
+    PreviewComponent,
+    TextEditorComponent
   ]
 })
 export class AppModule { }

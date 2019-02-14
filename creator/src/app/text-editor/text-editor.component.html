@@ -1,0 +1,23 @@
+<div class="title">EDIT</div>
+<textarea #textArea rows="6" cols="55" (keyup)="updatePreview()"></textarea>
+<div class="title">STYLE</div>
+<div *ngIf="!styleActive">
+  <span class="selector" 
+        *ngFor="let style of styleOpts; let idx = index;" 
+        [style.backgroundColor]="style.color"
+        (click)="stylePress(idx); updatePreview();">
+    {{ style.text }}
+  </span>
+</div>
+<span class="selector black"
+      *ngIf="styleActive"
+      (click)="endStyle(); updatePreview();"
+      [style.backgroundColor]="activeStyleColor">
+  <span class="material-icons">clear</span>
+  End Style    
+</span>
+<div class="title">PREVIEW</div>
+<div class="eqContainer" #eqContainer></div>
+<div style="display: flex">
+  <span class="button" (click)="apply(textArea.value)">Apply</span>
+</div>

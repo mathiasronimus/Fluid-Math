@@ -10,6 +10,7 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
+import { addStyleSheet } from './helpers';
 
 @Component({
   selector: 'app-root',
@@ -68,6 +69,7 @@ export class AppComponent {
       }, () => true)
     ];
     this.undoRedo.publishChange(this.getDefaultInitialState());
+    addStyleSheet();
   }
 
   @ViewChild(ModalDirective)

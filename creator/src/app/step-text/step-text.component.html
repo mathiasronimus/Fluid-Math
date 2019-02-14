@@ -1,4 +1,4 @@
 <div id="outer">
-  <span [ngClass]="{'italic': noText}">{{ noText ? 'No Text' : this.text }}</span>
-  <span class="material-icons">create</span>
+  <span [ngClass]="{'italic': noText}" [innerHTML]="noText ? 'No Text' : this.text"></span>
+  <span class="material-icons" (click)="edit($event)">create</span>
 </div>

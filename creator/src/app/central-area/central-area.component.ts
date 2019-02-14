@@ -41,7 +41,7 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
     this.containerEl.nativeElement.innerHTML = '';
     this.selection.resetAddListeners();
     this.selection.resetSelectedOnCanvasListeners();
-    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, 0, this.undoRedo, this.selection, this.step);
+    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, this.undoRedo, this.selection, this.step);
     this.containerEl.nativeElement.scrollTop = scrollBefore;
   }
 

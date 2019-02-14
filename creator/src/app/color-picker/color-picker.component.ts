@@ -3,6 +3,7 @@ import C from '@shared/main/consts';
 import { ContentSelectionService } from '../content-selection.service';
 import { UndoRedoService } from '../undo-redo.service';
 import { ModalService } from '../modal.service';
+import { cap } from '../helpers';
 
 @Component({
   selector: 'app-color-picker',
@@ -19,8 +20,6 @@ export class ColorPickerComponent implements OnInit {
   defaultColorIdx: number;
 
   constructor(private selection: ContentSelectionService, private undoRedo: UndoRedoService, private modal: ModalService) {
-    const cap = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-
     this.opacityData = [
       new SelectorData('rgba(0, 0, 0, ' + C.fadedOpacity + ')', 'Faded'),
       new SelectorData('rgba(0, 0, 0, ' + C.normalOpacity + ')', 'Normal'),
@@ -118,6 +117,6 @@ export class ColorPickerComponent implements OnInit {
 
 }
 
-class SelectorData {
+export class SelectorData {
   constructor(public color: string, public text: string) { }
 }

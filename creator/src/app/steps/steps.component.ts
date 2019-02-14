@@ -117,10 +117,10 @@ export class StepsComponent implements AfterViewInit {
       delete newState.stepOpts[this.step.selected - 1];
       delete newState.stepOpts[this.step.selected];
     }
-    this.undoRedo.publishChange(newState);
     if (this.step.selected !== 0) {
       this.step.selected--;
     }
+    this.undoRedo.publishChange(newState);
   }
 
   /**

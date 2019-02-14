@@ -1,0 +1,9 @@
+.selector {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.material-icons {
+    line-height: 22px;
+    font-size: 18px;
+    vertical-align: middle;
+}
