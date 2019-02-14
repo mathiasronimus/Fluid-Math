@@ -32,12 +32,13 @@ export class StepTextComponent {
   stateChange(newState) {
     // Bypass because the system for displaying colored text
     // relies on creating HTML inside the step text.
-    this.text = this.sanitizer.bypassSecurityTrustHtml(newState.steps[this.step.selected].text);
-    if (!this.text) {
+    const text = newState.steps[this.step.selected].text;
+    if (!text) {
       this.noText = true;
-    } else {
-      this.noText = false;
+      return;
     }
+    this.text = this.sanitizer.bypassSecurityTrustHtml(newState.steps[this.step.selected].text);
+    this.noText = false;
   }
 
   /**
