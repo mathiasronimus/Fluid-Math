@@ -451,4 +451,30 @@ export default class CreatorCanvasController extends CanvasController {
         this.currStep = newStep;
         this.recalc();
     }
+
+    /**
+     * Return the step layout of the currently
+     * selected container.
+     */
+    getStepLayoutOfSelected() {
+        const container = this.selectedLayout.component as EqContainer;
+        return container.toStepLayout(this);
+    }
+
+    /**
+     * Get the currently selected layout state.
+     */
+    getSelectedLayout() {
+        return this.selectedLayout;
+    }
+
+    /**
+     * Create a new state with the changes
+     * made to this canvas saved.
+     */
+    save() {
+        const newState: any = this.undoRedo.getStateClone();
+        newState.steps[this.step.selected].root = this.rootContainer.toStepLayout(this);
+        this.undoRedo.publishChange(newState);
+    }
 }

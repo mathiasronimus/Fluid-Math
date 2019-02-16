@@ -1,0 +1,14 @@
+<div class="title">EXPONENT/SUBSCRIPT ALIGNMENT</div>
+<div style="display: flex; justify-content: center;">
+  <p>Lower</p>
+  <input #slider type="range" min="0" max="1" step="0.01" [(ngModel)]="portrusion">
+  <p>Higher</p>
+</div>
+<div class="title">PRESETS</div>
+<span class="selector" (click)="portrusion = defaultPortrusion;">Default</span>
+<span class="selector" (click)="portrusion = '0.45';">Fractional Exponent</span>
+<div class="title">PREVIEW</div>
+<div class="eqContainer" #eqContainer></div>
+<div style="display: flex">
+  <span class="button" (click)="apply()">Apply</span>
+</div>

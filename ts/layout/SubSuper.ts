@@ -32,6 +32,9 @@ export default class SubSuper extends EqContainer {
     //The vertical distance between the bottom of the top and the top of the bottom
     private rightMiddleHeight: number;
 
+    // Used in creator: What to save portrusionProportion as.
+    private savePortrusionAs: number;
+
     constructor(top: HBox, middle: HBox, bottom: HBox, portrusion: number, padding: Padding) {
         super(padding);
         this.portrusionProportion = portrusion;
@@ -159,7 +162,12 @@ export default class SubSuper extends EqContainer {
         toReturn['top'] = EqContainer.childrenToStepLayout(this.top.getChildren(), controller);
         toReturn['middle'] = EqContainer.childrenToStepLayout(this.middle.getChildren(), controller);
         toReturn['bottom'] = EqContainer.childrenToStepLayout(this.bottom.getChildren(), controller);
-        if (this.portrusionProportion !== C.defaultExpPortrusion) {
+        if (this.savePortrusionAs) {
+            if (this.savePortrusionAs !== C.defaultExpPortrusion) {
+                toReturn['portrusion'] = this.savePortrusionAs;
+            }    
+            this.savePortrusionAs = undefined;
+        } else if (this.portrusionProportion !== C.defaultExpPortrusion) {
             toReturn['portrusion'] = this.portrusionProportion;
         }
         return toReturn;
@@ -175,7 +183,15 @@ export default class SubSuper extends EqContainer {
         this.bottom.forEachUnder(forEach);
     }
 
-    setPortrusion(newPortrusion: number) {
-        this.portrusionProportion = newPortrusion;
+    /**
+     * Save this SubSuper as having
+     * a particular portrusion proportion. The
+     * next time toStepLayout is called, this
+     * number will be saved, but this container
+     * isn't considered to have the proportion.
+     * @param saveAs What to save portrusion as.
+     */
+    savePortrusion(saveAs: number) {
+        this.savePortrusionAs = saveAs;
     }
 }

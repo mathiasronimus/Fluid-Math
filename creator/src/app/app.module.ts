@@ -13,6 +13,8 @@ import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
 import { StepTextComponent } from './step-text/step-text.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
+import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,9 +30,11 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     PreviewComponent,
     StepTextComponent,
     TextEditorComponent,
+    SubSuperAlignmentComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
@@ -39,7 +43,8 @@ import { TextEditorComponent } from './text-editor/text-editor.component';
     LoadComponent,
     SaveComponent,
     PreviewComponent,
-    TextEditorComponent
+    TextEditorComponent,
+    SubSuperAlignmentComponent
   ]
 })
 export class AppModule { }

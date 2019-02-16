@@ -11,6 +11,7 @@ import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
 import { addStyleSheet } from './helpers';
+import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,8 @@ export class AppComponent {
 
   selectedLeftIcons: Icon[];
   selectedRightIcons: Icon[];
+
+  subSuperAlignIcon: Icon;
 
   @ViewChild(CentralAreaComponent)
   centre: CentralAreaComponent;
@@ -68,6 +71,9 @@ export class AppComponent {
         this.modal.show(ColorPickerComponent);
       }, () => true)
     ];
+    this.subSuperAlignIcon = new Icon('vertical_align_top', () => {
+      this.modal.show(SubSuperAlignmentComponent);
+    }, () => true);
     this.undoRedo.publishChange(this.getDefaultInitialState());
     addStyleSheet();
   }
@@ -119,7 +125,12 @@ export class AppComponent {
    */
   getRightIcons() {
     if (this.selection.selectedOnCanvas) {
-      return this.selectedRightIcons;
+      if (this.selection.selectedOnCanvas === 'c3') {
+        // A subsuper is selected, offer option to change alignment.
+        return this.selectedRightIcons.concat([this.subSuperAlignIcon]);
+      } else {
+        return this.selectedRightIcons;
+      }
     } else {
       return this.defaultRightIcons;
     }
