@@ -11,8 +11,11 @@
     </div>
     <div class="step-right" *ngIf="step.selected === stepIdx">
       <span class="material-icons" (click)="add();">add</span>
-      <span class="material-icons" (click)="delete()">delete</span>
-      <span class="material-icons">settings</span>
+      <span class="material-icons" 
+            (click)="delete()" 
+            [ngClass]="{'unavailable': !deleteAvailable()}">delete</span>
+      <span class="material-icons"
+            [ngClass]="{'unavailable': !stepOptionsAvailable()}">settings</span>
     </div>
   </div>
 </div>

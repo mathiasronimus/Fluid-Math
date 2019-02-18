@@ -130,4 +130,19 @@ export class StepsComponent implements AfterViewInit {
   select(newIdx: number) {
     this.step.selected = newIdx;
   }
+
+  /**
+   * Whether the selected step can be deleted.
+   */
+  deleteAvailable(): boolean {
+    return this.numSteps > 1;
+  }
+
+  /**
+   * Whether step options can be edited for
+   * the selected step.
+   */
+  stepOptionsAvailable(): boolean {
+    return this.numSteps > 1 && this.step.selected < this.numSteps - 1;
+  }
 }
