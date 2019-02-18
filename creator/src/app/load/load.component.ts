@@ -52,7 +52,6 @@ export class LoadComponent implements OnInit {
     const oldStep = this.step.selected;
     try {
       const fileObj = JSON.parse(fileStr);
-      this.step.selected = 0;
       this.undoRedo.erase();
       this.undoRedo.publishChange(fileObj);
       this.modal.remove();

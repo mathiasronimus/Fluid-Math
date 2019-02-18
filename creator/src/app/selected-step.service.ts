@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UndoRedoService } from './undo-redo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,14 @@ export class SelectedStepService {
 
   private subscribers: ((newSelected: number) => void)[] = [];
 
-  constructor() { }
+  constructor(private undoRedo: UndoRedoService) {
+    undoRedo.subscribe((newState: any) => {
+      // If state changes, selected step may need to change.
+      if (this.selected >= newState.steps.length) {
+        this.selected = newState.steps.length - 1;
+      }
+    });
+  }
 
   set selected(newSelected: number) {
     this.selectedVar = newSelected;
