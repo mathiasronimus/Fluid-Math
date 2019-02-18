@@ -12,8 +12,12 @@
     <div    id="background" 
             *ngIf="displayingModal"
             (mousedown)="modal.remove();">
-        <div id="modal-inner" (mousedown)="$event.stopPropagation();">
+        <div id="modal-inner" (mousedown)="$event.stopPropagation();" (click)="$event.stopPropagation();">
             <ng-template appModalHost></ng-template>
         </div>
+    </div>
+    <div id="error" *ngIf="error.active">
+        {{ error.text }}
+        <span class="material-icons" (click)="error.active = false;">clear</span>
     </div>
 </div>

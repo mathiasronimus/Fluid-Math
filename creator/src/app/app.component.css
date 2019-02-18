@@ -34,3 +34,21 @@
     padding: 10px;
     overflow-y: scroll;
 }
+
+#error {
+    position: fixed;
+    z-index: 2;
+    padding: 10px;
+    bottom: 30px;
+    right: 30px;
+    background-color: black;
+    color: #EF5350;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#error .material-icons {
+    padding: 5px;
+    cursor: pointer;
+}

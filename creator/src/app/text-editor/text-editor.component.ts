@@ -6,6 +6,7 @@ import { SelectorData } from '../color-picker/color-picker.component';
 import C from '@shared/main/consts';
 import { cap, deCap } from '../helpers';
 import CanvasController from '@shared/main/CanvasController';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-text-editor',
@@ -28,7 +29,8 @@ export class TextEditorComponent implements AfterViewInit {
 
   constructor(private undoRedo: UndoRedoService,
               private step: SelectedStepService,
-              private modal: ModalService) {
+              private modal: ModalService,
+              private error: ErrorService) {
     this.styleOpts = Object.keys(C.colors).map(colName => {
       const name = colName === 'default' ? 'Bold' : cap(colName);
       const colorArr = C.colors[colName];
@@ -177,6 +179,7 @@ export class TextEditorComponent implements AfterViewInit {
     const range = window.getSelection().getRangeAt(0);
     if (range.startContainer === range.endContainer && range.startOffset === range.endOffset) {
       // TODO: Put an error in the UI.
+      this.error.text = 'Select Text First';
       throw new Error('Select text first.');
     }
     const start = this.getInnerHTMLOffset(range.startOffset, range.startContainer, true);

@@ -12,6 +12,7 @@ import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
 import { addStyleSheet } from './helpers';
 import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
+import { ErrorService } from './error.service';
 
 @Component({
   selector: 'app-root',
@@ -44,7 +45,8 @@ export class AppComponent {
   constructor(private undoRedo: UndoRedoService,
               private selection: ContentSelectionService,
               private modal: ModalService,
-              public cd: ChangeDetectorRef) {
+              public cd: ChangeDetectorRef,
+              private error: ErrorService) {
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.load = this.load.bind(this);

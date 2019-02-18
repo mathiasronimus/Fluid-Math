@@ -131,4 +131,22 @@ export class UndoRedoService {
     this.history = [];
     this.currentStateIdx = -1;
   }
+
+  /**
+   * Return the stored states and the index
+   * of the current one.
+   */
+  getHistory(): [object[], number] {
+    return [this.history, this.currentStateIdx];
+  }
+
+  /**
+   * Restore the states from earlier.
+   * @param saved Obtained from getHistory() earlier.
+   */
+  setHistory(saved: [object[], number]) {
+    this.history = saved[0];
+    this.currentStateIdx = saved[1];
+    this.notifySubscribers();
+  }
 }
