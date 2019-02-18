@@ -11,8 +11,8 @@
     <app-steps></app-steps>
     <div    id="background" 
             *ngIf="displayingModal"
-            (click)="modal.remove();">
-        <div id="modal-inner" (click)="$event.stopPropagation();">
+            (mousedown)="modal.remove();">
+        <div id="modal-inner" (mousedown)="$event.stopPropagation();">
             <ng-template appModalHost></ng-template>
         </div>
     </div>
