@@ -6,6 +6,7 @@ import C from '../main/consts';
 import { Map, tri, line } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
+import HDivider from '@shared/layout/HDivider';
 
 export default class HBox extends LinearContainer {
 
@@ -86,6 +87,9 @@ export default class HBox extends LinearContainer {
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent) {
+        if (toAdd instanceof HDivider) {
+            throw new Error("Fraction lines can only be added inside a vertical container.");
+        }
         let pad = new Padding(
             C.creatorContainerPadding.top * l.scale,
             C.creatorContainerPadding.left * l.scale,

@@ -3,6 +3,7 @@ import { UndoRedoService } from '../undo-redo.service';
 import CreatorCanvasController from './CreatorCanvasController';
 import { ContentSelectionService } from '../content-selection.service';
 import { SelectedStepService } from '../selected-step.service';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-central-area',
@@ -18,7 +19,8 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
 
   constructor(private undoRedo: UndoRedoService,
               private selection: ContentSelectionService,
-              private step: SelectedStepService) {
+              private step: SelectedStepService,
+              private error: ErrorService) {
     this.undoRedo.subscribe(this.updateState.bind(this));
     this.step.subscribe(newStep => {
       this.controller.showStep(newStep);
@@ -41,7 +43,14 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
     this.containerEl.nativeElement.innerHTML = '';
     this.selection.resetAddListeners();
     this.selection.resetSelectedOnCanvasListeners();
-    this.controller = new CreatorCanvasController(this.containerEl.nativeElement, newState, this.undoRedo, this.selection, this.step);
+    this.controller = new CreatorCanvasController(
+      this.containerEl.nativeElement,
+      newState,
+      this.undoRedo,
+      this.selection,
+      this.step,
+      this.error
+    );
     this.containerEl.nativeElement.scrollTop = scrollBefore;
   }
 

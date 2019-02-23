@@ -13,6 +13,7 @@ import { deepClone, inLayout } from '../helpers';
 import { UndoRedoService } from '../undo-redo.service';
 import { ContentSelectionService } from '../content-selection.service';
 import { SelectedStepService } from '../selected-step.service';
+import { ErrorService } from '../error.service';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -23,10 +24,11 @@ export default class CreatorCanvasController extends CanvasController {
     private undoRedo: UndoRedoService;
     private selection: ContentSelectionService;
     private step: SelectedStepService;
+    private error: ErrorService;
 
     private selectedLayout: LayoutState;
 
-    constructor(container: HTMLElement, instructions, undoRedo, selection, step: SelectedStepService) {
+    constructor(container: HTMLElement, instructions, undoRedo, selection, step: SelectedStepService, error: ErrorService) {
         super(container, instructions);
         // Remove progress line and upper area
         container.removeChild(container.firstChild);
@@ -34,6 +36,7 @@ export default class CreatorCanvasController extends CanvasController {
         this.undoRedo = undoRedo;
         this.selection = selection;
         this.step = step;
+        this.error = error;
         this.redraw = this.redraw.bind(this);
         this.delete = this.delete.bind(this);
         this.selection.addAddListener(this.redraw);
@@ -177,7 +180,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate of mouse
      */
     private finalizeAdd(x: number, y: number) {
-        this.undoRedo.publishChange(this.getChangedLayout(x, y));
+        this.undoRedo.publishChange(this.getChangedLayout(x, y, true));
         this.selection.adding = undefined;
     }
 
@@ -187,7 +190,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate of mouse.
      */
     private previewAdd(x: number, y: number) {
-        const newLayout: any = this.getChangedLayout(x, y);
+        const newLayout: any = this.getChangedLayout(x, y, false);
         const realSteps = this.steps;
         this.steps = newLayout.steps;
         super.recalc();
@@ -201,8 +204,9 @@ export default class CreatorCanvasController extends CanvasController {
      * Get the new layout resulting from adding something at (x, y)
      * @param x The x-ordinate of the mouse.
      * @param y The y-ordinate of the mouse.
+     * @param showError Whether to show an error message onscreen if one occurs.
      */
-    private getChangedLayout(x: number, y: number): object {
+    private getChangedLayout(x: number, y: number, showError: boolean): object {
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
             return this.getLayoutForPublish();
@@ -214,7 +218,13 @@ export default class CreatorCanvasController extends CanvasController {
         } else if (clickedLayout.component instanceof EqContent) {
             this.addClickOnComponent(clickedLayout, x, y);
         } else if (clickedLayout.component instanceof EqContainer) {
-            clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
+            try {
+                clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
+            } catch (e) {
+                if (showError) {
+                    this.error.text = e.message;
+                }
+            }
         } else {
             return this.getLayoutForPublish();
         }
