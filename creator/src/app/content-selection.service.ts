@@ -90,13 +90,6 @@ export class ContentSelectionService {
   }
 
   /**
-   * Remove all current add listeners.
-   */
-  resetAddListeners() {
-    this.addingListeners = [];
-  }
-
-  /**
    * Add a new listener that will be run when the
    * 'selectedOnCanvas' variable changes.
    * @param listener The new listener.

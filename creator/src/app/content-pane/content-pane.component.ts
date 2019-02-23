@@ -4,6 +4,7 @@ import { QueryList } from '@angular/core';
 import C from '@shared/main/consts';
 import { getFontSizeForTier } from '@shared/main/helpers';
 import { ContentSelectionService } from '../content-selection.service';
+import { ErrorService } from '../error.service';
 
 @Component({
   selector: 'app-content-pane',
@@ -23,7 +24,9 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   dragging = false;
 
-  constructor(private undoRedo: UndoRedoService, private selection: ContentSelectionService) {
+  constructor(private undoRedo: UndoRedoService,
+              private selection: ContentSelectionService,
+              private error: ErrorService) {
     this.containers = [
       'Horizontal',
       'Vertical',
@@ -63,7 +66,7 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
    */
   addTermTyped(e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      this.finishAddingTerm();
+      this.finishAddingTerm(true);
       return;
     }
     this.lastTermAddText = (e.target as HTMLInputElement).value;
@@ -71,15 +74,24 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
 
   /**
    * Typing the term is finished, add it to the state.
+   * @param fromKey Whether this function is called as a result of a key press.
    */
-  finishAddingTerm() {
+  finishAddingTerm(fromKey: boolean) {
     if (!this.addingTerm) {
       // Caused by input being removed activating blur
       return;
     }
     const termText = this.lastTermAddText.trim();
     if (termText === '') {
-      throw new Error('blank text not allowed');
+      if (fromKey) {
+        // User pressed enter to add, let them know invalid
+        this.error.text = 'Blank terms are not allowed.';
+        return;
+      } else {
+        // User pressed somewhere else, just cancel the adding.
+        this.addingTerm = false;
+        return;
+      }
     }
     const newState: any = this.undoRedo.getStateClone();
     if (!newState.terms) {

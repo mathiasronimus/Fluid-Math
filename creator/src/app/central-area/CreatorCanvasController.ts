@@ -39,7 +39,6 @@ export default class CreatorCanvasController extends CanvasController {
         this.error = error;
         this.redraw = this.redraw.bind(this);
         this.delete = this.delete.bind(this);
-        this.selection.addAddListener(this.redraw);
         this.selection.addSelectedOnCanvasListener(() => {
             if (this.selection.selectedOnCanvas === undefined) {
                 this.selectedLayout = undefined;

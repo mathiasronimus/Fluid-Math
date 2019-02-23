@@ -25,6 +25,9 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
     this.step.subscribe(newStep => {
       this.controller.showStep(newStep);
     });
+    this.selection.addAddListener(() => {
+      this.controller.redraw();
+    });
   }
 
   ngOnInit() {
@@ -41,7 +44,6 @@ export class CentralAreaComponent implements OnInit, AfterViewInit {
   updateState(newState: any) {
     const scrollBefore = this.containerEl.nativeElement.scrollTop;
     this.containerEl.nativeElement.innerHTML = '';
-    this.selection.resetAddListeners();
     this.selection.resetSelectedOnCanvasListeners();
     this.controller = new CreatorCanvasController(
       this.containerEl.nativeElement,

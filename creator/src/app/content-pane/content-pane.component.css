@@ -37,3 +37,7 @@ p {
 .grab {
     cursor: grab;
 }
+
+.more {
+    margin-left: 5px;
+}
