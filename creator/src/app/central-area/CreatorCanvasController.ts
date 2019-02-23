@@ -83,10 +83,10 @@ export default class CreatorCanvasController extends CanvasController {
      * @param e The mouse event.
      */
     private onMouseUp(e: MouseEvent) {
-        e.stopPropagation();
         if (this.selection.adding) {
             this.finalizeAdd(e.offsetX, e.offsetY);
         } else {
+            e.stopPropagation();
             this.select(e.offsetX, e.offsetY);
         }
     }
