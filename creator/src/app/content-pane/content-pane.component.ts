@@ -12,7 +12,7 @@ import { TermTemplateComponent } from '../term-template/term-template.component'
   templateUrl: './content-pane.component.html',
   styleUrls: ['./content-pane.component.css']
 })
-export class ContentPaneComponent implements OnInit, AfterViewInit {
+export class ContentPaneComponent implements AfterViewInit {
 
   containers: string[];
 
@@ -40,9 +40,6 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
     this.updateState(undoRedo.getState());
   }
 
-  ngOnInit() {
-  }
-
   ngAfterViewInit() {
     // Focus the term input whenever it appears
     this.termInputEl.changes.subscribe({
@@ -52,6 +49,22 @@ export class ContentPaneComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  /**
+   * Get the help text that is displayed
+   * on the top of the content pane.
+   */
+  getHelpText(): string {
+    if (this.addingTerm) {
+      return 'Press Enter to Add.';
+    } else if (this.dragging) {
+      return 'Drag to the Left to Add.';
+    } else if (this.selection.adding !== undefined) {
+      return 'Click on the Left to Add.';
+    } else {
+      return 'Click to Select.';
+    }
   }
 
   /**

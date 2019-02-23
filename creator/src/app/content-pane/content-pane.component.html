@@ -1,11 +1,11 @@
 <div id="outer">
-  <p>Click to Select.</p>
+  <p>{{ getHelpText() }}</p>
   <div id="inner">
     <div class="title">CONTAINERS</div>
     <span class="selector grab" 
           *ngFor="let container of containers; let cIndex = index;"
           (click)="select('c' + cIndex, $event)"
-          (dragstart)="deselect(); setAdding('c' + cIndex);"
+          (dragstart)="deselect(); setAdding('c' + cIndex); dragging = true;"
           [ngClass]="{'selected': selection.adding === 'c' + cIndex,
                       'color': selection.selectedOnCanvas === 'c' + cIndex}"
           draggable="true">
