@@ -15,6 +15,7 @@
             (click)="delete()" 
             [ngClass]="{'unavailable': !deleteAvailable()}">delete</span>
       <span class="material-icons"
+            (click)="showStepOptions()"
             [ngClass]="{'unavailable': !stepOptionsAvailable()}">settings</span>
     </div>
   </div>

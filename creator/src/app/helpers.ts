@@ -1,6 +1,29 @@
 import C from '@shared/main/consts';
 
 /**
+ * Recursively checks if a reference
+ * exists inside a step layout.
+ * @param toCheck The step layout to check.
+ * @param ref The ref to look for.
+ */
+export function inLayout(toCheck: object, ref: string): boolean {
+    let found = false;
+    Object.keys(toCheck).forEach(key => {
+        const value = toCheck[key];
+        if (typeof value === 'object') {
+            if (inLayout(value, ref)) {
+                found = true;
+            }
+        } else if (typeof value === 'string') {
+            if (value === ref) {
+                found = true;
+            }
+        }
+    });
+    return found;
+}
+
+/**
  * Deeply clones an object, ie clones it
  * and all of its child objects.
  * @param toClone The object to clone.

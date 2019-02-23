@@ -33,6 +33,7 @@ const constants = {
     //Creator
     creatorContainerPadding: Padding.even(30),
     creatorHDividerPadding: new Padding(5, 15, 5, 15),
+    creatorSelectableHDividerPadding: new Padding(5, 0, 5, 0),
     creatorContainerStroke: "rgb(225, 225, 225)",
     creatorCaretFillStyle: '#444',
     creatorCaretFillStyleLighter: '#999',

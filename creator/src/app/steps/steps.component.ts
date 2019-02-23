@@ -3,6 +3,8 @@ import { UndoRedoService } from '../undo-redo.service';
 import RendererCanvasController from './RendererCanvasController';
 import { deepClone } from '../helpers';
 import { SelectedStepService } from '../selected-step.service';
+import { ModalService } from '../modal.service';
+import { StepOptionsComponent } from '../step-options/step-options.component';
 
 @Component({
   selector: 'app-steps',
@@ -23,7 +25,9 @@ export class StepsComponent implements AfterViewInit {
   @ViewChildren('canvas')
   canvasEls: QueryList<ElementRef>;
 
-  constructor(private undoRedo: UndoRedoService, private step: SelectedStepService) {
+  constructor(private undoRedo: UndoRedoService,
+              private step: SelectedStepService,
+              private modal: ModalService) {
     undoRedo.subscribe(this.stateChange.bind(this));
     setTimeout(() => {
       this.stateChange(this.undoRedo.getState());
@@ -110,6 +114,9 @@ export class StepsComponent implements AfterViewInit {
    * Delete the currently selected step.
    */
   delete() {
+    if (!this.deleteAvailable()) {
+      return;
+    }
     const newState: any = this.undoRedo.getStateClone();
     newState.steps.splice(this.step.selected, 1);
     // Remove associated step options
@@ -144,5 +151,15 @@ export class StepsComponent implements AfterViewInit {
    */
   stepOptionsAvailable(): boolean {
     return this.numSteps > 1 && this.step.selected < this.numSteps - 1;
+  }
+
+  /**
+   * Show a step options modal.
+   */
+  showStepOptions(): void {
+    if (!this.stepOptionsAvailable()) {
+      return;
+    }
+    this.modal.show(StepOptionsComponent);
   }
 }

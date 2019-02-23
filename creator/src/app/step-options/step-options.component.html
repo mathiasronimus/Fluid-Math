@@ -1,0 +1,69 @@
+<!--Transition bit-->
+<div class="title">TRANSITION PREVIEW</div>
+<div class="eqContainer" #previewContainer></div>
+
+<!--Clones bit-->
+<div class="title-row" (click)="showingClones = !showingClones;">
+  <span class="material-icons">{{ showingClones ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</span>
+  <div class="title">
+    CLONES ({{ cloneToFrom.length }})
+  </div>
+  <span class="material-icons add" (click)="addClone($event)">add</span>
+</div>
+<div *ngIf="showingClones">
+  <div  class="selection-container"
+        *ngFor="let clone of cloneToFrom; let idx = index;">
+    <div class="top-row">
+      <p>FROM</p>
+      <span class="material-icons" (click)="removeClone(idx)">clear</span>
+    </div>
+    <div appCloneContainer [index]="idx"></div>
+    <p>TO</p>
+    <div appCloneContainer [index]="idx"></div>
+  </div>
+</div>
+
+<!--Merges bit-->
+<div class="title-row" (click)="showingMerges = !showingMerges;">
+  <span class="material-icons">{{ showingMerges ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</span>
+  <div class="title">
+    MERGES ({{ mergeFromTo.length }})
+  </div>
+  <span class="material-icons add" (click)="addMerge($event)">add</span>
+</div>
+<div *ngIf="showingMerges">
+  <div  class="selection-container"
+        *ngFor="let merge of mergeFromTo; let idx = index;">
+    <div class="top-row">
+      <p>FROM</p>
+      <span class="material-icons" (click)="removeMerge(idx)">clear</span>
+    </div>
+    <div appMergeContainer [index]="idx"></div>
+    <p>TO</p>
+    <div appMergeContainer [index]="idx"></div>
+  </div>
+</div>
+
+<!--Evaluations bit-->
+<div class="title-row" (click)="showingEvals = !showingEvals">
+  <div class="material-icons">{{ showingEvals ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</div>
+  <div class="title">
+    EVALUATIONS ({{ evalFromTo.length }})
+  </div>
+  <span class="material-icons add" (click)="addEval($event)">add</span>
+</div>
+<div *ngIf="showingEvals">
+  <div  class="selection-container"
+        *ngFor="let eval of evalFromTo; let idx = index;">
+    <div class="top-row">
+      <p>FROM</p>
+      <span class="material-icons" (click)="removeEval(idx)">clear</span>
+    </div>
+    <div appEvalContainer [index]="idx"></div>
+    <p>TO</p>
+    <div appEvalContainer [index]="idx"></div>
+  </div>
+</div>
+<div style="display: flex">
+  <div class="button" (click)="apply()">Apply</div>
+</div>

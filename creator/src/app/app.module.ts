@@ -15,6 +15,10 @@ import { StepTextComponent } from './step-text/step-text.component';
 import { TextEditorComponent } from './text-editor/text-editor.component';
 import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
 import { FormsModule } from '@angular/forms';
+import {  StepOptionsComponent,
+          CloneContainerDirective,
+          MergeContainerDirective,
+          EvalContainerDirective } from './step-options/step-options.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,10 @@ import { FormsModule } from '@angular/forms';
     StepTextComponent,
     TextEditorComponent,
     SubSuperAlignmentComponent,
+    StepOptionsComponent,
+    CloneContainerDirective,
+    MergeContainerDirective,
+    EvalContainerDirective
   ],
   imports: [
     BrowserModule,
@@ -44,7 +52,8 @@ import { FormsModule } from '@angular/forms';
     SaveComponent,
     PreviewComponent,
     TextEditorComponent,
-    SubSuperAlignmentComponent
+    SubSuperAlignmentComponent,
+    StepOptionsComponent
   ]
 })
 export class AppModule { }

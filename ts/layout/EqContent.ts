@@ -129,4 +129,8 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
     interpColorOff() {
         this.interpColor = false;
     }
+
+    getRef() {
+        return this.ref;
+    }
 }

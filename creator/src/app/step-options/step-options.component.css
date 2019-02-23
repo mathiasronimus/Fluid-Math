@@ -1,0 +1,40 @@
+.selection-container {
+    padding: 10px 20px 10px 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
+.top-row {
+    display: flex;
+}
+
+.top-row p {
+    flex-grow: 1;
+}
+
+p {
+    padding: 5px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.title {
+    flex-grow: 1;
+}
+
+.material-icons {
+    cursor: pointer;
+}
+
+.add {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding-left: 10px;
+    padding-right: 10px;
+}

@@ -9,7 +9,7 @@ import EqComponent from '@shared/layout/EqComponent';
 import LayoutState from '@shared/animation/LayoutState';
 import EqContent from '@shared/layout/EqContent';
 import HDivider from '@shared/layout/HDivider';
-import { deepClone } from '../helpers';
+import { deepClone, inLayout } from '../helpers';
 import { UndoRedoService } from '../undo-redo.service';
 import { ContentSelectionService } from '../content-selection.service';
 import { SelectedStepService } from '../selected-step.service';
@@ -273,30 +273,7 @@ export default class CreatorCanvasController extends CanvasController {
             return false;
         }
 
-        return this.recursiveOnCanvas(this.steps[this.currStep].root);
-    }
-
-    /**
-     * Recursively checks if the
-     * component to add already
-     * exists on the canvas.
-     * @param toCheck The object to check.
-     */
-    private recursiveOnCanvas(toCheck: object): boolean {
-        let found = false;
-        Object.keys(toCheck).forEach(key => {
-            const value = toCheck[key];
-            if (typeof value === 'object') {
-                if (this.recursiveOnCanvas(value)) {
-                    found = true;
-                }
-            } else if (typeof value === 'string') {
-                if (value === this.selection.adding) {
-                    found = true;
-                }
-            }
-        });
-        return found;
+        return inLayout(this.steps[this.currStep].root, this.selection.adding);
     }
 
     /**
