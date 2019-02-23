@@ -208,6 +208,9 @@ export default class CreatorCanvasController extends CanvasController {
     private getChangedLayout(x: number, y: number, showError: boolean): object {
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
+            if (showError) {
+                this.error.text = 'Duplicate content not allowed in a step.';
+            }
             return this.getLayoutForPublish();
         }
         const clickedLayout: LayoutState = this.getClickedLayout(x, y);
