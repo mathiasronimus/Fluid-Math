@@ -36,7 +36,7 @@
               (keyup)="addTermTyped($event)" 
               (blur)="finishAddingTerm(false)"
               #termInput>
-      <span class="material-icons more">more_horiz</span>
+      <span class="material-icons more" (mousedown)="showTermTemplate()">more_horiz</span>
     </span>
     <div class="title">FRACTION LINES</div>
     <span class="selector grab" 

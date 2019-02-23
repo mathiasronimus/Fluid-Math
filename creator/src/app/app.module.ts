@@ -19,6 +19,7 @@ import {  StepOptionsComponent,
           CloneContainerDirective,
           MergeContainerDirective,
           EvalContainerDirective } from './step-options/step-options.component';
+import { TermTemplateComponent } from './term-template/term-template.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {  StepOptionsComponent,
     StepOptionsComponent,
     CloneContainerDirective,
     MergeContainerDirective,
-    EvalContainerDirective
+    EvalContainerDirective,
+    TermTemplateComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +55,8 @@ import {  StepOptionsComponent,
     PreviewComponent,
     TextEditorComponent,
     SubSuperAlignmentComponent,
-    StepOptionsComponent
+    StepOptionsComponent,
+    TermTemplateComponent
   ]
 })
 export class AppModule { }
