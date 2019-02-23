@@ -6,7 +6,7 @@ import C from '../main/consts';
 import { Map, tri, line } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
-import HDivider from '@shared/layout/HDivider';
+import HDivider from './HDivider';
 
 export default class HBox extends LinearContainer {
 
