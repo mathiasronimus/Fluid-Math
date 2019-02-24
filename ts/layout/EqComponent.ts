@@ -6,8 +6,10 @@ import { Map } from '../main/helpers';
  * Represents any component (container, content)
  * that takes up space and forms a part of the
  * layout of a step.
+ * The type L represents the Layout State that this
+ * component produces.
  */
-export default abstract class EqComponent {
+export default abstract class EqComponent<L extends LayoutState> {
 
     protected width: number;
     protected height: number;
@@ -48,7 +50,7 @@ export default abstract class EqComponent {
      * @param opacityObj The object storing opacity info for this step.
      * @param colorsObj The object storing color info for this step.
      */
-    abstract addLayout( parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    abstract addLayout( parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                         tlx: number, tly: number, currScale: number,
-                        opacityObj: Object, colorsObj: Object): LayoutState;
+                        opacityObj: Object, colorsObj: Object): L;
 }

@@ -70,7 +70,7 @@ window.addEventListener('resize', function () {
  * there, returns the index of the minimum
  * width tier.
  */
-function getWidthTier(): number {
+export function getWidthTier(): number {
     let currWidth = window.innerWidth;
     for (let i = 0; i < C.widthTiers.length; i++) {
         if (currWidth > C.widthTiers[i]) {

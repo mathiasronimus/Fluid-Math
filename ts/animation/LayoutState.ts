@@ -12,7 +12,7 @@ export default class LayoutState {
     //The scaling of the component (width and height reflect this scaling,
     //but needs to be taken into account for drawing.)
     scale: number;
-    component: EqComponent;
+    component: EqComponent<LayoutState>;
     layoutParent: LayoutState;
 
     constructor(layoutParent, component, tlx, tly, width, height, scale) {

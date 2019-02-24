@@ -50,7 +50,7 @@ export default class Term extends EqContent<TermLayoutState> {
         return this.widths[tier] + this.padding.width();
     }
     
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
               tlx: number, tly: number, currScale: number,
               opacityObj: Object, colorsObj: Object): TermLayoutState {
         let state = new TermLayoutState(

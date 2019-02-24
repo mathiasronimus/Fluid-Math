@@ -3,7 +3,7 @@ import Padding from "./Padding";
 import C from '../main/consts';
 import ContentLayoutState from "../animation/ContentLayoutState";
 
-export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent {
+export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent<L> {
 
     protected ref: string;
     //Whether to interpolate color and opacity
@@ -21,7 +21,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
      * Subclasses should call the method as
      * defined here, then draw themselves
      * centered on (0, 0). Returns width
-     * and height and scale to allow them 
+     * and height to allow them 
      * to do this.
      * There is no need to call save() or
      * restore(), animations handle this.

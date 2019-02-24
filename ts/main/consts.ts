@@ -22,6 +22,7 @@ const constants = {
     defaultHBoxPadding: 0,
     defaultTightHBoxPadding: 0,
     defaultSubSuperPadding: Padding.even(0),
+    defaultRootPadding: Padding.even(0),
     termPadding: new Padding(10, 5, 10, 5),
     tightTermPadding: new Padding(5, 2, 5, 2),
     hDividerPadding: new Padding(0, 2, 0, 2),
@@ -29,6 +30,14 @@ const constants = {
     expScale: 0.5,
     //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
     defaultExpPortrusion: 0.1,
+
+    //Roots:
+    rootArgMarginLeft: 7,
+    rootIndexScale: 0.5,
+    // The angle the small tip of the radical kink makes
+    // to the rest of the kink.
+    rootKinkTipAngle: Math.PI / 2,
+    rootKinkTipLength: 3,
 
     //Creator
     creatorContainerPadding: Padding.even(30),
@@ -40,12 +49,6 @@ const constants = {
     creatorCaretSize: 5,
     creatorLineDash: [2],
     creatorErrorTimeout: 5000,
-    //The delay before initializing a canvas in
-    //the creator in MS. Too small gives weird layout,
-    //too large is annoying. This is a workaround for
-    //the clientWidth property taking time to be accurate
-    //when inside a fixed container.
-    creatorCanvasInitDelay: 500,
 
     //Animations: durations are in MS
     addDuration: 600,

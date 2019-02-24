@@ -19,7 +19,7 @@ export default class HDivider extends EqContent<ContentLayoutState> {
     protected calcWidth(): number {return 0;}
     protected calcHeight(): number {return 0;}
 
-    addLayout(  parentLayout: ContentLayoutState, layouts: Map<EqComponent, ContentLayoutState>, 
+    addLayout(  parentLayout: ContentLayoutState, layouts: Map<EqComponent<any>, ContentLayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): ContentLayoutState {
         //Set x to align left with parent

@@ -52,7 +52,7 @@ export default class SelectableCanvasController extends CanvasController {
     select(e: MouseEvent) {
         const x = e.offsetX;
         const y = e.offsetY;
-        const layoutsArr: [LayoutState, EqComponent][] = [];
+        const layoutsArr: [LayoutState, EqComponent<any>][] = [];
         this.currStates.forEach((layout, component) => {
             layoutsArr.push([layout, component]);
         });

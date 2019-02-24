@@ -17,7 +17,9 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier, Map, newMap, isIE } from "./helpers";
+import { getFontSizeForTier, Map, newMap, isIE, getWidthTier } from "./helpers";
+import Radical from "../layout/Radical";
+import RootContainer from "../layout/RootContainer";
 
 /**
  * Responsible for managing a single canvas,
@@ -37,9 +39,11 @@ export default class CanvasController {
     protected stepOptions: any[];
 
     protected terms: Term[];
+    protected termHeights: number[];
     protected hDividers: HDivider[];
+    protected radicals: Radical[];
 
-    protected currStates: Map<EqComponent, LayoutState>;
+    protected currStates: Map<EqComponent<any>, LayoutState>;
     protected animating = false;
     protected fontSize: number;
     protected lastHeight: number = 0;
@@ -58,6 +62,7 @@ export default class CanvasController {
         this.stepOptions = instructions['stepOpts'];
         this.terms = [];
         this.hDividers = [];
+        this.radicals = [];
         this.setSize = this.setSize.bind(this);
 
         this.progressLine = document.createElement('div');
@@ -233,7 +238,7 @@ export default class CanvasController {
      * in this slideshow.
      */
     private getNumContent(): number {
-        return this.terms.length + this.hDividers.length;
+        return this.terms.length + this.hDividers.length + this.radicals.length;
     }
 
     /**
@@ -257,9 +262,21 @@ export default class CanvasController {
     }
 
     /**
+     * Returns whether the concatenated
+     * index belongs to a radical.
+     * 
+     * @param i The index.
+     */
+    private inRadicalRange(i: number): boolean {
+        return  i >= this.terms.length + this.radicals.length && 
+                i < this.terms.length + this.hDividers.length + this.radicals.length;
+    }
+
+    /**
      * Returns the content for a particular
      * index. This is used when looping through
-     * all content. The order goes Terms,
+     * all content. The order goes Terms, h Dividers,
+     * Radicals.
      * 
      * @param i The index of the content to get.
      */
@@ -268,6 +285,8 @@ export default class CanvasController {
             return this.terms[i];
         } else if (this.inHDividerRange(i)) {
             return this.hDividers[i - this.terms.length];
+        } else if (this.inRadicalRange(i)) {
+            return this.radicals[i - this.terms.length - this.hDividers.length];
         } else {
             throw "content out of bounds";
         }
@@ -285,7 +304,7 @@ export default class CanvasController {
      * @param stepBefore The old step number.
      * @param stepAfter The current step number.
      */
-    private diff(oldStates: Map<EqComponent, LayoutState>, canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
+    private diff(oldStates: Map<EqComponent<any>, LayoutState>, canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
 
         let updateDimenAfter = canvasHeight < this.lastHeight;
         if (!updateDimenAfter) {
@@ -466,13 +485,13 @@ export default class CanvasController {
      * @param instructions The instructions JSON Object.
      */
     protected initContent(instructions) {
-        let heights = [];
+        this.termHeights = [];
         let ascents = [];
 
         if (instructions.terms.length > 0) {
             //Get the heights and ascents from each tier
             for (let w = 0; w < C.widthTiers.length; w++) {
-                heights.push(instructions.metrics[w].height);
+                this.termHeights.push(instructions.metrics[w].height);
                 ascents.push(instructions.metrics[w].ascent);
             }
         }
@@ -487,12 +506,16 @@ export default class CanvasController {
             }
 
             let text = instructions.terms[t];
-            let term = new Term(text, widths, heights, ascents, 't' + t);
+            let term = new Term(text, widths, this.termHeights, ascents, 't' + t);
             this.terms.push(term);
         }
         //Initialize h dividers
         for (let i = 0; i < instructions.hDividers; i++) {
             this.hDividers.push(new HDivider(C.hDividerPadding, 'h' + i));
+        }
+        //Initialize radicals
+        for (let i = 0; i < instructions.radicals; i++) {
+            this.radicals.push(new Radical('r' + i));
         }
     }
 
@@ -508,6 +531,8 @@ export default class CanvasController {
             return 't' + this.terms.indexOf(content);
         } else if (content instanceof HDivider) {
             return 'h' + this.hDividers.indexOf(content);
+        } else if (content instanceof Radical) {
+            return 'r' + this.radicals.indexOf(content);
         } else {
             throw "unrecognized content type";
         }
@@ -525,6 +550,8 @@ export default class CanvasController {
             return 't' + index;
         } else if (this.inHDividerRange(index)) {
             return 'h' + (index - this.terms.length);
+        } else if (this.inRadicalRange(index)) {
+            return 'r' + (index - this.terms.length - this.hDividers.length);
         } else {
             throw "unrecognized content type";
         }
@@ -545,6 +572,8 @@ export default class CanvasController {
             return this.terms[contentIndex];
         } else if (contentType === 'h') {
             return this.hDividers[contentIndex];
+        } else if (contentType === 'r') {
+            return this.radicals[contentIndex];
         } else {
             throw "unrecognized content type";
         }
@@ -579,7 +608,7 @@ export default class CanvasController {
      * 
      * @param idx The step number.
      */
-    protected calcLayout(idx): [Map<EqComponent, LayoutState>, LayoutState] {
+    protected calcLayout(idx): [Map<EqComponent<any>, LayoutState>, LayoutState] {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
@@ -609,7 +638,7 @@ export default class CanvasController {
      * 
      * @param containerObj The JSON Object representing the container.
      */
-    protected parseContainer(containerObj): EqContainer {
+    protected parseContainer(containerObj): EqContainer<any> {
         let type: string = containerObj.type;
         if (type === "vbox") {
             return new VBox(
@@ -639,6 +668,17 @@ export default class CanvasController {
             );
             let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.defaultSubSuperPadding);
+        } else if (type === 'root') {
+            let idx = new HBox(
+                this.parseContainerChildren(containerObj.idx),
+                Padding.even(0)
+            );
+            let arg = new HBox(
+                this.parseContainerChildren(containerObj.arg),
+                Padding.even(0)
+            );
+            let radical = this.getContentFromRef(containerObj.rad) as Radical;
+            return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights[getWidthTier()]);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {
@@ -652,7 +692,7 @@ export default class CanvasController {
      * 
      * @param children The children array.
      */
-    protected parseContainerChildren(children: any[]): EqComponent[] {
+    protected parseContainerChildren(children: any[]): EqComponent<any>[] {
         let toReturn = [];
         children.forEach(child => {
             if (typeof child === 'object') {

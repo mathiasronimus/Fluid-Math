@@ -6,7 +6,7 @@ import EqContent from './EqContent';
 import C from '../main/consts';
 import { tri } from '../main/helpers';
 
-export default abstract class EqContainer extends EqComponent {
+export default abstract class EqContainer<L extends LayoutState> extends EqComponent<L> {
 
     constructor(padding: Padding) {
         super(padding);
@@ -22,7 +22,7 @@ export default abstract class EqContainer extends EqComponent {
      * @param y The y-ordinate clicked.
      * @param toAdd The component to add.
      */
-    abstract addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent);
+    abstract addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>);
 
     /**
      * Returns an object representing
@@ -36,7 +36,7 @@ export default abstract class EqContainer extends EqComponent {
      * 
      * @param toDelete The child to delete.
      */
-    abstract delete(toDelete: EqComponent);
+    abstract delete(toDelete: EqComponent<any>);
 
     /**
      * Runs a function for every piece of
@@ -64,7 +64,7 @@ export default abstract class EqContainer extends EqComponent {
      * @param toAdd The child to add.
      * @param before Add before this child.
      */
-    protected abstract addBefore(toAdd: EqComponent, before: EqComponent);
+    protected abstract addBefore(toAdd: EqComponent<any>, before: EqComponent<any>);
 
     /**
      * Add a child after another.
@@ -72,7 +72,7 @@ export default abstract class EqContainer extends EqComponent {
      * @param toAdd The child to add.
      * @param after Add after this child.
      */
-    protected abstract addAfter(toAdd: EqComponent, after: EqComponent);
+    protected abstract addAfter(toAdd: EqComponent<any>, after: EqComponent<any>);
 
     /**
      * When this container is clicked,
@@ -86,13 +86,13 @@ export default abstract class EqContainer extends EqComponent {
      * @param y The y-ordinate clicked.
      * @param toAdd The component to add.
      */
-    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         let parentLayout = clickedLayout.layoutParent;
         if (!parentLayout) {
             // Can't add, no parent container
             return;
         }
-        let container = parentLayout.component as EqContainer;
+        let container = parentLayout.component as EqContainer<any>;
         if (container.addVertically()) {
             // Add on top or bottom
             if (clickedLayout.onTop(y)) {
@@ -138,7 +138,7 @@ export default abstract class EqContainer extends EqComponent {
             C.creatorContainerPadding.bottom * l.scale,
             C.creatorContainerPadding.right * l.scale
         );
-        let container: EqContainer = parentLayout.component as EqContainer;
+        let container: EqContainer<any> = parentLayout.component as EqContainer<any>;
         if (container.addVertically()) {
             // Add carets on top and bottom facing outwards
             ctx.save();
@@ -185,7 +185,7 @@ export default abstract class EqContainer extends EqComponent {
      * @param children The children array.
      * @param controller The canvas controller possessing this container.
      */
-    protected static childrenToStepLayout(children: EqComponent[], controller: CanvasController) {
+    protected static childrenToStepLayout(children: EqComponent<any>[], controller: CanvasController) {
         let toReturn = [];
         children.forEach(comp => {
             if (comp instanceof EqContainer) {

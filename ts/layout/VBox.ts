@@ -7,9 +7,9 @@ import { line, Map, tri } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 
-export default class VBox extends LinearContainer {
+export default class VBox extends LinearContainer<LayoutState> {
 
-    constructor(children: EqComponent[], padding: Padding) {
+    constructor(children: EqComponent<any>[], padding: Padding) {
         super(children, padding);
         this.width = this.calcWidth();
         this.height = this.calcHeight();
@@ -79,7 +79,7 @@ export default class VBox extends LinearContainer {
         ctx.restore();
     }
 
-    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         let scl = l.scale;
         let realPad = new Padding(
             C.creatorContainerPadding.top * scl,
@@ -117,7 +117,7 @@ export default class VBox extends LinearContainer {
         }
     }
 
-    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         if (clickedLayout.onTop(y)) {
             //Add top
             this.addBefore(toAdd, clickedLayout.component);
@@ -134,7 +134,7 @@ export default class VBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly, 

@@ -8,9 +8,9 @@ import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 import HDivider from './HDivider';
 
-export default class HBox extends LinearContainer {
+export default class HBox extends LinearContainer<LayoutState> {
 
-    constructor(children: EqComponent[], padding: Padding) {
+    constructor(children: EqComponent<any>[], padding: Padding) {
         super(children, padding);
         this.width = this.calcWidth();
         this.height = this.calcHeight();
@@ -86,7 +86,7 @@ export default class HBox extends LinearContainer {
         ctx.restore();
     }
 
-    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         if (toAdd instanceof HDivider) {
             throw new Error("Fraction lines can only be added inside a vertical container.");
         }
@@ -126,7 +126,7 @@ export default class HBox extends LinearContainer {
         }
     }
 
-    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         if (clickedLayout.onLeft(x)) {
             //Add left
             this.addBefore(toAdd, clickedLayout.component);
@@ -143,7 +143,7 @@ export default class HBox extends LinearContainer {
         return toReturn;
     }
 
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorObj: Object): LayoutState {
         let state = 

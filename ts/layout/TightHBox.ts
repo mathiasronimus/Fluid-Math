@@ -35,7 +35,7 @@ export default class TightHBox extends HBox {
     }
 
     //Override to reduce term padding.
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): LayoutState {
         let state = new LayoutState(

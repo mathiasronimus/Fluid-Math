@@ -13,7 +13,7 @@ import { line, Map } from "../main/helpers";
  * enables exponents (top) and subscripts
  * (bottom).
  */
-export default class SubSuper extends EqContainer {
+export default class SubSuper extends EqContainer<LayoutState> {
 
     private top: HBox;
     private middle: HBox;
@@ -71,7 +71,7 @@ export default class SubSuper extends EqContainer {
                 + this.padding.height();
     }
 
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent, LayoutState>, 
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): LayoutState {
         let layout = new LayoutState(   parentLayout, this, tlx, tly, 
@@ -119,11 +119,11 @@ export default class SubSuper extends EqContainer {
         return false;
     }
 
-    addBefore(e: EqComponent, b: EqComponent) {
+    addBefore(e: EqComponent<any>, b: EqComponent<any>) {
         return;
     }
 
-    addAfter(e: EqComponent, b: EqComponent) {
+    addAfter(e: EqComponent<any>, b: EqComponent<any>) {
         return;
     }
 
@@ -140,19 +140,19 @@ export default class SubSuper extends EqContainer {
         super.creatorDraw(l, ctx);
     }
 
-    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClick(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         if (x - clickedLayout.tlx < this.padding.left * clickedLayout.scale) {
-            let container = clickedLayout.layoutParent.component as EqContainer;
+            let container = clickedLayout.layoutParent.component as EqContainer<any>;
             container.addClickOnChild(clickedLayout, x, y, toAdd);
         } else if (clickedLayout.tlx + clickedLayout.width - x < this.padding.right * clickedLayout.scale) {
-            let container = clickedLayout.layoutParent.component as EqContainer;
+            let container = clickedLayout.layoutParent.component as EqContainer<any>;
             container.addClickOnChild(clickedLayout, x, y, toAdd);
         } else {
             return;
         }
     }
 
-    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent) {
+    addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
         return;
     }
 
@@ -173,7 +173,7 @@ export default class SubSuper extends EqContainer {
         return toReturn;
     }
 
-    delete(toDelete: EqComponent) {
+    delete(toDelete: EqComponent<any>) {
         throw "Can't delete children from a SubSuper container.";
     }
 
