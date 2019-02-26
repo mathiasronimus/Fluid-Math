@@ -69,9 +69,13 @@ export default class Radical extends EqContent<ContentLayoutState> {
     addLayout(  parentLayout: RootContainerLayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): ContentLayoutState {
+        const parentPad = parentLayout.component.getPadding();
+        const padWidth = parentPad.width();
+        const padHeight = parentPad.height();
         const thisLayout = new ContentLayoutState(
-            parentLayout, this, tlx, tly, parentLayout.width, parentLayout.height, currScale,
-            this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj)
+            parentLayout, this, tlx + padWidth / 2, tly + padHeight / 2,
+            parentLayout.width - padWidth, parentLayout.height - padHeight,
+            currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj)
         );
         layouts.set(this, thisLayout);
         return thisLayout;

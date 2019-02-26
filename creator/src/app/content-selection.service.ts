@@ -27,6 +27,13 @@ export class ContentSelectionService {
     },
     () => {
       return {
+        type: 'root',
+        idx: [],
+        arg: []
+      };
+    },
+    () => {
+      return {
           type: 'subSuper',
           top: [],
           middle: [],

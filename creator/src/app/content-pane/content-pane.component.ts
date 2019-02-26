@@ -23,6 +23,8 @@ export class ContentPaneComponent implements AfterViewInit {
 
   hDividers = 0;
 
+  radicals = 0;
+
   dragging = false;
 
   constructor(private undoRedo: UndoRedoService,
@@ -33,6 +35,7 @@ export class ContentPaneComponent implements AfterViewInit {
       'Horizontal',
       'Vertical',
       'Tight Horizontal',
+      'Root',
       'Exponent/Subscript'
     ];
     this.updateState = this.updateState.bind(this);
@@ -122,12 +125,14 @@ export class ContentPaneComponent implements AfterViewInit {
   }
 
   /**
-   * Get a string array for each hDivider. Used by the template.
+   * Get a string array representing counting from 1
+   * to a number.
+   * @param countTo The number to count to.
    */
-  getHDividerArray(): string[] {
+  getCountArray(countTo: number): string[] {
     const toReturn: string[] = [];
-    for (let i = 0; i < this.hDividers; i++) {
-      toReturn.push('' + i);
+    for (let i = 0; i < countTo; i++) {
+      toReturn.push('' + (i + 1));
     }
     return toReturn;
   }
@@ -145,6 +150,22 @@ export class ContentPaneComponent implements AfterViewInit {
     const newIndex = newState.hDividers;
     this.select('h' + newIndex, undefined);
     newState.hDividers++;
+    this.undoRedo.publishChange(newState);
+  }
+
+  /**
+   * Add a new radical.
+   * @param e The mouse event.
+   */
+  addRadical(e: MouseEvent) {
+    e.stopPropagation();
+    const newState: any = this.undoRedo.getStateClone();
+    if (!newState.radicals) {
+      newState.radicals = 0;
+    }
+    const newIndex = newState.radicals;
+    this.select('r' + newIndex, undefined);
+    newState.radicals++;
     this.undoRedo.publishChange(newState);
   }
 
@@ -190,6 +211,9 @@ export class ContentPaneComponent implements AfterViewInit {
         break;
       case 'h':
         newState.hDividers--;
+        break;
+      case 'r':
+        newState.radicals--;
         break;
       default:
         throw new Error('Undefined content type.');
@@ -283,6 +307,7 @@ export class ContentPaneComponent implements AfterViewInit {
   updateState(newState: any) {
     this.terms = newState.terms ? newState.terms : [];
     this.hDividers = newState.hDividers ? newState.hDividers : 0;
+    this.radicals = newState.radicals ? newState.radicals : 0;
     this.addingTerm = false;
   }
 }

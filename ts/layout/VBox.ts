@@ -6,6 +6,7 @@ import C from '../main/consts';
 import { line, Map, tri } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
+import Radical from './Radical';
 
 export default class VBox extends LinearContainer<LayoutState> {
 
@@ -104,12 +105,13 @@ export default class VBox extends LinearContainer<LayoutState> {
             realPad.height() / 4, 
             1
         );
-
         if (innerTop.contains(x, y)) {
             // Add at start
+            this.addValid(toAdd);
             this.children.unshift(toAdd);
         } else if (innerBot.contains(x, y)) {
             // Add at end
+            this.addValid(toAdd);
             this.children.push(toAdd);
         } else {
             // Click wasn't on inner part, add adjacent to parent container.
@@ -118,12 +120,19 @@ export default class VBox extends LinearContainer<LayoutState> {
     }
 
     addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
+        this.addValid(toAdd);
         if (clickedLayout.onTop(y)) {
             //Add top
             this.addBefore(toAdd, clickedLayout.component);
         } else {
             //Add bottom
             this.addAfter(toAdd, clickedLayout.component);
+        }
+    }
+    
+    addValid(toAdd: EqComponent<any>) {
+        if (toAdd instanceof Radical) {
+            throw new Error("Radicals can only be added inside a root container.");
         }
     }
 

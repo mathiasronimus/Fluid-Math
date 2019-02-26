@@ -35,6 +35,10 @@ export default abstract class EqComponent<L extends LayoutState> {
         return this.height;
     }
 
+    getPadding(): Padding {
+        return this.padding;
+    }
+
     protected abstract calcWidth(): number;
     protected abstract calcHeight(): number;
 

@@ -7,6 +7,7 @@ import { Map, tri, line } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 import HDivider from './HDivider';
+import Radical from './Radical';
 
 export default class HBox extends LinearContainer<LayoutState> {
 
@@ -87,9 +88,6 @@ export default class HBox extends LinearContainer<LayoutState> {
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        if (toAdd instanceof HDivider) {
-            throw new Error("Fraction lines can only be added inside a vertical container.");
-        }
         let pad = new Padding(
             C.creatorContainerPadding.top * l.scale,
             C.creatorContainerPadding.left * l.scale,
@@ -117,9 +115,11 @@ export default class HBox extends LinearContainer<LayoutState> {
         );
         if (innerLeft.contains(x, y)) {
             // Add at start
+            this.addValid(toAdd);
             this.children.unshift(toAdd);
         } else if (innerRight.contains(x, y)) {
             // Add at end
+            this.addValid(toAdd);
             this.children.push(toAdd);
         } else {
             super.addClick(l, x, y, toAdd);
@@ -127,12 +127,22 @@ export default class HBox extends LinearContainer<LayoutState> {
     }
 
     addClickOnChild(clickedLayout: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
+        this.addValid(toAdd);
         if (clickedLayout.onLeft(x)) {
             //Add left
             this.addBefore(toAdd, clickedLayout.component);
         } else {
             //Add right
             this.addAfter(toAdd, clickedLayout.component);
+        }
+    }
+    
+    addValid(toAdd: EqComponent<any>) {
+        if (toAdd instanceof HDivider) {
+            throw new Error("Fraction lines can only be added inside a vertical container.");
+        }
+        if (toAdd instanceof Radical) {
+            throw new Error("Radicals can only be added inside a root container.");
         }
     }
 

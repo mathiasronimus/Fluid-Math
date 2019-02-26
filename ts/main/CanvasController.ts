@@ -677,7 +677,10 @@ export default class CanvasController {
                 this.parseContainerChildren(containerObj.arg),
                 Padding.even(0)
             );
-            let radical = this.getContentFromRef(containerObj.rad) as Radical;
+            let radical;
+            if (containerObj.rad) {
+                radical = this.getContentFromRef(containerObj.rad) as Radical;
+            }
             return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights[getWidthTier()]);
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";

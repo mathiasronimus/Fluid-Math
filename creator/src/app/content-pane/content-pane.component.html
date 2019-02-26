@@ -40,7 +40,7 @@
     </span>
     <div class="title">FRACTION LINES</div>
     <span class="selector grab" 
-          *ngFor="let hDivider of getHDividerArray(); let hIndex = index;"
+          *ngFor="let hDivider of getCountArray(hDividers); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
           (dragstart)="deselect(); dragging = true; setAdding('h' + hIndex);"
           [ngClass]="{'selected': selection.adding === 'h' + hIndex,
@@ -55,6 +55,25 @@
     </span>
     <span class="selector material-icons color" 
           (click)="addHDivider($event)">
+          add
+    </span>
+    <div class="title">RADICALS</div>
+    <span class="selector grab" 
+          *ngFor="let radical of getCountArray(radicals); let rIndex = index;"
+          (click)="select('r' + rIndex, $event)"
+          (dragstart)="deselect(); dragging = true; setAdding('r' + rIndex);"
+          [ngClass]="{'selected': selection.adding === 'r' + rIndex,
+                      'color': selection.selectedOnCanvas === 'r' + rIndex}"
+          draggable="true">
+      {{ radical }}
+      <span *ngIf="selection.adding === 'r' + rIndex && !dragging"
+            class="material-icons"
+            (click)="delete($event)">
+          delete
+      </span>
+    </span>
+    <span class="selector material-icons color" 
+          (click)="addRadical($event)">
           add
     </span>
   </div>

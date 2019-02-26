@@ -127,7 +127,7 @@ export class AppComponent {
    */
   getRightIcons() {
     if (this.selection.selectedOnCanvas) {
-      if (this.selection.selectedOnCanvas === 'c3') {
+      if (this.selection.selectedOnCanvas === 'c4') {
         // A subsuper is selected, offer option to change alignment.
         return this.selectedRightIcons.concat([this.subSuperAlignIcon]);
       } else {

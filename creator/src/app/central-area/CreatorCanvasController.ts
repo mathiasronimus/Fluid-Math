@@ -14,6 +14,9 @@ import { UndoRedoService } from '../undo-redo.service';
 import { ContentSelectionService } from '../content-selection.service';
 import { SelectedStepService } from '../selected-step.service';
 import { ErrorService } from '../error.service';
+import RootContainer from '@shared/layout/RootContainer';
+import Radical from '@shared/layout/Radical';
+import { getWidthTier } from '@shared/main/helpers';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -166,6 +169,25 @@ export default class CreatorCanvasController extends CanvasController {
             );
             const portrusion = containerObj.portrusion ? containerObj.portrusion : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.creatorContainerPadding);
+        } else if (type === 'root') {
+            const idx = new HBox(
+                this.parseContainerChildren(containerObj.idx),
+                C.creatorContainerPadding
+            );
+            const arg = new HBox(
+                this.parseContainerChildren(containerObj.arg),
+                C.creatorContainerPadding
+            );
+            let radical;
+            if (containerObj.rad) {
+                radical = this.getContentFromRef(containerObj.rad) as Radical;
+            }
+            let termHeight = this.termHeights[getWidthTier()];
+            if (!termHeight) {
+                // If there are no terms yet, this is not defined.
+                termHeight = 0;
+            }
+            return new RootContainer(idx, arg, radical, C.creatorContainerPadding, termHeight);
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
         } else {
@@ -203,59 +225,120 @@ export default class CreatorCanvasController extends CanvasController {
      * Get the new layout resulting from adding something at (x, y)
      * @param x The x-ordinate of the mouse.
      * @param y The y-ordinate of the mouse.
-     * @param showError Whether to show an error message onscreen if one occurs.
+     * @param final Whether this is a final add. If it is, errors are shown
+     *              and some content may be automatically added.
      */
-    private getChangedLayout(x: number, y: number, showError: boolean): object {
+    private getChangedLayout(x: number, y: number, final: boolean): object {
+        let modifyWith = (instructions: object) => {};
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
-            if (showError) {
+            if (final) {
                 this.error.text = 'Duplicate content not allowed in a step.';
             }
-            return this.getLayoutForPublish();
+            return this.getLayoutForPublish(modifyWith);
         }
         const clickedLayout: LayoutState = this.getClickedLayout(x, y);
         if (clickedLayout === undefined) {
             // Didn't click on anything
-            return this.getLayoutForPublish();
+            return this.getLayoutForPublish(modifyWith);
         } else if (clickedLayout.component instanceof EqContent) {
-            this.addClickOnComponent(clickedLayout, x, y);
+            try {
+                // Add adjacent to content
+                const container: EqContainer<any> = clickedLayout.layoutParent.component as EqContainer<any>;
+                const toAdd = this.getAddComponent();
+                container.addClickOnChild(clickedLayout, x, y, toAdd);
+                if (final) {
+                    modifyWith = this.autoAddContent(toAdd);
+                }
+            } catch (e) {
+                if (final) {
+                    this.error.text = e.message;
+                }
+            }
         } else if (clickedLayout.component instanceof EqContainer) {
             try {
-                clickedLayout.component.addClick(clickedLayout, x, y, this.getAddComponent());
+                const toAdd = this.getAddComponent();
+                clickedLayout.component.addClick(clickedLayout, x, y, toAdd);
+                if (final) {
+                    modifyWith = this.autoAddContent(toAdd);
+                }
             } catch (e) {
-                if (showError) {
+                if (final) {
                     this.error.text = e.message;
                 }
             }
         } else {
-            return this.getLayoutForPublish();
+            return this.getLayoutForPublish(modifyWith);
         }
-        return this.getLayoutForPublish();
+        return this.getLayoutForPublish(modifyWith);
     }
 
     /**
      * Get the current layout in the format
      * that can be published.
+     * @param modifyWith A function to modify the instructions with after the step has been changed.
      */
-    private getLayoutForPublish(): object {
+    private getLayoutForPublish(modifyWith: (instructions: object) => void): object {
         const newStepLayout = this.rootContainer.toStepLayout(this);
         const origInstructionsClone: any = deepClone(this.originalInstructions);
         origInstructionsClone.steps[this.currStep].root = newStepLayout;
+        modifyWith(origInstructionsClone);
         return origInstructionsClone;
     }
 
     /**
-     * Adds content when the click was on a
-     * component. This adds the content
-     * adjacent to the component.
-     * @param clickedLayout The Layout state of the clicked component.
-     * @param x The x-ordinate clicked.
-     * @param y The y-ordinate clicked.
+     * When a final add happens, automatically
+     * add content to what was added if appropriate.
+     * Returns a function that will be passed the
+     * instructions object after the add. This can
+     * be used to add the content.
+     * @param addTo The component being added.
      */
-    private addClickOnComponent(clickedLayout: LayoutState, x: number, y: number): void {
-        // Add adjacent to content
-        const container: EqContainer<any> = clickedLayout.layoutParent.component as EqContainer<any>;
-        container.addClickOnChild(clickedLayout, x, y, this.getAddComponent());
+    private autoAddContent(addTo: EqComponent<any>): (instructions: object) => void {
+        if (addTo instanceof RootContainer) {
+            // Add a radical automatically.
+            // Look for a radical not used on the
+            // current step, next step, or previous
+            // step.
+            const currState: any = this.undoRedo.getState();
+            const currStep = currState.steps[this.step.selected];
+            const nextStep = currState.steps[this.step.selected + 1];
+            const prevStep = currState.steps[this.step.selected - 1];
+            let unusedRef;
+            for (let i = 0; i < currState.radicals; i++) {
+                const ref = 'r' + i;
+                console.log(ref);
+                const inCurr = currStep && inLayout(currStep.root, ref);
+                const inNext = nextStep && inLayout(nextStep.root, ref);
+                const inPrev = prevStep && inLayout(prevStep.root, ref);
+                if (!(inCurr || inNext || inPrev)) {
+                    // Found an unused ref
+                    unusedRef = ref;
+                    break;
+                }
+            }
+            if (unusedRef) {
+                // Use a previously created radical, no need to add one in instructions.
+                addTo.setRadical(this.getContentFromRef(unusedRef) as Radical);
+                return () => {};
+            } else {
+                // No radicals, or all used in adjacent steps.
+                const newRef = 'r' + this.radicals.length;
+                // Dummy radical, but doesn't matter. Contents of the
+                // container are serialized then re-created with the
+                // modifed instructions.
+                const dummyRadForSave = new Radical(newRef);
+                addTo.setRadical(dummyRadForSave);
+                return (instructions: any) => {
+                    if (!instructions.radicals) {
+                        instructions.radicals = 0;
+                    }
+                    instructions.radicals++;
+                };
+            }
+        } else {
+            return () => {};
+        }
     }
 
     /**
@@ -311,6 +394,8 @@ export default class CreatorCanvasController extends CanvasController {
             } else if (selectedComponent instanceof VBox) {
                 select('c1');
             } else if (selectedComponent instanceof SubSuper) {
+                select('c4');
+            } else if (selectedComponent instanceof RootContainer) {
                 select('c3');
             } else {
                 throw new Error('Unrecognized container selected.');
@@ -327,7 +412,7 @@ export default class CreatorCanvasController extends CanvasController {
     delete() {
         const parent = (this.selectedLayout.layoutParent.component as EqContainer<any>);
         parent.delete(this.selectedLayout.component);
-        this.undoRedo.publishChange(this.getLayoutForPublish());
+        this.undoRedo.publishChange(this.getLayoutForPublish(() => {}));
     }
 
     /**
@@ -337,7 +422,8 @@ export default class CreatorCanvasController extends CanvasController {
     canDelete() {
         return  this.selectedLayout &&
                 this.selectedLayout.layoutParent &&
-                !(this.selectedLayout.layoutParent.component instanceof SubSuper);
+                !(this.selectedLayout.layoutParent.component instanceof SubSuper) &&
+                !(this.selectedLayout.layoutParent.component instanceof RootContainer && this.selectedLayout.component instanceof HBox);
     }
 
     /**

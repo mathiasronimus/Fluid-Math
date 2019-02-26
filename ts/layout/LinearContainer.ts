@@ -20,12 +20,18 @@ export default abstract class LinearContainer<L extends LayoutState> extends EqC
     }
 
     /**
+     * Throws if toAdd is not valid.
+     */
+    protected abstract addValid(toAdd: EqComponent<any>);
+
+    /**
      * Add a child before another.
      * 
      * @param toAdd The child to add.
      * @param before Add before this child.
      */
     addBefore(toAdd: EqComponent<any>, before: EqComponent<any>) {
+        this.addValid(toAdd);
         let index = this.children.indexOf(before);
         this.children.splice(index, 0, toAdd);
     }
@@ -37,6 +43,7 @@ export default abstract class LinearContainer<L extends LayoutState> extends EqC
      * @param after Add after this child.
      */
     addAfter(toAdd: EqComponent<any>, after: EqComponent<any>) {
+        this.addValid(toAdd);
         let index = this.children.indexOf(after);
         this.children.splice(index + 1, 0, toAdd);
     }

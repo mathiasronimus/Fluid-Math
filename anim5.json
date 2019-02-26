@@ -13,45 +13,380 @@
                             "t1"
                         ],
                         "rad": "r0"
-                    },
-                    "t2"
+                    }
                 ]
-            }
+            },
+            "text": "Root Test: Normal"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: No Index"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Index, no Argument"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Back to Normal"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    },
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t2"
+                        ],
+                        "arg": [
+                            "t3"
+                        ],
+                        "rad": "r1"
+                    }
+                ]
+            },
+            "text": "Root Test: Add"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Remove"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    "t4",
+                                    "h0",
+                                    "t1"
+                                ]
+                            }
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Increase Arg Height"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Reduce Arg Height"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1",
+                            "t5",
+                            "t2"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Increase Arg Width"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Reduce Arg Width"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    "t0",
+                                    "h0",
+                                    "t3"
+                                ]
+                            }
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Increase Index Height"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Decrease Index Height"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0",
+                            "t5",
+                            "t3"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Increase Index Width"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "root",
+                        "idx": [
+                            "t0"
+                        ],
+                        "arg": [
+                            "t1"
+                        ],
+                        "rad": "r0"
+                    }
+                ]
+            },
+            "text": "Root Test: Decrease Index Width"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "root",
+                                "idx": [],
+                                "arg": [
+                                    "t3"
+                                ],
+                                "rad": "r1"
+                            },
+                            "t6",
+                            {
+                                "type": "root",
+                                "idx": [],
+                                "arg": [
+                                    "t1"
+                                ],
+                                "rad": "r2"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Root Test: In Hbox"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "root",
+                                "idx": [],
+                                "arg": [
+                                    "t3",
+                                    "t6",
+                                    "t1"
+                                ],
+                                "rad": "r1"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Root Test: Merge"
         }
     ],
     "terms": [
-        "3",
-        "39304",
-        "below"
+        "2",
+        "8",
+        "2",
+        "8",
+        "1",
+        "+",
+        "×"
     ],
-    "radicals": 1,
+    "radicals": 3,
     "metrics": [
         {
             "widths": [
                 19.70458984375,
-                98.5400390625,
-                93.60107421875
+                19.70458984375,
+                19.70458984375,
+                19.70458984375,
+                19.70458984375,
+                19.8583984375,
+                18.73046875
             ],
-            "ascent": 26.478494623655912,
-            "height": 26.94278033794162
+            "ascent": 24.342105263157897,
+            "height": 24.815789473684212
         },
         {
             "widths": [
                 16.8896484375,
-                84.462890625,
-                80.2294921875
+                16.8896484375,
+                16.8896484375,
+                16.8896484375,
+                16.8896484375,
+                17.021484375,
+                16.0546875
             ],
-            "ascent": 22.987499999999997,
-            "height": 22.987499999999997
+            "ascent": 21.8125,
+            "height": 21.8125
         },
         {
             "widths": [
                 14.07470703125,
-                70.3857421875,
-                66.85791015625
+                14.07470703125,
+                14.07470703125,
+                14.07470703125,
+                14.07470703125,
+                14.1845703125,
+                13.37890625
             ],
-            "ascent": 18.484848484848484,
-            "height": 18.9491341991342
+            "ascent": 17.357142857142854,
+            "height": 17.82142857142857
         }
-    ]
+    ],
+    "hDividers": 1,
+    "stepOpts": {
+        "14": {
+            "merges": {
+                "r2": "r1"
+            }
+        }
+    }
 }
