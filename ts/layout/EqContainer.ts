@@ -191,7 +191,7 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
             if (comp instanceof EqContainer) {
                 toReturn.push(comp.toStepLayout(controller));
             } else if (comp instanceof EqContent) {
-                toReturn.push(controller.getContentReference(comp));
+                toReturn.push(comp.getRef());
             } else {
                 throw "unrecognized type " + typeof comp;
             }

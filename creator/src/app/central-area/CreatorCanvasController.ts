@@ -102,7 +102,7 @@ export default class CreatorCanvasController extends CanvasController {
             }
             if (this.selection) {
                 if (l.component instanceof EqContent &&
-                    this.getContentReference(l.component) === this.selection.adding) {
+                    l.component.getRef() === this.selection.adding) {
                     // Highlight what's selected on the content pane.
                     this.ctx.save();
                     this.ctx.strokeStyle = '#2196F3';
@@ -401,7 +401,7 @@ export default class CreatorCanvasController extends CanvasController {
                 throw new Error('Unrecognized container selected.');
             }
         } else if (selectedComponent instanceof EqContent) {
-            select(this.getContentReference(selectedComponent));
+            select(selectedComponent.getRef());
         }
     }
 
@@ -482,7 +482,7 @@ export default class CreatorCanvasController extends CanvasController {
         if (stepObj.color === undefined) {
             stepObj.color = {};
         }
-        const ref = this.getContentReference(content);
+        const ref = content.getRef();
         if (colorName === 'default') {
             // Remove any color already set for this content
             delete stepObj.color[ref];
@@ -505,7 +505,7 @@ export default class CreatorCanvasController extends CanvasController {
         if (stepObj.opacity === undefined) {
             stepObj.opacity = {};
         }
-        const ref = this.getContentReference(content);
+        const ref = content.getRef();
         if (opacity === C.normalOpacity) {
             // Remove any opacity already set for this content
             delete stepObj.opacity[ref];

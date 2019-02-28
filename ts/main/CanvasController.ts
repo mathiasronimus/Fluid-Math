@@ -234,62 +234,19 @@ export default class CanvasController {
     }
 
     /**
-     * Returns the total amount of content
-     * in this slideshow.
+     * Run a callback for all content.
+     * @param forEach A function that will be passed each bit of content.
      */
-    private getNumContent(): number {
-        return this.terms.length + this.hDividers.length + this.radicals.length;
-    }
-
-    /**
-     * Returns whether the concatenated
-     * index belongs to a term.
-     * 
-     * @param i The index.
-     */
-    private inTermRange(i: number): boolean {
-        return i >= 0 && i < this.terms.length;
-    }
-
-    /**
-     * Returns whether the concatenated
-     * index belongs to an h divider.
-     * 
-     * @param i The index.
-     */
-    private inHDividerRange(i: number): boolean {
-        return i >= this.terms.length && i < this.terms.length + this.hDividers.length;
-    }
-
-    /**
-     * Returns whether the concatenated
-     * index belongs to a radical.
-     * 
-     * @param i The index.
-     */
-    private inRadicalRange(i: number): boolean {
-        return  i >= this.terms.length + this.radicals.length && 
-                i < this.terms.length + this.hDividers.length + this.radicals.length;
-    }
-
-    /**
-     * Returns the content for a particular
-     * index. This is used when looping through
-     * all content. The order goes Terms, h Dividers,
-     * Radicals.
-     * 
-     * @param i The index of the content to get.
-     */
-    private getContent(i): EqContent<any> {
-        if (this.inTermRange(i)) {
-            return this.terms[i];
-        } else if (this.inHDividerRange(i)) {
-            return this.hDividers[i - this.terms.length];
-        } else if (this.inRadicalRange(i)) {
-            return this.radicals[i - this.terms.length - this.hDividers.length];
-        } else {
-            throw "content out of bounds";
-        }
+    private forAllContent(forEach: (content: EqContent<any>) => void) {
+        this.terms.forEach(term => {
+            forEach(term);
+        });
+        this.hDividers.forEach(hDivider => {
+            forEach(hDivider);
+        });
+        this.radicals.forEach(radical => {
+            forEach(radical);
+        });
     }
  
     /**
@@ -383,14 +340,13 @@ export default class CanvasController {
         set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
 
         //Look through content to see what has happened to it (avoiding containers)
-        for (let i = 0; i < this.getNumContent(); i++) {
-            let content = this.getContent(i);
+        this.forAllContent(content => {
 
             let stateBefore: LayoutState = undefined;
             //We may be initilizing, where there are no old frames and everything is added
             if (oldStates !== undefined) stateBefore = oldStates.get(content);
             let stateAfter: LayoutState = this.currStates.get(content);
-            let contentRef = this.getContentRefFromIndex(i);
+            let contentRef = content.getRef();
 
             if (stateBefore && stateAfter) {
                 //Content has just moved
@@ -430,7 +386,7 @@ export default class CanvasController {
                 }
             }
 
-        }
+        });
 
         return set;
     }
@@ -516,44 +472,6 @@ export default class CanvasController {
         //Initialize radicals
         for (let i = 0; i < instructions.radicals; i++) {
             this.radicals.push(new Radical('r' + i));
-        }
-    }
-
-    /**
-     * Given a piece of content, get the
-     * string used to reference it in the
-     * JSON instructions.
-     * 
-     * @param content The content to find a reference for.
-     */
-    getContentReference(content: EqContent<any>): string {
-        if (content instanceof Term) {
-            return 't' + this.terms.indexOf(content);
-        } else if (content instanceof HDivider) {
-            return 'h' + this.hDividers.indexOf(content);
-        } else if (content instanceof Radical) {
-            return 'r' + this.radicals.indexOf(content);
-        } else {
-            throw "unrecognized content type";
-        }
-    }
-
-    /**
-     * Given the concatenated index of
-     * some content, get the reference
-     * for it. Preferred to the above method.
-     * 
-     * @param index The concatenated index of the content.
-     */
-    getContentRefFromIndex(index: number) {
-        if (this.inTermRange(index)) {
-            return 't' + index;
-        } else if (this.inHDividerRange(index)) {
-            return 'h' + (index - this.terms.length);
-        } else if (this.inRadicalRange(index)) {
-            return 'r' + (index - this.terms.length - this.hDividers.length);
-        } else {
-            throw "unrecognized content type";
         }
     }
 

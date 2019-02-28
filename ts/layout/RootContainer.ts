@@ -34,8 +34,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     private kinkHeight: number;
     // The distance that the index rises above the top of the root.
     // This happens when something taller than a regular term is put
-    // in the index. If this isn't the case, this will be <= 0 and can
-    // be ignored. This is added to the bottom to ensure the arg text
+    // in the index. If this isn't the case, this will be set to 0. 
+    // This is added to the bottom to ensure the arg text
     // remains vertically centered.
     private indexTopOverflow: number;
     // The width of the kink. Depends on the angle the tick makes to
@@ -61,6 +61,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         this.indexHeight = (termHeight + C.termPadding.height()) * C.rootIndexScale;
         this.kinkHeight = argument.getHeight() - this.indexHeight;
         this.indexTopOverflow = index.getHeight() * C.rootIndexScale - this.indexHeight;
+        this.indexTopOverflow = this.indexTopOverflow > 0 ? this.indexTopOverflow : 0;
 
         /*
               /\        /-----------
@@ -105,8 +106,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     }
 
     protected calcHeight(): number {
-        const realIdxTopPortrusion = this.indexTopOverflow > 0 ? this.indexTopOverflow : 0;
-        return realIdxTopPortrusion * 2 + this.argument.getHeight() + this.padding.height();
+        return this.indexTopOverflow * 2 + this.argument.getHeight() + this.padding.height();
     }
 
     /**
@@ -126,7 +126,6 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
                 opacityObj: Object, colorsObj: Object): RootContainerLayoutState {
         // Work out points for the radical (relative to this container)
         const realLeftOverflow = this.indexLeftOverflow >= 0 ? this.indexLeftOverflow : 0;
-        const realTopOverflow = this.indexTopOverflow >= 0 ? this.indexTopOverflow : 0;
 
         const kinkTipX = realLeftOverflow;
         const kinkTipY = this.yToKinkStart;
@@ -166,7 +165,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
 
         const argTlx = tlx + realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft + this.padding.left;
         this.argument.addLayout(
-            thisLayout, layouts, argTlx, tly + this.padding.top + realTopOverflow, currScale, opacityObj, colorsObj
+            thisLayout, layouts, argTlx, tly + this.padding.top + this.indexTopOverflow, currScale, opacityObj, colorsObj
         );
 
         if (this.radical) {
