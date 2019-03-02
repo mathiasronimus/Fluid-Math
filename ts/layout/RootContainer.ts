@@ -38,6 +38,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     // This is added to the bottom to ensure the arg text
     // remains vertically centered.
     private indexTopOverflow: number;
+    // If argument is taller than a normal term, this will be >= 0.
+    private emptySpaceAboveIndex: number;
     // The width of the kink. Depends on the angle the tick makes to
     // the horizontal, which the start of the kink matches. Also depends
     // on the kink height, kink tip length, and kink tip angle.
@@ -52,27 +54,37 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     private kinkTipWidth: number;
     // The height of the kink tip.
     private kinkTipHeight: number;
+    // An amount left blank (not taken up by the radical)
+    // at the bottom of the container. Distinct from normal
+    // padding, applies only to the radicals physical appearance.
+    private padBottom: number;
 
     constructor(index: HBox, argument: HBox, radical: Radical, padding: Padding, termHeight: number) {
         super(padding);
         this.index = index;
         this.argument = argument;
         this.radical = radical;
-        this.indexHeight = (termHeight + C.termPadding.height()) * C.rootIndexScale;
-        this.kinkHeight = argument.getHeight() - this.indexHeight;
+        this.padBottom = C.termPadding.bottom / 2;
+        termHeight += C.termPadding.height();
+        this.indexHeight = termHeight * C.rootIndexScale;
+        this.kinkHeight = (termHeight - this.padBottom) - this.indexHeight;
         this.indexTopOverflow = index.getHeight() * C.rootIndexScale - this.indexHeight;
-        this.indexTopOverflow = this.indexTopOverflow > 0 ? this.indexTopOverflow : 0;
-
+        this.indexTopOverflow = Math.max(this.indexTopOverflow, 0);
+        this.emptySpaceAboveIndex = argument.getHeight() - this.kinkHeight - this.indexHeight;
+        this.emptySpaceAboveIndex = Math.max(this.emptySpaceAboveIndex, 0);
         /*
               /\        /-----------
              /  \      /
             /y|z \    /   arg
                   \  /
-        __________x\/x______________
+        __________x\/w______________
+        Calculate x such that x = w if
+        the height of the argument is one
+        terms height.
         */
-        // tan x = argHeight / argMargin
-        // x = atan(argHeight / argMargin)
-        const x = Math.atan(argument.getHeight() / C.rootArgMarginLeft);
+        // tan x = termHeight / argMargin
+        // x = atan(termHeight / argMargin)
+        const x = Math.atan(termHeight / C.rootArgMarginLeft);
         // tan x = h / w
         // w = h / tan x
         const mainKinkWidth = this.kinkHeight / Math.tan(x);
@@ -87,7 +99,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         // cos y = h / tipLen
         // h = tipLen * cos y
         this.kinkTipHeight = C.rootKinkTipLength * Math.cos(y);
-        this.yToKinkStart = this.indexTopOverflow + this.indexHeight + this.kinkTipHeight;
+        this.yToKinkStart = this.indexTopOverflow + this.emptySpaceAboveIndex + this.indexHeight + this.kinkTipHeight - this.padBottom;
 
         // tan x = kinkHeight / xFromRightOfKink
         // xFromRightOfKink = kinkHeight / tan x
@@ -101,7 +113,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     }
 
     protected calcWidth(): number {
-        const realIdxLeftPortrusion = this.indexLeftOverflow > 0 ? this.indexLeftOverflow : 0;
+        const realIdxLeftPortrusion = Math.max(this.indexLeftOverflow, 0);
         return realIdxLeftPortrusion + this.kinkWidth + C.rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
     }
 
@@ -125,7 +137,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): RootContainerLayoutState {
         // Work out points for the radical (relative to this container)
-        const realLeftOverflow = this.indexLeftOverflow >= 0 ? this.indexLeftOverflow : 0;
+        const realLeftOverflow = Math.max(this.indexLeftOverflow, 0);
 
         const kinkTipX = realLeftOverflow;
         const kinkTipY = this.yToKinkStart;
@@ -137,7 +149,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         const tickBotY = kinkTopY + this.kinkHeight;
         
         const tickTopX = tickBotX + C.rootArgMarginLeft;
-        const tickTopY = tickBotY - this.argument.getHeight() + 1;
+        const tickTopY = tickBotY - this.argument.getHeight() + 1 + this.padBottom;
 
         const endX = tickTopX + this.argument.getWidth();
         const endY = tickTopY;
@@ -159,7 +171,9 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         indexTlx += this.padding.left;
 
         this.index.addLayout(
-            thisLayout, layouts, indexTlx - 1, tly + this.padding.top - 1, currScale * C.rootIndexScale,
+            thisLayout, layouts, 
+            indexTlx - 1, tly + this.emptySpaceAboveIndex + this.padding.top - 1 - this.padBottom,
+            currScale * C.rootIndexScale,
             opacityObj, colorsObj
         );
 
