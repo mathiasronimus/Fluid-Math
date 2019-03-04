@@ -18,6 +18,36 @@ export default class Radical extends EqContent<ContentLayoutState> {
     protected calcHeight(): number { return 0; }
 
     /**
+     * Sets up the Canvas by performing
+     * transformations and style changes.
+     * Subclasses should call the method as
+     * defined here, then draw themselves
+     * centered on (0, 0). Returns width
+     * and height to allow them 
+     * to do this.
+     * There is no need to call save() or
+     * restore(), animations handle this.
+     * 
+     * Override to not scale.
+     * 
+     * @param before The State before.
+     * @param after The State after.
+     * @param progress How close we are to after, from before,
+     *                 from 0-1.
+     * @param ctx The rendering context.
+     */
+    protected setupCtx(before: ContentLayoutState, after: ContentLayoutState, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
+        let invProg = 1 - progress;
+        let x = before.tlx * invProg + after.tlx * progress;
+        let y = before.tly * invProg + after.tly * progress;
+        let width = before.width * invProg + after.width * progress;
+        let height = before.height * invProg + after.height * progress;
+        ctx.translate(x + width / 2, y + height / 2);
+        this.setupCtxStyle(before, after, progress, ctx);
+        return [width, height];
+    }
+
+    /**
      * Draws the content on the canvas.
      * 
      * @param before The starting layout state.
@@ -70,8 +100,14 @@ export default class Radical extends EqContent<ContentLayoutState> {
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): ContentLayoutState {
         const parentPad = parentLayout.component.getPadding();
-        const padWidth = parentPad.width();
-        const padHeight = parentPad.height();
+        const realPad = new Padding(
+            parentPad.top * currScale,
+            parentPad.left * currScale,
+            parentPad.bottom * currScale,
+            parentPad.right * currScale
+        );
+        const padWidth = realPad.width();
+        const padHeight = realPad.height();
         const thisLayout = new ContentLayoutState(
             parentLayout, this, tlx + padWidth / 2, tly + padHeight / 2,
             parentLayout.width - padWidth, parentLayout.height - padHeight,

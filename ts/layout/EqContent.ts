@@ -41,19 +41,34 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
         let scale = before.scale * invProg + after.scale * progress;
         ctx.translate(x + width / 2, y + height / 2);
         ctx.scale(scale, scale);
+        this.setupCtxStyle(before, after, progress, ctx);
+        return [width, height];
+    }
 
+    /**
+     * Interpolates color and opacity and sets up the
+     * canvas to draw with the right color and opacity.
+     * 
+     * @param before The State before.
+     * @param after The State after.
+     * @param progress How close we are to after, from before,
+     *                 from 0-1.
+     * @param ctx The rendering context.
+     */
+    protected setupCtxStyle(before: L, after: L, progress: number, ctx: CanvasRenderingContext2D): void {
         if (progress === 0) {
             //Check whether to interpolate color at start of animation
             let colB = before.color;
             let colA = after.color;
             this.interpColor =  colB[0] !== colA[0] ||
-                                colB[1] !== colA[1] ||
-                                colB[2] !== colA[2] ||
-                                before.opacity !== after.opacity;
+            colB[1] !== colA[1] ||
+            colB[2] !== colA[2] ||
+            before.opacity !== after.opacity;
         }
         let color = before.color;
         let opacity = before.opacity;
         if (this.interpColor) {
+            let invProg = 1 - progress;
             let r = before.color[0] * invProg + after.color[0] * progress;
             let g = before.color[1] * invProg + after.color[1] * progress;
             let b = before.color[2] * invProg + after.color[2] * progress;
@@ -61,9 +76,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
             color = [Math.round(r), Math.round(g), Math.round(b)];
             opacity = a;
         }
-
         this.setCtxStyle(ctx, color, opacity);
-        return [width, height];
     }
 
     /**

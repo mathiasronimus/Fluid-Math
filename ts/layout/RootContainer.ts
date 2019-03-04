@@ -136,7 +136,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): RootContainerLayoutState {
-        // Work out points for the radical (relative to this container)
+        // Points for the radical: Relative to this container
         const realLeftOverflow = Math.max(this.indexLeftOverflow, 0);
 
         const kinkTipX = realLeftOverflow;
@@ -154,32 +154,40 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         const endX = tickTopX + this.argument.getWidth();
         const endY = tickTopY;
 
+        // The layout for this container
         const thisLayout = new RootContainerLayoutState(
-            parentLayout, this, tlx, tly, this.getWidth(), this.getHeight(), currScale,
-            kinkTipX, kinkTipY, kinkTopX, kinkTopY, tickBotX, tickBotY,
-            tickTopX, tickTopY, endX, endY
+            parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale,
+            kinkTipX * currScale, kinkTipY * currScale,
+            kinkTopX * currScale, kinkTopY * currScale,
+            tickBotX * currScale, tickBotY * currScale,
+            tickTopX * currScale, tickTopY * currScale,
+            endX * currScale, endY * currScale
         );
 
+        // Calculate layout for the index
         let indexTlx;
         if (this.indexLeftOverflow < 0) {
             // Doesn't overflow, needs to be centered
-            indexTlx = tlx - this.indexLeftOverflow / 2;
+            indexTlx = tlx - (this.indexLeftOverflow / 2) * currScale;
         } else {
             // Overflows or fits exactly
             indexTlx = tlx;
         }
-        indexTlx += this.padding.left;
+        indexTlx += (this.padding.left - 1) * currScale;
+        const indexTly = tly + (this.emptySpaceAboveIndex + this.padding.top - 1 - this.padBottom) * currScale;
 
         this.index.addLayout(
             thisLayout, layouts, 
-            indexTlx - 1, tly + this.emptySpaceAboveIndex + this.padding.top - 1 - this.padBottom,
+            indexTlx, indexTly,
             currScale * C.rootIndexScale,
             opacityObj, colorsObj
         );
 
-        const argTlx = tlx + realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft + this.padding.left;
+        // Calculate layout for the argument
+        const argTlx = tlx + (realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft + this.padding.left) * currScale;
+        const argTly = tly + (this.padding.top + this.indexTopOverflow) * currScale;
         this.argument.addLayout(
-            thisLayout, layouts, argTlx, tly + this.padding.top + this.indexTopOverflow, currScale, opacityObj, colorsObj
+            thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj
         );
 
         if (this.radical) {
