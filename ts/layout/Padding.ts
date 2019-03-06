@@ -22,6 +22,20 @@ export default class Padding {
     }
 
     /**
+     * Return a new Padding, having scaled this
+     * one by a certain amount.
+     * @param by The amount to scale by.
+     */
+    scale(by: number): Padding {
+        return new Padding(
+            this.top * by,
+            this.left * by,
+            this.bottom * by,
+            this.right * by
+        );
+    }
+
+    /**
      * Return a new Padding with same insets on
      * each side.
      * @param amount The amount of inset on each side.

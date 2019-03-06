@@ -136,6 +136,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
                 opacityObj: Object, colorsObj: Object): RootContainerLayoutState {
+        const adjustedPad = this.padding.scale(currScale);
+
         // Points for the radical: Relative to this container
         const realLeftOverflow = Math.max(this.indexLeftOverflow, 0);
 
@@ -154,14 +156,17 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         const endX = tickTopX + this.argument.getWidth();
         const endY = tickTopY;
 
+        const thisWidth = this.getWidth() * currScale;
+        const thisHeight = this.getHeight() * currScale;
+
         // The layout for this container
         const thisLayout = new RootContainerLayoutState(
-            parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale,
-            kinkTipX * currScale, kinkTipY * currScale,
-            kinkTopX * currScale, kinkTopY * currScale,
-            tickBotX * currScale, tickBotY * currScale,
-            tickTopX * currScale, tickTopY * currScale,
-            endX * currScale, endY * currScale
+            parentLayout, this, tlx, tly, thisWidth, thisHeight, currScale,
+            kinkTipX, kinkTipY,
+            kinkTopX, kinkTopY,
+            tickBotX, tickBotY,
+            tickTopX, tickTopY,
+            endX, endY
         );
 
         // Calculate layout for the index
@@ -173,8 +178,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
             // Overflows or fits exactly
             indexTlx = tlx;
         }
-        indexTlx += (this.padding.left - 1) * currScale;
-        const indexTly = tly + (this.emptySpaceAboveIndex + this.padding.top - 1 - this.padBottom) * currScale;
+        indexTlx += adjustedPad.left - 1 * currScale;
+        const indexTly = tly + (this.emptySpaceAboveIndex - 1 - this.padBottom) * currScale + adjustedPad.top;
 
         this.index.addLayout(
             thisLayout, layouts, 
@@ -184,8 +189,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         );
 
         // Calculate layout for the argument
-        const argTlx = tlx + (realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft + this.padding.left) * currScale;
-        const argTly = tly + (this.padding.top + this.indexTopOverflow) * currScale;
+        const argTlx = tlx + (realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft) * currScale + adjustedPad.left;
+        const argTly = tly + this.indexTopOverflow * currScale + adjustedPad.top;
         this.argument.addLayout(
             thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj
         );

@@ -5,8 +5,9 @@ import { Map, line } from '../main/helpers';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import RootContainerLayoutState from "../animation/RootContainerLayoutState";
+import { OriginalDimenLayoutState } from "../animation/OriginalDimenLayoutState";
 
-export default class Radical extends EqContent<ContentLayoutState> {
+export default class Radical extends EqContent<OriginalDimenLayoutState> {
 
     constructor(ref: string) {
         super(Padding.even(0), ref);
@@ -18,36 +19,6 @@ export default class Radical extends EqContent<ContentLayoutState> {
     protected calcHeight(): number { return 0; }
 
     /**
-     * Sets up the Canvas by performing
-     * transformations and style changes.
-     * Subclasses should call the method as
-     * defined here, then draw themselves
-     * centered on (0, 0). Returns width
-     * and height to allow them 
-     * to do this.
-     * There is no need to call save() or
-     * restore(), animations handle this.
-     * 
-     * Override to not scale.
-     * 
-     * @param before The State before.
-     * @param after The State after.
-     * @param progress How close we are to after, from before,
-     *                 from 0-1.
-     * @param ctx The rendering context.
-     */
-    protected setupCtx(before: ContentLayoutState, after: ContentLayoutState, progress: number, ctx: CanvasRenderingContext2D): [number, number] {
-        let invProg = 1 - progress;
-        let x = before.tlx * invProg + after.tlx * progress;
-        let y = before.tly * invProg + after.tly * progress;
-        let width = before.width * invProg + after.width * progress;
-        let height = before.height * invProg + after.height * progress;
-        ctx.translate(x + width / 2, y + height / 2);
-        this.setupCtxStyle(before, after, progress, ctx);
-        return [width, height];
-    }
-
-    /**
      * Draws the content on the canvas.
      * 
      * @param before The starting layout state.
@@ -55,21 +26,23 @@ export default class Radical extends EqContent<ContentLayoutState> {
      * @param progress The progress through the animation from 0-1.
      * @param ctx The graphics context to draw on.
      */
-    draw(before: ContentLayoutState, after: ContentLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
+    draw(before: OriginalDimenLayoutState, after: OriginalDimenLayoutState, progress: number, ctx: CanvasRenderingContext2D) {
         const contBefore = before.layoutParent as RootContainerLayoutState;
         const contAfter = after.layoutParent as RootContainerLayoutState;
         const invProg = 1 - progress;
-        const kinkTipX = contBefore.kinkTipX * invProg + contAfter.kinkTipX * progress;
-        const kinkTipY = contBefore.kinkTipY * invProg + contAfter.kinkTipY * progress;
-        const kinkTopX = contBefore.kinkTopX * invProg + contAfter.kinkTopX * progress;
-        const kinkTopY = contBefore.kinkTopY * invProg + contAfter.kinkTopY * progress;
-        const tickBotX = contBefore.tickBotX * invProg + contAfter.tickBotX * progress;
-        const tickBotY = contBefore.tickBotY * invProg + contAfter.tickBotY * progress;
-        const tickTopX = contBefore.tickTopX * invProg + contAfter.tickTopX * progress;
-        const tickTopY = contBefore.tickTopY * invProg + contAfter.tickTopY * progress;
-        const endX = contBefore.endX * invProg + contAfter.endX * progress;
-        const endY = contBefore.endY * invProg + contAfter.endY * progress;
-        const [width, height] = this.setupCtx(before, after, progress, ctx);
+        const kinkTipX =    contBefore.kinkTipX * invProg       + contAfter.kinkTipX * progress;
+        const kinkTipY =    contBefore.kinkTipY * invProg       + contAfter.kinkTipY * progress;
+        const kinkTopX =    contBefore.kinkTopX * invProg       + contAfter.kinkTopX * progress;
+        const kinkTopY =    contBefore.kinkTopY * invProg       + contAfter.kinkTopY * progress;
+        const tickBotX =    contBefore.tickBotX * invProg       + contAfter.tickBotX * progress;
+        const tickBotY =    contBefore.tickBotY * invProg       + contAfter.tickBotY * progress;
+        const tickTopX =    contBefore.tickTopX * invProg       + contAfter.tickTopX * progress;
+        const tickTopY =    contBefore.tickTopY * invProg       + contAfter.tickTopY * progress;
+        const endX =        contBefore.endX * invProg           + contAfter.endX * progress;
+        const endY =        contBefore.endY * invProg           + contAfter.endY * progress;
+        const width =       before.origInnerWidth * invProg     + after.origInnerWidth * progress;
+        const height =      before.origInnerHeight * invProg    + after.origInnerHeight * progress;
+        this.setupCtx(before, after, progress, ctx);
 
         const startX = -width / 2;
         const startY = -height / 2;
@@ -98,20 +71,15 @@ export default class Radical extends EqContent<ContentLayoutState> {
      */
     addLayout(  parentLayout: RootContainerLayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): ContentLayoutState {
-        const parentPad = parentLayout.component.getPadding();
-        const realPad = new Padding(
-            parentPad.top * currScale,
-            parentPad.left * currScale,
-            parentPad.bottom * currScale,
-            parentPad.right * currScale
-        );
-        const padWidth = realPad.width();
-        const padHeight = realPad.height();
-        const thisLayout = new ContentLayoutState(
+                opacityObj: Object, colorsObj: Object): OriginalDimenLayoutState {
+        const parentPad = parentLayout.component.getPadding().scale(currScale);
+        const padWidth = parentPad.width();
+        const padHeight = parentPad.height();
+        const thisLayout = new OriginalDimenLayoutState(
             parentLayout, this, tlx + padWidth / 2, tly + padHeight / 2,
             parentLayout.width - padWidth, parentLayout.height - padHeight,
-            currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj)
+            currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj),
+            (parentLayout.width - padWidth) / currScale, (parentLayout.height - padHeight) / currScale
         );
         layouts.set(this, thisLayout);
         return thisLayout;
