@@ -147,11 +147,13 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
             ctx.save();
             ctx.translate(l.tlx + l.width / 2, l.tly + pad.top / 4);
             ctx.rotate(Math.PI);
+            ctx.scale(l.scale, l.scale);
             tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
             ctx.restore();
 
             ctx.save();
             ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.bottom / 4);
+            ctx.scale(l.scale, l.scale);
             tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
             ctx.restore();
 
@@ -165,12 +167,14 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
             ctx.save();
             ctx.translate(l.tlx + pad.left / 4, l.tly + l.height / 2);
             ctx.rotate(Math.PI / 2);
+            ctx.scale(l.scale, l.scale);
             tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
             ctx.restore();
 
             ctx.save();
             ctx.translate(l.tlx + l.width - pad.right / 4, l.tly + l.height / 2);
             ctx.rotate(-Math.PI / 2);
+            ctx.scale(l.scale, l.scale);
             tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
             ctx.restore();
 

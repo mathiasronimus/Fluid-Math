@@ -66,11 +66,16 @@ export default class VBox extends LinearContainer<LayoutState> {
         //Carets
         ctx.fillStyle = C.creatorCaretFillStyle;
 
-        tri(l.tlx + l.width / 2, l.tly + pad.top * 0.75, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        ctx.save();
+        ctx.translate(l.tlx + l.width / 2, l.tly + pad.top * 0.75);
+        ctx.scale(l.scale, l.scale);
+        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        ctx.restore();
 
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.top * 0.75);
         ctx.rotate(Math.PI);
+        ctx.scale(l.scale, l.scale);
         tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
         ctx.restore();
 
