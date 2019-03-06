@@ -55,8 +55,7 @@ export default class HBox extends LinearContainer<LayoutState> {
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let padD = C.creatorContainerPadding;
-        let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);
+        let pad = C.creatorContainerPadding.scale(l.scale);
 
         //Horizontal lines
         let x1 = l.tlx + pad.left / 2;
@@ -90,12 +89,7 @@ export default class HBox extends LinearContainer<LayoutState> {
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        let pad = new Padding(
-            C.creatorContainerPadding.top * l.scale,
-            C.creatorContainerPadding.left * l.scale,
-            C.creatorContainerPadding.bottom * l.scale,
-            C.creatorContainerPadding.right * l.scale
-        );
+        let pad = C.creatorContainerPadding.scale(l.scale);
         // Make fake layout states to use like rectangles
         let innerLeft = new LayoutState(
             undefined,

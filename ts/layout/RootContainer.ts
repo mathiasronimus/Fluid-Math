@@ -218,12 +218,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
      * @param toAdd The component to add.
      */
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        let pad = new Padding(
-            C.creatorContainerPadding.top * l.scale,
-            C.creatorContainerPadding.left * l.scale,
-            C.creatorContainerPadding.bottom * l.scale,
-            C.creatorContainerPadding.right * l.scale
-        );
+        let pad = C.creatorContainerPadding.scale(l.scale);
         // Make fake layout state to use like rectangles
         let inner = new LayoutState(
             undefined,

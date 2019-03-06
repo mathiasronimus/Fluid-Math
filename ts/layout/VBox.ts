@@ -52,8 +52,7 @@ export default class VBox extends LinearContainer<LayoutState> {
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        let padD = C.creatorContainerPadding;
-        let pad = new Padding(padD.top * l.scale, padD.left * l.scale, padD.bottom * l.scale, padD.right * l.scale);     
+        let pad = C.creatorContainerPadding.scale(l.scale);     
         
         //Vertical lines
         let y1 = l.tly + pad.top / 2;
@@ -86,13 +85,7 @@ export default class VBox extends LinearContainer<LayoutState> {
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        let scl = l.scale;
-        let realPad = new Padding(
-            C.creatorContainerPadding.top * scl,
-            C.creatorContainerPadding.left * scl,
-            C.creatorContainerPadding.bottom * scl,
-            C.creatorContainerPadding.right * scl
-        );
+        let realPad = C.creatorContainerPadding.scale(l.scale);
         // Create mock layout states to use like rectangles
         let innerTop = new LayoutState(
             undefined, undefined, 

@@ -132,12 +132,7 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
         if (!parentLayout) {
             return;
         }
-        let pad = new Padding(
-            C.creatorContainerPadding.top * l.scale,
-            C.creatorContainerPadding.left * l.scale,
-            C.creatorContainerPadding.bottom * l.scale,
-            C.creatorContainerPadding.right * l.scale
-        );
+        let pad = C.creatorContainerPadding.scale(l.scale);
         let container: EqContainer<any> = parentLayout.component as EqContainer<any>;
         if (container.addVertically()) {
             // Add carets on top and bottom facing outwards
