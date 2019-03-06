@@ -25,7 +25,7 @@ const constants = {
     defaultRootPadding: Padding.even(0),
     termPadding: new Padding(10, 5, 10, 5),
     tightTermPadding: new Padding(5, 2, 5, 2),
-    hDividerPadding: new Padding(0, 2, 0, 2),
+    hDividerPadding: new Padding(0, 3, 0, 3),
     //The scaling of exponents and subscripts.
     expScale: 0.5,
     //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
