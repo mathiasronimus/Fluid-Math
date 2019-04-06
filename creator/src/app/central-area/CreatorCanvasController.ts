@@ -139,43 +139,43 @@ export default class CreatorCanvasController extends CanvasController {
     }
 
     // Override to change padding
-    protected parseContainer(containerObj): EqContainer<any> {
+    protected parseContainer(containerObj, depth: number): EqContainer<any> {
         const type: string = containerObj.type;
         if (type === 'vbox') {
             return new VBox(
-                this.parseContainerChildren(containerObj.children),
+                this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding);
         } else if (type === 'hbox') {
             return new HBox(
-                this.parseContainerChildren(containerObj.children),
+                this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding);
         } else if (type === 'tightHBox') {
             return new TightHBox(
-                this.parseContainerChildren(containerObj.children),
+                this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding
             );
         } else if (type === 'subSuper') {
             const top = new HBox(
-                this.parseContainerChildren(containerObj.top),
+                this.parseContainerChildren(containerObj.top, depth),
                 C.creatorContainerPadding
             );
             const middle = new TightHBox(
-                this.parseContainerChildren(containerObj.middle),
+                this.parseContainerChildren(containerObj.middle, depth),
                 C.creatorContainerPadding
             );
             const bottom = new HBox(
-                this.parseContainerChildren(containerObj.bottom),
+                this.parseContainerChildren(containerObj.bottom, depth),
                 C.creatorContainerPadding
             );
             const portrusion = containerObj.portrusion ? containerObj.portrusion : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.creatorContainerPadding);
         } else if (type === 'root') {
             const idx = new HBox(
-                this.parseContainerChildren(containerObj.idx),
+                this.parseContainerChildren(containerObj.idx, depth),
                 C.creatorContainerPadding
             );
             const arg = new HBox(
-                this.parseContainerChildren(containerObj.arg),
+                this.parseContainerChildren(containerObj.arg, depth),
                 C.creatorContainerPadding
             );
             let radical;
@@ -432,7 +432,7 @@ export default class CreatorCanvasController extends CanvasController {
     private getAddComponent(): EqComponent<any> {
         if (this.selection.addingContainer()) {
             // Adding a container
-            return this.parseContainer(this.selection.getContainer());
+            return this.parseContainer(this.selection.getContainer(), 0);
         } else {
             return this.getContentFromRef(this.selection.adding);
         }

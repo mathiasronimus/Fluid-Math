@@ -32,7 +32,7 @@ export default class RendererCanvasController extends CanvasController {
         const toReturn: HTMLCanvasElement[] = [];
         this.steps.forEach(step => {
             // Get the layouts for the step
-            const rootContainer = this.parseContainer(step.root);
+            const rootContainer = this.parseContainer(step.root, 0);
             const colors = step.color;
             const opacities = step.opacity;
             const layouts = newMap();

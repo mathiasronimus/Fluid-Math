@@ -2,7 +2,7 @@ import CanvasController from './CanvasController';
 import C from './consts';
 import { addStyleSheet } from './helpers';
 
-WebFont.load({
+window['WebFont'].load({
     google: {
         families: [C.fontFamily + ":" + C.fontWeight + ",400"]
     },
@@ -17,16 +17,16 @@ function init() {
 
     //For each container, get its instructions from the server
     for (let i = 0; i < containers.length; i++) {
-        new InstructionsRequest(containers[i], i);
+        new InstructionsRequest(containers[i] as HTMLElement, i);
     }
 
 }
 
 class InstructionsRequest {
 
-    private container: Element;
+    private container: HTMLElement;
 
-    constructor(container: Element, num: number) {
+    constructor(container: HTMLElement, num: number) {
         this.container = container;
 
         let this_ = this;

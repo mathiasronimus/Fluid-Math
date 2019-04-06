@@ -5,8 +5,8 @@
         (click)="deselect();">
     <app-tool-bar [leftIcons]="getLeftIcons()" [rightIcons]="getRightIcons()"></app-tool-bar>
     <div id="middle-row">
-        <app-central-area style="flex-grow: 1;"></app-central-area>
-        <app-content-pane></app-content-pane>
+        <app-central-area style="flex-grow: 1; height: calc(100vh - 156px);"></app-central-area>
+        <app-content-pane style="height: calc(100vh - 156px)"></app-content-pane>
     </div>
     <app-steps></app-steps>
     <div    id="background" 

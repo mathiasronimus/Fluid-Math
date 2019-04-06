@@ -20,6 +20,7 @@ import SubSuper from "../layout/SubSuper";
 import { getFontSizeForTier, Map, newMap, isIE, getWidthTier } from "./helpers";
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
+import VCenterVBox from "../layout/VCenterVBox";
 
 /**
  * Responsible for managing a single canvas,
@@ -48,6 +49,7 @@ export default class CanvasController {
     protected fontSize: number;
     protected lastHeight: number = 0;
     protected lastWidth: number = 0;
+    protected fixedHeights: number[];
 
     /**
      * Create a new Canvas Controller,
@@ -56,7 +58,7 @@ export default class CanvasController {
      * @param container The container. 
      * @param instructions The instructions.
      */
-    constructor(container: Element, instructions) {
+    constructor(container: HTMLElement, instructions) {
         this.container = container;
         this.steps = instructions['steps'];
         this.stepOptions = instructions['stepOpts'];
@@ -112,6 +114,13 @@ export default class CanvasController {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         canvasContainer.appendChild(this.canvas);
+
+        //Check whether to fix the height of the canvas
+        const mhAttrExists = container.dataset.fixHeight !== undefined;
+        const mhVarsExist = instructions.maxHeights !== undefined;
+        if (mhAttrExists && container.dataset.fixHeight === 'true' && mhVarsExist) {
+            this.fixedHeights = instructions.maxHeights;
+        }
 
         //Initialize Components and display first step
         this.initContent(instructions);
@@ -530,11 +539,16 @@ export default class CanvasController {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
-        let root = this.parseContainer(rootObj);
+        let root = this.parseContainer(rootObj, 0);
         //If content doesn't take up full width, center it
         let width = this.container.clientWidth;
         if (root.getWidth() < width) {
             root.setWidth(width);
+        }
+        //Apply fixed height
+        if (this.fixedHeights) {
+            let height = this.fixedHeights[window['currentWidthTier']];
+            root.setHeight(height);
         }
 
         //Set the text
@@ -555,44 +569,50 @@ export default class CanvasController {
      * Parse a container from the JSON Object.
      * 
      * @param containerObj The JSON Object representing the container.
+     * @param depth The depth in the layout tree.
      */
-    protected parseContainer(containerObj): EqContainer<any> {
+    protected parseContainer(containerObj, depth: number): EqContainer<any> {
         let type: string = containerObj.type;
         if (type === "vbox") {
-            return new VBox(
-                this.parseContainerChildren(containerObj.children),
-                Padding.even(C.defaultVBoxPadding));
+            const c = this.parseContainerChildren(containerObj.children, depth + 1);
+            const p = Padding.even(C.defaultVBoxPadding);
+            console.log(depth);
+            if (this.fixedHeights && depth === 0) {
+                return new VCenterVBox(c, p);
+            } else {
+                return new VBox(c, p);
+            }
         } else if (type === "hbox") {
             return new HBox(
-                this.parseContainerChildren(containerObj.children),
+                this.parseContainerChildren(containerObj.children, depth + 1),
                 Padding.even(C.defaultHBoxPadding));
         } else if (type === "tightHBox") {
             return new TightHBox(
-                this.parseContainerChildren(containerObj.children),
+                this.parseContainerChildren(containerObj.children, depth + 1),
                 Padding.even(C.defaultTightHBoxPadding)
             );
         } else if (type === 'subSuper') {
             let top = new HBox(
-                this.parseContainerChildren(containerObj.top),
+                this.parseContainerChildren(containerObj.top, depth + 1),
                 Padding.even(0)
             );
             let middle = new TightHBox(
-                this.parseContainerChildren(containerObj.middle),
+                this.parseContainerChildren(containerObj.middle, depth + 1),
                 Padding.even(0)
             );
             let bottom = new HBox(
-                this.parseContainerChildren(containerObj.bottom),
+                this.parseContainerChildren(containerObj.bottom, depth + 1),
                 Padding.even(0)
             );
             let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.defaultSubSuperPadding);
         } else if (type === 'root') {
             let idx = new HBox(
-                this.parseContainerChildren(containerObj.idx),
+                this.parseContainerChildren(containerObj.idx, depth + 1),
                 Padding.even(0)
             );
             let arg = new HBox(
-                this.parseContainerChildren(containerObj.arg),
+                this.parseContainerChildren(containerObj.arg, depth + 1),
                 Padding.even(0)
             );
             let radical;
@@ -612,12 +632,13 @@ export default class CanvasController {
      * JSON Object.
      * 
      * @param children The children array.
+     * @param depth The depth in the layout tree.
      */
-    protected parseContainerChildren(children: any[]): EqComponent<any>[] {
+    protected parseContainerChildren(children: any[], depth: number): EqComponent<any>[] {
         let toReturn = [];
         children.forEach(child => {
             if (typeof child === 'object') {
-                toReturn.push(this.parseContainer(child));
+                toReturn.push(this.parseContainer(child, depth + 1));
             } else if (typeof child === 'string') {
                 toReturn.push(this.getContentFromRef(child));
             } else {

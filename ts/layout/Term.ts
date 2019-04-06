@@ -31,7 +31,7 @@ export default class Term extends EqContent<TermLayoutState> {
         this.text = text;
     }
 
-    private recalcDimensions() {
+    recalcDimensions() {
         this.height = this.calcHeight();
         this.width = this.calcWidth();
         let tier: number = window['currentWidthTier'];

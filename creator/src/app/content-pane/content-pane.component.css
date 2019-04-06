@@ -1,7 +1,7 @@
 #outer {
     width: 250px;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
-    height: 100%;
+    max-height: 100%;
     overflow-x: auto;
 }
 
