@@ -116,7 +116,7 @@ export default class CanvasController {
         canvasContainer.appendChild(this.canvas);
 
         //Check whether to fix the height of the canvas
-        const mhAttrExists = container.dataset.fixHeight !== undefined;
+        const mhAttrExists = container.dataset && container.dataset.fixHeight;
         const mhVarsExist = instructions.maxHeights !== undefined;
         if (mhAttrExists && container.dataset.fixHeight === 'true' && mhVarsExist) {
             this.fixedHeights = instructions.maxHeights;
