@@ -3,7 +3,9 @@ import Padding from '../layout/Padding';
 
 const constants = {
     //Font: size in px
+    // The DEFAULT Google font, may be overridden.
     fontFamily: 'Roboto',
+    fontStyle: 'Normal',
     fontWeight: '400',
     fontSizes: [35, 30, 25],
     borderRadius: 5,

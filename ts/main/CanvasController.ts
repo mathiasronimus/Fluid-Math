@@ -46,7 +46,12 @@ export default class CanvasController {
 
     protected currStates: Map<EqComponent<any>, LayoutState>;
     protected animating = false;
+
+    protected fontWeight: string;
+    protected fontStyle: string;
     protected fontSize: number;
+    protected fontFamily: string;
+
     protected lastHeight: number = 0;
     protected lastWidth: number = 0;
     protected fixedHeights: number[];
@@ -120,6 +125,45 @@ export default class CanvasController {
         const mhVarsExist = instructions.maxHeights !== undefined;
         if (mhAttrExists && container.dataset.fixHeight === 'true' && mhVarsExist) {
             this.fixedHeights = instructions.maxHeights;
+        }
+
+        //Initialize the font
+        if (instructions.font) {
+            // There's a font set
+            if (instructions.font.type === "c") {
+                // There's a custom font
+                this.fontFamily = instructions.font.name;
+                this.fontStyle = instructions.font.style;
+                this.fontWeight = instructions.font.weight;
+            } else if (instructions.font.type === "g") {
+                // There's a google font
+                let descriptor: string = instructions.font.name;
+                let split: string[] = descriptor.split(":");
+                this.fontFamily = split[0];
+                if (split[1]) {
+                    // It has a special weight/italic
+                    if (split[1].charAt(split[1].length - 1) === "i") {
+                        // Is italic
+                        this.fontStyle = "italic";
+                        this.fontWeight = split[1].substring(0, split[1].length - 1);
+                    } else {
+                        // Not italic
+                        this.fontStyle = C.fontStyle;
+                        this.fontWeight = split[1];
+                    }
+                } else {
+                    // No defined weight/italic
+                    this.fontStyle = C.fontStyle;
+                    this.fontWeight = C.fontWeight;
+                }
+            } else {
+                throw "Unrecognized custom font type";
+            }
+        } else {
+            // Use default
+            this.fontWeight = C.fontWeight;
+            this.fontStyle = C.fontStyle;
+            this.fontFamily = C.fontFamily;
         }
 
         //Initialize Components and display first step
@@ -435,7 +479,7 @@ export default class CanvasController {
         this.canvas.width = newWidth * pixelRatio;
         this.canvas.height = newHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
-        this.ctx.font = C.fontWeight + " " + this.fontSize + "px " + C.fontFamily;
+        this.ctx.font = this.fontWeight + " " + this.fontStyle + " " + this.fontSize + "px " + this.fontFamily;
 
         this.lastHeight = newHeight;
         this.lastWidth = newWidth;
@@ -576,7 +620,6 @@ export default class CanvasController {
         if (type === "vbox") {
             const c = this.parseContainerChildren(containerObj.children, depth + 1);
             const p = Padding.even(C.defaultVBoxPadding);
-            console.log(depth);
             if (this.fixedHeights && depth === 0) {
                 return new VCenterVBox(c, p);
             } else {

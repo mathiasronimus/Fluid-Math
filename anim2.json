@@ -1,1 +1,61 @@
-{"metrics":[{"widths":[797.15576171875,167.66845703125],"ascent":27.247804265997488,"height":34.353199498117945},{"widths":[683.2763671875,143.7158203125],"ascent":22.920937042459734,"height":28.52635431918008},{"widths":[569.39697265625,119.76318359375],"ascent":18.420913884007028,"height":23.526362038664324}],"hDividers":0,"terms":["Really very big term that fills up the whole canvas!!","small term"],"steps":[{"root":{"type":"vbox","children":["t1"]}},{"root":{"type":"vbox","children":[{"type":"hbox","children":["t0","t1"]}]}}]}
+{
+    "font": {
+        "type": "g",
+        "name": "Old Standard TT:400"
+    },
+    "metrics": [
+        {
+            "widths": [
+                797.15576171875,
+                167.66845703125
+            ],
+            "ascent": 27.247804265997488,
+            "height": 34.353199498117945
+        },
+        {
+            "widths": [
+                683.2763671875,
+                143.7158203125
+            ],
+            "ascent": 22.920937042459734,
+            "height": 28.52635431918008
+        },
+        {
+            "widths": [
+                569.39697265625,
+                119.76318359375
+            ],
+            "ascent": 18.420913884007028,
+            "height": 23.526362038664324
+        }
+    ],
+    "hDividers": 0,
+    "terms": [
+        "Really very big term that fills up the whole canvas!!",
+        "small term"
+    ],
+    "steps": [
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    "t1"
+                ]
+            }
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            "t0",
+                            "t1"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
