@@ -6,3 +6,6 @@
   <p>Loading will erase the current project! If you want to keep it, save first.</p>
   <span class="button" (click)="load();">Load</span>
 </div>
+<p *ngIf="showLoading">
+  loading...
+</p>

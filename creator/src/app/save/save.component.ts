@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import HeightComputeCanvasController from './HeightComputeCanvasController';
+import HeightComputeCanvasController from '@shared/main/HeightComputeCanvasController';
 
 @Component({
   selector: 'app-save',
@@ -18,8 +18,18 @@ export class SaveComponent implements OnDestroy, AfterViewInit {
   textAreaEl: ElementRef;
 
   constructor(private undoRedo: UndoRedoService, private sanitizer: DomSanitizer) {
-    const currState: any = this.undoRedo.getState();
-    currState.maxHeights = new HeightComputeCanvasController(currState).compute();
+    const currState: any = this.undoRedo.getStateClone();
+    // Check if there is an unloaded custom font
+    if (currState.saveLaterFont) {
+      currState.font = currState.saveLaterFont;
+      delete currState.saveLaterFont;
+      // Metrics are for default font, no longer valid
+      delete currState.metrics;
+      delete currState.maxHeights;
+    } else {
+      // Computing max heights is only valid if the font is correct
+      currState.maxHeights = new HeightComputeCanvasController(currState).compute();
+    }
     this.fileString = JSON.stringify(currState);
     const blob = new Blob([this.fileString], {type: 'text/plain'});
     this.downloadHref = sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));

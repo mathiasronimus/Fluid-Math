@@ -1,6 +1,6 @@
-import CanvasController from '@shared/main/CanvasController';
-import C from '@shared/main/consts';
-import { getWidthTier } from '@shared/main/helpers';
+import CanvasController from './CanvasController';
+import C from './consts';
+import { getWidthTier } from './helpers';
 
 /**
  * Canvas controller that computes the max height of an

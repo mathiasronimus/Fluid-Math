@@ -20,6 +20,8 @@ import {  StepOptionsComponent,
           MergeContainerDirective,
           EvalContainerDirective } from './step-options/step-options.component';
 import { TermTemplateComponent } from './term-template/term-template.component';
+import { FontSettingsComponent } from './font-settings/font-settings.component';
+import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font-load-fail.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { TermTemplateComponent } from './term-template/term-template.component';
     CloneContainerDirective,
     MergeContainerDirective,
     EvalContainerDirective,
-    TermTemplateComponent
+    TermTemplateComponent,
+    FontSettingsComponent,
+    CustomFontLoadFailComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +60,9 @@ import { TermTemplateComponent } from './term-template/term-template.component';
     TextEditorComponent,
     SubSuperAlignmentComponent,
     StepOptionsComponent,
-    TermTemplateComponent
+    TermTemplateComponent,
+    FontSettingsComponent,
+    CustomFontLoadFailComponent
   ]
 })
 export class AppModule { }

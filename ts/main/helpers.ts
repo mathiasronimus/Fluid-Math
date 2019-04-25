@@ -4,14 +4,154 @@ import C from './consts';
  * Add styles based on the contents of consts
  */
 export function addStyleSheet() {
-    let styleEl = document.createElement('style');
-    let styleText = "";
+    const styleEl = document.createElement('style');
+    let styleText = '';
     Object.keys(C.colors).forEach(colorName => {
-        let colorVal = C.colors[colorName];
-        styleText += '.' + colorName + " { color: " + 'rgb(' + colorVal[0] + ',' + colorVal[1] + "," + colorVal[2] + ")}";
+        const colorVal = C.colors[colorName];
+        styleText += '.' + colorName + ' { color: ' + 'rgb(' + colorVal[0] + ',' + colorVal[1] + ',' + colorVal[2] + ')}';
     });
     styleEl.appendChild(document.createTextNode(styleText));
     document.head.appendChild(styleEl);
+}
+
+/**
+ * Return the font family, style, and weight (in that order) to
+ * use for a given instructions object.
+ * @param instructions The instructions.
+ */
+export function getFont(instructions: any): [string, string, string] {
+    if (instructions.font) {
+        // There's a font set
+        if (instructions.font.type === "c") {
+            // There's a custom font
+            return [
+                instructions.font.name, 
+                instructions.font.style, 
+                instructions.font.weight
+            ];
+        } else if (instructions.font.type === "g") {
+            // There's a google font
+            let descriptor: string = instructions.font.name;
+            let split: string[] = descriptor.split(":");
+            const fontFamily = split[0];
+            if (split[1]) {
+                // It has a special weight/italic
+                if (split[1].charAt(split[1].length - 1) === "i") {
+                    // Is italic
+                    return [
+                        fontFamily,
+                        'italic',
+                        split[1].substring(0, split[1].length - 1)
+                    ];
+                } else {
+                    // Not italic
+                    return [
+                        fontFamily,
+                        C.fontStyle,
+                        split[1]
+                    ]
+                }
+            } else {
+                // No defined weight/italic
+                return [
+                    fontFamily,
+                    C.fontStyle,
+                    C.fontWeight
+                ];
+            }
+        } else {
+            throw "Unrecognized custom font type";
+        }
+    } else {
+        // Use default
+        return [
+            C.fontFamily,
+            C.fontStyle,
+            C.fontWeight
+        ];
+    }
+}
+
+/**
+ * Get the font metrics object for an instructions object.
+ * @param instructions The instructions to get the metrics for.
+ */
+export function getMetrics(instructions): object[] {
+    const metricsArr = [];
+    // Calculate a metrics object for each width tier
+    for (let i = 0; i < C.widthTiers.length; i++) {
+        const metrics: any = {};
+        metricsArr.push(metrics);
+
+        metrics.widths = [];
+
+        /* Look for the max ascent and
+           descent, which all terms will use. */
+        let maxAscent = 0;
+        let maxDescent = 0;
+        instructions.terms.forEach(term => {
+            const termMetrics: any = measureTerm(term, i, instructions);
+            if (termMetrics.ascent > maxAscent) {
+                maxAscent = termMetrics.ascent;
+            }
+            if (termMetrics.descent > maxDescent) {
+                maxDescent = termMetrics.descent;
+            }
+            // All terms have their own width
+            metrics.widths.push(termMetrics.width);
+        });
+        metrics.ascent = maxAscent;
+        metrics.height = maxAscent + maxDescent;
+    }
+    return metricsArr;
+}
+
+/**
+ * Measure the metrics for a term.
+ * @param term The term to measure.
+ * @param tier The width tier to measure this term for.
+ * @param instructions The instructions object containing this term.
+ */
+function measureTerm(term: string, tier: number, instructions: any): object {
+    const toReturn: any = {};
+
+    const fontSize = getFontSizeForTier(tier);
+
+    const [fontFamily, style, weight] = getFont(instructions);
+
+    // Create a canvas to measure with
+    const testCanvas = document.createElement('canvas');
+    testCanvas.width = C.testCanvasWidth;
+    testCanvas.height = fontSize * C.testCanvasFontSizeMultiple;
+    const testCtx = testCanvas.getContext('2d');
+    testCtx.font = weight + " " + style + " " + fontSize + "px " + fontFamily;
+
+    // Get the width
+    toReturn.width = testCtx.measureText(term).width;
+
+    // Draw the text on the canvas to measure ascent and descent
+    testCtx.fillStyle = 'white';
+    testCtx.fillRect(0, 0, testCanvas.width, testCanvas.height);
+    testCtx.fillStyle = 'black';
+    testCtx.fillText(term, 0, testCanvas.height / 2);
+
+    const image = testCtx.getImageData(0, 0, toReturn.width, testCanvas.height);
+    const imageData = image.data;
+
+    // Go down until we find text
+    let i = 0;
+    while (++i < imageData.length && imageData[i] === 255) { }
+    const ascent = i / (image.width * 4);
+
+    // Go up until we find text
+    i = imageData.length - 1;
+    while (--i > 0 && imageData[i] === 255) { }
+    const descent = i / (image.width * 4);
+
+    toReturn.ascent = testCanvas.height / 2 - ascent;
+    toReturn.descent = descent - testCanvas.height / 2;
+
+    return toReturn;
 }
 
 //Detects if the browser is ie

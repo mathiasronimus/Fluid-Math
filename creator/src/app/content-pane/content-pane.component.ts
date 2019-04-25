@@ -3,7 +3,7 @@ import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
 import { ContentSelectionService } from '../content-selection.service';
 import { ErrorService } from '../error.service';
-import { getMetrics } from '../helpers';
+import { getMetrics } from '@shared/main/helpers';
 import { ModalService } from '../modal.service';
 import { TermTemplateComponent } from '../term-template/term-template.component';
 

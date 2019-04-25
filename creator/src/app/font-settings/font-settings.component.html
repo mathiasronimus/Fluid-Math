@@ -1,0 +1,72 @@
+<div class="title">Font Type</div>
+<select #fontType (select)="fontTypeChanged($event.target.value);">
+  <option value="default">Default Font</option>
+  <option value="google fonts">Font from Google Fonts</option>
+  <option value="custom font">Custom Font</option>
+</select>
+
+<!-- Options for Google fonts -->
+<div *ngIf="fontType.value === 'google fonts'">
+  <p>Browse Google Fonts <a href="https://fonts.google.com" target="blank">here</a> and find a font and style.</p>
+  <div class="title">Font Name</div>
+  <p>For example: 'Lato'</p>
+  <input type="text" #gfName>
+  <div class="title">Font Weight</div>
+  <p>Not all of the weights below may be available. To check, select the font on Google Fonts and navigate to 'customize'.</p>
+  <select #gfFontWeight>
+    <option value="100">100 (Thin)</option>
+    <option value="200">200</option>
+    <option value="300">300 (Light)</option>
+    <option value="400">400 (Regular)</option>
+    <option value="500">500 (Medium)</option>
+    <option value="600">600</option>
+    <option value="700">700 (Bold)</option>
+    <option value="800">800 (Black)</option>
+  </select>
+  <div class="title">Font Style</div>
+  <input type="checkbox" #gfItalic>Make this font italic.<br>
+</div>
+
+<!-- Options for Custom fonts -->
+<div *ngIf="fontType.value === 'custom font'">
+  <div class="title">Name</div>
+  <p>
+    Can be anything, as long as it isn't the name of another font used on the same page.
+  </p>
+  <input type="text" #cfName>
+  <div class="title">Weight</div>
+  <select #cfFontWeight>
+      <option value="100">100 (Thin)</option>
+      <option value="200">200</option>
+      <option value="300">300 (Light)</option>
+      <option value="400">400 (Regular)</option>
+      <option value="500">500 (Medium)</option>
+      <option value="600">600</option>
+      <option value="700">700 (Bold)</option>
+      <option value="800">800 (Black)</option>
+    </select>
+    <div class="title">Style</div>
+    <input type="checkbox" #cfItalic>Make this font italic.<br>
+    <div class="title">URL</div>
+    <p>
+      The relative path or URL to where your font can be found.
+      For example:<br>
+      fonts/my-font.otf<br>
+      Or:<br>
+      www.mywebsite.com/fonts/my-font.ttf
+    </p>
+    <input type="text" #cfURL>
+</div>
+
+<div style="display: flex;">
+  <span class="button" (click)="apply()">Apply</span>
+</div>
+
+<p *ngIf="loadingText">
+  loading...
+</p>
+
+<p *ngIf="errorText">
+  Couldn't find that font. Double check the font name, and make sure it's available in the
+  selected style.
+</p>

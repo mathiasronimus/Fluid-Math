@@ -10,9 +10,10 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LoadComponent } from './load/load.component';
 import { SaveComponent } from './save/save.component';
 import { PreviewComponent } from './preview/preview.component';
-import { addStyleSheet } from './helpers';
+import { addStyleSheet } from '@shared/main/helpers';
 import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
 import { ErrorService } from './error.service';
+import { FontSettingsComponent } from './font-settings/font-settings.component';
 
 @Component({
   selector: 'app-root',
@@ -53,6 +54,7 @@ export class AppComponent {
     this.save = this.save.bind(this);
     this.play = this.play.bind(this);
     this.deselect = this.deselect.bind(this);
+    this.changeFont = this.changeFont.bind(this);
     this.modal.appComponent = this;
     this.defaultLeftIcons = [];
     this.defaultRightIcons = [
@@ -60,7 +62,8 @@ export class AppComponent {
       new Icon('get_app', this.load, () => true),
       new Icon('play_arrow', this.play, () => true),
       new Icon('undo', this.undo, this.undoRedo.canUndo),
-      new Icon('redo', this.redo, this.undoRedo.canRedo)
+      new Icon('redo', this.redo, this.undoRedo.canRedo),
+      new Icon('font_download', this.changeFont, () => true)
     ];
     this.selectedLeftIcons = [
       new Icon('clear', this.deselect, () => true)
@@ -200,5 +203,12 @@ export class AppComponent {
    */
   play() {
     this.modal.show(PreviewComponent);
+  }
+
+  /**
+   * Change the current font.
+   */
+  changeFont() {
+    this.modal.show(FontSettingsComponent);
   }
 }

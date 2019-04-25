@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
-import { getMetrics } from '../helpers';
+import { getMetrics } from '@shared/main/helpers';
 import { ContentSelectionService } from '../content-selection.service';
 import { ModalService } from '../modal.service';
 

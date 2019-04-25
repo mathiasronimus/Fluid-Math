@@ -1,11 +1,12 @@
 import CanvasController from './CanvasController';
+import HeightComputeCanvasController from './HeightComputeCanvasController';
 import C from './consts';
-import { addStyleSheet } from './helpers';
+import { addStyleSheet, getMetrics } from './helpers';
 
 (function () {
 
     addStyleSheet();
-    let containers = document.getElementsByClassName('eqContainer');
+    let containers = document.getElementsByClassName('eqContainer') as HTMLCollectionOf<HTMLElement>;
     // Once loaded, instructions are put here. Each container is
     // associated with its instructions by index.
     let instructions = [];
@@ -90,7 +91,18 @@ import { addStyleSheet } from './helpers';
 
     function afterFontLoad() {
         for (let i = 0; i < containers.length; i++) {
-            new CanvasController(containers[i] as HTMLElement, instructions[i]);
+            const instruction = instructions[i];
+            const container = containers[i];
+            if (!instruction.metrics) {
+                // Metrics not calculated yet
+                instruction.metrics = getMetrics(instruction);
+            }
+            if (container.dataset && container.dataset.fixHeight && !instruction.maxHeights) {
+                // Canvas needs fixed height information and
+                // doesn't have it.
+                instruction.maxHeights = new HeightComputeCanvasController(instruction).compute();
+            }
+            new CanvasController(containers[i] as HTMLElement, instruction);
         }
     }
 

@@ -17,7 +17,7 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier, Map, newMap, isIE, getWidthTier } from "./helpers";
+import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./helpers";
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
@@ -97,7 +97,6 @@ export default class CanvasController {
         if (!(this.steps.length === 1 && this.steps[0]['text'] === undefined)) {
             this.textArea = document.createElement("div");
             this.textArea.className = "eqText";
-            this.textArea.innerHTML = "test";
             upperArea.appendChild(this.textArea);
         }
 
@@ -121,50 +120,16 @@ export default class CanvasController {
         canvasContainer.appendChild(this.canvas);
 
         //Check whether to fix the height of the canvas
-        const mhAttrExists = container.dataset && container.dataset.fixHeight;
-        const mhVarsExist = instructions.maxHeights !== undefined;
-        if (mhAttrExists && container.dataset.fixHeight === 'true' && mhVarsExist) {
+        if (container.dataset && container.dataset.fixHeight) {
             this.fixedHeights = instructions.maxHeights;
         }
 
         //Initialize the font
-        if (instructions.font) {
-            // There's a font set
-            if (instructions.font.type === "c") {
-                // There's a custom font
-                this.fontFamily = instructions.font.name;
-                this.fontStyle = instructions.font.style;
-                this.fontWeight = instructions.font.weight;
-            } else if (instructions.font.type === "g") {
-                // There's a google font
-                let descriptor: string = instructions.font.name;
-                let split: string[] = descriptor.split(":");
-                this.fontFamily = split[0];
-                if (split[1]) {
-                    // It has a special weight/italic
-                    if (split[1].charAt(split[1].length - 1) === "i") {
-                        // Is italic
-                        this.fontStyle = "italic";
-                        this.fontWeight = split[1].substring(0, split[1].length - 1);
-                    } else {
-                        // Not italic
-                        this.fontStyle = C.fontStyle;
-                        this.fontWeight = split[1];
-                    }
-                } else {
-                    // No defined weight/italic
-                    this.fontStyle = C.fontStyle;
-                    this.fontWeight = C.fontWeight;
-                }
-            } else {
-                throw "Unrecognized custom font type";
-            }
-        } else {
-            // Use default
-            this.fontWeight = C.fontWeight;
-            this.fontStyle = C.fontStyle;
-            this.fontFamily = C.fontFamily;
-        }
+        [
+            this.fontFamily,
+            this.fontStyle,
+            this.fontWeight
+        ] = getFont(instructions);
 
         //Initialize Components and display first step
         this.initContent(instructions);

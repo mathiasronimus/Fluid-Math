@@ -1,0 +1,25 @@
+<div id="outer">
+    <p>
+        Couldn't load the custom font. The animation will still be saved with this font,
+        and the player will also attempt to load it. There are a few reasons the creator
+        may not be able to load the custom font:
+      </p>
+      <ul>
+        <li>
+          The URL given is relative to where the animation file will be hosted, and the
+          creator is not hosted from the same place.
+        </li>
+        <li>
+          The website where the font is hosted does not allow cross-origin requests to
+          the font.
+        </li>
+        <li>
+          The URL given is incorrect, or the font is not available in the chosen style.
+        </li>
+      </ul>
+      <div style="display: flex">
+        <span class="button" (click)="modal.remove()">
+          Ok
+        </span>
+      </div>      
+</div>
