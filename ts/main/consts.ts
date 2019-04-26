@@ -1,5 +1,5 @@
-import bezier from '../animation/BezierEasing';
 import Padding from '../layout/Padding';
+import bezier from 'bezier-easing';
 
 const constants = {
     //Font: size in px

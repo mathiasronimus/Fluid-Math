@@ -1,0 +1,32 @@
+{
+  "name": "math-animations",
+  "version": "1.0.0",
+  "description": "An algebra layout and animation engine. (WIP)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathiasronimus/Math-Animations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mathiasronimus/Math-Animations/issues"
+  },
+  "homepage": "https://github.com/mathiasronimus/Math-Animations#readme",
+  "devDependencies": {
+    "ts-loader": "^5.4.3",
+    "typescript": "^3.4.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "dependencies": {
+    "@types/webfontloader": "^1.6.29",
+    "bezier-easing": "^2.1.0",
+    "map-or-similar": "^1.5.0",
+    "webfontloader": "^1.6.28"
+  }
+}

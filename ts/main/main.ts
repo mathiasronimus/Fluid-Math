@@ -1,10 +1,10 @@
 import CanvasController from './CanvasController';
 import HeightComputeCanvasController from './HeightComputeCanvasController';
+import * as WebFont from 'webfontloader';
 import C from './consts';
 import { addStyleSheet, getMetrics } from './helpers';
 
-(function () {
-
+(function(){
     addStyleSheet();
     let containers = document.getElementsByClassName('eqContainer') as HTMLCollectionOf<HTMLElement>;
     // Once loaded, instructions are put here. Each container is
@@ -86,7 +86,7 @@ import { addStyleSheet, getMetrics } from './helpers';
                 throw "unrecognized custom font type";
             }
         });
-        window['WebFont'].load(webFontObj);
+        WebFont.load(webFontObj);
     }
 
     function afterFontLoad() {
@@ -120,5 +120,4 @@ import { addStyleSheet, getMetrics } from './helpers';
         req.open("GET", "anim" + containerIndex + ".json");
         req.send();
     }
-
 })();
