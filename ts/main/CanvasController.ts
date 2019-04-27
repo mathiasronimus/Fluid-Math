@@ -135,7 +135,7 @@ export default class CanvasController {
         this.initContent(instructions);
         this.updateFontSize();
         this.recalc();
-
+        
         //Bind next step to canvas/text click
         this.nextStep = this.nextStep.bind(this);
         this.canvas.addEventListener("click", this.nextStep);
