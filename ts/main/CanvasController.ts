@@ -181,7 +181,7 @@ export default class CanvasController {
     /**
      * Recalculates and redraws the current step.
      */
-    recalc() {
+    protected recalc() {
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         let [width, height] = this.getSize(rootLayout);
@@ -193,7 +193,7 @@ export default class CanvasController {
      * If possible, animate to the next step
      * in the sequence.
      */
-    nextStep() {
+    protected nextStep() {
         if (this.currStep + 1 >= this.steps.length || this.animating) {
             //Can't go to next step
             return;
@@ -213,7 +213,7 @@ export default class CanvasController {
     /**
      * If possible, animate to the previous step.
      */
-    prevStep() {
+    protected prevStep() {
         if (this.currStep - 1 < 0 || this.animating) {
             //Can't go to next step
             return;
@@ -233,7 +233,7 @@ export default class CanvasController {
     /**
      * Return to the first step.
      */
-    restart() {
+    protected restart() {
         if (this.animating) {
             //Can't go to next step
             return;

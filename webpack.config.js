@@ -15,7 +15,7 @@ module.exports = {
     extensions: [ '.ts', '.js' ]
   },
   output: {
-    filename: 'index.js',
+    filename: 'algebra-animations.js',
     path: __dirname
   },
   mode: 'production'
