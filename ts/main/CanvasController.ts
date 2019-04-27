@@ -120,7 +120,7 @@ export default class CanvasController {
         canvasContainer.appendChild(this.canvas);
 
         //Check whether to fix the height of the canvas
-        if (container.dataset && container.dataset.fixHeight) {
+        if (container.hasAttribute('data-fix-height')) {
             this.fixedHeights = instructions.maxHeights;
         }
 
@@ -181,7 +181,7 @@ export default class CanvasController {
     /**
      * Recalculates and redraws the current step.
      */
-    protected recalc() {
+    recalc() {
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         let [width, height] = this.getSize(rootLayout);
@@ -193,7 +193,7 @@ export default class CanvasController {
      * If possible, animate to the next step
      * in the sequence.
      */
-    protected nextStep() {
+    nextStep() {
         if (this.currStep + 1 >= this.steps.length || this.animating) {
             //Can't go to next step
             return;
@@ -213,7 +213,7 @@ export default class CanvasController {
     /**
      * If possible, animate to the previous step.
      */
-    private prevStep() {
+    prevStep() {
         if (this.currStep - 1 < 0 || this.animating) {
             //Can't go to next step
             return;
@@ -233,7 +233,7 @@ export default class CanvasController {
     /**
      * Return to the first step.
      */
-    private restart() {
+    restart() {
         if (this.animating) {
             //Can't go to next step
             return;

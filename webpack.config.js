@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './ts/main/main',
+  entry: './ts/main/loadEqContainer',
   module: {
     rules: [
       {
