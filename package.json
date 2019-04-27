@@ -1,22 +1,31 @@
 {
-  "name": "math-animations",
+  "name": "algebra-animations",
   "version": "1.0.0",
-  "description": "An algebra layout and animation engine. (WIP)",
-  "main": "index.js",
+  "description": "An algebra layout and animation engine.",
+  "main": "algebra-animations.js",
+  "keywords": [
+    "animation",
+    "math",
+    "algebra",
+    "teaching",
+    "tool",
+    "layout",
+    "equation"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mathiasronimus/Math-Animations.git"
+    "url": "git+https://github.com/mathiasronimus/Algebra-Animations.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mathias Ronimus",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mathiasronimus/Math-Animations/issues"
+    "url": "https://github.com/mathiasronimus/Algebra-Animations/issues"
   },
-  "homepage": "https://github.com/mathiasronimus/Math-Animations#readme",
+  "homepage": "https://github.com/mathiasronimus/Algebra-Animations#readme",
   "devDependencies": {
     "ts-loader": "^5.4.3",
     "typescript": "^3.4.5",
