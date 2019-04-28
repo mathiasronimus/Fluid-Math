@@ -5,12 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="algebra-animations.css"/>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Tests</title>
+    <title>Examples</title>
 </head>
 
 <body>
-    <div class="eqContainer" data-src="explogform.json"></div>
+    <p>
+        (Tap/Click the examples below to play them)
+    </p>
+    <h1>The Basics</h1>
+    <p>
+        Demonstrating expanding a bracket:
+    </p>
+    <div class="eqContainer" data-src="examples/expandbracket.json" data-fix-height></div>
+    <p>
+        Showing a static equation:
+    </p>
+    <div class="eqContainer" data-src="examples/staticequation.json"></div>
+    <h1>Appearance</h1>
+    <p>
+        Using a custom font:
+    </p>
+    <div class="eqContainer" data-src="examples/customfont.json"></div>
+    <p>
+        Using colors/opacity and their transitions:
+    </p>
+    <div class="eqContainer" data-src="examples/colors.json"></div>
+    <p>
+        The same <em class="red">colors</em> can automatically
+        be used on the rest of the page.
+    </p>
+    <h1>
+        Fractions
+    </h1>
+    <p>
+        Demonstrating the rule for adding fractions:
+    </p>
+    <div class="eqContainer" data-src="examples/addfractions.json"></div>
+    <p>
+        Simplifying nested fractions:
+    </p>
+    <div class="eqContainer" data-src="examples/nestedfractions.json" data-fix-height></div>
+    <p>
+        A fraction inside an exponent:
+    </p>
+    <div class="eqContainer" data-src="examples/fractionalexponent.json"></div>
+    <h1>
+        Exponents and Subscripts
+    </h1>
+    <p>
+        Rearranging from exponential to log form:
+    </p>
+    <div class="eqContainer" data-src="examples/explogform.json"></div>
+    <p>
+        A double exponent:
+    </p>
+    <div class="eqContainer" data-src="examples/doubleexponent.json" data-fix-height></div>
+    <h1>
+        Roots
+    </h1>
+    <p>
+        Converting a square root to a power:
+    </p>
+    <div class="eqContainer" data-src="examples/roottoexponent.json" data-fix-height></div>
+    <p>
+        The quadratic formula:
+    </p>
+    <div class="eqContainer" data-src="examples/quadformula.json"></div>
+    <h1>
+        Stress Test
+    </h1>
+    <div class="eqContainer" data-src="examples/stresstest.json"></div>
     <script src="algebra-animations.js"></script>
     <script>
         loadEqContainer('eqContainer');

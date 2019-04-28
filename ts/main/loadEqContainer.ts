@@ -4,6 +4,8 @@ import * as WebFont from 'webfontloader';
 import C from './consts';
 import { addStyleSheet, getMetrics } from './helpers';
 
+addStyleSheet();
+
 const defaultFontObj = {
     type: "g",
     name: C.fontFamily + ":" + C.fontWeight

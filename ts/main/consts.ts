@@ -4,7 +4,7 @@ import bezier from 'bezier-easing';
 const constants = {
     //Font: size in px
     // The DEFAULT Google font, may be overridden.
-    fontFamily: 'Roboto',
+    fontFamily: 'Old Standard TT',
     fontStyle: 'Normal',
     fontWeight: '400',
     fontSizes: [35, 30, 25],
