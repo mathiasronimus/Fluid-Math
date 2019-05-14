@@ -21,6 +21,7 @@ import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
+import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat } from "./FileFormat";
 
 /**
  * Responsible for managing a single canvas,
@@ -36,8 +37,8 @@ export default class CanvasController {
     protected ctx: CanvasRenderingContext2D;
 
     protected currStep = 0;
-    protected steps: any[];
-    protected stepOptions: any[];
+    protected steps: StepFormat[];
+    protected stepOptions: TransitionOptionsFormat[];
 
     protected terms: Term[];
     protected termHeights: number[];
@@ -63,10 +64,10 @@ export default class CanvasController {
      * @param container The container. 
      * @param instructions The instructions.
      */
-    constructor(container: HTMLElement, instructions) {
+    constructor(container: HTMLElement, instructions: FileFormat) {
         this.container = container;
-        this.steps = instructions['steps'];
-        this.stepOptions = instructions['stepOpts'];
+        this.steps = instructions.steps;
+        this.stepOptions = instructions.stepOpts;
         this.terms = [];
         this.hDividers = [];
         this.radicals = [];
@@ -94,7 +95,7 @@ export default class CanvasController {
 
         //Create text area, if needed
         //text doesn't show if: there is only one step and it has no text
-        if (!(this.steps.length === 1 && this.steps[0]['text'] === undefined)) {
+        if (!(this.steps.length === 1 && this.steps[0].text === undefined)) {
             this.textArea = document.createElement("div");
             this.textArea.className = "eqText";
             upperArea.appendChild(this.textArea);
@@ -319,15 +320,15 @@ export default class CanvasController {
         }
         //Whether a merge animation exists for this step
         let mergeExists = (ref: string) => {
-            return stepOptions && stepOptions['merges'] && stepOptions['merges'][ref];
+            return stepOptions && stepOptions.merges && stepOptions.merges[ref];
         };
         //Whether a clone animation exists for this step
         let cloneExists = (ref: string) => {
-            return stepOptions && stepOptions['clones'] && stepOptions['clones'][ref];
+            return stepOptions && stepOptions.clones && stepOptions.clones[ref];
         };
         //Whether an eval animation exists for this step
         let evalExists = (ref: string) => {
-            return stepOptions && stepOptions['evals'] && stepOptions['evals'][ref];
+            return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
         //Add a merge animation
         let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
@@ -374,14 +375,14 @@ export default class CanvasController {
                 //Doesn't exist after, has been removed
                 if (mergeExists(contentRef)) {
                     //Do a merge animation
-                    addMerge(stepOptions['merges'][contentRef], stateBefore);
+                    addMerge(stepOptions.merges[contentRef], stateBefore);
                 } else if (evalExists(contentRef)) {
                     //Do an eval animation
-                    addEval(stepOptions['evals'][contentRef], stateBefore);
+                    addEval(stepOptions.evals[contentRef], stateBefore);
                 } else if (reverseStep && cloneExists(contentRef)) {
                     //Do a reverse clone, aka merge.
                     //Cloning is "to": "from", need to work backwards
-                    addMerge(stepOptions['clones'][contentRef], stateBefore);
+                    addMerge(stepOptions.clones[contentRef], stateBefore);
                 } else {
                     //Do a regular remove animation
                     set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
@@ -391,14 +392,14 @@ export default class CanvasController {
                 //Doesn't exist before, has been added
                 if (cloneExists(contentRef)) {
                     //Do a clone animation
-                    addClone(stepOptions['clones'][contentRef], stateAfter);
+                    addClone(stepOptions.clones[contentRef], stateAfter);
                 } else if (reverseStep && mergeExists(contentRef)) {
                     //Do a reverse merge, aka clone.
                     //Merging is "from": "to", need to work backwards.
-                    addClone(stepOptions['merges'][contentRef], stateAfter);
+                    addClone(stepOptions.merges[contentRef], stateAfter);
                 } else if (reverseStep && evalExists(contentRef)) {
                     //Do a reverse eval
-                    addRevEval(stepOptions['evals'][contentRef], stateAfter);
+                    addRevEval(stepOptions.evals[contentRef], stateAfter);
                 } else {
                     set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
                 }
@@ -458,7 +459,7 @@ export default class CanvasController {
      * 
      * @param instructions The instructions JSON Object.
      */
-    protected initContent(instructions) {
+    protected initContent(instructions: FileFormat) {
         this.termHeights = [];
         let ascents = [];
 
@@ -525,7 +526,7 @@ export default class CanvasController {
      * @param step1 The first step.
      * @param step2 The second step.
      */
-    protected getStepOptions(step1: number, step2: number): any {
+    protected getStepOptions(step1: number, step2: number): TransitionOptionsFormat {
         if (!this.stepOptions) {
             //No step options defined
             return undefined;
@@ -566,8 +567,8 @@ export default class CanvasController {
         }
 
         //Get the color info
-        let colorsObj = this.steps[idx]['color'];
-        let opacityObj = this.steps[idx]['opacity'];
+        let colorsObj = this.steps[idx].color;
+        let opacityObj = this.steps[idx].opacity;
 
         let allLayouts = newMap();
         let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj);
@@ -580,10 +581,10 @@ export default class CanvasController {
      * @param containerObj The JSON Object representing the container.
      * @param depth The depth in the layout tree.
      */
-    protected parseContainer(containerObj, depth: number): EqContainer<any> {
+    protected parseContainer(containerObj: ContainerFormat, depth: number): EqContainer<any> {
         let type: string = containerObj.type;
         if (type === "vbox") {
-            const c = this.parseContainerChildren(containerObj.children, depth + 1);
+            const c = this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1);
             const p = Padding.even(C.defaultVBoxPadding);
             if (this.fixedHeights && depth === 0) {
                 return new VCenterVBox(c, p);
@@ -592,40 +593,42 @@ export default class CanvasController {
             }
         } else if (type === "hbox") {
             return new HBox(
-                this.parseContainerChildren(containerObj.children, depth + 1),
+                this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1),
                 Padding.even(C.defaultHBoxPadding));
         } else if (type === "tightHBox") {
             return new TightHBox(
-                this.parseContainerChildren(containerObj.children, depth + 1),
+                this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1),
                 Padding.even(C.defaultTightHBoxPadding)
             );
         } else if (type === 'subSuper') {
+            let format = containerObj as SubSuperContainerFormat;
             let top = new HBox(
-                this.parseContainerChildren(containerObj.top, depth + 1),
+                this.parseContainerChildren(format.top, depth + 1),
                 Padding.even(0)
             );
             let middle = new TightHBox(
-                this.parseContainerChildren(containerObj.middle, depth + 1),
+                this.parseContainerChildren(format.middle, depth + 1),
                 Padding.even(0)
             );
             let bottom = new HBox(
-                this.parseContainerChildren(containerObj.bottom, depth + 1),
+                this.parseContainerChildren(format.bottom, depth + 1),
                 Padding.even(0)
             );
-            let portrusion = containerObj['portrusion'] ? containerObj['portrusion'] : C.defaultExpPortrusion;
+            let portrusion = format.portrusion ? format.portrusion : C.defaultExpPortrusion;
             return new SubSuper(top, middle, bottom, portrusion, C.defaultSubSuperPadding);
         } else if (type === 'root') {
+            let format = containerObj as RootContainerFormat;
             let idx = new HBox(
-                this.parseContainerChildren(containerObj.idx, depth + 1),
+                this.parseContainerChildren(format.idx, depth + 1),
                 Padding.even(0)
             );
             let arg = new HBox(
-                this.parseContainerChildren(containerObj.arg, depth + 1),
+                this.parseContainerChildren(format.arg, depth + 1),
                 Padding.even(0)
             );
             let radical;
-            if (containerObj.rad) {
-                radical = this.getContentFromRef(containerObj.rad) as Radical;
+            if (format.rad) {
+                radical = this.getContentFromRef(format.rad) as Radical;
             }
             return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights[getWidthTier()]);
         } else if (type === undefined) {

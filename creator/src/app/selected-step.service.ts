@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UndoRedoService } from './undo-redo.service';
+import { FileFormat } from '@shared/main/FileFormat';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SelectedStepService {
   private subscribers: ((newSelected: number) => void)[] = [];
 
   constructor(private undoRedo: UndoRedoService) {
-    undoRedo.subscribe((newState: any) => {
+    undoRedo.subscribe((newState: FileFormat) => {
       // If state changes, selected step may need to change.
       if (this.selected >= newState.steps.length) {
         this.selected = newState.steps.length - 1;

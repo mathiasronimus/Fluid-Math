@@ -5,6 +5,7 @@ import { deepClone } from '../helpers';
 import { SelectedStepService } from '../selected-step.service';
 import { ModalService } from '../modal.service';
 import { StepOptionsComponent } from '../step-options/step-options.component';
+import { FileFormat, StepFormat } from '@shared/main/FileFormat';
 
 @Component({
   selector: 'app-steps',
@@ -48,7 +49,7 @@ export class StepsComponent implements AfterViewInit {
    * Called when the state changes.
    * @param newState The new full state.
    */
-  stateChange(newState) {
+  stateChange(newState: FileFormat) {
     this.numSteps = newState.steps.length;
     this.showThumbnail = Array(this.numSteps).fill(false);
     this.updateThumbnails(newState);
@@ -102,9 +103,9 @@ export class StepsComponent implements AfterViewInit {
    * Add a new slide after the selected one.
    */
   add() {
-    const newState: any = this.undoRedo.getStateClone();
+    const newState = this.undoRedo.getStateClone();
     const addIndex = this.step.selected + 1;
-    const newStep = deepClone(newState.steps[this.step.selected]);
+    const newStep = deepClone(newState.steps[this.step.selected]) as StepFormat;
     newState.steps.splice(addIndex, 0, newStep);
     this.undoRedo.publishChange(newState);
     this.step.selected = addIndex;
@@ -117,7 +118,7 @@ export class StepsComponent implements AfterViewInit {
     if (!this.deleteAvailable()) {
       return;
     }
-    const newState: any = this.undoRedo.getStateClone();
+    const newState = this.undoRedo.getStateClone();
     newState.steps.splice(this.step.selected, 1);
     // Remove associated step options
     if (newState.stepOpts) {

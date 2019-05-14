@@ -1,5 +1,6 @@
 import C from './consts';
 import Similar from 'map-or-similar';
+import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from './FileFormat';
 
 /**
  * Add styles based on the contents of consts
@@ -20,19 +21,21 @@ export function addStyleSheet() {
  * use for a given instructions object.
  * @param instructions The instructions.
  */
-export function getFont(instructions: any): [string, string, string] {
+export function getFont(instructions: FileFormat): [string, string, string] {
     if (instructions.font) {
         // There's a font set
         if (instructions.font.type === "c") {
             // There's a custom font
+            let font = instructions.font as CustomFontFormat;
             return [
-                instructions.font.name, 
-                instructions.font.style, 
-                instructions.font.weight
+                font.name, 
+                font.style, 
+                font.weight
             ];
         } else if (instructions.font.type === "g") {
+            let font = instructions.font as GoogleFontFormat;
             // There's a google font
-            let descriptor: string = instructions.font.name;
+            let descriptor: string = font.name;
             let split: string[] = descriptor.split(":");
             const fontFamily = split[0];
             if (split[1]) {
@@ -77,7 +80,7 @@ export function getFont(instructions: any): [string, string, string] {
  * Get the font metrics object for an instructions object.
  * @param instructions The instructions to get the metrics for.
  */
-export function getMetrics(instructions): object[] {
+export function getMetrics(instructions: FileFormat): MetricsFormat[] {
     const metricsArr = [];
     // Calculate a metrics object for each width tier
     for (let i = 0; i < C.widthTiers.length; i++) {
@@ -113,7 +116,7 @@ export function getMetrics(instructions): object[] {
  * @param tier The width tier to measure this term for.
  * @param instructions The instructions object containing this term.
  */
-function measureTerm(term: string, tier: number, instructions: any): object {
+function measureTerm(term: string, tier: number, instructions: FileFormat): object {
     const toReturn: any = {};
 
     const fontSize = getFontSizeForTier(tier);

@@ -7,6 +7,7 @@ import { line, Map, tri } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import CanvasController from '../main/CanvasController';
 import Radical from './Radical';
+import { LinearContainerFormat } from '../main/FileFormat';
 
 export default class VBox extends LinearContainer<LayoutState> {
 
@@ -134,11 +135,11 @@ export default class VBox extends LinearContainer<LayoutState> {
         }
     }
 
-    toStepLayout(controller: CanvasController): Object {
-        let toReturn = {};
-        toReturn['type'] = 'vbox';
-        toReturn['children'] = EqContainer.childrenToStepLayout(this.children, controller);
-        return toReturn;
+    toStepLayout(controller: CanvasController): LinearContainerFormat {
+        return {
+            type: 'vbox',
+            children: EqContainer.childrenToStepLayout(this.children, controller)
+        }
     }
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 

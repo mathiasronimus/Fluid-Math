@@ -3,10 +3,11 @@ import HeightComputeCanvasController from './HeightComputeCanvasController';
 import * as WebFont from 'webfontloader';
 import C from './consts';
 import { addStyleSheet, getMetrics } from './helpers';
+import { GoogleFontFormat, CustomFontFormat, FileFormat, FontFormat } from './FileFormat';
 
 addStyleSheet();
 
-const defaultFontObj = {
+const defaultFontObj: GoogleFontFormat = {
     type: "g",
     name: C.fontFamily + ":" + C.fontWeight
 }
@@ -27,7 +28,7 @@ declare var define;
     }
 }(typeof self !== 'undefined' ? self : this, function () {
     // The implementation of loadEqContainer
-    return function(arg1: string | HTMLElement, arg2: string | object) {
+    return function(arg1: string | HTMLElement, arg2: string | FileFormat) {
         if (typeof arg1 === 'string') {
             // String represents class name. Find all
             // elements of this class to initialize.
@@ -52,15 +53,15 @@ declare var define;
  * face declaration.
  * @param fontObj The font object for the custom font.
  */
-function customFontObjToFamily(fontObj) {
+function customFontObjToFamily(fontObj: CustomFontFormat) {
     // Need to add a stylesheet containing a font face declaration.
     let styleEl = document.createElement('style');
     let styleText = 
         "@font-face {" +
-            "font-family: " + fontObj["name"] + ";" +
-            "font-style: " + fontObj["style"] + ";" +
-            "font-weight: " + fontObj["weight"] + ";" +
-            "src: url(" + fontObj["src"] + ");" +
+            "font-family: " + fontObj.name + ";" +
+            "font-style: " + fontObj.style + ";" +
+            "font-weight: " + fontObj.weight + ";" +
+            "src: url(" + fontObj.src + ");" +
         "}";
     styleEl.appendChild(document.createTextNode(styleText));
     document.head.appendChild(styleEl);
@@ -83,7 +84,7 @@ function customFontObjToFamily(fontObj) {
  * @param element The HTML element to initialize into.
  * @param instructions The instructions object.
  */
-function initCanvController(element: HTMLElement, instructions) {
+function initCanvController(element: HTMLElement, instructions: FileFormat) {
     if (!instructions.metrics) {
         // Metrics not calculated yet
         instructions.metrics = getMetrics(instructions);
@@ -104,9 +105,9 @@ function initCanvController(element: HTMLElement, instructions) {
  *                  or undefined to attempt to load via the data-src
  *                  attribute on the element.
  */
-function initOne(element: HTMLElement, urlOrObj: string | object) {
+function initOne(element: HTMLElement, urlOrObj: string | FileFormat) {
 
-    let instructionsObj;
+    let instructionsObj: FileFormat;
     
     let afterFontLoad = function() {
         initCanvController(element, instructionsObj);
@@ -123,13 +124,13 @@ function initOne(element: HTMLElement, urlOrObj: string | object) {
         } else if (instructionsObj.font.type === 'c') {
             fontConfig = {
                 custom: {
-                    families: [customFontObjToFamily(instructionsObj.font)]
+                    families: [customFontObjToFamily(instructionsObj.font as CustomFontFormat)]
                 }
             }
         } else if (instructionsObj.font.type === 'g') {
             fontConfig = {
                 google: {
-                    families: [instructionsObj.font.name]
+                    families: [(instructionsObj.font as GoogleFontFormat).name]
                 }
             }
         } else {
@@ -174,7 +175,7 @@ function initAll(className: string) {
     let containers = document.getElementsByClassName(className) as HTMLCollectionOf<HTMLElement>;
     // Once loaded, instructions are put here. Each container is
     // associated with its instructions by index.
-    let instructions = [];
+    let instructions: FileFormat[] = [];
     let numInstructionsToGet = containers.length;
 
     let numCustom = 0;
@@ -195,42 +196,44 @@ function initAll(className: string) {
         // fonts we have to load.
         let fontSet = {}
         instructions.forEach(instructObj => {
-            let fontObj;
-            if (!instructObj["font"]) {
+            let fontObj: FontFormat;
+            if (!instructObj.font) {
                 // No font specified, use default
                 fontObj = defaultFontObj;
             } else {
                 // Load custom font
-                fontObj = instructObj["font"];
+                fontObj = instructObj.font;
             }
             fontSet[JSON.stringify(fontObj)] = true;
         });
         // Get an object describing how to load the font for each
         // unique font.
-        let fontObjs = Object.keys(fontSet).map(str => JSON.parse(str));
+        let fontObjs: FontFormat[] = Object.keys(fontSet).map(str => JSON.parse(str));
         // Convert these to an object used by the google web font loader
-        let webFontObj = {
+        let webFontObj: WebFont.Config = {
             active: afterFontLoad,
             inactive: afterFontLoad
         };
         fontObjs.forEach(fontObj => {
-            let type: string = fontObj["type"];
+            let type: string = fontObj.type;
             if (type === "g") {
+                let googleFont = fontObj as GoogleFontFormat;
                 // Load a google font
-                if (!webFontObj["google"]) {
-                    webFontObj["google"] = {};
-                    webFontObj["google"]["families"] = [];
+                if (!webFontObj.google) {
+                    webFontObj.google = {
+                        families: []
+                    };
                 }
-                (webFontObj["google"]["families"] as Array<string>).push(fontObj["name"]);
+                webFontObj.google.families.push(googleFont.name);
             } else if (type === "c") {
                 // Load a custom font
                 // Need to add a stylesheet containing a font face declaration.
-                const loaderString = customFontObjToFamily(fontObj);
-                if (!webFontObj["custom"]) {
-                    webFontObj["custom"] = {};
-                    webFontObj["custom"]["families"] = [];
+                const loaderString = customFontObjToFamily(fontObj as CustomFontFormat);
+                if (!webFontObj.custom) {
+                    webFontObj.custom = {};
+                    webFontObj.custom.families = [];
                 }
-                (webFontObj["custom"]["families"] as Array<string>).push(loaderString);
+                webFontObj.custom.families.push(loaderString);
             } else {
                 throw "unrecognized custom font type";
             }
@@ -246,7 +249,7 @@ function initAll(className: string) {
 
     function instructionsRequest(containerIndex: number, src: string) {
         let onLoad = function() {
-            let instructObj = JSON.parse(this.responseText);
+            let instructObj: FileFormat = JSON.parse(this.responseText);
             instructions[containerIndex] = instructObj;
             numInstructionsToGet--;
             if (numInstructionsToGet === 0) {

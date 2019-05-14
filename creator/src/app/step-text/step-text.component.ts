@@ -4,6 +4,7 @@ import { SelectedStepService } from '../selected-step.service';
 import { ModalService } from '../modal.service';
 import { TextEditorComponent } from '../text-editor/text-editor.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FileFormat } from '@shared/main/FileFormat';
 
 @Component({
   selector: 'app-step-text',
@@ -29,7 +30,7 @@ export class StepTextComponent {
    * Called when the global state changes.
    * @param newState The new state.
    */
-  stateChange(newState) {
+  stateChange(newState: FileFormat) {
     // Bypass because the system for displaying colored text
     // relies on creating HTML inside the step text.
     const text = newState.steps[this.step.selected].text;

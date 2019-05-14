@@ -109,7 +109,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
      * 
      * @param colorObj The colors object for a step.
      */
-    protected getColorForContent(colorObj: Object): number[] {
+    protected getColorForContent(colorObj: object): number[] {
         if (colorObj !== undefined && colorObj[this.ref] !== undefined) {
             //A color is specified
             return C.colors[colorObj[this.ref]];
@@ -125,7 +125,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
      * 
      * @param opacityObj The opacities object for a step.
      */
-    protected getOpacityForContent(opacityObj: Object): number {
+    protected getOpacityForContent(opacityObj: object): number {
         if (opacityObj !== undefined && opacityObj[this.ref] !== undefined) {
             //Opacity specified
             return opacityObj[this.ref];

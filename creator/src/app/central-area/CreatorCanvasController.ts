@@ -17,10 +17,11 @@ import { ErrorService } from '../error.service';
 import RootContainer from '@shared/layout/RootContainer';
 import Radical from '@shared/layout/Radical';
 import { getWidthTier } from '@shared/main/helpers';
+import { ContainerFormat, FileFormat } from '@shared/main/FileFormat';
 
 export default class CreatorCanvasController extends CanvasController {
 
-    private originalInstructions;
+    private originalInstructions: FileFormat;
 
     private rootContainer: EqContainer<any>;
 
@@ -228,7 +229,7 @@ export default class CreatorCanvasController extends CanvasController {
      * @param final Whether this is a final add. If it is, errors are shown
      *              and some content may be automatically added.
      */
-    private getChangedLayout(x: number, y: number, final: boolean): object {
+    private getChangedLayout(x: number, y: number, final: boolean): FileFormat {
         let modifyWith = (instructions: object) => {};
         // Check if the content is already on the canvas
         if (this.onCanvas()) {
@@ -278,7 +279,7 @@ export default class CreatorCanvasController extends CanvasController {
      * that can be published.
      * @param modifyWith A function to modify the instructions with after the step has been changed.
      */
-    private getLayoutForPublish(modifyWith: (instructions: object) => void): object {
+    private getLayoutForPublish(modifyWith: (instructions: object) => void): FileFormat {
         const newStepLayout = this.rootContainer.toStepLayout(this);
         const origInstructionsClone: any = deepClone(this.originalInstructions);
         origInstructionsClone.steps[this.currStep].root = newStepLayout;
@@ -531,7 +532,7 @@ export default class CreatorCanvasController extends CanvasController {
      * Return the step layout of the currently
      * selected container.
      */
-    getStepLayoutOfSelected() {
+    getStepLayoutOfSelected(): ContainerFormat {
         const container = this.selectedLayout.component as EqContainer<any>;
         return container.toStepLayout(this);
     }

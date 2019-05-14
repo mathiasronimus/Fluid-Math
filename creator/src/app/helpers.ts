@@ -1,5 +1,6 @@
 import C from '@shared/main/consts';
 import { getFontSizeForTier } from '@shared/main/helpers';
+import { ContainerFormat } from '@shared/main/FileFormat';
 
 /**
  * Recursively checks if a reference
@@ -7,7 +8,7 @@ import { getFontSizeForTier } from '@shared/main/helpers';
  * @param toCheck The step layout to check.
  * @param ref The ref to look for.
  */
-export function inLayout(toCheck: object, ref: string): boolean {
+export function inLayout(toCheck: ContainerFormat, ref: string): boolean {
     let found = false;
     Object.keys(toCheck).forEach(key => {
         const value = toCheck[key];

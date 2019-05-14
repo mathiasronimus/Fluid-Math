@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { deepClone } from './helpers';
+import { FileFormat } from '@shared/main/FileFormat';
 
 // The total amount of objects that may be stored
 const MAX_SIZE = 100;
@@ -18,10 +19,10 @@ export class UndoRedoService {
   // Where idx > currentStateIdx, that state is a redo.
   // Where idx < currentStateIdx, that state is an undo.
   // Where idx = currentStateIdx, that state is current.
-  private history: object[];
+  private history: FileFormat[];
   private currentStateIdx;
 
-  private subscribers: ((newState: object) => void)[];
+  private subscribers: ((newState: FileFormat) => void)[];
 
   constructor() {
     this.history = [];
@@ -37,7 +38,7 @@ export class UndoRedoService {
    * Subscribe to changes in the current state.
    * @param changeFunction Function that will be passed the current state when it changes.
    */
-  subscribe(changeFunction: (newState: object) => void) {
+  subscribe(changeFunction: (newState: FileFormat) => void) {
     this.subscribers.push(changeFunction);
   }
 
@@ -55,7 +56,7 @@ export class UndoRedoService {
    * Make a change to the current state.
    * @param newState The new current state.
    */
-  publishChange(newState: object) {
+  publishChange(newState: FileFormat) {
     // Erase any redos ahead of this change
     this.history.splice(this.currentStateIdx + 1, this.history.length);
     // Add the new state
@@ -112,7 +113,7 @@ export class UndoRedoService {
   /**
    * Get the current state.
    */
-  getState(): object {
+  getState(): FileFormat {
     return this.history[this.currentStateIdx];
   }
 
@@ -120,8 +121,8 @@ export class UndoRedoService {
    * Get a deep clone of the current state.
    * Useful for making changes then publishing.
    */
-  getStateClone(): object {
-    return deepClone(this.getState());
+  getStateClone(): FileFormat {
+    return deepClone(this.getState()) as FileFormat;
   }
 
   /**
@@ -136,7 +137,7 @@ export class UndoRedoService {
    * Return the stored states and the index
    * of the current one.
    */
-  getHistory(): [object[], number] {
+  getHistory(): [FileFormat[], number] {
     return [this.history, this.currentStateIdx];
   }
 
@@ -144,7 +145,7 @@ export class UndoRedoService {
    * Restore the states from earlier.
    * @param saved Obtained from getHistory() earlier.
    */
-  setHistory(saved: [object[], number]) {
+  setHistory(saved: [FileFormat[], number]) {
     this.history = saved[0];
     this.currentStateIdx = saved[1];
     this.notifySubscribers();

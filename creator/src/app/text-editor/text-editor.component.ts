@@ -43,7 +43,7 @@ export class TextEditorComponent implements AfterViewInit {
    * Apply the changes.
    */
   apply(text: string) {
-    const newState: any = this.undoRedo.getStateClone();
+    const newState = this.undoRedo.getStateClone();
     newState.steps[this.step.selected].text = text;
     this.undoRedo.publishChange(newState);
     this.modal.remove();
@@ -54,7 +54,7 @@ export class TextEditorComponent implements AfterViewInit {
    * when the component loads.
    */
   getInitialValue(): string {
-    const state: any = this.undoRedo.getState();
+    const state = this.undoRedo.getState();
     const stepText = state.steps[this.step.selected].text;
     if (!stepText) {
       return 'Step Text Here';
@@ -295,7 +295,7 @@ export class TextEditorComponent implements AfterViewInit {
    * Show an updated version of the preview.
    */
   updatePreview() {
-    const state: any = this.undoRedo.getStateClone();
+    const state = this.undoRedo.getStateClone();
     state.steps = [state.steps[this.step.selected]];
     state.steps[0].text = undefined;
     this.eqContainerEl.nativeElement.innerHTML = '';

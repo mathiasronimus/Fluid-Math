@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import * as WebFont from 'webfontloader';
+import { FontFormat, GoogleFontFormat, CustomFontFormat } from '@shared/main/FileFormat';
 
 @Injectable({
   providedIn: 'root'
@@ -27,37 +28,39 @@ export class FontUpdateService implements OnInit {
    *                  the font is loaded and can be used in Canvas instances.
    * @param onFail Called when the loading of the font was unsuccessful.
    */
-  load(fontObj: any, onSuccess: () => void, onFail: () => void) {
+  load(fontObj: FontFormat, onSuccess: () => void, onFail: () => void) {
     // Parse the font object
-    let loadObj;
+    let loadObj: WebFont.Config;
     if (fontObj.type === 'g') {
       // Load google font
+      const font = fontObj as GoogleFontFormat;
       loadObj = {
         google: {
-          families: [fontObj.name]
+          families: [font.name]
         }
       };
     } else if (fontObj.type === 'c') {
       // Load custom font
       // Add a font face declaration
+      const font = fontObj as CustomFontFormat;
       const fontFaceText =
                     '@font-face {' +
-                        'font-family: ' + fontObj.name + ';' +
-                        'font-style: ' + fontObj.style + ';' +
-                        'font-weight: ' + fontObj.weight + ';' +
-                        'src: url(' + fontObj.src + ');' +
+                        'font-family: ' + font.name + ';' +
+                        'font-style: ' + font.style + ';' +
+                        'font-weight: ' + font.weight + ';' +
+                        'src: url(' + font.src + ');' +
                     '}';
       this.styleEl.appendChild(document.createTextNode(fontFaceText));
       // Create the object for the loader
-      let loaderString = fontObj.name + ':';
-      if (fontObj.style === 'normal') {
+      let loaderString = font.name + ':';
+      if (font.style === 'normal') {
         loaderString += 'n';
-      } else if (fontObj.style === 'italic') {
+      } else if (font.style === 'italic') {
         loaderString += 'i';
       } else {
         throw new Error('Unrecognized custom font style');
       }
-      loaderString += fontObj.weight;
+      loaderString += font.weight;
       loadObj = {
         custom: {
           families: [loaderString]

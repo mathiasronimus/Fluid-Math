@@ -69,7 +69,7 @@ export class TermTemplateComponent {
    */
   apply(idx: number) {
     const text = this.templates[idx];
-    const newState: any = this.undoRedo.getStateClone();
+    const newState = this.undoRedo.getStateClone();
     if (!newState.terms) {
       newState.terms = [];
     }

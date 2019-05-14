@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import CreatorCanvasController from './central-area/CreatorCanvasController';
+import { ContainerFormat } from '@shared/main/FileFormat';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentSelectionService {
 
-  containerObjGetters: (() => object)[] = [
+  containerObjGetters: (() => ContainerFormat)[] = [
     () => {
       return {
         type: 'hbox',
@@ -123,7 +124,7 @@ export class ContentSelectionService {
    * Returns the object representation of the
    * container we are adding.
    */
-  getContainer(): object {
+  getContainer(): ContainerFormat {
     const type = this.adding.charAt(0);
     if (type !== 'c') {
       throw new Error('Cannot add container. The type of adding is not a container.');

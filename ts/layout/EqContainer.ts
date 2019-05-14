@@ -5,6 +5,7 @@ import CanvasController from '../main/CanvasController';
 import EqContent from './EqContent';
 import C from '../main/consts';
 import { tri } from '../main/helpers';
+import { ContainerFormat } from '../main/FileFormat';
 
 export default abstract class EqContainer<L extends LayoutState> extends EqComponent<L> {
 
@@ -29,7 +30,7 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
      * the step layout that would generate
      * this container.
      */
-    abstract toStepLayout(controller: CanvasController): Object;
+    abstract toStepLayout(controller: CanvasController): ContainerFormat;
 
     /**
      * Delete a child of this container.
@@ -185,7 +186,7 @@ export default abstract class EqContainer<L extends LayoutState> extends EqCompo
      * @param controller The canvas controller possessing this container.
      */
     protected static childrenToStepLayout(children: EqComponent<any>[], controller: CanvasController) {
-        let toReturn = [];
+        let toReturn: (string | ContainerFormat)[] = [];
         children.forEach(comp => {
             if (comp instanceof EqContainer) {
                 toReturn.push(comp.toStepLayout(controller));

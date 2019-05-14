@@ -9,6 +9,7 @@ import CanvasController from '../main/CanvasController';
 import EqContent from './EqContent';
 import { Map } from '../main/helpers';
 import C from '../main/consts';
+import { RootContainerFormat } from "../main/FileFormat";
 
 /**
  * Works together with the 'Radical' content to
@@ -271,7 +272,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
      * the step layout that would generate
      * this container.
      */
-    toStepLayout(controller: CanvasController): Object {
+    toStepLayout(controller: CanvasController): RootContainerFormat {
         let toReturn: any = {};
         toReturn.type = 'root';
         toReturn.idx = EqContainer.childrenToStepLayout(this.index.getChildren(), controller);

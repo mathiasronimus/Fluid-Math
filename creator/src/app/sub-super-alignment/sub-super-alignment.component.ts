@@ -6,6 +6,7 @@ import CanvasController from '@shared/main/CanvasController';
 import C from '@shared/main/consts';
 import SubSuper from '@shared/layout/SubSuper';
 import { ModalService } from '../modal.service';
+import { FileFormat, SubSuperContainerFormat, ContainerFormat } from '@shared/main/FileFormat';
 
 @Component({
   selector: 'app-sub-super-alignment',
@@ -14,8 +15,8 @@ import { ModalService } from '../modal.service';
 })
 export class SubSuperAlignmentComponent implements AfterViewInit {
 
-  private subSuperLayout;
-  private fullInstructions;
+  private subSuperLayout: SubSuperContainerFormat;
+  private fullInstructions: FileFormat;
 
   defaultPortrusion = C.defaultExpPortrusion;
   private portrusionVar = this.defaultPortrusion + '';
@@ -30,14 +31,14 @@ export class SubSuperAlignmentComponent implements AfterViewInit {
     // Create an instructions containing solely the
     // selected subSuper layout. Keep the color, remove
     // the text.
-    this.subSuperLayout = selection.canvasInstance.getStepLayoutOfSelected();
+    this.subSuperLayout = selection.canvasInstance.getStepLayoutOfSelected() as SubSuperContainerFormat;
     this.fullInstructions = undoRedo.getStateClone();
     this.fullInstructions.steps = [this.fullInstructions.steps[step.selected]];
     delete this.fullInstructions.steps[0].text;
     this.fullInstructions.steps[0].root = {
       type: 'vbox',
       children: [this.subSuperLayout]
-    };
+    } as ContainerFormat;
   }
 
   get portrusion() {
@@ -45,7 +46,6 @@ export class SubSuperAlignmentComponent implements AfterViewInit {
   }
 
   set portrusion(newPort: string) {
-    console.log(newPort);
     this.portrusionVar = newPort;
     this.update();
   }

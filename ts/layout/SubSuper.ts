@@ -7,6 +7,7 @@ import EqComponent from './EqComponent';
 import EqContent from './EqContent';
 import CanvasController from '../main/CanvasController';
 import { line, Map } from "../main/helpers";
+import { SubSuperContainerFormat } from "../main/FileFormat";
 
 /**
  * Lays out components in a way that
@@ -156,12 +157,13 @@ export default class SubSuper extends EqContainer<LayoutState> {
         return;
     }
 
-    toStepLayout(controller: CanvasController): Object {
-        let toReturn = {};
-        toReturn['type'] = 'subSuper';
-        toReturn['top'] = EqContainer.childrenToStepLayout(this.top.getChildren(), controller);
-        toReturn['middle'] = EqContainer.childrenToStepLayout(this.middle.getChildren(), controller);
-        toReturn['bottom'] = EqContainer.childrenToStepLayout(this.bottom.getChildren(), controller);
+    toStepLayout(controller: CanvasController): SubSuperContainerFormat {
+        let toReturn: SubSuperContainerFormat = {
+            type: 'subSuper',
+            top: EqContainer.childrenToStepLayout(this.top.getChildren(), controller),
+            middle: EqContainer.childrenToStepLayout(this.middle.getChildren(), controller),
+            bottom: EqContainer.childrenToStepLayout(this.bottom.getChildren(), controller)
+        };
         if (this.savePortrusionAs) {
             if (this.savePortrusionAs !== C.defaultExpPortrusion) {
                 toReturn['portrusion'] = this.savePortrusionAs;

@@ -1,1 +1,265 @@
-{"steps":[{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"vbox","children":["t1","h0","t2"]},"t0",{"type":"vbox","children":["t3","h1","t4"]}]}]},"text":"Adding Fractions"},{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"vbox","children":[{"type":"hbox","children":["t1"]},"h0",{"type":"hbox","children":["t2"]}]},"t0",{"type":"vbox","children":[{"type":"hbox","children":["t5","t3"]},"h1",{"type":"hbox","children":["t6","t4"]}]}]}]},"text":"Adding Fractions"},{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"vbox","children":[{"type":"hbox","children":["t1","t7"]},"h0",{"type":"hbox","children":["t2","t8"]}]},"t0",{"type":"vbox","children":[{"type":"hbox","children":["t5","t3"]},"h1",{"type":"hbox","children":["t6","t4"]}]}]}]},"text":"Adding Fractions"},{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"vbox","children":[{"type":"hbox","children":["t1","t7","t0","t5","t3"]},"h0",{"type":"hbox","children":["t2","t8"]}]}]}]},"text":"Adding Fractions"}],"terms":["+","a","b","c","d","b","b","d","d"],"metrics":[{"widths":[32.899993896484375,17.289993286132812,17.919998168945312,15.259994506835938,18.269989013671875,17.919998168945312,17.919998168945312,18.269989013671875,18.269989013671875],"ascent":25.5,"height":31.546875},{"widths":[28.199996948242188,14.819992065429688,15.3599853515625,13.079986572265625,15.659988403320312,15.3599853515625,15.3599853515625,15.659988403320312,15.659988403320312],"ascent":21,"height":24.55357142857143},{"widths":[23.5,12.349990844726562,12.79998779296875,10.899993896484375,13.04998779296875,12.79998779296875,12.79998779296875,13.04998779296875,13.04998779296875],"ascent":17.5,"height":21.543478260869563}],"hDividers":2,"stepOpts":{"0":{"clones":{"t6":"t2","t5":"t2"}},"1":{"clones":{"t8":"t4","t7":"t4"}},"2":{"merges":{"t4":"t8","t6":"t2","h1":"h0"}}},"font":{"type":"g","name":"Old Standard TT:400"},"maxHeights":[104.09375,90.10714285714286,84.08695652173913]}
+{
+    "steps": [
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    "t1",
+                                    "h0",
+                                    "t2"
+                                ]
+                            },
+                            "t0",
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    "t3",
+                                    "h1",
+                                    "t4"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Adding Fractions"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t1"
+                                        ]
+                                    },
+                                    "h0",
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t2"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "t0",
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t5",
+                                            "t3"
+                                        ]
+                                    },
+                                    "h1",
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t6",
+                                            "t4"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Adding Fractions"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t1",
+                                            "t7"
+                                        ]
+                                    },
+                                    "h0",
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t2",
+                                            "t8"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "t0",
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t5",
+                                            "t3"
+                                        ]
+                                    },
+                                    "h1",
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t6",
+                                            "t4"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Adding Fractions"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "vbox",
+                                "children": [
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t1",
+                                            "t7",
+                                            "t0",
+                                            "t5",
+                                            "t3"
+                                        ]
+                                    },
+                                    "h0",
+                                    {
+                                        "type": "hbox",
+                                        "children": [
+                                            "t2",
+                                            "t8"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "text": "Adding Fractions"
+        }
+    ],
+    "terms": [
+        "+",
+        "a",
+        "b",
+        "c",
+        "d",
+        "b",
+        "b",
+        "d",
+        "d"
+    ],
+    "metrics": [
+        {
+            "widths": [
+                32.899993896484375,
+                17.289993286132812,
+                17.919998168945312,
+                15.259994506835938,
+                18.269989013671875,
+                17.919998168945312,
+                17.919998168945312,
+                18.269989013671875,
+                18.269989013671875
+            ],
+            "ascent": 25.5,
+            "height": 31.546875
+        },
+        {
+            "widths": [
+                28.199996948242188,
+                14.819992065429688,
+                15.3599853515625,
+                13.079986572265625,
+                15.659988403320312,
+                15.3599853515625,
+                15.3599853515625,
+                15.659988403320312,
+                15.659988403320312
+            ],
+            "ascent": 21,
+            "height": 24.55357142857143
+        },
+        {
+            "widths": [
+                23.5,
+                12.349990844726562,
+                12.79998779296875,
+                10.899993896484375,
+                13.04998779296875,
+                12.79998779296875,
+                12.79998779296875,
+                13.04998779296875,
+                13.04998779296875
+            ],
+            "ascent": 17.5,
+            "height": 21.543478260869563
+        }
+    ],
+    "hDividers": 2,
+    "stepOpts": {
+        "0": {
+            "clones": {
+                "t6": "t2",
+                "t5": "t2"
+            }
+        },
+        "1": {
+            "clones": {
+                "t8": "t4",
+                "t7": "t4"
+            }
+        },
+        "2": {
+            "merges": {
+                "t4": "t8",
+                "t6": "t2",
+                "h1": "h0"
+            }
+        }
+    },
+    "font": {
+        "type": "g",
+        "name": "Old Standard TT:400"
+    },
+    "maxHeights": [
+        104.09375,
+        90.10714285714286,
+        84.08695652173913
+    ]
+}

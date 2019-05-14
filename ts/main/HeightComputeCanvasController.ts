@@ -1,6 +1,7 @@
 import CanvasController from './CanvasController';
 import C from './consts';
 import { getWidthTier } from './helpers';
+import { FileFormat } from './FileFormat';
 
 /**
  * Canvas controller that computes the max height of an
@@ -8,7 +9,7 @@ import { getWidthTier } from './helpers';
  */
 export default class HeightComputeCanvasController extends CanvasController {
 
-    constructor(instructions) {
+    constructor(instructions: FileFormat) {
         super(document.createElement('div'), instructions);
     }
 

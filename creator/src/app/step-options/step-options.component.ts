@@ -7,6 +7,7 @@ import SelectableCanvasController from './SelectableCanvasController';
 import CanvasController from '@shared/main/CanvasController';
 import { ErrorService } from '../error.service';
 import { ModalService } from '../modal.service';
+import { FileFormat, StepFormat, TransitionOptionsFormat } from '@shared/main/FileFormat';
 
 @Directive({
   selector: '[appCloneContainer]'
@@ -57,9 +58,9 @@ export class StepOptionsComponent implements AfterViewInit {
   // Instructions objects used to load the
   // selection canvases. These contain the
   // layout for just one step.
-  currStepContentInstructions;
+  currStepContentInstructions: FileFormat;
   currStepText: string;
-  nextStepContentInstructions;
+  nextStepContentInstructions: FileFormat;
   nextStepText: string;
 
   @ViewChild('previewContainer')
@@ -80,7 +81,7 @@ export class StepOptionsComponent implements AfterViewInit {
     this.evalFromValid = this.evalFromValid.bind(this);
     this.updateEvalTo = this.updateEvalTo.bind(this);
 
-    const currState: any = undoRedo.getState();
+    const currState = undoRedo.getState();
     if (currState.stepOpts && currState.stepOpts[step.selected]) {
       // Options already exist for this transition, load them.
       const stepOpts = currState.stepOpts[step.selected];
@@ -108,14 +109,14 @@ export class StepOptionsComponent implements AfterViewInit {
     }
 
     // Extract current and next steps
-    const currStep = deepClone(currState.steps[step.selected]);
-    this.currStepContentInstructions = deepClone(currState);
+    const currStep = deepClone(currState.steps[step.selected]) as StepFormat;
+    this.currStepContentInstructions = deepClone(currState) as FileFormat;
     this.currStepContentInstructions.steps = [currStep];
     this.currStepText = this.currStepContentInstructions.steps[0].text;
     delete this.currStepContentInstructions.steps[0].text;
 
-    const nextStep = deepClone(currState.steps[step.selected + 1]);
-    this.nextStepContentInstructions = deepClone(currState);
+    const nextStep = deepClone(currState.steps[step.selected + 1]) as StepFormat;
+    this.nextStepContentInstructions = deepClone(currState) as FileFormat;
     this.nextStepContentInstructions.steps = [nextStep];
     this.nextStepText = this.nextStepContentInstructions.steps[0].text;
     delete this.nextStepContentInstructions.steps[0].text;
@@ -428,7 +429,7 @@ export class StepOptionsComponent implements AfterViewInit {
    */
   updatePreview() {
     this.previewEl.nativeElement.innerHTML = '';
-    const instructions: any = this.undoRedo.getStateClone();
+    const instructions = this.undoRedo.getStateClone();
 
     const stepOne: any = deepClone(this.currStepContentInstructions.steps[0]);
     stepOne.text = this.currStepText;
@@ -437,9 +438,9 @@ export class StepOptionsComponent implements AfterViewInit {
     stepTwo.text = this.nextStepText;
 
     instructions.steps = [stepOne, stepTwo];
-    instructions.stepOpts = {
-      0: this.getFinalStepOption()
-    };
+    instructions.stepOpts = [
+      this.getFinalStepOption()
+    ];
 
     const canv = new CanvasController(this.previewEl.nativeElement, instructions);
   }
