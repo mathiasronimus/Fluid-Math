@@ -29,7 +29,7 @@ const constants = {
     tightTermPadding: new Padding(5, 2, 5, 2),
     hDividerPadding: new Padding(0, 3, 0, 3),
     //The scaling of exponents and subscripts.
-    expScale: 0.5,
+    expScale: 0.575,
     //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
     defaultExpPortrusion: 0.1,
 
