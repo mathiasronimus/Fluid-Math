@@ -6,6 +6,7 @@ import { ErrorService } from '../error.service';
 import { getMetrics } from '@shared/main/helpers';
 import { ModalService } from '../modal.service';
 import { TermTemplateComponent } from '../term-template/term-template.component';
+import { TransitionOptionsFormat } from '@shared/main/FileFormat';
 
 @Component({
   selector: 'app-content-pane',
@@ -200,7 +201,7 @@ export class ContentPaneComponent implements AfterViewInit {
    */
   delete(e: MouseEvent) {
     e.stopPropagation();
-    const newState: any = this.undoRedo.getStateClone();
+    const newState = this.undoRedo.getStateClone();
     // We know it's a string, delete button only shows up for content
     const ref = this.selection.adding as string;
     const type = ref.charAt(0);
@@ -236,6 +237,22 @@ export class ContentPaneComponent implements AfterViewInit {
       });
     }
 
+    // Remove the object from step options
+    if (newState.stepOpts) {
+      Object.keys(newState.stepOpts).forEach(stepNum => {
+        const stepOpts: TransitionOptionsFormat = newState.stepOpts[stepNum];
+        if (stepOpts.clones) {
+          stepOpts.clones = removeDeletedKeysOrValues(stepOpts.clones) as { [ref: string]: string};
+        }
+        if (stepOpts.evals) {
+          stepOpts.evals = removeDeletedKeysOrValues(stepOpts.evals) as { [ref: string]: string};
+        }
+        if (stepOpts.merges) {
+          stepOpts.merges = removeDeletedKeysOrValues(stepOpts.merges) as { [ref: string]: string};
+        }
+      });
+    }
+
     this.deselect();
     newState.metrics = getMetrics(newState);
     this.undoRedo.publishChange(newState);
@@ -259,6 +276,40 @@ export class ContentPaneComponent implements AfterViewInit {
           }
         }
       });
+    }
+
+    // Look through an object, removing the deleted reference
+    // whether it's in a key or value, moving others down into
+    // the removed space. Return the new object.
+    function removeDeletedKeysOrValues(deleteIn: object): object {
+      const toReturn = {};
+      // Transform to an array of arrays for easier processing
+      const asArray: [string, any][] = Object.keys(deleteIn).map(key => [key, deleteIn[key]]);
+      // Find deleted values or ones that need to be shifted
+      asArray.forEach(keyValuePair => {
+        // Seperate key and value into their parts
+        let key = keyValuePair[0];
+        let value = keyValuePair[1];
+        const keyType = key.charAt(0);
+        const valType = key.charAt(0);
+        const keyIndex = parseInt(key.substring(1, key.length), 10);
+        const valIndex = parseInt(value.substring(1, value.length), 10);
+        if (key === ref || value === ref) {
+          // Do nothing, doesn't get transferred to new object
+          return;
+        }
+        // Check if key needs to be moved down
+        if (keyType === type && keyIndex > index) {
+          key = keyType + (keyIndex - 1);
+        }
+        // Check if value needs to be moved down
+        if (valType === type && valIndex > index) {
+          value = valType + (valIndex - 1);
+        }
+        // Add to the new object
+        toReturn[key] = value;
+      });
+      return toReturn;
     }
 
     // Looks through an objects properties to
