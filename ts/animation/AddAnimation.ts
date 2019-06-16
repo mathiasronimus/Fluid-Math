@@ -10,7 +10,7 @@ import EqContent from "../layout/EqContent";
  */
 export default class AddAnimation extends Animation {
 
-    constructor(end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
-        super(C.addDuration, C.addEasing, set, end.withZeroScale(), end, end.component as EqContent<any>, ctx);
+    constructor(end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D, duration: number) {
+        super(duration, C.addEasing, set, end.withZeroScale(), end, end.component as EqContent<any>, ctx);
     }
 }

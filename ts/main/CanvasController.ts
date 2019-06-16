@@ -307,7 +307,7 @@ export default class CanvasController {
         }, this.ctx, this.lastWidth, this.lastHeight);
 
         //Get the step options for this transition
-        let stepOptions;
+        let stepOptions: TransitionOptionsFormat;
         let reverseStep: boolean;
         if (stepBefore < stepAfter) {
             //Going forward
@@ -330,33 +330,47 @@ export default class CanvasController {
         let evalExists = (ref: string) => {
             return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
+        // Find the durations for each transition type (may be custom)
+        const moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : C.moveDuration;
+        let addDuration;
+        let removeDuration;
+        // Add and remove need to be switched if we're going backwards
+        if (reverseStep) {
+            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : C.removeDuration;
+            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : C.addDuration;
+        } else {
+            // Not going backwards
+            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : C.addDuration;
+            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : C.removeDuration;
+        }
+        const maxDuration = Math.max(moveDuration, addDuration, removeDuration);
         //Add a merge animation
         let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
             let mergeTo = this.getContentFromRef(mergeToRef);
             let mergeToNewState = this.currStates.get(mergeTo);
-            set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx));
+            set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a clone animation
         let addClone = function(cloneFromRef: string, stateAfter: LayoutState) {
             let cloneFrom = this.getContentFromRef(cloneFromRef);
             let cloneFromOldState = oldStates.get(cloneFrom);
-            set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx));
+            set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
         //Add an eval animation
         let addEval = function(evalToRef: string, stateBefore: LayoutState) {
             let evalTo = this.getContentFromRef(evalToRef);
             let evalToNewState = this.currStates.get(evalTo);
-            set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx));
+            set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a reverse eval
         let addRevEval = function(evalToRef: string, stateAfter: LayoutState) {
             let evalTo = this.getContentFromRef(evalToRef);
             let evalToOldState = oldStates.get(evalTo);
-            set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx));
+            set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
 
         //Animate the progress bar
-        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set));
+        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set, maxDuration));
 
         //Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(content => {
@@ -369,7 +383,7 @@ export default class CanvasController {
 
             if (stateBefore && stateAfter) {
                 //Content has just moved
-                set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx));
+                set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx, moveDuration));
 
             } else if (stateBefore) {
                 //Doesn't exist after, has been removed
@@ -385,7 +399,7 @@ export default class CanvasController {
                     addMerge(stepOptions.clones[contentRef], stateBefore);
                 } else {
                     //Do a regular remove animation
-                    set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx));
+                    set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx, removeDuration));
                 }
 
             } else if (stateAfter) {
@@ -401,7 +415,7 @@ export default class CanvasController {
                     //Do a reverse eval
                     addRevEval(stepOptions.evals[contentRef], stateAfter);
                 } else {
-                    set.addAnimation(new AddAnimation(stateAfter, set, this.ctx));
+                    set.addAnimation(new AddAnimation(stateAfter, set, this.ctx, addDuration));
                 }
             }
 

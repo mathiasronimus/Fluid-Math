@@ -11,9 +11,8 @@ export default abstract class BezierCallback {
     easing: Function; //The easing function, eg. bezier(0, 0, 1, 1)
     set: AnimationSet; //The animation set this belongs to
 
-    private started = false;
     private done = false;
-    private tOffset: number; //Starting time
+    private startTime: number = -1;
 
     constructor(duration, easing, set) {
         this.duration = duration;
@@ -30,16 +29,19 @@ export default abstract class BezierCallback {
     protected abstract step(completion: number): void;
 
     run(timestamp: number): void {
-        if (this.done) return;
-        if (!this.started) {
+        if (this.done) {
+            // Continue drawing the final state
+            this.step(1);
+            return;
+        }
+        if (this.startTime === -1) {
             //Special Case: First Frame
-            this.tOffset = timestamp;
-            this.started = true;
+            this.startTime = timestamp;
             this.step(0);
             return;
         }
 
-        let elapsed = timestamp - this.tOffset;
+        let elapsed = timestamp - this.startTime;
 
         if (elapsed >= this.duration) {
             //Done

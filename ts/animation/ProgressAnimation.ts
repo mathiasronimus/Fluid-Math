@@ -12,8 +12,8 @@ export default class ProgressAnimation extends BezierCallback {
     private endWidth: number;
     private line: HTMLDivElement;
 
-    constructor(startStep: number, endStep: number, numSteps: number, canvasWidth: number, line: HTMLDivElement, set: AnimationSet) {
-        super(C.progressDuration, C.progressEasing, set);
+    constructor(startStep: number, endStep: number, numSteps: number, canvasWidth: number, line: HTMLDivElement, set: AnimationSet, duration: number) {
+        super(duration, C.progressEasing, set);
         let widthPerSegment = (canvasWidth - C.borderRadius * 2) / (numSteps - 1);
         this.startWidth = startStep * widthPerSegment;
         this.endWidth = endStep * widthPerSegment;

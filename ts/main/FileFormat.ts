@@ -147,6 +147,15 @@ export interface TransitionOptionsFormat {
     // content becomes less visible as it travels, making
     // it ideal if the merger and mergee don't look the same.
     evals?: {[contentReferenceOfRemovedContent: string]: string}
+    // If present, sets the duration of add animations to be
+    // something else than the default (in MS)
+    addDuration?: number;
+    // If present, sets the duration of move animations to be
+    // something else than the default (in MS)
+    moveDuration?: number;
+    // If present, sets the duration of remove animations to be
+    // something else than the default (in MS)
+    removeDuration?: number;
 }
 
 export interface FontFormat {

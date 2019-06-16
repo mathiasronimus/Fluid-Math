@@ -6,9 +6,9 @@ import EqContent from '../layout/EqContent';
 
 export default class ReverseEvalAnimation extends Animation {
 
-    constructor(from: LayoutState, to: LayoutState, set: AnimationSet, ctx) {
+    constructor(from: LayoutState, to: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D, duration: number) {
 
-        super(  C.moveDuration, C.moveEasing, set, 
+        super(  duration, C.moveEasing, set, 
                 from.withZeroScale(), to, 
                 to.component as EqContent<any>, ctx);
     }

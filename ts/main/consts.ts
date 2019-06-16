@@ -55,17 +55,10 @@ const constants = {
     //Animations: durations are in MS
     addDuration: 700,
     addEasing: bezier(0.0, 0.0, 0.2, 1),
-    canvasSizeDuration: 600,
-    canvasSizeEasing: bezier(0.4, 0.0, 0.2, 1),
     moveDuration: 700,
     moveEasing: bezier(0.4, 0.0, 0.2, 1),
     removeDuration: 400,
     removeEasing: bezier(0.4, 0.0, 1, 1),
-    colorDuration: 700,
-    colorEasing: bezier(0.5, 0.5, 0.5, 0.5),
-    opacityDuration: 700,
-    opacityEasing: bezier(0.5, 0.5, 0.5, 0.5),
-    progressDuration: 700,
     progressEasing: bezier(0.4, 0.0, 0.2, 1),
 
     //Appearance

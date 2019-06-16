@@ -7,7 +7,7 @@ import Animation from './Animation';
 
 export default class RemoveAnimation extends Animation {
 
-    constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
-        super(C.removeDuration, C.removeEasing, set, start, start.withZeroScale(), start.component as EqContent<any>, ctx);
+    constructor(start: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D, duration: number) {
+        super(duration, C.removeEasing, set, start, start.withZeroScale(), start.component as EqContent<any>, ctx);
     }
 }

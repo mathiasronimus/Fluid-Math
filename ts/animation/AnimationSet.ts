@@ -7,7 +7,7 @@ import BezierCallback from "./BezierCallback";
  */
 export default class AnimationSet {
 
-    private numRunning;
+    private numRunning: number;
     private animations: BezierCallback[];
     private done: () => void;
     private ctx: CanvasRenderingContext2D;

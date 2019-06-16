@@ -6,8 +6,8 @@ import EqContent from "../layout/EqContent";
 
 export default class MoveAnimation extends Animation {
 
-    constructor(start: LayoutState, end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D) {
-        super(C.moveDuration, C.moveEasing, set, start, end, end.component as EqContent<any>, ctx);
+    constructor(start: LayoutState, end: LayoutState, set: AnimationSet, ctx: CanvasRenderingContext2D, duration: number) {
+        super(duration, C.moveEasing, set, start, end, end.component as EqContent<any>, ctx);
     }
 
 }
