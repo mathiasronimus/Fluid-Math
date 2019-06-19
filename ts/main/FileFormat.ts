@@ -37,6 +37,9 @@ export interface FileFormat {
     // Optionally defines a custom font to be used in this
     // animation.
     font?: FontFormat;
+    // If present, indicates that the steps of this animation
+    // should play one after another once the play button is pressed.
+    autoplay?: AutoplayFormat;
 }
 
 export interface StepFormat {
@@ -182,4 +185,11 @@ export interface CustomFontFormat extends FontFormat {
     // The URL used to load the font, whether relative
     // to the project or hosted on a seperate website.
     src: string;
+}
+
+// Options relating to autoplay
+export interface AutoplayFormat {
+    // The delays between animations, if any
+    // index is the step to put a delay before
+    delays?: {[stepIndex: number]: number};
 }

@@ -34,8 +34,7 @@ export default class CreatorCanvasController extends CanvasController {
 
     constructor(container: HTMLElement, instructions, undoRedo, selection, step: SelectedStepService, error: ErrorService) {
         super(container, instructions);
-        // Remove progress line and upper area
-        container.removeChild(container.firstChild);
+        // Remove upper area
         container.removeChild(container.firstChild);
         this.undoRedo = undoRedo;
         this.selection = selection;
