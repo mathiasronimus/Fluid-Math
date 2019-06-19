@@ -8,6 +8,7 @@ import CanvasController from '@shared/main/CanvasController';
 import { ErrorService } from '../error.service';
 import { ModalService } from '../modal.service';
 import { FileFormat, StepFormat, TransitionOptionsFormat } from '@shared/main/FileFormat';
+import C from '@shared/main/consts';
 
 @Directive({
   selector: '[appCloneContainer]'
@@ -66,6 +67,11 @@ export class StepOptionsComponent implements AfterViewInit {
   @ViewChild('previewContainer')
   previewEl: ElementRef;
 
+  // Duration options for this step
+  moveDuration: number;
+  addDuration: number;
+  removeDuration: number;
+
   constructor(private undoRedo: UndoRedoService,
               private step: SelectedStepService,
               private error: ErrorService,
@@ -80,6 +86,7 @@ export class StepOptionsComponent implements AfterViewInit {
     this.updateEvalFrom = this.updateEvalFrom.bind(this);
     this.evalFromValid = this.evalFromValid.bind(this);
     this.updateEvalTo = this.updateEvalTo.bind(this);
+    this.updateDurations = this.updateDurations.bind(this);
 
     const currState = undoRedo.getState();
     if (currState.stepOpts && currState.stepOpts[step.selected]) {
@@ -106,6 +113,15 @@ export class StepOptionsComponent implements AfterViewInit {
           this.evalFromTo.push([fromRef, toRef]);
         });
       }
+      // Load durations
+      this.moveDuration = stepOpts.moveDuration ? stepOpts.moveDuration : C.moveDuration;
+      this.addDuration = stepOpts.addDuration ? stepOpts.addDuration : C.addDuration;
+      this.removeDuration = stepOpts.removeDuration ? stepOpts.removeDuration : C.removeDuration;
+    } else {
+      // Durations need to be set default if no step options
+      this.setDefaultMoveDuration();
+      this.setDefaultAddDuration();
+      this.setDefaultRemoveDuration();
     }
 
     // Extract current and next steps
@@ -120,6 +136,38 @@ export class StepOptionsComponent implements AfterViewInit {
     this.nextStepContentInstructions.steps = [nextStep];
     this.nextStepText = this.nextStepContentInstructions.steps[0].text;
     delete this.nextStepContentInstructions.steps[0].text;
+
+  }
+
+  /**
+   * Called when the slider for move duration changes.
+   */
+  updateDurations() {
+    this.updatePreview();
+  }
+
+  /**
+   * Reset move duration to default.
+   */
+  setDefaultMoveDuration() {
+    this.moveDuration = C.moveDuration;
+    this.updateDurations();
+  }
+
+  /**
+   * Reset add duration to default.
+   */
+  setDefaultAddDuration() {
+    this.addDuration = C.addDuration;
+    this.updateDurations();
+  }
+
+  /**
+   * Reset remove duration to default.
+   */
+  setDefaultRemoveDuration() {
+    this.removeDuration = C.removeDuration;
+    this.updateDurations();
   }
 
   /**
@@ -428,6 +476,11 @@ export class StepOptionsComponent implements AfterViewInit {
    * Update the preview of the step transition.
    */
   updatePreview() {
+    // May fire before preview is ready
+    if (!this.previewEl) {
+      return;
+    }
+
     this.previewEl.nativeElement.innerHTML = '';
     const instructions = this.undoRedo.getStateClone();
 
@@ -450,7 +503,7 @@ export class StepOptionsComponent implements AfterViewInit {
    * into a step options object as used in
    * instructions.
    */
-  getFinalStepOption(): any {
+  getFinalStepOption(): StepOptionsComponent {
     const toReturn: any = {};
     // Add clones
     this.cloneToFrom.forEach(cloneToFrom => {
@@ -491,6 +544,16 @@ export class StepOptionsComponent implements AfterViewInit {
       }
       toReturn.evals[fromRef] = toRef;
     });
+    // Add durations
+    if (this.moveDuration !== C.moveDuration) {
+      toReturn.moveDuration = this.moveDuration;
+    }
+    if (this.addDuration !== C.addDuration) {
+      toReturn.addDuration = this.addDuration;
+    }
+    if (this.removeDuration !== C.removeDuration) {
+      toReturn.removeDuration = this.removeDuration;
+    }
 
     return toReturn;
   }

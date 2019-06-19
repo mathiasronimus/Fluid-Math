@@ -1,3 +1,13 @@
+#outer {
+    max-height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+}
+
+#top {
+    overflow-y: scroll;
+}
+
 .selection-container {
     padding: 10px 20px 10px 20px;
     margin-top: 20px;
@@ -37,4 +47,28 @@ p {
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.buttonContainer {
+    flex-basis: 55px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.durationRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.durationTitle {
+    font-style: italic;
+}
+
+.slider {
+    margin-right: 10px;
+}
+
+.textBox {
+    width: 50px;
+    margin-right: 10px;
 }

@@ -284,7 +284,7 @@ export class ContentPaneComponent implements AfterViewInit {
     function removeDeletedKeysOrValues(deleteIn: object): object {
       const toReturn = {};
       // Transform to an array of arrays for easier processing
-      const asArray: [string, any][] = Object.keys(deleteIn).map(key => [key, deleteIn[key]]);
+      const asArray = Object.keys(deleteIn).map(key => [key, deleteIn[key]]);
       // Find deleted values or ones that need to be shifted
       asArray.forEach(keyValuePair => {
         // Seperate key and value into their parts
