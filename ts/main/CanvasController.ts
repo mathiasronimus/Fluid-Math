@@ -22,6 +22,7 @@ import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
 import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat } from "./FileFormat";
+import ProgressIndicator from "./ProgressIndicator";
 
 /**
  * Responsible for managing a single canvas,
@@ -32,9 +33,9 @@ export default class CanvasController {
 
     protected container: Element;
     protected textArea: HTMLDivElement;
-    protected progressLine: HTMLDivElement;
     protected canvas: HTMLCanvasElement;
     protected ctx: CanvasRenderingContext2D;
+    protected progress: ProgressIndicator;
 
     protected currStep = 0;
     protected steps: StepFormat[];
@@ -73,16 +74,13 @@ export default class CanvasController {
         this.radicals = [];
         this.setSize = this.setSize.bind(this);
 
-        this.progressLine = document.createElement('div');
-        this.progressLine.className = "progressLine";
-        this.container.appendChild(this.progressLine);
-        this.progressLine.style.left = C.borderRadius + 'px';
-
+        
+        
         //Create area above canvas
         let upperArea = document.createElement("div");
         upperArea.className = "eqUpper";
         this.container.appendChild(upperArea);
-
+        
         //Create back button, if needed
         if (this.steps.length > 1) {
             let backButton = document.createElement("div");
@@ -92,7 +90,7 @@ export default class CanvasController {
             this.prevStep = this.prevStep.bind(this);
             backButton.addEventListener("click", this.prevStep);
         }
-
+        
         //Create text area, if needed
         //text doesn't show if: there is only one step and it has no text
         if (!(this.steps.length === 1 && this.steps[0].text === undefined)) {
@@ -100,26 +98,33 @@ export default class CanvasController {
             this.textArea.className = "eqText";
             upperArea.appendChild(this.textArea);
         }
-
-        //Create restart button
+        
+        //Create restart button and progress indicator
         if (this.steps.length > 1) {
             let restButton = document.createElement("div");
-            restButton.className = "material-icons eqIcon";
+            restButton.className = "material-icons eqIcon restartIcon";
             restButton.innerHTML = "replay";
             upperArea.appendChild(restButton);
             this.restart = this.restart.bind(this);
             restButton.addEventListener("click", this.restart);
-        }
 
+            const progressCanvas = document.createElement("canvas");
+            progressCanvas.className = "progressCanvas";
+            progressCanvas.setAttribute("height", ProgressIndicator.DIMEN + "");
+            progressCanvas.setAttribute("width", ProgressIndicator.DIMEN + "");
+            this.progress = new ProgressIndicator(progressCanvas);
+            upperArea.appendChild(progressCanvas);
+        }
+        
         //Create canvas
         let canvasContainer = document.createElement('div');
         canvasContainer.className = 'canvas-container';
         this.container.appendChild(canvasContainer);
-
+        
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         canvasContainer.appendChild(this.canvas);
-
+        
         //Check whether to fix the height of the canvas
         if (container.hasAttribute('data-fix-height')) {
             this.fixedHeights = instructions.maxHeights;
@@ -173,10 +178,6 @@ export default class CanvasController {
             }
             this.ctx.restore();
         });
-
-        //Redraw the progress line
-        let widthPerSegment = (this.container.clientWidth - C.borderRadius*2) / (this.steps.length - 1);
-        this.progressLine.style.width = (this.currStep * widthPerSegment) + "px";
     }
 
     /**
@@ -370,7 +371,7 @@ export default class CanvasController {
         }.bind(this);
 
         //Animate the progress bar
-        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.container.clientWidth, this.progressLine, set, maxDuration));
+        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration));
 
         //Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(content => {

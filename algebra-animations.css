@@ -16,6 +16,7 @@
     justify-content: space-between;
     align-items: center;
     color: rgba(0, 0, 0, 0.67);
+    position: relative;
 }
 
 .eqIcon {
@@ -31,15 +32,18 @@
     text-align: center;
 }
 
-.progressLine {
-    height: 1px;
-    width: 0px;
-    background-color: rgba(0, 0, 0, 0.15);
-    position: relative;
-    top: -1px;
+.progressCanvas {
+    width: 44px;
+    height: 44px;
+}
+
+.restartIcon {
+    position: absolute;
+    right: 0px;
 }
 
 em {
     font-style: normal;
     font-weight: 600;
 }
+

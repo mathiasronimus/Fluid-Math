@@ -1,27 +1,26 @@
 import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
 import C from '../main/consts';
+import ProgressIndicator from "../main/ProgressIndicator";
 
 /**
- * Draws a progress bar at the top of the
- * canvas.
+ * Animate the progress indicator.
  */
 export default class ProgressAnimation extends BezierCallback {
 
-    private startWidth: number;
-    private endWidth: number;
-    private line: HTMLDivElement;
+    private startCompletion: number;
+    private endCompletion: number;
+    private pi: ProgressIndicator;
 
-    constructor(startStep: number, endStep: number, numSteps: number, canvasWidth: number, line: HTMLDivElement, set: AnimationSet, duration: number) {
+    constructor(startStep: number, endStep: number, numSteps: number, pi: ProgressIndicator, set: AnimationSet, duration: number) {
         super(duration, C.progressEasing, set);
-        let widthPerSegment = (canvasWidth - C.borderRadius * 2) / (numSteps - 1);
-        this.startWidth = startStep * widthPerSegment;
-        this.endWidth = endStep * widthPerSegment;
-        this.line = line;
+        this.startCompletion = startStep / (numSteps - 1);
+        this.endCompletion = endStep / (numSteps - 1);
+        this.pi = pi;
     }
 
-    protected step (completion: number) {
-        let width = this.startWidth * (1 - completion) + this.endWidth * completion;
-        this.line.style.width = width + "px";
+    protected step(animCompletion: number) {
+        const currCompletion = this.startCompletion * (1 - animCompletion) + this.endCompletion * animCompletion;
+        this.pi.draw(currCompletion);
     }
 }

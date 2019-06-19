@@ -8,7 +8,6 @@ const constants = {
     fontStyle: 'Normal',
     fontWeight: '400',
     fontSizes: [35, 30, 25],
-    borderRadius: 5,
     //The tiers at which font size will change.
     //More tiers means better layout but worse
     //file size.
@@ -18,6 +17,11 @@ const constants = {
     //innacuracies.
     testCanvasFontSizeMultiple: 5,
     testCanvasWidth: 800,
+    // The width and height of the progress indicator in px
+    restartAndProgressSize: 28,
+    // The total padding (x and y) of the progress indicator in px
+    restartAndProgressPadding: 16,
+    progressFill: "rgba(0, 0, 0, 0.06)",
     
     //Layout:
     defaultVBoxPadding: 0,
