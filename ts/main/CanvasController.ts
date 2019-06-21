@@ -21,7 +21,7 @@ import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
-import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat } from "./FileFormat";
+import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat } from "./FileFormat";
 import ProgressIndicator from "./ProgressIndicator";
 
 /**
@@ -34,12 +34,14 @@ export default class CanvasController {
     protected container: Element;
     protected textArea: HTMLDivElement;
     protected canvas: HTMLCanvasElement;
+    protected overlayContainer: HTMLElement;
     protected ctx: CanvasRenderingContext2D;
     protected progress: ProgressIndicator;
 
     protected currStep = 0;
     protected steps: StepFormat[];
     protected stepOptions: TransitionOptionsFormat[];
+    protected isAutoplay: AutoplayFormat;
 
     protected terms: Term[];
     protected termHeights: number[];
@@ -73,8 +75,9 @@ export default class CanvasController {
         this.hDividers = [];
         this.radicals = [];
         this.setSize = this.setSize.bind(this);
+        this.startAutoplay = this.startAutoplay.bind(this);
 
-        
+        this.isAutoplay = instructions.autoplay;
         
         //Create area above canvas
         let upperArea = document.createElement("div");
@@ -82,7 +85,7 @@ export default class CanvasController {
         this.container.appendChild(upperArea);
         
         //Create back button, if needed
-        if (this.steps.length > 1) {
+        if (this.steps.length > 1 && !this.isAutoplay) {
             let backButton = document.createElement("div");
             backButton.className = "material-icons eqIcon";
             backButton.innerHTML = "arrow_back";
@@ -91,16 +94,20 @@ export default class CanvasController {
             backButton.addEventListener("click", this.prevStep);
         }
         
-        //Create text area, if needed
-        //text doesn't show if: there is only one step and it has no text
-        if (!(this.steps.length === 1 && this.steps[0].text === undefined)) {
-            this.textArea = document.createElement("div");
-            this.textArea.className = "eqText";
-            upperArea.appendChild(this.textArea);
+        // Create text area, if needed
+        // text doesn't show if: none of the steps define any text
+        for (let i = 0; i < this.steps.length; i++) {
+            let step = this.steps[i];
+            if (step.text) {
+                this.textArea = document.createElement("div");
+                this.textArea.className = "eqText";
+                upperArea.appendChild(this.textArea);
+                break;
+            }
         }
         
         //Create restart button and progress indicator
-        if (this.steps.length > 1) {
+        if (this.steps.length > 1 && !this.isAutoplay) {
             let restButton = document.createElement("div");
             restButton.className = "material-icons eqIcon restartIcon";
             restButton.innerHTML = "replay";
@@ -142,17 +149,86 @@ export default class CanvasController {
         this.updateFontSize();
         this.recalc();
         
-        //Bind next step to canvas/text click
-        this.nextStep = this.nextStep.bind(this);
-        this.canvas.addEventListener("click", this.nextStep);
-        if (this.textArea) {
-            this.textArea.addEventListener('click', this.nextStep);
+        //Bind next step to canvas/text click if not autoplaying
+        if (!this.isAutoplay) {
+            this.nextStep = this.nextStep.bind(this);
+            this.canvas.addEventListener("click", this.nextStep as () => void);
+            if (this.textArea) {
+                this.textArea.addEventListener('click', this.nextStep as () => void);
+            }
         }
 
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
         window.addEventListener('resize', this.updateFontSize.bind(this));
         window.addEventListener('resize', this.recalc);
+
+        // Add overlay for play if autoplaying
+        if (this.isAutoplay) {
+            this.overlayContainer = document.createElement("div");
+            this.overlayContainer.className = "overlayContainer";
+            this.overlayContainer.addEventListener("click", this.startAutoplay);
+
+            const playButton = document.createElement("span");
+            playButton.className = "material-icons playButton";
+            playButton.innerHTML = "play_arrow";
+
+            this.overlayContainer.appendChild(playButton);
+            container.appendChild(this.overlayContainer);
+        }
+    }
+
+    /**
+     * Start playing the steps one after another.
+     */
+    protected startAutoplay() {
+        this.overlayContainer.style.display = "none";
+        this.autoplay();
+    }
+
+    /**
+     * Animate to the next step until done.
+     */
+    protected autoplay() {
+        if (this.currStep >= this.steps.length - 1) {
+            // At the end
+            setTimeout(() => {
+                this.stopAutoplay();
+                this.currStep = 0;
+                this.recalc();
+            }, this.getAutoplayDelay(this.steps.length - 1));
+        } else {
+            // Can go to next step
+            setTimeout(() => {
+                this.nextStep(() => {
+                    this.autoplay();
+                });
+            }, this.getAutoplayDelay(this.currStep));
+        }
+    }
+
+    /**
+     * Stop autoplaying.
+     */
+    protected stopAutoplay() {
+        this.overlayContainer.style.display = "block";
+    }
+
+    /**
+     * Get the delay before a step while autoplaying,
+     * or 0 if none exists.
+     * @param stepNum 
+     */
+    protected getAutoplayDelay(stepNum: number): number {
+        if (this.isAutoplay.delays) {
+            if (this.isAutoplay.delays[stepNum]) {
+                return this.isAutoplay.delays[stepNum];
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -194,8 +270,9 @@ export default class CanvasController {
     /**
      * If possible, animate to the next step
      * in the sequence.
+     * @param whenDone A function to call when the next step animation is complete.
      */
-    protected nextStep() {
+    protected nextStep(whenDone: () => void) {
         if (this.currStep + 1 >= this.steps.length || this.animating) {
             //Can't go to next step
             return;
@@ -207,7 +284,7 @@ export default class CanvasController {
         let rootLayout
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         let [width, height] = this.getSize(rootLayout);
-        let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep);
+        let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
         this.animating = true;
         anims.start();
     }
@@ -227,7 +304,7 @@ export default class CanvasController {
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         let [width, height] = this.getSize(rootLayout);        
-        let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep);
+        let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
         this.animating = true;
         anims.start();
     }
@@ -248,7 +325,7 @@ export default class CanvasController {
         let rootLayout;
         [this.currStates, rootLayout] = this.calcLayout(this.currStep);
         let [width, height] = this.getSize(rootLayout);
-        let anims = this.diff(oldStates, width, height, oldStep, 0);
+        let anims = this.diff(oldStates, width, height, oldStep, 0, undefined);
         this.animating = true;
         anims.start();
     }
@@ -280,8 +357,10 @@ export default class CanvasController {
      * @param canvasHeight The height the canvas should be as of the current step.
      * @param stepBefore The old step number.
      * @param stepAfter The current step number.
+     * @param whenDone A function to call when the animation is done.
      */
-    private diff(oldStates: Map<EqComponent<any>, LayoutState>, canvasWidth: number, canvasHeight: number, stepBefore: number, stepAfter: number): AnimationSet {
+    private diff(   oldStates: Map<EqComponent<any>, LayoutState>, canvasWidth: number, canvasHeight: number, 
+                    stepBefore: number, stepAfter: number, whenDone: () => void): AnimationSet {
 
         let updateDimenAfter = canvasHeight < this.lastHeight;
         if (!updateDimenAfter) {
@@ -305,6 +384,9 @@ export default class CanvasController {
                 this.redraw();
             }
             this.animating = false;
+            if (whenDone) {
+                whenDone();
+            }
         }, this.ctx, this.lastWidth, this.lastHeight);
 
         //Get the step options for this transition
@@ -370,8 +452,10 @@ export default class CanvasController {
             set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
 
-        //Animate the progress bar
-        set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration));
+        //Animate the progress circle
+        if (this.progress) {
+            set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration));
+        }
 
         //Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(content => {
@@ -560,7 +644,7 @@ export default class CanvasController {
      * 
      * @param idx The step number.
      */
-    protected calcLayout(idx): [Map<EqComponent<any>, LayoutState>, LayoutState] {
+    protected calcLayout(idx: number): [Map<EqComponent<any>, LayoutState>, LayoutState] {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
@@ -578,7 +662,7 @@ export default class CanvasController {
 
         //Set the text
         if (this.textArea) {
-            this.textArea.innerHTML = this.steps[idx].text;
+            this.textArea.innerHTML = this.steps[idx].text ? this.steps[idx].text : "";
         }
 
         //Get the color info

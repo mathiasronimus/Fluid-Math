@@ -21,6 +21,10 @@ export default class SelectableCanvasController extends CanvasController {
                 onChange: (newRef: string, index: number) => void,
                 changeValid: (newRef: string, index: number) => void) {
         super(container, instructions);
+        // Remove autoplay overlay if present
+        if (this.isAutoplay) {
+            container.removeChild(container.children[container.childElementCount - 1]);
+        }
         this.selectedRef = selectedRef;
         this.index = index;
         this.onChange = onChange;

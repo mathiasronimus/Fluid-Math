@@ -495,6 +495,9 @@ export class StepOptionsComponent implements AfterViewInit {
       this.getFinalStepOption()
     ];
 
+    // Should not autoplay, even if the whole animation is
+    delete instructions.autoplay;
+
     const canv = new CanvasController(this.previewEl.nativeElement, instructions);
   }
 

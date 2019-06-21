@@ -1,1 +1,185 @@
-{"steps":[{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"subSuper","top":[],"middle":["t0"],"bottom":["t1"]},"t2","t3",{"type":"subSuper","top":[],"middle":["t4"],"bottom":["t5"]},"t6"]}]},"text":"Simplifying Logs Being Added Together"},{"root":{"type":"vbox","children":[{"type":"hbox","children":[{"type":"subSuper","top":[],"middle":["t0"],"bottom":["t1"]},{"type":"tightHBox","children":["t2","t6"]}]}]},"text":"Simplifying Logs Being Added Together"}],"terms":["log","b","A","+","log","b","B"],"metrics":[{"widths":[44.72412109375,17.5,25.27587890625,19.73876953125,44.72412109375,17.5,23.3447265625],"ascent":24.43181818181818,"height":31.852272727272727},{"widths":[38.3349609375,15,21.6650390625,16.9189453125,38.3349609375,15,20.009765625],"ascent":20.94736842105263,"height":26.85526315789474},{"widths":[31.94580078125,12.5,18.05419921875,14.09912109375,31.94580078125,12.5,16.6748046875],"ascent":17.5,"height":22.951612903225808}],"stepOpts":{"0":{"merges":{"t5":"t1","t4":"t0"},"moveDuration":1000}},"maxHeights":[57.815284090909095,52.24361842105263,47.891048387096774]}
+{
+    "steps": [
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "subSuper",
+                                "top": [],
+                                "middle": [
+                                    "t0"
+                                ],
+                                "bottom": [
+                                    "t1"
+                                ]
+                            },
+                            "t2",
+                            "t3",
+                            {
+                                "type": "subSuper",
+                                "top": [],
+                                "middle": [
+                                    "t4"
+                                ],
+                                "bottom": [
+                                    "t5"
+                                ]
+                            },
+                            "t6"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "subSuper",
+                                "top": [],
+                                "middle": [
+                                    "t0"
+                                ],
+                                "bottom": [
+                                    "t1"
+                                ]
+                            },
+                            {
+                                "type": "tightHBox",
+                                "children": [
+                                    "t2",
+                                    "t6"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            {
+                                "type": "subSuper",
+                                "top": [],
+                                "middle": [
+                                    "t0"
+                                ],
+                                "bottom": [
+                                    "t1"
+                                ]
+                            },
+                            {
+                                "type": "tightHBox",
+                                "children": [
+                                    "t2"
+                                ]
+                            },
+                            "t3",
+                            {
+                                "type": "subSuper",
+                                "top": [],
+                                "middle": [
+                                    "t4"
+                                ],
+                                "bottom": [
+                                    "t5"
+                                ]
+                            },
+                            "t6"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "terms": [
+        "log",
+        "b",
+        "A",
+        "+",
+        "log",
+        "b",
+        "B"
+    ],
+    "metrics": [
+        {
+            "widths": [
+                45.709991455078125,
+                17.919998168945312,
+                26.739990234375,
+                32.899993896484375,
+                45.709991455078125,
+                17.919998168945312,
+                24.149993896484375
+            ],
+            "ascent": 25.5,
+            "height": 33.92222222222222
+        },
+        {
+            "widths": [
+                39.17997741699219,
+                15.3599853515625,
+                22.919998168945312,
+                28.199996948242188,
+                39.17997741699219,
+                15.3599853515625,
+                20.699996948242188
+            ],
+            "ascent": 21,
+            "height": 27.91025641025641
+        },
+        {
+            "widths": [
+                32.649993896484375,
+                12.79998779296875,
+                19.099990844726562,
+                23.5,
+                32.649993896484375,
+                12.79998779296875,
+                17.25
+            ],
+            "ascent": 17.5,
+            "height": 23.953125
+        }
+    ],
+    "stepOpts": {
+        "0": {
+            "merges": {
+                "t5": "t1",
+                "t4": "t0"
+            },
+            "moveDuration": 1000
+        },
+        "1": {
+            "clones": {
+                "t5": "t1",
+                "t4": "t0"
+            }
+        }
+    },
+    "maxHeights": [
+        60.12327777777777,
+        53.41993589743589,
+        49.007734375
+    ],
+    "autoplay": {
+        "delays": {
+            "0": 500,
+            "1": 1000,
+            "2": 1000
+        }
+    }
+}

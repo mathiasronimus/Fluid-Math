@@ -35,6 +35,7 @@ export class SubSuperAlignmentComponent implements AfterViewInit {
     this.fullInstructions = undoRedo.getStateClone();
     this.fullInstructions.steps = [this.fullInstructions.steps[step.selected]];
     delete this.fullInstructions.steps[0].text;
+    delete this.fullInstructions.autoplay;
     this.fullInstructions.steps[0].root = {
       type: 'vbox',
       children: [this.subSuperLayout]

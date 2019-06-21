@@ -191,5 +191,9 @@ export interface CustomFontFormat extends FontFormat {
 export interface AutoplayFormat {
     // The delays between animations, if any
     // index is the step to put a delay before
+    // if an index is provided for
+    // the last step, this is interpreted as
+    // a delay before resetting (immediately)
+    // to the beginning.
     delays?: {[stepIndex: number]: number};
 }

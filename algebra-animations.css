@@ -2,6 +2,7 @@
     max-width: 650px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    position: relative;
 }
 
 .canvas-container {
@@ -40,6 +41,7 @@
 .restartIcon {
     position: absolute;
     right: 0px;
+    top: 0px;
 }
 
 em {
@@ -47,3 +49,21 @@ em {
     font-weight: 600;
 }
 
+.overlayContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.playButton {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.9);
+}

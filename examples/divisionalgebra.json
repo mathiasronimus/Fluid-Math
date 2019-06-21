@@ -1,0 +1,119 @@
+{
+    "steps": [
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            "t0",
+                            "t1",
+                            "t2"
+                        ]
+                    }
+                ]
+            },
+            "text": "Normal Notation"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "vbox",
+                        "children": [
+                            "t0",
+                            "h0",
+                            "t2"
+                        ]
+                    }
+                ]
+            },
+            "text": "<em>Algebra </em>Notation"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "hbox",
+                        "children": [
+                            "t0",
+                            "t1",
+                            "t2"
+                        ]
+                    }
+                ]
+            },
+            "text": "Normal Notation"
+        },
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "vbox",
+                        "children": [
+                            "t0",
+                            "h0",
+                            "t2"
+                        ]
+                    }
+                ]
+            },
+            "text": "<em>Algebra </em>Notation"
+        }
+    ],
+    "terms": [
+        "10",
+        "÷",
+        "2"
+    ],
+    "metrics": [
+        {
+            "widths": [
+                40.5999755859375,
+                32.899993896484375,
+                20.29998779296875
+            ],
+            "ascent": 24.25,
+            "height": 26.328125
+        },
+        {
+            "widths": [
+                34.79998779296875,
+                28.199996948242188,
+                17.399993896484375
+            ],
+            "ascent": 20.764705882352942,
+            "height": 22.318277310924373
+        },
+        {
+            "widths": [
+                29,
+                23.5,
+                14.5
+            ],
+            "ascent": 17.285714285714285,
+            "height": 18.372670807453417
+        }
+    ],
+    "hDividers": 1,
+    "stepOpts": {
+        "0": {}
+    },
+    "maxHeights": [
+        93.65625,
+        85.63655462184875,
+        77.74534161490683
+    ],
+    "autoplay": {
+        "delays": {
+            "0": 500,
+            "1": 1000,
+            "2": 1000,
+            "3": 1000
+        }
+    }
+}
