@@ -71,6 +71,7 @@ export class StepOptionsComponent implements AfterViewInit {
   moveDuration: number;
   addDuration: number;
   removeDuration: number;
+  delay: number;
 
   constructor(private undoRedo: UndoRedoService,
               private step: SelectedStepService,
@@ -124,6 +125,13 @@ export class StepOptionsComponent implements AfterViewInit {
       this.setDefaultRemoveDuration();
     }
 
+    // Load delay, if necessary
+    if (this.isAutoplay() && currState.autoplay.delays && currState.autoplay.delays[step.selected] !== undefined) {
+      this.delay = currState.autoplay.delays[step.selected];
+    } else {
+      this.setDefaultDelay();
+    }
+
     // Extract current and next steps
     const currStep = deepClone(currState.steps[step.selected]) as StepFormat;
     this.currStepContentInstructions = deepClone(currState) as FileFormat;
@@ -137,6 +145,14 @@ export class StepOptionsComponent implements AfterViewInit {
     this.nextStepText = this.nextStepContentInstructions.steps[0].text;
     delete this.nextStepContentInstructions.steps[0].text;
 
+  }
+
+  /**
+   * Whether the current animation is autoplay.
+   */
+  isAutoplay() {
+    const currState = this.undoRedo.getState();
+    return currState.autoplay !== undefined;
   }
 
   /**
@@ -168,6 +184,13 @@ export class StepOptionsComponent implements AfterViewInit {
   setDefaultRemoveDuration() {
     this.removeDuration = C.removeDuration;
     this.updateDurations();
+  }
+
+  /**
+   * Reset delay to default.
+   */
+  setDefaultDelay() {
+    this.delay = 0;
   }
 
   /**
@@ -566,10 +589,18 @@ export class StepOptionsComponent implements AfterViewInit {
    */
   apply() {
     const newState: any = this.undoRedo.getStateClone();
+    // Add step options
     if (!newState.stepOpts) {
       newState.stepOpts = {};
     }
     newState.stepOpts[this.step.selected] = this.getFinalStepOption();
+    // Add delay for autoplay
+    if (newState.autoplay !== undefined && this.delay !== 0) {
+      if (!newState.autoplay.delays) {
+        newState.autoplay.delays = {};
+      }
+      newState.autoplay.delays[this.step.selected] = this.delay;
+    }
     this.undoRedo.publishChange(newState);
     this.modal.remove();
   }

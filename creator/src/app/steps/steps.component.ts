@@ -107,6 +107,21 @@ export class StepsComponent implements AfterViewInit {
     const addIndex = this.step.selected + 1;
     const newStep = deepClone(newState.steps[this.step.selected]) as StepFormat;
     newState.steps.splice(addIndex, 0, newStep);
+    // Step options from current step to next now invalid,
+    // others above this need to be moved up.
+    if (newState.stepOpts) {
+      delete newState.stepOpts[addIndex - 1];
+      for (let i = newState.steps.length - 2; i >= addIndex + 1; i--) {
+        newState.stepOpts[i] = newState.stepOpts[i - 1];
+      }
+    }
+    // Delays need to be updated too. Copy the delay from
+    // current to added step, move the others up one.
+    if (newState.autoplay && newState.autoplay.delays) {
+      for (let i = newState.steps.length - 1; i >= addIndex; i--) {
+        newState.autoplay.delays[i] = newState.autoplay.delays[i - 1];
+      }
+    }
     this.undoRedo.publishChange(newState);
     this.step.selected = addIndex;
   }
@@ -124,6 +139,21 @@ export class StepsComponent implements AfterViewInit {
     if (newState.stepOpts) {
       delete newState.stepOpts[this.step.selected - 1];
       delete newState.stepOpts[this.step.selected];
+    }
+    // Step options for other steps are now invalid,
+    // need to be moved down
+    for (let i = this.step.selected + 1; i < newState.steps.length; i++) {
+      newState.stepOpts[i - 1] = newState.stepOpts[i];
+    }
+    // If applicable, delays are invalid as well
+    if (newState.autoplay && newState.autoplay.delays) {
+      // Need different behavior for deleting last step:
+      // need to preserve the delay of the deleted step,
+      // as it is the delay before ending the animation.
+      const startIndex = this.step.selected === newState.steps.length ? this.step.selected - 1 : this.step.selected;
+      for (let i = startIndex; i <= newState.steps.length; i++) {
+        newState.autoplay.delays[i] = newState.autoplay.delays[i + 1];
+      }
     }
     if (this.step.selected !== 0) {
       this.step.selected--;

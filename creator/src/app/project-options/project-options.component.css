@@ -1,0 +1,18 @@
+.durationRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.durationTitle {
+    font-style: italic;
+}
+
+.slider {
+    margin-right: 10px;
+}
+
+.textBox {
+    width: 50px;
+    margin-right: 10px;
+}

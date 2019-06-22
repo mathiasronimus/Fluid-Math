@@ -33,6 +33,14 @@
         <span class="selector" (click)="setDefaultRemoveDuration()">Default</span>
       </span>
     </div>
+    <div class="durationRow" *ngIf="isAutoplay()">
+      <span class="durationTitle">Delay: </span>
+      <span class="durationRow">
+        <input class="textBox" type="number" [(ngModel)]="delay">
+        <input class="slider" type="range" min="0" max="2000" [(ngModel)]="delay">
+        <span class="selector" (click)="setDefaultDelay()">Default</span>
+      </span>
+    </div>
 
     <!--Clones bit-->
     <div class="title-row" (click)="showingClones = !showingClones;">

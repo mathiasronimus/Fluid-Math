@@ -22,6 +22,7 @@ import {  StepOptionsComponent,
 import { TermTemplateComponent } from './term-template/term-template.component';
 import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font-load-fail.component';
+import { ProjectOptionsComponent } from './project-options/project-options.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font
     EvalContainerDirective,
     TermTemplateComponent,
     FontSettingsComponent,
-    CustomFontLoadFailComponent
+    CustomFontLoadFailComponent,
+    ProjectOptionsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font
     StepOptionsComponent,
     TermTemplateComponent,
     FontSettingsComponent,
-    CustomFontLoadFailComponent
+    CustomFontLoadFailComponent,
+    ProjectOptionsComponent
   ]
 })
 export class AppModule { }

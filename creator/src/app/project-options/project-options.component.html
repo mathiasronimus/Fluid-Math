@@ -1,0 +1,11 @@
+<span>Play as one animation </span><input type="checkbox" [(ngModel)]="isAutoplay">
+<div class="durationRow" *ngIf="isAutoplay">
+  <span class="durationTitle">Delay Before Ending: </span>
+  <span class="durationRow">
+    <input class="textBox" type="number" [(ngModel)]="endDelay">
+    <input class="slider" type="range" min="0" max="2000" [(ngModel)]="endDelay">
+  </span>
+</div>
+<div style="display: flex">
+  <span class="button" (click)="apply()">Apply</span>
+</div>

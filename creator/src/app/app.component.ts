@@ -14,6 +14,7 @@ import { addStyleSheet } from '@shared/main/helpers';
 import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alignment.component';
 import { ErrorService } from './error.service';
 import { FontSettingsComponent } from './font-settings/font-settings.component';
+import { ProjectOptionsComponent } from './project-options/project-options.component';
 
 @Component({
   selector: 'app-root',
@@ -55,6 +56,7 @@ export class AppComponent {
     this.play = this.play.bind(this);
     this.deselect = this.deselect.bind(this);
     this.changeFont = this.changeFont.bind(this);
+    this.openProjectOptions = this.openProjectOptions.bind(this);
     this.modal.appComponent = this;
     this.defaultLeftIcons = [];
     this.defaultRightIcons = [
@@ -63,7 +65,8 @@ export class AppComponent {
       new Icon('play_arrow', this.play, () => true),
       new Icon('undo', this.undo, this.undoRedo.canUndo),
       new Icon('redo', this.redo, this.undoRedo.canRedo),
-      new Icon('font_download', this.changeFont, () => true)
+      new Icon('font_download', this.changeFont, () => true),
+      new Icon('build', this.openProjectOptions, () => true)
     ];
     this.selectedLeftIcons = [
       new Icon('clear', this.deselect, () => true)
@@ -210,5 +213,12 @@ export class AppComponent {
    */
   changeFont() {
     this.modal.show(FontSettingsComponent);
+  }
+
+  /**
+   * Show the project config dialog.
+   */
+  openProjectOptions() {
+    this.modal.show(ProjectOptionsComponent);
   }
 }

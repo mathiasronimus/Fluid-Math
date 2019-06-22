@@ -50,6 +50,16 @@ export class TextEditorComponent implements AfterViewInit {
   }
 
   /**
+   * Remove the text from this step.
+   */
+  remove() {
+    const newState = this.undoRedo.getStateClone();
+    delete newState.steps[this.step.selected].text;
+    this.undoRedo.publishChange(newState);
+    this.modal.remove();
+  }
+
+  /**
    * Get the value to put in the text area
    * when the component loads.
    */
