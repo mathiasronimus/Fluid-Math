@@ -18,12 +18,18 @@ import RootContainer from '@shared/layout/RootContainer';
 import Radical from '@shared/layout/Radical';
 import { getWidthTier } from '@shared/main/helpers';
 import { ContainerFormat, FileFormat } from '@shared/main/FileFormat';
+import CreatorContainer from './CreatorContainer';
+import CreatorRootContainer from './CreatorRootContainer';
+import CreatorVBox from './CreatorVBox';
+import CreatorHBox from './CreatorHBox';
+import CreatorTightHBox from './CreatorTightHBox';
+import CreatorSubSuper from './CreatorSubSuper';
 
 export default class CreatorCanvasController extends CanvasController {
 
     private originalInstructions: FileFormat;
 
-    private rootContainer: EqContainer<any>;
+    private rootContainer: EqContainer<any> & CreatorContainer;
 
     private undoRedo: UndoRedoService;
     private selection: ContentSelectionService;
@@ -102,7 +108,7 @@ export default class CreatorCanvasController extends CanvasController {
         super.redraw();
         this.currStates.forEach(l => {
             if (l.component instanceof EqContainer) {
-                l.component.creatorDraw(l, this.ctx);
+                (l.component as unknown as CreatorContainer).creatorDraw(l, this.ctx);
             }
             if (this.selection) {
                 if (l.component instanceof EqContent &&
@@ -146,39 +152,39 @@ export default class CreatorCanvasController extends CanvasController {
     protected parseContainer(containerObj, depth: number): EqContainer<any> {
         const type: string = containerObj.type;
         if (type === 'vbox') {
-            return new VBox(
+            return new CreatorVBox(
                 this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding);
         } else if (type === 'hbox') {
-            return new HBox(
+            return new CreatorHBox(
                 this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding);
         } else if (type === 'tightHBox') {
-            return new TightHBox(
+            return new CreatorTightHBox(
                 this.parseContainerChildren(containerObj.children, depth),
                 C.creatorContainerPadding
             );
         } else if (type === 'subSuper') {
-            const top = new HBox(
+            const top = new CreatorHBox(
                 this.parseContainerChildren(containerObj.top, depth),
                 C.creatorContainerPadding
             );
-            const middle = new TightHBox(
+            const middle = new CreatorTightHBox(
                 this.parseContainerChildren(containerObj.middle, depth),
                 C.creatorContainerPadding
             );
-            const bottom = new HBox(
+            const bottom = new CreatorHBox(
                 this.parseContainerChildren(containerObj.bottom, depth),
                 C.creatorContainerPadding
             );
             const portrusion = containerObj.portrusion ? containerObj.portrusion : C.defaultExpPortrusion;
-            return new SubSuper(top, middle, bottom, portrusion, C.creatorContainerPadding);
+            return new CreatorSubSuper(top, middle, bottom, portrusion, C.creatorContainerPadding);
         } else if (type === 'root') {
-            const idx = new HBox(
+            const idx = new CreatorHBox(
                 this.parseContainerChildren(containerObj.idx, depth),
                 C.creatorContainerPadding
             );
-            const arg = new HBox(
+            const arg = new CreatorHBox(
                 this.parseContainerChildren(containerObj.arg, depth),
                 C.creatorContainerPadding
             );
@@ -191,7 +197,7 @@ export default class CreatorCanvasController extends CanvasController {
                 // If there are no terms yet, this is not defined.
                 termHeight = 0;
             }
-            return new RootContainer(idx, arg, radical, C.creatorContainerPadding, termHeight);
+            return new CreatorRootContainer(idx, arg, radical, C.creatorContainerPadding, termHeight);
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
         } else {
@@ -250,7 +256,7 @@ export default class CreatorCanvasController extends CanvasController {
                 // Add adjacent to content
                 const container: EqContainer<any> = clickedLayout.layoutParent.component as EqContainer<any>;
                 const toAdd = this.getAddComponent();
-                container.addClickOnChild(clickedLayout, x, y, toAdd);
+                (container as unknown as CreatorContainer).addClickOnChild(clickedLayout, x, y, toAdd);
                 if (final) {
                     modifyWith = this.autoAddContent(toAdd);
                 }
@@ -262,7 +268,7 @@ export default class CreatorCanvasController extends CanvasController {
         } else if (clickedLayout.component instanceof EqContainer) {
             try {
                 const toAdd = this.getAddComponent();
-                clickedLayout.component.addClick(clickedLayout, x, y, toAdd);
+                (clickedLayout.component as unknown as CreatorContainer).addClick(clickedLayout, x, y, toAdd);
                 if (final) {
                     modifyWith = this.autoAddContent(toAdd);
                 }
@@ -323,7 +329,7 @@ export default class CreatorCanvasController extends CanvasController {
             }
             if (unusedRef) {
                 // Use a previously created radical, no need to add one in instructions.
-                addTo.setRadical(this.getContentFromRef(unusedRef) as Radical);
+                (addTo as unknown as CreatorRootContainer).setRadical(this.getContentFromRef(unusedRef) as Radical);
                 return () => {};
             } else {
                 // No radicals, or all used in adjacent steps.
@@ -332,7 +338,7 @@ export default class CreatorCanvasController extends CanvasController {
                 // container are serialized then re-created with the
                 // modifed instructions.
                 const dummyRadForSave = new Radical(newRef);
-                addTo.setRadical(dummyRadForSave);
+                (addTo as unknown as CreatorRootContainer).setRadical(dummyRadForSave);
                 return (instructions: any) => {
                     if (!instructions.radicals) {
                         instructions.radicals = 0;
@@ -414,8 +420,8 @@ export default class CreatorCanvasController extends CanvasController {
      * @param state The layout state generated by a component.
      */
     delete() {
-        const parent = (this.selectedLayout.layoutParent.component as EqContainer<any>);
-        parent.delete(this.selectedLayout.component);
+        const parent = this.selectedLayout.layoutParent.component;
+        (parent as unknown as CreatorContainer).delete(this.selectedLayout.component);
         this.undoRedo.publishChange(this.getLayoutForPublish(() => {}));
     }
 
@@ -468,7 +474,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.applyColor(selected, colorName, step);
             this.applyOpacity(selected, opacity, step);
         } else if (selected instanceof EqContainer) {
-            selected.forEachUnder((content) => {
+            (selected as unknown as CreatorContainer).forEachUnder((content) => {
                 this.applyColor(content, colorName, step);
                 this.applyOpacity(content, opacity, step);
             });
@@ -536,8 +542,8 @@ export default class CreatorCanvasController extends CanvasController {
      * selected container.
      */
     getStepLayoutOfSelected(): ContainerFormat {
-        const container = this.selectedLayout.component as EqContainer<any>;
-        return container.toStepLayout(this);
+        const container = this.selectedLayout.component;
+        return (container as unknown as CreatorContainer).toStepLayout(this);
     }
 
     /**

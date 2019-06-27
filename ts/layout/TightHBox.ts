@@ -3,23 +3,12 @@ import C from '../main/consts';
 import Term from "./Term";
 import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
-import CanvasController from '../main/CanvasController';
-import EqContainer from "./EqContainer";
 import EqComponent from "./EqComponent";
 import { Map } from '../main/helpers';
-import { LinearContainerFormat } from "../main/FileFormat";
 
 const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
 
 export default class TightHBox extends HBox {
-
-    //Override to have right type
-    toStepLayout(controller: CanvasController): LinearContainerFormat {
-        return {
-            type: 'tightHBox',
-            children: EqContainer.childrenToStepLayout(this.children, controller)
-        }
-    }
 
     //Override to account for reduced width of tight terms.
     protected calcWidth(): number {

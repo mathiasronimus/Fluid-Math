@@ -7,6 +7,7 @@ import C from '@shared/main/consts';
 import SubSuper from '@shared/layout/SubSuper';
 import { ModalService } from '../modal.service';
 import { FileFormat, SubSuperContainerFormat, ContainerFormat } from '@shared/main/FileFormat';
+import CreatorSubSuper from '../central-area/CreatorSubSuper';
 
 @Component({
   selector: 'app-sub-super-alignment',
@@ -71,7 +72,7 @@ export class SubSuperAlignmentComponent implements AfterViewInit {
    * Apply the changes.
    */
   apply() {
-    const subSuper = this.selection.canvasInstance.getSelectedLayout().component as SubSuper;
+    const subSuper = this.selection.canvasInstance.getSelectedLayout().component as CreatorSubSuper;
     subSuper.savePortrusion(parseFloat(this.portrusion));
     this.selection.canvasInstance.save();
     this.modal.remove();
