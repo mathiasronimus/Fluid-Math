@@ -1,0 +1,8 @@
+<div class="title">SELECT ANSWERS</div>
+<div class="selectRow" *ngFor="let answer of answers; index as idx; trackBy: trackByIndex">
+  <input type="checkbox" [(ngModel)]="answers[idx]">
+  <div #eqContainer class="eqContainer"></div>
+</div>
+<div style="display: flex">
+  <div class="button" (click)="apply()">Apply</div>
+</div>

@@ -47,6 +47,7 @@
     border-radius: 5px;
     display: flex;
     align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 #error .material-icons {

@@ -17,13 +17,15 @@ import { ErrorService } from '../error.service';
 import RootContainer from '@shared/layout/RootContainer';
 import Radical from '@shared/layout/Radical';
 import { getWidthTier } from '@shared/main/helpers';
-import { ContainerFormat, FileFormat } from '@shared/main/FileFormat';
+import { ContainerFormat, FileFormat, QuizFormat } from '@shared/main/FileFormat';
 import CreatorContainer from './CreatorContainer';
 import CreatorRootContainer from './CreatorRootContainer';
 import CreatorVBox from './CreatorVBox';
 import CreatorHBox from './CreatorHBox';
 import CreatorTightHBox from './CreatorTightHBox';
 import CreatorSubSuper from './CreatorSubSuper';
+import CreatorQuiz from './CreatorQuiz';
+import Quiz from '@shared/layout/Quiz';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -199,6 +201,13 @@ export default class CreatorCanvasController extends CanvasController {
                 termHeight = 0;
             }
             return new CreatorRootContainer(idx, arg, radical, C.creatorContainerPadding, termHeight);
+        } else if (type === 'quiz') {
+            const format = containerObj as QuizFormat;
+            return new CreatorQuiz(
+                this.parseContainerChildren(format.children, depth),
+                C.creatorContainerPadding,
+                format.answers
+            );
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
         } else {
@@ -402,6 +411,8 @@ export default class CreatorCanvasController extends CanvasController {
                 select('c2');
             } else if (selectedComponent instanceof HBox) {
                 select('c0');
+            } else if (selectedComponent instanceof Quiz) {
+                select('c5');
             } else if (selectedComponent instanceof VBox) {
                 select('c1');
             } else if (selectedComponent instanceof SubSuper) {

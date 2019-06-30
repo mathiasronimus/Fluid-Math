@@ -23,6 +23,7 @@ import { TermTemplateComponent } from './term-template/term-template.component';
 import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font-load-fail.component';
 import { ProjectOptionsComponent } from './project-options/project-options.component';
+import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ProjectOptionsComponent } from './project-options/project-options.compo
     TermTemplateComponent,
     FontSettingsComponent,
     CustomFontLoadFailComponent,
-    ProjectOptionsComponent
+    ProjectOptionsComponent,
+    QuizConfigurationComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +67,8 @@ import { ProjectOptionsComponent } from './project-options/project-options.compo
     TermTemplateComponent,
     FontSettingsComponent,
     CustomFontLoadFailComponent,
-    ProjectOptionsComponent
+    ProjectOptionsComponent,
+    QuizConfigurationComponent
   ]
 })
 export class AppModule { }

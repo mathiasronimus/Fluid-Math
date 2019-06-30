@@ -40,6 +40,13 @@ export class ContentSelectionService {
           middle: [],
           bottom: []
       };
+    },
+    () => {
+      return {
+        type: 'quiz',
+        children: [],
+        answers: []
+      };
     }
   ];
 

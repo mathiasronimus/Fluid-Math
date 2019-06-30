@@ -37,7 +37,8 @@ export class ContentPaneComponent implements AfterViewInit {
       'Vertical',
       'Tight Horizontal',
       'Root',
-      'Exponent/Subscript'
+      'Exponent/Subscript',
+      'Quiz'
     ];
     this.updateState = this.updateState.bind(this);
     undoRedo.subscribe(this.updateState);

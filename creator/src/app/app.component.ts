@@ -15,6 +15,7 @@ import { SubSuperAlignmentComponent } from './sub-super-alignment/sub-super-alig
 import { ErrorService } from './error.service';
 import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { ProjectOptionsComponent } from './project-options/project-options.component';
+import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ export class AppComponent {
   selectedRightIcons: Icon[];
 
   subSuperAlignIcon: Icon;
+  quizConfigIcon: Icon;
 
   @ViewChild(CentralAreaComponent)
   centre: CentralAreaComponent;
@@ -81,6 +83,9 @@ export class AppComponent {
     ];
     this.subSuperAlignIcon = new Icon('vertical_align_top', () => {
       this.modal.show(SubSuperAlignmentComponent);
+    }, () => true);
+    this.quizConfigIcon = new Icon('star_half', () => {
+      this.modal.show(QuizConfigurationComponent);
     }, () => true);
     this.undoRedo.publishChange(this.getDefaultInitialState());
     addStyleSheet();
@@ -136,6 +141,9 @@ export class AppComponent {
       if (this.selection.selectedOnCanvas === 'c4') {
         // A subsuper is selected, offer option to change alignment.
         return this.selectedRightIcons.concat([this.subSuperAlignIcon]);
+      } else if (this.selection.selectedOnCanvas === 'c5') {
+        // Quiz selected, offer option to change config
+        return this.selectedRightIcons.concat([this.quizConfigIcon]);
       } else {
         return this.selectedRightIcons;
       }
