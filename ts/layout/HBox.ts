@@ -5,10 +5,11 @@ import LayoutState from '../animation/LayoutState';
 import C from '../main/consts';
 import { Map, tri, line } from '../main/helpers';
 import LinearContainer from './LinearContainer';
-import CanvasController from '../main/CanvasController';
+import CanvasController, { MouseEventCallback } from '../main/CanvasController';
 import HDivider from './HDivider';
 import Radical from './Radical';
 import { LinearContainerFormat } from '../main/FileFormat';
+import EqContent from './EqContent';
 
 export default class HBox extends LinearContainer<LayoutState> {
 
@@ -41,7 +42,11 @@ export default class HBox extends LinearContainer<LayoutState> {
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorObj: Object): LayoutState {
+                opacityObj: Object, colorObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>,
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
         let state = 
             new LayoutState(parentLayout, this, 
                             tlx, tly, 
@@ -57,7 +62,11 @@ export default class HBox extends LinearContainer<LayoutState> {
 
             //Position child in the middle vertically
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorObj).width;
+            upToX += currChild.addLayout(   state, layouts, 
+                                            upToX, childTLY, 
+                                            currScale, opacityObj, colorObj,
+                                            mouseEnter, mouseExit, mouseClick,
+                                            tempContent).width;
         }
 
         layouts.set(this, state);

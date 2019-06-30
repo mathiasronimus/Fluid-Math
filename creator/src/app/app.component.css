@@ -20,7 +20,7 @@
     left: 0px;
     bottom: 0px;
     right: 0px;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 #modal-inner {
@@ -28,11 +28,12 @@
     top: 50%;
     transform: translate(-50%, -50%);
     position: fixed;
-    background-color: white;
+    background-color: #111;
     width: 400px;
     max-height: 100vh;
     padding: 10px;
     overflow-y: auto;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 #error {

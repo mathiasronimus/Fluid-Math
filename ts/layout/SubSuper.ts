@@ -5,7 +5,7 @@ import C from '../main/consts';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import EqContent from './EqContent';
-import CanvasController from '../main/CanvasController';
+import CanvasController, { MouseEventCallback } from '../main/CanvasController';
 import { line, Map } from "../main/helpers";
 import { SubSuperContainerFormat } from "../main/FileFormat";
 
@@ -66,7 +66,12 @@ export default class SubSuper extends EqContainer<LayoutState> {
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): LayoutState {
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
+                    
         let layout = new LayoutState(   parentLayout, this, tlx, tly, 
                                         this.getWidth() * currScale, 
                                         this.getHeight() * currScale, 
@@ -77,7 +82,9 @@ export default class SubSuper extends EqContainer<LayoutState> {
             tlx + this.padding.left * currScale, 
             tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, 
             currScale,
-            opacityObj, colorsObj
+            opacityObj, colorsObj,
+            mouseEnter, mouseExit, mouseClick,
+            tempContent
         );
         let rightX = middleLayout.tlx + middleLayout.width;
 
@@ -87,7 +94,9 @@ export default class SubSuper extends EqContainer<LayoutState> {
             rightX,
             tly + (this.padding.top + this.topBlank) * currScale, 
             currScale * C.expScale,
-            opacityObj, colorsObj
+            opacityObj, colorsObj,
+            mouseEnter, mouseExit, mouseClick,
+            tempContent
         );
 
         //Add the bottom
@@ -96,7 +105,9 @@ export default class SubSuper extends EqContainer<LayoutState> {
             rightX, 
             tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * C.expScale) * currScale,
             currScale * C.expScale,
-            opacityObj, colorsObj
+            opacityObj, colorsObj,
+            mouseEnter, mouseExit, mouseClick,
+            tempContent
         );
 
         //Add own

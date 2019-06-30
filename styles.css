@@ -2,6 +2,8 @@ body {
     max-width: 700px;
     margin: auto;
     padding: 20px;
+    background-color: #111;
+    color: rgba(255, 255, 255, 0.75);
 }
 
 p {
@@ -16,8 +18,8 @@ h1 {
     font-family: 'Roboto';
     background: repeating-linear-gradient(
         45deg,
-        #e3f2fd,
-        #e3f2fd 2px,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) 2px,
         rgba(0, 0, 0, 0) 2px,
         rgba(0, 0, 0, 0) 4px
     );
@@ -27,6 +29,6 @@ h1 {
     font-weight: 600;
     display: block;
     max-width: 630px;
-    border: 1px solid #e3f2fd;
+    border: 1px solid rgba(255, 255, 255, 0.65);
     border-radius: 5px;
 }

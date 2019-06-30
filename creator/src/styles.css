@@ -9,6 +9,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+html {
+    background-color: #111;
+}
+
 .title {
     font-size: 18px;
     padding: 10px;
@@ -20,7 +24,7 @@
     display: inline-block;
     padding: 5px 10px 5px 10px;
     margin: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.175);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50px;
     cursor: pointer;
     font-size: 16px;
@@ -29,7 +33,7 @@
 }
 
 .button {
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 10px;
     margin: 10px auto 0px auto;
     border-radius: 10px;

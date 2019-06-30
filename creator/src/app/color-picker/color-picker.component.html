@@ -1,7 +1,7 @@
 <div class="title">OPACITY</div>
 <div>
   <span class="selector" *ngFor="let data of opacityData; let idx = index;" [style.color]="data.color" (click)="selectO(idx)">
-    <span *ngIf="selectedOpacityIdx === idx" class="material-icons tick black">
+    <span *ngIf="selectedOpacityIdx === idx" class="material-icons tick white">
       check_circle_outline
     </span>
     {{ data.text }}
@@ -10,10 +10,12 @@
 <div class="title">COLOR</div>
 <div>
   <span class="selector white" *ngFor="let data of colorData; let idx = index;" [style.backgroundColor]="data.color" (click)="selectC(idx)">
-    <span *ngIf="selectedColorIdx === idx" class="material-icons tick white">
+    <span *ngIf="selectedColorIdx === idx" class="material-icons tick" [class.black]="data.text === 'Default'">
       check_circle_outline
     </span>
-    {{ data.text }}
+    <span [class.black]="data.text === 'Default'">
+      {{ data.text }}
+    </span>
   </span>
 </div>
 <div id="bottom-row">

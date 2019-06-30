@@ -21,9 +21,9 @@ export class ColorPickerComponent implements OnInit {
 
   constructor(private selection: ContentSelectionService, private undoRedo: UndoRedoService, private modal: ModalService) {
     this.opacityData = [
-      new SelectorData('rgba(0, 0, 0, ' + C.fadedOpacity + ')', 'Faded'),
-      new SelectorData('rgba(0, 0, 0, ' + C.normalOpacity + ')', 'Normal'),
-      new SelectorData('rgba(0, 0, 0, ' + C.focusedOpacity + ')', 'Focused')
+      new SelectorData('rgba(255, 255, 255, ' + C.fadedOpacity + ')', 'Faded'),
+      new SelectorData('rgba(255, 255, 255, ' + C.normalOpacity + ')', 'Normal'),
+      new SelectorData('rgba(255, 255, 255, ' + C.focusedOpacity + ')', 'Focused')
     ];
     const colNames = Object.keys(C.colors);
     this.colorData = colNames

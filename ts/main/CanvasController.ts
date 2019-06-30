@@ -21,8 +21,13 @@ import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
-import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat } from "./FileFormat";
+import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat } from "./FileFormat";
 import ProgressIndicator from "./ProgressIndicator";
+import Quiz from "../layout/Quiz";
+import ContentLayoutState from "../animation/ContentLayoutState";
+import Set from 'core-js/features/set';
+
+export type MouseEventCallback = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => void;
 
 /**
  * Responsible for managing a single canvas,
@@ -47,9 +52,20 @@ export default class CanvasController {
     protected termHeights: number[];
     protected hDividers: HDivider[];
     protected radicals: Radical[];
+    // Content added temporarily in the current step
+    protected tempContent: EqContent<any>[];
 
     protected currStates: Map<EqComponent<any>, LayoutState>;
     protected animating = false;
+
+    // Various mouse events. When triggered, the callback
+    // may add animations to the set or manipulate the controller.
+    // If any click events are present, do not go to the next
+    // step as usual.
+    protected mouseEnterEvents: Map<LayoutState, MouseEventCallback>;
+    protected mouseExitEvents: Map<LayoutState, MouseEventCallback>;
+    protected mouseClickEvents: Map<LayoutState, MouseEventCallback>;
+    protected mouseOnLast: Set = new Set();
 
     protected fontWeight: string;
     protected fontStyle: string;
@@ -151,10 +167,10 @@ export default class CanvasController {
         
         //Bind next step to canvas/text click if not autoplaying
         if (!this.isAutoplay) {
-            this.nextStep = this.nextStep.bind(this);
-            this.canvas.addEventListener("click", this.nextStep as () => void);
+            this.handleMouseClick = this.handleMouseClick.bind(this);
+            this.canvas.addEventListener("click", this.handleMouseClick);
             if (this.textArea) {
-                this.textArea.addEventListener('click', this.nextStep as () => void);
+                this.textArea.addEventListener('click', this.handleMouseClick);
             }
         }
 
@@ -175,6 +191,126 @@ export default class CanvasController {
 
             this.overlayContainer.appendChild(playButton);
             container.appendChild(this.overlayContainer);
+        }
+
+        // Check for mouse events
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.canvas.addEventListener("mousemove", this.handleMouseMove);
+    }
+
+    /**
+     * Set what the cursor will be above the canvas.
+     * @param cursor The css style property for cursor.
+     */
+    setCursor(cursor: string) {
+        this.canvas.style.cursor = cursor;
+    }
+
+    /**
+     * Set what will be displayed as the text.
+     * @param innerHTML The inner HTML text.
+     */
+    setText(innerHTML: string) {
+        if (this.textArea) {
+            this.textArea.innerHTML = innerHTML;
+        }
+    }
+
+    /**
+     * Fire mouse events if necessary when the mouse clicks.
+     * @param e The mouse event.
+     */
+    protected handleMouseClick(e: MouseEvent) {
+        if (this.mouseClickEvents.size > 0) {
+            // May be something to process
+            // Get the relative coords
+            const canvasRect = this.canvas.getBoundingClientRect();
+            const relX = e.clientX - canvasRect.left;
+            const relY = e.clientY - canvasRect.top;
+
+            // Get the layouts that the cursor is currently on
+            const currentlyOn = new Set();
+            this.mouseClickEvents.forEach((handler, layout) => {
+                if (layout.contains(relX, relY)) {
+                    currentlyOn.add(layout);
+                }
+            });
+
+            // list of all states which need to be drawn each frame
+            const allStates: LayoutState[] = [];
+            this.currStates.forEach(state => allStates.push(state));
+
+            // The animations that will be played.
+            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, allStates);
+
+            currentlyOn.forEach((layout: LayoutState) => {
+                let handler = this.mouseClickEvents.get(layout);
+                handler(layout, animSet, this);
+            });
+
+            animSet.start();
+        } else {
+            this.nextStep();
+        }
+    }
+
+    /**
+     * Fire mouse events if necessary when the mouse moves.
+     */
+    protected handleMouseMove(e: MouseEvent) {
+        if (this.mouseEnterEvents.size > 0 || this.mouseExitEvents.size > 0) {
+            // May be something to process
+            // Get the relative coords
+            const canvasRect = this.canvas.getBoundingClientRect();
+            const relX = e.clientX - canvasRect.left;
+            const relY = e.clientY - canvasRect.top;
+            
+            // Get the layouts that the cursor is currently on
+            const currentlyOn = new Set();
+            this.mouseEnterEvents.forEach((handler, layout) => {
+                if (layout.contains(relX, relY)) {
+                    currentlyOn.add(layout);
+                }
+            });
+
+            this.mouseExitEvents.forEach((handler, layout) => {
+                if (layout.contains(relX, relY)) {
+                    currentlyOn.add(layout);
+                }
+            });
+
+            // list of all states which need to be drawn each frame
+            const allStates: LayoutState[] = [];
+            this.currStates.forEach(state => allStates.push(state));
+
+            // The animations that will be played.
+            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, allStates);
+
+            // For each layout the cursor is on, check if it
+            // was on beforehand. If it was not, fire enter
+            // event.
+            currentlyOn.forEach((layout: LayoutState) => {
+                if (!this.mouseOnLast.has(layout)) {
+                    // Fire the enter event
+                    let handler = this.mouseEnterEvents.get(layout);
+                    handler(layout, animSet, this);
+                }
+            });
+
+            // For each layout the cursor was on, check if it
+            // is still on. If not, fire the exit event.
+            this.mouseOnLast.forEach((oldLayout: LayoutState) => {
+                if (!currentlyOn.has(oldLayout)) {
+                    // Fire the exit event
+                    console.log(this.mouseExitEvents.get);
+                    let handler = this.mouseExitEvents.get(oldLayout);
+                    handler(oldLayout, animSet, this);
+                }
+            });
+
+            this.mouseOnLast = currentlyOn;
+            animSet.start();
+
         }
     }
 
@@ -261,7 +397,15 @@ export default class CanvasController {
      */
     protected recalc() {
         let rootLayout;
-        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        [
+            this.currStates, 
+            rootLayout, 
+            this.mouseEnterEvents, 
+            this.mouseExitEvents, 
+            this.mouseClickEvents,
+            this.tempContent
+        ] = this.calcLayout(this.currStep);
+        this.mouseOnLast = new Set();
         let [width, height] = this.getSize(rootLayout);
         this.setSize(width, height);
         this.redraw();
@@ -272,7 +416,7 @@ export default class CanvasController {
      * in the sequence.
      * @param whenDone A function to call when the next step animation is complete.
      */
-    protected nextStep(whenDone: () => void) {
+    protected nextStep(whenDone?: () => void) {
         if (this.currStep + 1 >= this.steps.length || this.animating) {
             //Can't go to next step
             return;
@@ -282,7 +426,15 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         let rootLayout
-        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        [
+            this.currStates,
+            rootLayout,
+            this.mouseEnterEvents,
+            this.mouseExitEvents,
+            this.mouseClickEvents,
+            this.tempContent
+        ] = this.calcLayout(this.currStep);
+        this.mouseOnLast = new Set();
         let [width, height] = this.getSize(rootLayout);
         let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
         this.animating = true;
@@ -302,7 +454,15 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         let rootLayout;
-        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        [
+            this.currStates, 
+            rootLayout,
+            this.mouseEnterEvents,
+            this.mouseExitEvents,
+            this.mouseClickEvents,
+            this.tempContent
+        ] = this.calcLayout(this.currStep);
+        this.mouseOnLast = new Set();
         let [width, height] = this.getSize(rootLayout);        
         let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
         this.animating = true;
@@ -313,7 +473,7 @@ export default class CanvasController {
      * Return to the first step.
      */
     protected restart() {
-        if (this.animating) {
+        if (this.animating || this.currStep === 0) {
             //Can't go to next step
             return;
         }
@@ -323,7 +483,15 @@ export default class CanvasController {
 
         let oldStates = this.currStates;
         let rootLayout;
-        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        [
+            this.currStates, 
+            rootLayout,
+            this.mouseEnterEvents,
+            this.mouseExitEvents,
+            this.mouseClickEvents,
+            this.tempContent
+        ] = this.calcLayout(this.currStep);
+        this.mouseOnLast = new Set();
         let [width, height] = this.getSize(rootLayout);
         let anims = this.diff(oldStates, width, height, oldStep, 0, undefined);
         this.animating = true;
@@ -343,6 +511,9 @@ export default class CanvasController {
         });
         this.radicals.forEach(radical => {
             forEach(radical);
+        });
+        this.tempContent.forEach(temp => {
+            forEach(temp);
         });
     }
  
@@ -639,12 +810,15 @@ export default class CanvasController {
 
     /**
      * Calculate and return the layout for
-     * a particular step. Returns [all layouts, root layout].
-     * 
+     * a particular step. Returns [all layouts, root layout, mouse enter events, mouse exit events, mouse click events, temp content].
      * 
      * @param idx The step number.
      */
-    protected calcLayout(idx: number): [Map<EqComponent<any>, LayoutState>, LayoutState] {
+    protected calcLayout(idx: number):  [Map<EqComponent<any>, LayoutState>, LayoutState, 
+                                         Map<LayoutState, MouseEventCallback>,
+                                         Map<LayoutState, MouseEventCallback>,
+                                         Map<LayoutState, MouseEventCallback>,
+                                         EqContent<any>[]] {
 
         //First create the structure of containers in memory
         let rootObj = this.steps[idx].root;
@@ -670,8 +844,13 @@ export default class CanvasController {
         let opacityObj = this.steps[idx].opacity;
 
         let allLayouts = newMap();
-        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj);
-        return [allLayouts, rootLayout];
+        let mouseEnters = newMap();
+        let mouseExits = newMap();
+        let mouseClicks = newMap();
+        let tempContent = [];
+        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj, 
+                                        mouseEnters, mouseExits, mouseClicks, tempContent);
+        return [allLayouts, rootLayout, mouseEnters, mouseExits, mouseClicks, tempContent];
     }
 
     /**
@@ -730,6 +909,13 @@ export default class CanvasController {
                 radical = this.getContentFromRef(format.rad) as Radical;
             }
             return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights[getWidthTier()]);
+        } else if (type === 'quiz') {
+            let format = containerObj as QuizFormat;
+            return new Quiz(
+                this.parseContainerChildren(format.children, depth + 1),
+                C.defaultQuizPadding,
+                format.answers
+            );
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {

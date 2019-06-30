@@ -19,9 +19,10 @@
     "webpack-cli": "^3.3.1"
   },
   "dependencies": {
+    "@types/core-js": "^2.5.2",
     "@types/webfontloader": "^1.6.29",
     "bezier-easing": "^2.1.0",
-    "map-or-similar": "^1.5.0",
+    "core-js": "^3.1.4",
     "npm": "^6.9.0",
     "webfontloader": "^1.6.28"
   }

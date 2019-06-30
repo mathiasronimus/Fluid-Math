@@ -36,7 +36,8 @@ export default class RendererCanvasController extends CanvasController {
             const colors = step.color;
             const opacities = step.opacity;
             const layouts = newMap();
-            const rootLayout = rootContainer.addLayout(undefined, layouts, 0 , 0, 1, opacities, colors);
+            const rootLayout = rootContainer.addLayout( undefined, layouts, 0 , 0, 1, opacities, colors,
+                                                        newMap(), newMap(), newMap(), []);
 
             // Render the layout
             const overflowX = rootLayout.width - this.renderWidth;

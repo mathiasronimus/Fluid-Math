@@ -5,6 +5,8 @@ import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
 import EqComponent from "./EqComponent";
 import { Map } from '../main/helpers';
+import { MouseEventCallback } from "../main/CanvasController";
+import EqContent from "./EqContent";
 
 const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
 
@@ -27,7 +29,11 @@ export default class TightHBox extends HBox {
     //Override to reduce term padding.
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): LayoutState {
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                mouseExit: Map<LayoutState, MouseEventCallback>,
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
         let state = new LayoutState(
                             parentLayout, this, tlx, tly, 
                             this.getWidth() * currScale, 
@@ -42,7 +48,11 @@ export default class TightHBox extends HBox {
 
             //Position child in the middle vertically
             let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            let childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorsObj);
+            let childLayout = currChild.addLayout(  state, layouts, 
+                                                    upToX, childTLY, currScale, 
+                                                    opacityObj, colorsObj,
+                                                    mouseEnter, mouseExit, mouseClick,
+                                                    tempContent);
             if (currChild instanceof Term) {
                 (childLayout as TermLayoutState).tighten(widthDiff * currScale);
             }

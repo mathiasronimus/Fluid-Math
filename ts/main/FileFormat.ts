@@ -122,6 +122,14 @@ export interface RootContainerFormat extends ContainerFormat {
     rad?: string;
 }
 
+// Format for type = quiz
+export interface QuizFormat extends LinearContainerFormat {
+    // Holds the indices of the correct answers to the 
+    // quiz. Indices are defined by their order in the
+    // quizzes children array.
+    answers: number[];
+}
+
 export interface MetricsFormat {
     // The width of each Term for this font size.
     // In the same order as the terms array.

@@ -4,7 +4,7 @@ import bezier from 'bezier-easing';
 const constants = {
     //Font: size in px
     // The DEFAULT Google font, may be overridden.
-    fontFamily: 'Old Standard TT',
+    fontFamily: 'PT Serif',
     fontStyle: 'Normal',
     fontWeight: '400',
     fontSizes: [35, 30, 25],
@@ -21,7 +21,7 @@ const constants = {
     restartAndProgressSize: 28,
     // The total padding (x and y) of the progress indicator in px
     restartAndProgressPadding: 16,
-    progressFill: "rgba(0, 0, 0, 0.06)",
+    progressFill: "rgba(255, 255, 255, 0.275)",
     
     //Layout:
     defaultVBoxPadding: 0,
@@ -29,6 +29,7 @@ const constants = {
     defaultTightHBoxPadding: 0,
     defaultSubSuperPadding: Padding.even(0),
     defaultRootPadding: Padding.even(0),
+    defaultQuizPadding: new Padding(0, 10, 0, 10),
     termPadding: new Padding(10, 5, 10, 5),
     tightTermPadding: new Padding(5, 2, 5, 2),
     hDividerPadding: new Padding(0, 3, 0, 3),
@@ -45,13 +46,27 @@ const constants = {
     rootKinkTipAngle: Math.PI / 2,
     rootKinkTipLength: 3,
 
+    // Curved outlines:
+    curvedOutlineBorderRadius: 5,
+    curvedOutlineDefaultOpacity: 0.3,
+    curvedOutlineColor: [255, 255, 255],
+
+    // Quizzes:
+    answerVMargin: 20,
+    hoveredOutlineOpacity: 0.75,
+    revealedOutlineOpacity: 1,
+    outlineFadeInDuration: 300,
+    outlineFadeInEasing: bezier(0.5, 0.5, 0.5, 0.5),
+    quizCorrectColor: [100,221,23],
+    quizIncorrectColor: [198,40,40],
+
     //Creator
     creatorContainerPadding: Padding.even(30),
     creatorHDividerPadding: new Padding(5, 15, 5, 15),
     creatorSelectableHDividerPadding: new Padding(5, 0, 5, 0),
-    creatorContainerStroke: "rgb(225, 225, 225)",
-    creatorCaretFillStyle: '#444',
-    creatorCaretFillStyleLighter: '#999',
+    creatorContainerStroke: "rgb(175, 175, 175)",
+    creatorCaretFillStyle: '#eee',
+    creatorCaretFillStyleLighter: '#777',
     creatorCaretSize: 5,
     creatorLineDash: [2],
     creatorErrorTimeout: 5000,
@@ -69,17 +84,17 @@ const constants = {
     colors: {
         //RGB
         "red": [229,57,53],
-        "pink": [216,27,96],
-        "purple": [142,36,170],
-        "blue": [30,136,229],
-        "teal": [0,137,123],
-        "green": [67,160,71],
-        "orange": [251,140,0],
-        "default": [0,0,0]
+        "pink": [247, 18, 171],
+        "purple": [170,0,255],
+        "blue": [27, 158, 245],
+        "teal": [0, 181, 193],
+        "green": [88, 199, 75],
+        "orange": [255, 102, 0],
+        "default": [255, 255, 255]
     },
-    fadedOpacity: 0.3,
-    normalOpacity: 0.6,
-    focusedOpacity: 0.9,
+    fadedOpacity: 0.5,
+    normalOpacity: 0.9,
+    focusedOpacity: 1,
 }
 
 export default constants;

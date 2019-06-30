@@ -3,6 +3,8 @@ import EqComponent from "./EqComponent";
 import Padding from "./Padding";
 import LayoutState from '../animation/LayoutState';
 import { Map } from '../main/helpers';
+import { MouseEventCallback } from "../main/CanvasController";
+import EqContent from "./EqContent";
 
 /**
  * VBox used at the root of the layout hierarchy.
@@ -24,7 +26,11 @@ export default class VCenterVBox extends VBox {
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): LayoutState {
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly,
             this.getWidth() * currScale,
             this.getHeight() * currScale,
@@ -38,7 +44,11 @@ export default class VCenterVBox extends VBox {
 
             //Position child in the middle horizontally
             let childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
-            upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale, opacityObj, colorsObj).height;
+            upToY += currChild.addLayout(   state, layouts, 
+                                            childTLX, upToY, currScale, 
+                                            opacityObj, colorsObj,
+                                            mouseEnter, mouseExit, mouseClick,
+                                            tempContent).height;
         }
 
         layouts.set(this, state);

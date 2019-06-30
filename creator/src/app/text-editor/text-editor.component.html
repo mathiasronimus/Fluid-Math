@@ -2,10 +2,10 @@
 <div contenteditable="true" #textArea id="text-area" (keydown)="checkValid($event)">Step Text</div>
 <div class="eqContainer" #eqContainer></div>
 <div class="title">STYLE</div>
-<span class="selector black" (mousedown)="unStyle()">Normal</span>
+<span class="selector" (mousedown)="unStyle()">Normal</span>
 <span class="selector" 
       *ngFor="let style of styleOpts; let idx = index;" 
-      [style.backgroundColor]="style.color"
+      [style.backgroundColor]="style.text === 'Bold' ? '#111' : style.color"
       (mousedown)="stylePress(idx)">
   {{ style.text }}
 </span>

@@ -5,7 +5,7 @@ import HBox from "./HBox";
 import Radical from './Radical';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
-import CanvasController from '../main/CanvasController';
+import CanvasController, { MouseEventCallback } from '../main/CanvasController';
 import EqContent from './EqContent';
 import { Map } from '../main/helpers';
 import C from '../main/consts';
@@ -136,7 +136,11 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
      */
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): RootContainerLayoutState {
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): RootContainerLayoutState {
         const adjustedPad = this.padding.scale(currScale);
 
         // Points for the radical: Relative to this container
@@ -186,14 +190,17 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
             thisLayout, layouts, 
             indexTlx, indexTly,
             currScale * C.rootIndexScale,
-            opacityObj, colorsObj
+            opacityObj, colorsObj,
+            mouseEnter, mouseExit, mouseClick,
+            tempContent
         );
 
         // Calculate layout for the argument
         const argTlx = tlx + (realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft) * currScale + adjustedPad.left;
         const argTly = tly + this.indexTopOverflow * currScale + adjustedPad.top;
         this.argument.addLayout(
-            thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj
+            thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj, 
+            mouseEnter, mouseExit, mouseClick, tempContent
         );
 
         if (this.radical) {

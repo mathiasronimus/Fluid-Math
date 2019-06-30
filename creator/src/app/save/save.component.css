@@ -11,3 +11,7 @@ p {
 .margin-top {
     margin-top: 10px;
 }
+
+a {
+    color: rgba(255, 255, 255, 0.9);
+}

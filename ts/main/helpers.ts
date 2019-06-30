@@ -1,5 +1,5 @@
 import C from './consts';
-import Similar from 'map-or-similar';
+import Map from 'core-js/features/map';
 import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from './FileFormat';
 
 /**
@@ -241,7 +241,7 @@ let mapSupported = typeof window['Map'] === 'function';
  * below.
  */
 export function newMap(): Map<any, any> {
-    return mapSupported ? new window['Map'] : new Similar();
+    return mapSupported ? new window['Map'] : new Map();
 }
 
 export interface Map<K, V> {

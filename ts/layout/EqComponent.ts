@@ -1,6 +1,8 @@
 import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 import { Map } from '../main/helpers';
+import CanvasController, { MouseEventCallback } from '../main/CanvasController';
+import EqContent from './EqContent';
 
 /**
  * Represents any component (container, content)
@@ -53,8 +55,16 @@ export default abstract class EqComponent<L extends LayoutState> {
      * @param currScale The current canvas scaling factor.
      * @param opacityObj The object storing opacity info for this step.
      * @param colorsObj The object storing color info for this step.
+     * @param mouseEnter Mouse enter events for this step.
+     * @param mouseExit Mouse exit events for this step.
+     * @param mouseClick Mouse click events for this step.
+     * @param tempContent Temporary content added only for this step.
      */
     abstract addLayout( parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                         tlx: number, tly: number, currScale: number,
-                        opacityObj: Object, colorsObj: Object): L;
+                        opacityObj: Object, colorsObj: Object,
+                        mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                        mouseExit: Map<LayoutState, MouseEventCallback>, 
+                        mouseClick: Map<LayoutState, MouseEventCallback>,
+                        tempContent: EqContent<any>[]): L;
 }

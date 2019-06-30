@@ -5,9 +5,10 @@ import Padding from './Padding';
 import C from '../main/consts';
 import { line, Map, tri } from '../main/helpers';
 import LinearContainer from './LinearContainer';
-import CanvasController from '../main/CanvasController';
+import CanvasController, { MouseEventCallback } from '../main/CanvasController';
 import Radical from './Radical';
 import { LinearContainerFormat } from '../main/FileFormat';
+import EqContent from './EqContent';
 
 export default class VBox extends LinearContainer<LayoutState> {
 
@@ -38,7 +39,11 @@ export default class VBox extends LinearContainer<LayoutState> {
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object): LayoutState {
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>, 
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
         let state = new LayoutState(parentLayout, this, tlx, tly, 
                                     this.getWidth() * currScale, 
                                     this.getHeight() * currScale, 
@@ -52,7 +57,11 @@ export default class VBox extends LinearContainer<LayoutState> {
 
             //Position child in the middle horizontally
             let childTLX = (innerWidth - childWidth) / 2 + this.padding.left * currScale + tlx;
-            upToY += currChild.addLayout(state, layouts, childTLX, upToY, currScale, opacityObj, colorsObj).height;
+            upToY += currChild.addLayout(   state, layouts, 
+                                            childTLX, upToY, currScale, 
+                                            opacityObj, colorsObj,
+                                            mouseEnter, mouseExit, mouseClick,
+                                            tempContent).height;
         }
 
         layouts.set(this, state);

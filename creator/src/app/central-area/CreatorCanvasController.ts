@@ -62,7 +62,8 @@ export default class CreatorCanvasController extends CanvasController {
         this.currStep = step.selected;
         this.recalc();
         // Don't allow going to next step
-        this.canvas.removeEventListener('click', this.nextStep as () => void);
+        this.canvas.removeEventListener('click', this.handleMouseClick as () => void);
+        this.canvas.removeEventListener('mousemove', this.handleMouseMove);
         this.originalInstructions = instructions;
         // Whether dragging or clicking, mouse up could mean add
         this.onMoveOver = this.onMoveOver.bind(this);
@@ -121,7 +122,7 @@ export default class CreatorCanvasController extends CanvasController {
                     this.ctx.restore();
                 } else if (l === this.selectedLayout) {
                     this.ctx.save();
-                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                     this.ctx.fillRect(l.tlx, l.tly, l.width, l.height);
                     this.ctx.restore();
                 }

@@ -40,7 +40,7 @@ export default class SelectableCanvasController extends CanvasController {
             if (component instanceof EqContent) {
                 if (component.getRef() === this.selectedRef) {
                     this.ctx.save();
-                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
                     this.ctx.fillRect(layout.tlx, layout.tly, layout.width, layout.height);
                     this.ctx.restore();
                 }
