@@ -21,11 +21,13 @@ import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
-import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat } from "./FileFormat";
+import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat, TableFormat } from "./FileFormat";
 import ProgressIndicator from "./ProgressIndicator";
 import Quiz from "../layout/Quiz";
 import ContentLayoutState from "../animation/ContentLayoutState";
 import Set from 'core-js/features/set';
+import TableContainer from "../layout/TableContainer";
+import VDivider from "../layout/VDivider";
 
 export type MouseEventCallback = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => void;
 
@@ -51,6 +53,7 @@ export default class CanvasController {
     protected terms: Term[];
     protected termHeights: number[];
     protected hDividers: HDivider[];
+    protected vDividers: VDivider[];
     protected radicals: Radical[];
     // Content added temporarily in the current step
     protected tempContent: EqContent<any>[];
@@ -89,6 +92,7 @@ export default class CanvasController {
         this.stepOptions = instructions.stepOpts;
         this.terms = [];
         this.hDividers = [];
+        this.vDividers = [];
         this.radicals = [];
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
@@ -503,18 +507,11 @@ export default class CanvasController {
      * @param forEach A function that will be passed each bit of content.
      */
     private forAllContent(forEach: (content: EqContent<any>) => void) {
-        this.terms.forEach(term => {
-            forEach(term);
-        });
-        this.hDividers.forEach(hDivider => {
-            forEach(hDivider);
-        });
-        this.radicals.forEach(radical => {
-            forEach(radical);
-        });
-        this.tempContent.forEach(temp => {
-            forEach(temp);
-        });
+        this.terms.forEach(forEach);
+        this.hDividers.forEach(forEach);
+        this.vDividers.forEach(forEach);
+        this.radicals.forEach(forEach);
+        this.tempContent.forEach(forEach);
     }
  
     /**
@@ -758,6 +755,10 @@ export default class CanvasController {
         for (let i = 0; i < instructions.hDividers; i++) {
             this.hDividers.push(new HDivider(C.hDividerPadding, 'h' + i));
         }
+        //Initialize v dividers
+        for (let i = 0; i < instructions.vDividers; i++) {
+            this.vDividers.push(new VDivider(C.vDividerPadding, 'v' + i));
+        }
         //Initialize radicals
         for (let i = 0; i < instructions.radicals; i++) {
             this.radicals.push(new Radical('r' + i));
@@ -781,6 +782,8 @@ export default class CanvasController {
             return this.hDividers[contentIndex];
         } else if (contentType === 'r') {
             return this.radicals[contentIndex];
+        } else if (contentType === 'v') {
+            return this.vDividers[contentIndex];
         } else {
             throw "unrecognized content type";
         }
@@ -916,11 +919,49 @@ export default class CanvasController {
                 C.defaultQuizPadding,
                 format.answers
             );
+        } else if (type === 'table') {
+            let format = containerObj as TableFormat;
+            let children = this.parseChildren2D(format.children);
+            return new TableContainer(
+                C.defaultTablePadding,
+                children,
+                this.parseChildrenObj(format.hLines),
+                this.parseChildrenObj(format.vLines)
+            );
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";
         } else {
             throw "Invalid JSON File: Unrecognized type: " + type;
         }
+    }
+
+    /**
+     * Parse an object containing references with indices
+     * as keys.
+     * @param obj The object to parse. 
+     */
+    protected parseChildrenObj(obj: {[index: number]: string}): {[index: number]: EqComponent<any>} {
+        let toReturn = {};
+        if (!obj) {
+            return toReturn;
+        }
+        Object.keys(obj).forEach(index => {
+            let ref = obj[index];
+            toReturn[index] = this.getContentFromRef(ref);
+        });
+        return toReturn;
+    }
+
+    /**
+     * Parse a 2D array of components.
+     * @param fromFile The array from the file.
+     */
+    protected parseChildren2D(fromFile: (string | ContainerFormat)[][]): EqComponent<any>[][] {
+        const toReturn: EqComponent<any>[][] = [];
+        fromFile.forEach(row => {
+            toReturn.push(this.parseContainerChildren(row, 1));
+        });
+        return toReturn;
     }
 
     /**
@@ -934,7 +975,11 @@ export default class CanvasController {
         let toReturn = [];
         children.forEach(child => {
             if (typeof child === 'object') {
-                toReturn.push(this.parseContainer(child, depth + 1));
+                if (child === null) {
+                    toReturn.push(undefined);
+                } else {
+                    toReturn.push(this.parseContainer(child, depth + 1));
+                }
             } else if (typeof child === 'string') {
                 toReturn.push(this.getContentFromRef(child));
             } else {

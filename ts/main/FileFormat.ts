@@ -13,6 +13,9 @@ export interface FileFormat {
     // Optional. The amount of horizontal dividers in the
     // animation. If not present, there are none.
     hDividers?: number;
+    // Optional. The amount of vertical dividers in the
+    // animation. If not present, there are none.
+    vDividers?: number;
     // Optional. The amount of radicals in the
     // animation. If not present, there are none.
     radicals?: number;
@@ -128,6 +131,18 @@ export interface QuizFormat extends LinearContainerFormat {
     // quiz. Indices are defined by their order in the
     // quizzes children array.
     answers: number[];
+}
+
+// Format for type = table
+export interface TableFormat extends ContainerFormat {
+    // 2d array of what's inside the table cells
+    children: (string | ContainerFormat)[][];
+    // positions of horizontal lines, map from possible
+    // positions (index) to content reference of line.
+    hLines?: {[index: number]: string};
+    // positions of vertical lines, map from possible
+    // positions (index) to content reference of line.
+    vLines?: {[index: number]: string};
 }
 
 export interface MetricsFormat {

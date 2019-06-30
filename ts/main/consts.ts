@@ -30,9 +30,11 @@ const constants = {
     defaultSubSuperPadding: Padding.even(0),
     defaultRootPadding: Padding.even(0),
     defaultQuizPadding: new Padding(0, 10, 0, 10),
+    defaultTablePadding: Padding.even(2),
     termPadding: new Padding(10, 5, 10, 5),
     tightTermPadding: new Padding(5, 2, 5, 2),
     hDividerPadding: new Padding(0, 3, 0, 3),
+    vDividerPadding: new Padding(3, 0, 3, 0),
     //The scaling of exponents and subscripts.
     expScale: 0.575,
     //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
