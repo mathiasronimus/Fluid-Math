@@ -47,6 +47,17 @@ export class ContentSelectionService {
         children: [],
         answers: []
       };
+    },
+    () => {
+      return {
+        type: 'table',
+        children: [
+          [null, null],
+          [null, null]
+        ],
+        hLines: {},
+        vLines: {}
+      };
     }
   ];
 

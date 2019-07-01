@@ -17,6 +17,10 @@ export default class HDivider extends EqContent<OriginalDimenLayoutState> {
         this.width = 0;
     }
 
+    setPadding(newPadding: Padding) {
+        this.padding = newPadding;
+    }
+
     protected calcWidth(): number {return 0;}
     protected calcHeight(): number {return 0;}
 

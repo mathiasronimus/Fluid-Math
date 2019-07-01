@@ -16,6 +16,7 @@ import { ErrorService } from './error.service';
 import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { ProjectOptionsComponent } from './project-options/project-options.component';
 import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
+import { TableAddComponent } from './table-add/table-add.component';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ export class AppComponent {
 
   subSuperAlignIcon: Icon;
   quizConfigIcon: Icon;
+  tableIcons: Icon[];
 
   @ViewChild(CentralAreaComponent)
   centre: CentralAreaComponent;
@@ -87,6 +89,17 @@ export class AppComponent {
     this.quizConfigIcon = new Icon('star_half', () => {
       this.modal.show(QuizConfigurationComponent);
     }, () => true);
+    this.tableIcons = [
+      new Icon('add', () => {
+        this.modal.show(TableAddComponent);
+      }, () => true),
+      new Icon('border_outer', () => {
+        this.selection.canvasInstance.tableAddOuterBorder();
+      }, () => true),
+      new Icon('border_inner', () => {
+        this.selection.canvasInstance.tableAddInnerBorder();
+      }, () => true)
+    ];
     this.undoRedo.publishChange(this.getDefaultInitialState());
     addStyleSheet();
   }
@@ -144,6 +157,9 @@ export class AppComponent {
       } else if (this.selection.selectedOnCanvas === 'c5') {
         // Quiz selected, offer option to change config
         return this.selectedRightIcons.concat([this.quizConfigIcon]);
+      } else if (this.selection.selectedOnCanvas === 'c6') {
+        // Table selected, offer table options
+        return this.selectedRightIcons.concat(this.tableIcons);
       } else {
         return this.selectedRightIcons;
       }

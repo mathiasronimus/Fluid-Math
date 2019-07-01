@@ -22,21 +22,43 @@ export default class TableContainer extends EqContainer<LayoutState> {
     protected hLines: {[index: number]: EqComponent<any>};
     protected vLines: {[index: number]: EqComponent<any>};
 
-    constructor(padding: Padding, children: EqComponent<any>[][], hLines: {[index: number]: EqComponent<any>}, vLines: {[index: number]: EqComponent<any>}) {
+    protected lineStroke: number;
+
+    constructor(padding: Padding, 
+                children: EqComponent<any>[][], 
+                hLines: {[index: number]: EqComponent<any>}, 
+                vLines: {[index: number]: EqComponent<any>},
+                lineStroke: number) {
         super(padding);
+        this.lineStroke = lineStroke;
         this.children = children;
-        console.log(this.children);
         this.width = this.calcWidth();
         this.height = this.calcHeight();
         this.hLines = hLines;
         this.vLines = vLines;
     }
 
+    /**
+     * Return the amount of space to leave for lines
+     * (both horizontal and vertical).
+     */
+    protected getLineStroke(): number {
+        return this.lineStroke;
+    }
+
+    /**
+     * Return the mimimum dimension in either axis
+     * for a table cell.
+     */
+    protected getMinCellDimen(): number {
+        return 0;
+    }
+
     protected calcWidth(): number {
         let totalWidth = 0;
         // Width of each column is the max width of any component in that row
         for (let c = 0; c < this.children[0].length; c++) {
-            let maxWidth = 0;
+            let maxWidth = this.getMinCellDimen();
             for (let r = 0; r < this.children.length; r++) {
                 let currChild = this.children[r][c];
                 let currWidth;
@@ -54,15 +76,16 @@ export default class TableContainer extends EqContainer<LayoutState> {
             // Store col width for later
             this.widths[c] = maxWidth;
         }
-        // Also need to take width of lines (1) into account,
+        // Also need to take width of lines into account,
         // and padding.
-        return totalWidth + this.padding.width() + this.children[0].length + 1;
+        return totalWidth + this.padding.width() + (this.children[0].length + 1) * this.getLineStroke();
     }
+    
     protected calcHeight(): number {
         let totalHeight = 0;
         // Height of each row is the max height of any component in that row
         for (let r = 0; r < this.children.length; r++) {
-            let maxHeight = 0;
+            let maxHeight = this.getMinCellDimen();
             for (let c = 0; c < this.children[r].length; c++) {
                 let currChild = this.children[r][c];
                 let currHeight;
@@ -80,9 +103,9 @@ export default class TableContainer extends EqContainer<LayoutState> {
             // Store height of this row for later
             this.heights[r] = maxHeight;
         }
-        // Also need to take height of lines (1) into account,
+        // Also need to take height of lines into account,
         // and padding.
-        return totalHeight + this.padding.height() + this.children.length + 1;
+        return totalHeight + this.padding.height() + (this.children.length + 1) * this.getLineStroke();
     }
 
     /**
@@ -115,16 +138,16 @@ export default class TableContainer extends EqContainer<LayoutState> {
         )
 
         // Add child layouts row by row
-        let upToY = tly + this.padding.top + 1;
+        let upToY = tly + this.padding.top + this.getLineStroke();
         for (let r = 0; r < this.children.length; r++) {
             // Do the row
-            let upToX = tlx + this.padding.left + 1;
+            let upToX = tlx + this.padding.left + this.getLineStroke();
             let rowHeight = this.heights[r];
 
             // Add hline before row if there is one
             if (this.hLines[r]) {
                 this.hLines[r].addLayout(
-                    thisState, layouts, tlx + this.padding.left, upToY - 1, currScale,
+                    thisState, layouts, undefined, upToY - this.getLineStroke(), currScale,
                     opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent
                 );
             }
@@ -136,7 +159,7 @@ export default class TableContainer extends EqContainer<LayoutState> {
                 // Add vline before column if there is one
                 if (this.vLines[c]) {
                     this.vLines[c].addLayout(
-                        thisState, layouts, upToX - 1, tly + this.padding.top, currScale,
+                        thisState, layouts, upToX - this.getLineStroke(), undefined, currScale,
                         opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent
                     );
                 }
@@ -154,22 +177,22 @@ export default class TableContainer extends EqContainer<LayoutState> {
                         tempContent
                     );
                 }
-                upToX += colWidth + 1;
+                upToX += colWidth + this.getLineStroke();
 
                 // Add vline after last column if there is one
                 if (c === this.children[r].length - 1 && this.vLines[c + 1]) {
                     this.vLines[c + 1].addLayout(
-                        thisState, layouts, upToX - 1, tly + this.padding.top, currScale,
+                        thisState, layouts, upToX - this.getLineStroke(), undefined, currScale,
                         opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent
                     );
                 }
             }
-            upToY += rowHeight + 1;
+            upToY += rowHeight + this.getLineStroke();
 
             // Add hline after the last row if there is one
             if (r === this.children.length - 1 && this.hLines[r + 1]) {
                 this.hLines[r + 1].addLayout(
-                    thisState, layouts, tlx + this.padding.left, upToY - 1,
+                    thisState, layouts, tlx + this.padding.left, upToY - this.getLineStroke(),
                     currScale, opacityObj, colorsObj,
                     mouseEnter, mouseExit, mouseClick, tempContent
                 )

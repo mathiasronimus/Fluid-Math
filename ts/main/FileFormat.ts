@@ -71,7 +71,7 @@ export interface StepFormat {
 export interface ContainerFormat {
     // Each container has a unique string identifying
     // its type.
-    type: string;
+    type: 'vbox' | 'hbox' | 'tightHBox' | 'subSuper' | 'root' | 'quiz' | 'table';
 }
 
 // Format for type = vbox, hbox, or tightHBox

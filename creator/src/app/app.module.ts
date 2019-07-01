@@ -24,6 +24,7 @@ import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { CustomFontLoadFailComponent } from './custom-font-load-fail/custom-font-load-fail.component';
 import { ProjectOptionsComponent } from './project-options/project-options.component';
 import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
+import { TableAddComponent } from './table-add/table-add.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { QuizConfigurationComponent } from './quiz-configuration/quiz-configurat
     FontSettingsComponent,
     CustomFontLoadFailComponent,
     ProjectOptionsComponent,
-    QuizConfigurationComponent
+    QuizConfigurationComponent,
+    TableAddComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,8 @@ import { QuizConfigurationComponent } from './quiz-configuration/quiz-configurat
     FontSettingsComponent,
     CustomFontLoadFailComponent,
     ProjectOptionsComponent,
-    QuizConfigurationComponent
+    QuizConfigurationComponent,
+    TableAddComponent
   ]
 })
 export class AppModule { }

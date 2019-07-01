@@ -38,7 +38,7 @@
               #termInput>
       <span class="material-icons more" (mousedown)="showTermTemplate()">more_horiz</span>
     </span>
-    <div class="title">FRACTION LINES</div>
+    <div class="title">HORIZONTAL LINES</div>
     <span class="selector grab" 
           *ngFor="let hDivider of getCountArray(hDividers); let hIndex = index;"
           (click)="select('h' + hIndex, $event)"
@@ -55,6 +55,25 @@
     </span>
     <span class="selector material-icons color" 
           (click)="addHDivider($event)">
+          add
+    </span>
+    <div class="title">VERTICAL LINES</div>
+    <span class="selector grab" 
+          *ngFor="let vDivider of getCountArray(vDividers); let vIndex = index;"
+          (click)="select('v' + vIndex, $event)"
+          (dragstart)="deselect(); dragging = true; setAdding('v' + vIndex);"
+          [ngClass]="{'selected': selection.adding === 'v' + vIndex,
+                      'color': selection.selectedOnCanvas === 'v' + vIndex}"
+          draggable="true">
+      {{ vDivider }}
+      <span *ngIf="selection.adding === 'v' + vIndex && !dragging"
+            class="material-icons"
+            (click)="delete($event)">
+          delete
+      </span>
+    </span>
+    <span class="selector material-icons color" 
+          (click)="addVDivider($event)">
           add
     </span>
     <div class="title">RADICALS</div>

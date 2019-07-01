@@ -926,7 +926,8 @@ export default class CanvasController {
                 C.defaultTablePadding,
                 children,
                 this.parseChildrenObj(format.hLines),
-                this.parseChildrenObj(format.vLines)
+                this.parseChildrenObj(format.vLines),
+                1
             );
         } else if (type === undefined) {
             throw "Invalid JSON File: Missing type attribute on container descriptor.";

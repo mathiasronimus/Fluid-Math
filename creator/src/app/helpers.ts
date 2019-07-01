@@ -1,6 +1,5 @@
-import C from '@shared/main/consts';
-import { getFontSizeForTier } from '@shared/main/helpers';
 import { ContainerFormat } from '@shared/main/FileFormat';
+import _ from 'lodash';
 
 /**
  * Recursively checks if a reference
@@ -10,6 +9,9 @@ import { ContainerFormat } from '@shared/main/FileFormat';
  */
 export function inLayout(toCheck: ContainerFormat, ref: string): boolean {
     let found = false;
+    if (!toCheck) {
+        return found;
+    }
     Object.keys(toCheck).forEach(key => {
         const value = toCheck[key];
         if (typeof value === 'object') {
@@ -31,35 +33,7 @@ export function inLayout(toCheck: ContainerFormat, ref: string): boolean {
  * @param toClone The object to clone.
  */
 export function deepClone(toClone: object): object {
-    const cloneTo = {};
-    recDeepClone(toClone, cloneTo);
-    return cloneTo;
-}
-
-function recDeepClone(toClone: object, cloneTo: object) {
-    Object.keys(toClone).forEach(key => {
-        const val = toClone[key];
-        if (typeof val === 'object') {
-            if (Array.isArray(val)) {
-                // Clone array
-                cloneTo[key] = [];
-                for (let i = 0; i < val.length; i++) {
-                    if (typeof val[i] === 'object') {
-                        cloneTo[key][i] = {};
-                        recDeepClone(val[i], cloneTo[key][i]);
-                    } else {
-                        cloneTo[key][i] = val[i];
-                    }
-                }
-            } else {
-                // Clone object
-                cloneTo[key] = {};
-                recDeepClone(val, cloneTo[key]);
-            }
-        } else {
-            cloneTo[key] = val;
-        }
-    });
+    return _.cloneDeep(toClone);
 }
 
 /**

@@ -17,7 +17,7 @@ import { ErrorService } from '../error.service';
 import RootContainer from '@shared/layout/RootContainer';
 import Radical from '@shared/layout/Radical';
 import { getWidthTier } from '@shared/main/helpers';
-import { ContainerFormat, FileFormat, QuizFormat } from '@shared/main/FileFormat';
+import { ContainerFormat, FileFormat, QuizFormat, TableFormat } from '@shared/main/FileFormat';
 import CreatorContainer from './CreatorContainer';
 import CreatorRootContainer from './CreatorRootContainer';
 import CreatorVBox from './CreatorVBox';
@@ -26,6 +26,10 @@ import CreatorTightHBox from './CreatorTightHBox';
 import CreatorSubSuper from './CreatorSubSuper';
 import CreatorQuiz from './CreatorQuiz';
 import Quiz from '@shared/layout/Quiz';
+import CreatorTable from './CreatorTable';
+import Padding from '@shared/layout/Padding';
+import VDivider from '@shared/layout/VDivider';
+import TableContainer from '@shared/layout/TableContainer';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -80,6 +84,74 @@ export default class CreatorCanvasController extends CanvasController {
             e.preventDefault();
         });
         this.canvas.setAttribute('droppable', 'true');
+    }
+
+    private addVDivider(): VDivider {
+        const newDivider = new VDivider(C.vDividerPadding, 'v' + this.vDividers.length);
+        this.vDividers.push(newDivider);
+        return newDivider;
+    }
+
+    private addHDivider(): HDivider {
+        const newDivider = new HDivider(C.hDividerPadding, 'h' + this.hDividers.length);
+        this.hDividers.push(newDivider);
+        return newDivider;
+    }
+
+    /**
+     * Add an outer border to the currently selected
+     * table.
+     */
+    tableAddOuterBorder() {
+        const table = this.getSelectedLayout().component as CreatorTable;
+        const vLines = table.getVLines();
+        const hLines = table.getHLines();
+        const children = table.getChildren();
+        // Add left border, if none
+        if (!vLines[0]) {
+            vLines[0] = this.addVDivider();
+        }
+        // Add right border, if none
+        if (!vLines[children[0].length]) {
+            vLines[children[0].length] = this.addVDivider();
+        }
+        // Add top border, if none
+        if (!hLines[0]) {
+            hLines[0] = this.addHDivider();
+        }
+        // Add bottom border, if none
+        if (!hLines[children.length]) {
+            hLines[children.length] = this.addHDivider();
+        }
+        // Save changes
+        this.save();
+    }
+
+    /**
+     * Add inner borders to the currently selected
+     * table.
+     */
+    tableAddInnerBorder() {
+        const table = this.getSelectedLayout().component as CreatorTable;
+        const vLines = table.getVLines();
+        const hLines = table.getHLines();
+        const children = table.getChildren();
+
+        // Add each missing horizontal border
+        for (let r = 1; r < children.length; r++) {
+            if (!hLines[r]) {
+                hLines[r] = this.addHDivider();
+            }
+        }
+
+        // Add each missing vertical border
+        for (let c = 1; c < children[0].length; c++) {
+            if (!vLines[c]) {
+                vLines[c] = this.addVDivider();
+            }
+        }
+
+        this.save();
     }
 
     /**
@@ -208,6 +280,15 @@ export default class CreatorCanvasController extends CanvasController {
                 C.creatorContainerPadding,
                 format.answers
             );
+        } else if (type === 'table') {
+            const format = containerObj as TableFormat;
+            return new CreatorTable(
+                C.creatorContainerPadding,
+                this.parseChildren2D(format.children),
+                this.parseChildrenObj(format.hLines),
+                this.parseChildrenObj(format.vLines),
+                11
+            );
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
         } else {
@@ -283,6 +364,7 @@ export default class CreatorCanvasController extends CanvasController {
                     modifyWith = this.autoAddContent(toAdd);
                 }
             } catch (e) {
+                console.error(e);
                 if (final) {
                     this.error.text = e.message;
                 }
@@ -419,6 +501,8 @@ export default class CreatorCanvasController extends CanvasController {
                 select('c4');
             } else if (selectedComponent instanceof RootContainer) {
                 select('c3');
+            } else if (selectedComponent instanceof TableContainer) {
+                select('c6');
             } else {
                 throw new Error('Unrecognized container selected.');
             }
@@ -434,7 +518,8 @@ export default class CreatorCanvasController extends CanvasController {
     delete() {
         const parent = this.selectedLayout.layoutParent.component;
         (parent as unknown as CreatorContainer).delete(this.selectedLayout.component);
-        this.undoRedo.publishChange(this.getLayoutForPublish(() => {}));
+        const newLayout = this.getLayoutForPublish(() => {});
+        this.undoRedo.publishChange(newLayout);
     }
 
     /**
@@ -460,12 +545,16 @@ export default class CreatorCanvasController extends CanvasController {
         }
     }
 
-    // Override to give h dividers some padding
+    // Override to give dividers some padding
     protected initContent(instructions) {
         super.initContent(instructions);
         this.hDividers = [];
         for (let i = 0; i < instructions.hDividers; i++) {
             this.hDividers.push(new HDivider(C.creatorHDividerPadding, 'h' + i));
+        }
+        this.vDividers = [];
+        for (let i = 0; i < instructions.vDividers; i++) {
+            this.vDividers.push(new VDivider(C.creatorVDividerPadding, 'v' + i));
         }
     }
 
@@ -570,8 +659,10 @@ export default class CreatorCanvasController extends CanvasController {
      * made to this canvas saved.
      */
     save() {
-        const newState: any = this.undoRedo.getStateClone();
+        const newState = this.undoRedo.getStateClone();
         newState.steps[this.step.selected].root = this.rootContainer.toStepLayout(this);
+        newState.hDividers = this.hDividers.length;
+        newState.vDividers = this.vDividers.length;
         this.undoRedo.publishChange(newState);
     }
 }

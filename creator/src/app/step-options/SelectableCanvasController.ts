@@ -5,6 +5,9 @@ import HDivider from '@shared/layout/HDivider';
 import C from '@shared/main/consts';
 import LayoutState from '@shared/animation/LayoutState';
 import EqComponent from '@shared/layout/EqComponent';
+import VDivider from '@shared/layout/VDivider';
+import { ContainerFormat, TableFormat } from '@shared/main/FileFormat';
+import TableContainer from '@shared/layout/TableContainer';
 
 export default class SelectableCanvasController extends CanvasController {
 
@@ -81,12 +84,38 @@ export default class SelectableCanvasController extends CanvasController {
         } catch (e) {} finally {}
     }
 
-    // Override to give h dividers some padding
+    // Override to give dividers some padding
     protected initContent(instructions) {
         super.initContent(instructions);
         this.hDividers = [];
         for (let i = 0; i < instructions.hDividers; i++) {
             this.hDividers.push(new HDivider(C.creatorSelectableHDividerPadding, 'h' + i));
+        }
+        this.vDividers = [];
+        for (let i = 0; i < instructions.vDividers; i++) {
+            this.vDividers.push(new VDivider(C.creatorSelectableVDividerPadding, 'v' + i));
+        }
+    }
+
+    /**
+     * Parse a container from the JSON Object.
+     * Override to change stroke for table.
+     * @param containerObj The JSON Object representing the container.
+     * @param depth The depth in the layout tree.
+     */
+    protected parseContainer(containerObj: ContainerFormat, depth: number): EqContainer<any> {
+        if (containerObj.type === 'table') {
+            const format = containerObj as TableFormat;
+            const children = this.parseChildren2D(format.children);
+            return new TableContainer(
+                C.defaultTablePadding,
+                children,
+                this.parseChildrenObj(format.hLines),
+                this.parseChildrenObj(format.vLines),
+                11
+            );
+        } else {
+            return super.parseContainer(containerObj, depth);
         }
     }
 }

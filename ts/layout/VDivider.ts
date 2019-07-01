@@ -17,6 +17,10 @@ export default class VDivider extends EqContent<OriginalDimenLayoutState> {
         this.height = 0;
     }
 
+    setPadding(newPadding: Padding) {
+        this.padding = newPadding;
+    }
+
     protected calcWidth(): number {return 0;}
     protected calcHeight(): number {return 0;}
 

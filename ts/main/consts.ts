@@ -65,13 +65,17 @@ const constants = {
     //Creator
     creatorContainerPadding: Padding.even(30),
     creatorHDividerPadding: new Padding(5, 15, 5, 15),
+    creatorVDividerPadding: new Padding(15, 5, 15, 5),
     creatorSelectableHDividerPadding: new Padding(5, 0, 5, 0),
+    creatorSelectableVDividerPadding: new Padding(0, 5, 0, 5),
     creatorContainerStroke: "rgb(175, 175, 175)",
     creatorCaretFillStyle: '#eee',
     creatorCaretFillStyleLighter: '#777',
     creatorCaretSize: 5,
     creatorLineDash: [2],
     creatorErrorTimeout: 5000,
+    creatorTableMinCellDimen: 30,
+    creatorPlusLineHalfLength: 5,
 
     //Animations: durations are in MS
     addDuration: 700,

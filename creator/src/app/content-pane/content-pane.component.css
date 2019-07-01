@@ -43,3 +43,7 @@ p {
 .more {
     margin-left: 5px;
 }
+
+.material-icons {
+    cursor: pointer;
+}

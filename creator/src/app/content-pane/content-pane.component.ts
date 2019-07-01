@@ -6,7 +6,16 @@ import { ErrorService } from '../error.service';
 import { getMetrics } from '@shared/main/helpers';
 import { ModalService } from '../modal.service';
 import { TermTemplateComponent } from '../term-template/term-template.component';
-import { TransitionOptionsFormat } from '@shared/main/FileFormat';
+import {
+  TransitionOptionsFormat,
+  ContainerFormat,
+  LinearContainerFormat,
+  SubSuperContainerFormat,
+  QuizFormat,
+  RootContainerFormat,
+  TableFormat
+} from '@shared/main/FileFormat';
+import { deepClone } from '../helpers';
 
 @Component({
   selector: 'app-content-pane',
@@ -23,6 +32,7 @@ export class ContentPaneComponent implements AfterViewInit {
   @ViewChildren('termInput') termInputEl: QueryList<any>;
 
   hDividers = 0;
+  vDividers = 0;
 
   radicals = 0;
 
@@ -38,7 +48,8 @@ export class ContentPaneComponent implements AfterViewInit {
       'Tight Horizontal',
       'Root',
       'Exponent/Subscript',
-      'Quiz'
+      'Quiz',
+      'Table'
     ];
     this.updateState = this.updateState.bind(this);
     undoRedo.subscribe(this.updateState);
@@ -156,6 +167,22 @@ export class ContentPaneComponent implements AfterViewInit {
   }
 
   /**
+   * Add a new vDivider.
+   * @param e The mouse event.
+   */
+  addVDivider(e: MouseEvent) {
+    e.stopPropagation();
+    const newState: any = this.undoRedo.getStateClone();
+    if (!newState.vDividers) {
+      newState.vDividers = 0;
+    }
+    const newIndex = newState.vDividers;
+    this.select('v' + newIndex, undefined);
+    newState.vDividers++;
+    this.undoRedo.publishChange(newState);
+  }
+
+  /**
    * Add a new radical.
    * @param e The mouse event.
    */
@@ -217,6 +244,9 @@ export class ContentPaneComponent implements AfterViewInit {
       case 'r':
         newState.radicals--;
         break;
+      case 'v':
+        newState.vDividers--;
+        break;
       default:
         throw new Error('Undefined content type.');
     }
@@ -224,11 +254,10 @@ export class ContentPaneComponent implements AfterViewInit {
     // We've just removed the content from the arrays,
     // so now any reference to content later in the
     // array will be incorrect.
-
-    // Recursively look for any numbers in the step hierarchy
     if (newState.steps) {
       newState.steps.forEach(step => {
-        recursiveRemove(step.root);
+        removeAndShiftContent(step.root);
+        // Color info also invalidated
         if (step.color) {
           removeDeletedKeys(step.color);
         }
@@ -258,6 +287,55 @@ export class ContentPaneComponent implements AfterViewInit {
     newState.metrics = getMetrics(newState);
     this.undoRedo.publishChange(newState);
 
+    // For a container/content hierarchy, remove any reference
+    // to the content being removed, and shift other content
+    // so it still refers to the same thing.
+    function removeAndShiftContent(container: ContainerFormat) {
+      if (container.type === 'hbox' || container.type === 'vbox' || container.type === 'tightHBox') {
+        const cont = container as LinearContainerFormat;
+        removeOrShiftValues(cont.children, false);
+        // Doing this leaves 'holes' in the array, get rid of them:
+        cont.children = cont.children.filter(child => child !== null);
+
+      } else if (container.type === 'subSuper') {
+        const cont = container as SubSuperContainerFormat;
+        // Just recursively check the three components
+        removeAndShiftContent({type: 'hbox', children: cont.top} as ContainerFormat);
+        removeAndShiftContent({type: 'hbox', children: cont.middle} as ContainerFormat);
+        removeAndShiftContent({type: 'hbox', children: cont.bottom} as ContainerFormat);
+
+      } else if (container.type === 'quiz') {
+        const cont = container as QuizFormat;
+        // Just like a vbox, but answers is no longer valid:
+        cont.answers = [];
+        removeAndShiftContent({type: 'hbox', children: cont.children} as ContainerFormat);
+
+      } else if (container.type === 'root') {
+        const cont = container as RootContainerFormat;
+        // Check radical
+        if (ref === cont.rad) {
+          delete cont.rad;
+        } else if (type === 'r') {
+          // Check if need to shift radical down
+          const radIndex = parseInt(cont.rad.substring(1, cont.rad.length), 10);
+          if (radIndex > index) {
+            cont.rad = 'r' + (radIndex - 1);
+          }
+        }
+
+      } else if (container.type === 'table') {
+        const cont = container as TableFormat;
+        // Remove/shift lines
+        removeOrShiftValues(cont.hLines, false);
+        removeOrShiftValues(cont.vLines, false);
+        // Remove/shift child array
+        // tslint:disable-next-line:prefer-for-of
+        for (let r = 0; r < cont.children.length; r++) {
+          removeOrShiftValues(cont.children[r], true);
+        }
+      }
+    }
+
     // Looks through the keys of an object to
     // find deleted references.
     function removeDeletedKeys(deleteIn: object) {
@@ -275,6 +353,37 @@ export class ContentPaneComponent implements AfterViewInit {
             delete deleteIn[key];
             deleteIn[newKey] = val;
           }
+        }
+      });
+    }
+
+    // Delete the ref or shift down when necessary,
+    // looking in the keys of an object.
+    function removeOrShiftValues(lookIn: object, leaveNull: boolean) {
+      // Treat array as key/val pair
+      Object.keys(lookIn).forEach(childNum => {
+        const child = lookIn[childNum];
+        if (typeof child === 'string') {
+          // Is content, could be what we deleted
+          const childType = child.charAt(0);
+          const childIndex = parseInt(child.substring(1, child.length), 10);
+          if (child === ref) {
+            // Is what we deleted
+            if (leaveNull) {
+              lookIn[childNum] = null;
+            } else {
+              delete lookIn[childNum];
+            }
+          } else if (childType === type) {
+            // Is same type of content
+            if (childIndex > index) {
+              // Is above in array, need to shift down
+              lookIn[childNum] = childType + (childIndex - 1);
+            }
+          }
+        } else if (typeof child === 'object' && child !== null) {
+          // Is object, recursively check
+          removeAndShiftContent(child as ContainerFormat);
         }
       });
     }
@@ -313,35 +422,6 @@ export class ContentPaneComponent implements AfterViewInit {
       return toReturn;
     }
 
-    // Looks through an objects properties to
-    // remove a certain index.
-    function recursiveRemove(lookIn: object) {
-      Object.keys(lookIn).forEach(key => {
-        const value = lookIn[key];
-        if (typeof value === 'object') {
-          recursiveRemove(value);
-          if (Array.isArray(value)) {
-            /* Treating the array like an object
-               leaves empty values. Clear these
-               out. */
-            lookIn[key] = value.filter(el => el !== null);
-          }
-        } else if (typeof value === 'string') {
-          // If > index, decrement to account for
-          // shifting in array, otherwise remove
-          if (value.charAt(0) === type) {
-            // Value refers to same content type
-            const valIndex: number = parseFloat(value.substring(1, value.length));
-            if (valIndex === index) {
-              delete lookIn[key];
-            } else if (valIndex > index) {
-              lookIn[key] = value.charAt(0) + (valIndex - 1);
-            }
-          }
-        }
-      });
-    }
-
   }
 
   /**
@@ -359,6 +439,7 @@ export class ContentPaneComponent implements AfterViewInit {
   updateState(newState: any) {
     this.terms = newState.terms ? newState.terms : [];
     this.hDividers = newState.hDividers ? newState.hDividers : 0;
+    this.vDividers = newState.vDividers ? newState.vDividers : 0;
     this.radicals = newState.radicals ? newState.radicals : 0;
     this.addingTerm = false;
   }
