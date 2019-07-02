@@ -15,7 +15,7 @@ module.exports = {
     extensions: [ '.ts', '.js' ]
   },
   output: {
-    filename: 'algebra-animations.js',
+    filename: 'fluid-math.js',
     path: __dirname
   },
   mode: 'production'
