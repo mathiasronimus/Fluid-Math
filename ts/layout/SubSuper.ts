@@ -51,6 +51,13 @@ export default class SubSuper extends EqContainer<LayoutState> {
         this.height = this.calcHeight();
     }
 
+    recalcDimensions() {
+        this.top.recalcDimensions();
+        this.middle.recalcDimensions();
+        this.bottom.recalcDimensions();
+        super.recalcDimensions();
+    }
+
     protected calcWidth(): number {
         //Width of the right portion, ie the top and bottom
         let rightWidth = Math.max(this.top.getWidth() * C.expScale, this.bottom.getWidth() * C.expScale);

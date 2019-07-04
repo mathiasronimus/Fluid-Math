@@ -27,13 +27,11 @@ export default class Term extends EqContent<TermLayoutState> {
         this.halfInnerHeights = this.heights.map(height => height / 2);
         this.ascents = ascents; 
         this.recalcDimensions();
-        window.addEventListener('resize', this.recalcDimensions.bind(this));
         this.text = text;
     }
 
     recalcDimensions() {
-        this.height = this.calcHeight();
-        this.width = this.calcWidth();
+        super.recalcDimensions();
         let tier: number = window['currentWidthTier'];
         this.halfInnerWidth = this.halfInnerWidths[tier];
         this.halfInnerHeight = this.halfInnerHeights[tier];

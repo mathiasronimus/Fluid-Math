@@ -10,11 +10,11 @@ export default class HDivider extends EqContent<OriginalDimenLayoutState> {
 
     constructor(padding: Padding, ref: string) {
         super(padding, ref);
-        this.height = 1 + this.padding.height();
+        this.height = this.calcHeight();
         //For layout purposes, the divider
         //has no width. It stretches to fill
         //its container.
-        this.width = 0;
+        this.width = this.calcWidth();
     }
 
     setPadding(newPadding: Padding) {
@@ -22,7 +22,7 @@ export default class HDivider extends EqContent<OriginalDimenLayoutState> {
     }
 
     protected calcWidth(): number {return 0;}
-    protected calcHeight(): number {return 0;}
+    protected calcHeight(): number {return 1 + this.padding.height();}
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,

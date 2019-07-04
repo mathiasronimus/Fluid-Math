@@ -21,7 +21,7 @@ export default class OutlineColorAnimation extends BezierCallback {
         const currR = this.startColor[0] * (1 - completion) + this.endColor[0] * completion;
         const currG = this.startColor[1] * (1 - completion) + this.endColor[1] * completion;
         const currB = this.startColor[2] * (1 - completion) + this.endColor[2] * completion;
-        this.layout.color = [currR, currG, currB];
+        this.layout.color = [Math.round(currR), Math.round(currG), Math.round(currB)];
     }
     
 }

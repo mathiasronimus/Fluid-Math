@@ -53,6 +53,10 @@ const constants = {
     curvedOutlineDefaultOpacity: 0.3,
     curvedOutlineColor: [255, 255, 255],
 
+    // Radio buttons:
+    radioButtonDefaultOpacity: 0.3,
+    radioButtonColor: [255, 255, 255],
+
     // Quizzes:
     answerVMargin: 20,
     hoveredOutlineOpacity: 0.75,
@@ -61,6 +65,13 @@ const constants = {
     outlineFadeInEasing: bezier(0.5, 0.5, 0.5, 0.5),
     quizCorrectColor: [100,221,23],
     quizIncorrectColor: [198,40,40],
+    quizCurvedOutlinePadding: new Padding(0, 5, 0, 5),
+    quizRadioButtonDimen: 35,
+    quizRadioButtonPadding: Padding.even(10),
+    quizRadioButtonSelectDuration: 300,
+    quizRadioButtonSelectEasing: bezier(0.0, 0.0, 0.2, 1),
+    quizRadioButtonDeselectDuration: 300,
+    quizRadioButtonDeselectEasing: bezier(0.4, 0.0, 1, 1),
 
     //Creator
     creatorContainerPadding: Padding.even(30),

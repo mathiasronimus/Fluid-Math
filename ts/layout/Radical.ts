@@ -11,6 +11,8 @@ export default class Radical extends EqContent<OriginalDimenLayoutState> {
 
     constructor(ref: string) {
         super(Padding.even(0), ref);
+        this.height = this.calcHeight();
+        this.width = this.calcWidth();
     }
 
     // Radical mimics dimensions of the root container, so for layout

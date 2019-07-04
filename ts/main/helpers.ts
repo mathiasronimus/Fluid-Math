@@ -1,5 +1,5 @@
 import C from './consts';
-import Map from 'core-js/features/map';
+import Map from 'map-or-similar';
 import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from './FileFormat';
 
 /**

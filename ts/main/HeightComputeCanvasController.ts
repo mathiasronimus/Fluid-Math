@@ -26,7 +26,7 @@ export default class HeightComputeCanvasController extends CanvasController {
         });
         let maxHeight = 0;
         for (let i = 0; i < this.steps.length; i++) {
-            const layout = this.calcLayout(i)[1];
+            const layout = this.calcLayout(i, true)[1];
             if (layout.height > maxHeight) {
                 maxHeight = layout.height;
             }

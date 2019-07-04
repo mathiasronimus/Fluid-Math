@@ -25,7 +25,6 @@ import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, Linea
 import ProgressIndicator from "./ProgressIndicator";
 import Quiz from "../layout/Quiz";
 import ContentLayoutState from "../animation/ContentLayoutState";
-import Set from 'core-js/features/set';
 import TableContainer from "../layout/TableContainer";
 import VDivider from "../layout/VDivider";
 
@@ -59,6 +58,7 @@ export default class CanvasController {
     protected tempContent: EqContent<any>[];
 
     protected currStates: Map<EqComponent<any>, LayoutState>;
+    protected currRootContainer: EqContainer<any>;
     protected animating = false;
 
     // Various mouse events. When triggered, the callback
@@ -68,7 +68,7 @@ export default class CanvasController {
     protected mouseEnterEvents: Map<LayoutState, MouseEventCallback>;
     protected mouseExitEvents: Map<LayoutState, MouseEventCallback>;
     protected mouseClickEvents: Map<LayoutState, MouseEventCallback>;
-    protected mouseOnLast: Set = new Set();
+    protected mouseOnLast: LayoutState[] = [];
 
     protected fontWeight: string;
     protected fontStyle: string;
@@ -109,6 +109,7 @@ export default class CanvasController {
             let backButton = document.createElement("div");
             backButton.className = "material-icons eqIcon";
             backButton.innerHTML = "arrow_back";
+            backButton.setAttribute("role", "button");
             upperArea.appendChild(backButton);
             this.prevStep = this.prevStep.bind(this);
             backButton.addEventListener("click", this.prevStep);
@@ -131,6 +132,7 @@ export default class CanvasController {
             let restButton = document.createElement("div");
             restButton.className = "material-icons eqIcon restartIcon";
             restButton.innerHTML = "replay";
+            restButton.setAttribute("role", "button");
             upperArea.appendChild(restButton);
             this.restart = this.restart.bind(this);
             restButton.addEventListener("click", this.restart);
@@ -167,7 +169,7 @@ export default class CanvasController {
         //Initialize Components and display first step
         this.initContent(instructions);
         this.updateFontSize();
-        this.recalc();
+        this.recalc(true);
         
         //Bind next step to canvas/text click if not autoplaying
         if (!this.isAutoplay) {
@@ -181,7 +183,7 @@ export default class CanvasController {
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
         window.addEventListener('resize', this.updateFontSize.bind(this));
-        window.addEventListener('resize', this.recalc);
+        window.addEventListener('resize', () => this.recalc(false));
 
         // Add overlay for play if autoplaying
         if (this.isAutoplay) {
@@ -233,10 +235,10 @@ export default class CanvasController {
             const relY = e.clientY - canvasRect.top;
 
             // Get the layouts that the cursor is currently on
-            const currentlyOn = new Set();
+            const currentlyOn = [];
             this.mouseClickEvents.forEach((handler, layout) => {
                 if (layout.contains(relX, relY)) {
-                    currentlyOn.add(layout);
+                    currentlyOn.push(layout);
                 }
             });
 
@@ -270,16 +272,16 @@ export default class CanvasController {
             const relY = e.clientY - canvasRect.top;
             
             // Get the layouts that the cursor is currently on
-            const currentlyOn = new Set();
+            const currentlyOn = [];
             this.mouseEnterEvents.forEach((handler, layout) => {
                 if (layout.contains(relX, relY)) {
-                    currentlyOn.add(layout);
+                    currentlyOn.push(layout);
                 }
             });
 
             this.mouseExitEvents.forEach((handler, layout) => {
                 if (layout.contains(relX, relY)) {
-                    currentlyOn.add(layout);
+                    currentlyOn.push(layout);
                 }
             });
 
@@ -294,7 +296,7 @@ export default class CanvasController {
             // was on beforehand. If it was not, fire enter
             // event.
             currentlyOn.forEach((layout: LayoutState) => {
-                if (!this.mouseOnLast.has(layout)) {
+                if (this.mouseOnLast.indexOf(layout) === -1) {
                     // Fire the enter event
                     let handler = this.mouseEnterEvents.get(layout);
                     handler(layout, animSet, this);
@@ -304,9 +306,8 @@ export default class CanvasController {
             // For each layout the cursor was on, check if it
             // is still on. If not, fire the exit event.
             this.mouseOnLast.forEach((oldLayout: LayoutState) => {
-                if (!currentlyOn.has(oldLayout)) {
+                if (currentlyOn.indexOf(oldLayout) === -1) {
                     // Fire the exit event
-                    console.log(this.mouseExitEvents.get);
                     let handler = this.mouseExitEvents.get(oldLayout);
                     handler(oldLayout, animSet, this);
                 }
@@ -335,7 +336,7 @@ export default class CanvasController {
             setTimeout(() => {
                 this.stopAutoplay();
                 this.currStep = 0;
-                this.recalc();
+                this.recalc(true);
             }, this.getAutoplayDelay(this.steps.length - 1));
         } else {
             // Can go to next step
@@ -398,9 +399,14 @@ export default class CanvasController {
 
     /**
      * Recalculates and redraws the current step.
+     * @param reparse Whether to reparse the container hierarchy.
      */
-    protected recalc() {
+    protected recalc(reparse: boolean) {
         let rootLayout;
+        if (!reparse) {
+            // Keep container instances, may need different dimensions.
+            this.currRootContainer.recalcDimensions();
+        }
         [
             this.currStates, 
             rootLayout, 
@@ -408,8 +414,8 @@ export default class CanvasController {
             this.mouseExitEvents, 
             this.mouseClickEvents,
             this.tempContent
-        ] = this.calcLayout(this.currStep);
-        this.mouseOnLast = new Set();
+        ] = this.calcLayout(this.currStep, reparse);
+        this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);
         this.setSize(width, height);
         this.redraw();
@@ -437,8 +443,8 @@ export default class CanvasController {
             this.mouseExitEvents,
             this.mouseClickEvents,
             this.tempContent
-        ] = this.calcLayout(this.currStep);
-        this.mouseOnLast = new Set();
+        ] = this.calcLayout(this.currStep, true);
+        this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);
         let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
         this.animating = true;
@@ -465,8 +471,8 @@ export default class CanvasController {
             this.mouseExitEvents,
             this.mouseClickEvents,
             this.tempContent
-        ] = this.calcLayout(this.currStep);
-        this.mouseOnLast = new Set();
+        ] = this.calcLayout(this.currStep, true);
+        this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);        
         let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
         this.animating = true;
@@ -494,8 +500,8 @@ export default class CanvasController {
             this.mouseExitEvents,
             this.mouseClickEvents,
             this.tempContent
-        ] = this.calcLayout(this.currStep);
-        this.mouseOnLast = new Set();
+        ] = this.calcLayout(this.currStep, true);
+        this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);
         let anims = this.diff(oldStates, width, height, oldStep, 0, undefined);
         this.animating = true;
@@ -816,29 +822,32 @@ export default class CanvasController {
      * a particular step. Returns [all layouts, root layout, mouse enter events, mouse exit events, mouse click events, temp content].
      * 
      * @param idx The step number.
+     * @param reparse Whether to re-create the container hierarchy.
      */
-    protected calcLayout(idx: number):  [Map<EqComponent<any>, LayoutState>, LayoutState, 
-                                         Map<LayoutState, MouseEventCallback>,
-                                         Map<LayoutState, MouseEventCallback>,
-                                         Map<LayoutState, MouseEventCallback>,
-                                         EqContent<any>[]] {
+    protected calcLayout(idx: number, reparse: boolean):  [ Map<EqComponent<any>, LayoutState>, LayoutState, 
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            EqContent<any>[]] {
 
         //First create the structure of containers in memory
-        let rootObj = this.steps[idx].root;
-        let root = this.parseContainer(rootObj, 0);
+        if (reparse) {
+            let rootObj = this.steps[idx].root;
+            this.currRootContainer = this.parseContainer(rootObj, 0);
+        }
         //If content doesn't take up full width, center it
         let width = this.container.clientWidth;
-        if (root.getWidth() < width) {
-            root.setWidth(width);
+        if (this.currRootContainer.getWidth() < width) {
+            this.currRootContainer.setWidth(width);
         }
         //Apply fixed height
         if (this.fixedHeights) {
             let height = this.fixedHeights[window['currentWidthTier']];
-            root.setHeight(height);
+            this.currRootContainer.setHeight(height);
         }
 
         //Set the text
-        if (this.textArea) {
+        if (reparse && this.textArea) {
             this.textArea.innerHTML = this.steps[idx].text ? this.steps[idx].text : "";
         }
 
@@ -851,7 +860,7 @@ export default class CanvasController {
         let mouseExits = newMap();
         let mouseClicks = newMap();
         let tempContent = [];
-        let rootLayout = root.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj, 
+        let rootLayout = this.currRootContainer.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj, 
                                         mouseEnters, mouseExits, mouseClicks, tempContent);
         return [allLayouts, rootLayout, mouseEnters, mouseExits, mouseClicks, tempContent];
     }
@@ -911,7 +920,7 @@ export default class CanvasController {
             if (format.rad) {
                 radical = this.getContentFromRef(format.rad) as Radical;
             }
-            return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights[getWidthTier()]);
+            return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights);
         } else if (type === 'quiz') {
             let format = containerObj as QuizFormat;
             return new Quiz(

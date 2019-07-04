@@ -4,11 +4,10 @@ import LayoutState from "../animation/LayoutState";
 import EqComponent from "./EqComponent";
 import { Map } from '../main/helpers';
 import C from '../main/consts';
+import Padding from "./Padding";
 
 /**
- * A special sort of content: Not present in the file format,
- * but can be added by some other container/content to give it
- * a curved outline. As such, not persistent between steps.
+ * Temporary content that draws a curved outline.
  */
 export default class CurvedOutline extends EqContent<ContentLayoutState> {
 
@@ -20,14 +19,16 @@ export default class CurvedOutline extends EqContent<ContentLayoutState> {
      * @param mimic The layout state to mimic.
      * @param addTo The collection to add this outline to.
      */
-    constructor(mimic: LayoutState, addTo: Map<EqComponent<any>, LayoutState>) {
-        super(undefined, undefined);
+    constructor(padding: Padding, mimic: LayoutState, addTo: Map<EqComponent<any>, LayoutState>) {
+        super(padding, undefined);
+        const padWidth = padding.width();
+        const padHeight = padding.height();
         this.layout = new ContentLayoutState(undefined, this,
-            mimic.tlx, mimic.tly, mimic.width, mimic.height, mimic.scale,
+            mimic.tlx - padWidth / 2, mimic.tly - padHeight / 2, mimic.width + padWidth, mimic.height + padHeight, mimic.scale,
             C.curvedOutlineColor, C.curvedOutlineDefaultOpacity);
         addTo.set(this, this.layout);
-        this.width = mimic.width;
-        this.height = mimic.height;
+        this.width = this.layout.width;
+        this.height = this.layout.height;
     }
 
     getLayout(): ContentLayoutState {

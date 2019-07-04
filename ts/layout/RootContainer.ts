@@ -7,7 +7,7 @@ import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import CanvasController, { MouseEventCallback } from '../main/CanvasController';
 import EqContent from './EqContent';
-import { Map } from '../main/helpers';
+import { Map, getWidthTier } from '../main/helpers';
 import C from '../main/consts';
 import { RootContainerFormat } from "../main/FileFormat";
 
@@ -24,6 +24,8 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     protected index: HBox;
     protected argument: HBox;
     protected radical: Radical;
+
+    private termHeights: number[];
 
     // Metrics:
     // The height of an index term at the current width tier.
@@ -60,18 +62,29 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     // padding, applies only to the radicals physical appearance.
     private padBottom: number;
 
-    constructor(index: HBox, argument: HBox, radical: Radical, padding: Padding, termHeight: number) {
+    constructor(index: HBox, argument: HBox, radical: Radical, padding: Padding, termHeights: number[]) {
         super(padding);
         this.index = index;
         this.argument = argument;
         this.radical = radical;
+        this.termHeights = termHeights;
+        this.calcMetrics();
+        this.width = this.calcWidth();
+        this.height = this.calcHeight();
+    }
+
+    /**
+     * Calculate the layout parameters for the display
+     * of the container.
+     */
+    private calcMetrics() {
         this.padBottom = C.termPadding.bottom / 2;
-        termHeight += C.termPadding.height();
+        const termHeight = this.termHeights[getWidthTier()] + C.termPadding.height();
         this.indexHeight = termHeight * C.rootIndexScale;
         this.kinkHeight = (termHeight - this.padBottom) - this.indexHeight;
-        this.indexTopOverflow = index.getHeight() * C.rootIndexScale - this.indexHeight;
+        this.indexTopOverflow = this.index.getHeight() * C.rootIndexScale - this.indexHeight;
         this.indexTopOverflow = Math.max(this.indexTopOverflow, 0);
-        this.emptySpaceAboveIndex = argument.getHeight() - this.kinkHeight - this.indexHeight;
+        this.emptySpaceAboveIndex = this.argument.getHeight() - this.kinkHeight - this.indexHeight;
         this.emptySpaceAboveIndex = Math.max(this.emptySpaceAboveIndex, 0);
         /*
               /\        /-----------
@@ -106,11 +119,16 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         // xFromRightOfKink = kinkHeight / tan x
         const xFromRightOfKinkForIdx = this.kinkHeight / Math.tan(x);
         const widthForIdx = this.kinkWidth + xFromRightOfKinkForIdx;
-        const realIdxWidth = index.getWidth() * C.rootIndexScale;
+        const realIdxWidth = this.index.getWidth() * C.rootIndexScale;
         this.indexLeftOverflow = realIdxWidth - widthForIdx;
-        
-        this.width = this.calcWidth();
-        this.height = this.calcHeight();
+    }
+
+    recalcDimensions() {
+        this.radical.recalcDimensions();
+        this.argument.recalcDimensions();
+        this.index.recalcDimensions();
+        this.calcMetrics();
+        super.recalcDimensions();
     }
 
     protected calcWidth(): number {

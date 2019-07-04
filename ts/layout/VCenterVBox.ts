@@ -17,11 +17,20 @@ export default class VCenterVBox extends VBox {
 
     constructor(children: EqComponent<any>[], padding: Padding) {
         super(children, padding);
+        this.calcChildHeight();
+    }
+
+    private calcChildHeight() {
         // Calculate total child height
         this.totalChildHeight = 0;
         this.children.forEach(child => {
             this.totalChildHeight += child.getHeight();
         });
+    }
+
+    recalcDimensions() {
+        this.calcChildHeight();
+        super.recalcDimensions();
     }
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,

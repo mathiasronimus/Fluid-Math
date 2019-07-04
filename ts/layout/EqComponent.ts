@@ -41,6 +41,16 @@ export default abstract class EqComponent<L extends LayoutState> {
         return this.padding;
     }
 
+    /**
+     * Recalc dimensions for this component, and all children if
+     * this is a container. Default implementation does just for
+     * this component.
+     */
+    recalcDimensions() {
+        this.width = this.calcWidth();
+        this.height = this.calcHeight();
+    }
+
     protected abstract calcWidth(): number;
     protected abstract calcHeight(): number;
 

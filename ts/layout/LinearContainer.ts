@@ -22,4 +22,9 @@ export default abstract class LinearContainer<L extends LayoutState> extends EqC
     getChildren(): EqComponent<any>[] {
         return this.children;
     }
+
+    recalcDimensions() {
+        this.children.forEach(child => child.recalcDimensions());
+        super.recalcDimensions();
+    }
 }

@@ -10,18 +10,18 @@ export default class VDivider extends EqContent<OriginalDimenLayoutState> {
 
     constructor(padding: Padding, ref: string) {
         super(padding, ref);
-        this.width = 1 + this.padding.width();
+        this.width = this.calcWidth();
         //For layout purposes, the divider
         //has no height. It stretches to fill
         //its container.
-        this.height = 0;
+        this.height = this.calcHeight();
     }
 
     setPadding(newPadding: Padding) {
         this.padding = newPadding;
     }
 
-    protected calcWidth(): number {return 0;}
+    protected calcWidth(): number {return 1 + this.padding.width()}
     protected calcHeight(): number {return 0;}
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 

@@ -54,6 +54,15 @@ export default class TableContainer extends EqContainer<LayoutState> {
         return 0;
     }
 
+    recalcDimensions() {
+        this.children.forEach(row => {
+            row.forEach(child => {
+                child.recalcDimensions();
+            });
+        });
+        super.recalcDimensions();
+    }
+
     protected calcWidth(): number {
         let totalWidth = 0;
         // Width of each column is the max width of any component in that row
