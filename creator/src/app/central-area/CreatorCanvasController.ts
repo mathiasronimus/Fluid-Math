@@ -216,7 +216,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.selectedLayout = undefined;
         }
         let rootLayout;
-        [this.currStates, rootLayout] = this.calcLayout(this.currStep);
+        [this.currStates, rootLayout] = this.calcLayout(this.currStep, true);
         this.rootContainer = rootLayout.component;
         const [width, height] = this.getSize(rootLayout);
         this.setSize(width, height);
@@ -267,12 +267,7 @@ export default class CreatorCanvasController extends CanvasController {
             if (containerObj.rad) {
                 radical = this.getContentFromRef(containerObj.rad) as Radical;
             }
-            let termHeight = this.termHeights[getWidthTier()];
-            if (!termHeight) {
-                // If there are no terms yet, this is not defined.
-                termHeight = 0;
-            }
-            return new CreatorRootContainer(idx, arg, radical, C.creatorContainerPadding, termHeight);
+            return new CreatorRootContainer(idx, arg, radical, C.creatorContainerPadding, this.termHeights);
         } else if (type === 'quiz') {
             const format = containerObj as QuizFormat;
             return new CreatorQuiz(
@@ -315,10 +310,10 @@ export default class CreatorCanvasController extends CanvasController {
         const newLayout: any = this.getChangedLayout(x, y, false);
         const realSteps = this.steps;
         this.steps = newLayout.steps;
-        super.recalc();
+        super.recalc(true);
         this.steps = realSteps;
         let newRootState;
-        [this.currStates, newRootState] = this.calcLayout(this.currStep);
+        [this.currStates, newRootState] = this.calcLayout(this.currStep, true);
         this.rootContainer = newRootState.component;
     }
 
