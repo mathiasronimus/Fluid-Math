@@ -5,6 +5,8 @@ import ContentLayoutState from "../animation/ContentLayoutState";
 
 export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent<L> {
 
+    static colors: {[color: string]: [number, number, number]};
+
     protected ref: string;
     //Whether to interpolate color and opacity
     //during the current animation.
@@ -112,10 +114,10 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
     protected getColorForContent(colorObj: object): number[] {
         if (colorObj !== undefined && colorObj[this.ref] !== undefined) {
             //A color is specified
-            return C.colors[colorObj[this.ref]];
+            return EqContent.colors[colorObj[this.ref]];
         } else {
             //A color isn't specified, use default
-            return C.colors['default'];
+            return EqContent.colors['default'];
         }
     }
 

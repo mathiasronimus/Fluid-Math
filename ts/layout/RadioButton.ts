@@ -18,12 +18,14 @@ export default class RadioButton extends EqContent<RadioButtonLayoutState> {
      * @param tly The y-ordinate of the top left of the button, including padding.
      * @param dimen The width and height of the button.
      * @param addTo The collection to add the layout state of this radio button to.
+     * @param opacity The opacity to render as.
      */
-    constructor(padding: Padding, tlx: number, tly: number, dimen: number, addTo: Map<EqComponent<any>, LayoutState>) {
+    constructor(padding: Padding, tlx: number, tly: number, dimen: number, addTo: Map<EqComponent<any>, LayoutState>,
+                opacity: number, color: [number, number, number]) {
         super(padding, undefined);
 
         this.layout = new RadioButtonLayoutState(
-            this, tlx, tly, dimen, dimen, 1, C.radioButtonColor, C.radioButtonDefaultOpacity, 0
+            this, tlx, tly, dimen, dimen, 1, color, opacity, 0
         );
         this.width = dimen;
         this.height = dimen;

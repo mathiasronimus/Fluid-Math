@@ -18,14 +18,16 @@ export default class CurvedOutline extends EqContent<ContentLayoutState> {
      * as a layout state.
      * @param mimic The layout state to mimic.
      * @param addTo The collection to add this outline to.
+     * @param opacity The opacity to render as.
      */
-    constructor(padding: Padding, mimic: LayoutState, addTo: Map<EqComponent<any>, LayoutState>) {
+    constructor(padding: Padding, mimic: LayoutState, addTo: Map<EqComponent<any>, LayoutState>,
+                opacity: number, color: [number, number, number]) {
         super(padding, undefined);
         const padWidth = padding.width();
         const padHeight = padding.height();
         this.layout = new ContentLayoutState(undefined, this,
             mimic.tlx - padWidth / 2, mimic.tly - padHeight / 2, mimic.width + padWidth, mimic.height + padHeight, mimic.scale,
-            C.curvedOutlineColor, C.curvedOutlineDefaultOpacity);
+            color, opacity);
         addTo.set(this, this.layout);
         this.width = this.layout.width;
         this.height = this.layout.height;

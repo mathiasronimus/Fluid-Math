@@ -20,8 +20,26 @@ export default class Quiz extends VBox {
     protected answers: boolean[];
     protected clickedIndex = -1;
 
-    constructor(children: EqComponent<any>[], padding: Padding, answers: number[]) {
+    protected outlineOpacity: number;
+    protected outlineColor: [number, number, number];
+
+    protected radioButtonOpacity: number;
+    protected radioButtonColor: [number, number, number];
+
+    protected correctColor: [number, number, number];
+    protected incorrectColor: [number, number, number];
+
+    constructor(children: EqComponent<any>[], padding: Padding, answers: number[], 
+                outlineOpacity: number, outlineColor: [number, number, number],
+                radioButtonOpacity: number, radioButtonColor: [number, number, number],
+                correctColor: [number, number, number], incorrectColor: [number, number, number]) {
         super(children, padding);
+        this.outlineOpacity = outlineOpacity;
+        this.outlineColor = outlineColor;
+        this.radioButtonOpacity = radioButtonOpacity;
+        this.radioButtonColor = radioButtonColor;
+        this.correctColor = correctColor;
+        this.incorrectColor = incorrectColor;
         this.answers = [];
         answers.forEach(index => this.answers[index] = true);
     }
@@ -69,7 +87,7 @@ export default class Quiz extends VBox {
             // Add radio button
             const radioButton = new RadioButton(
                 C.quizRadioButtonPadding, rowTLX, upToY + (rowHeight - C.quizRadioButtonDimen) / 2,
-                C.quizRadioButtonDimen, layouts
+                C.quizRadioButtonDimen, layouts, this.radioButtonOpacity, this.radioButtonColor
             );
             tempContent.push(radioButton);
             const radioButtonLayout = radioButton.getLayout();
@@ -90,16 +108,16 @@ export default class Quiz extends VBox {
             upToY += childLayout.height + C.answerVMargin;
 
             // Give child an outline that can respond to events.
-            let outline = new CurvedOutline(C.quizCurvedOutlinePadding, childLayout, layouts);
+            let outline = new CurvedOutline(C.quizCurvedOutlinePadding, childLayout, layouts, this.outlineOpacity, this.outlineColor);
             tempContent.push(outline);
             let outlineLayout: ContentLayoutState = outline.getLayout();
             allOutlines.push(outlineLayout);  
             if (this.clickedIndex !== -1) {
                 outlineLayout.opacity = C.revealedOutlineOpacity;
                 if (this.answers[i]) {
-                    outlineLayout.color = C.quizCorrectColor;
+                    outlineLayout.color = this.correctColor;
                 } else {
-                    outlineLayout.color = C.quizIncorrectColor;
+                    outlineLayout.color = this.incorrectColor;
                 }
             }
 
@@ -126,7 +144,7 @@ export default class Quiz extends VBox {
             // If mouse exits, make darker again (unless answer has been revealed)
             let onExit = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
                 if (this.clickedIndex === -1) {
-                    new OutlineFadeAnimation(outlineLayout, C.curvedOutlineDefaultOpacity, set);
+                    new OutlineFadeAnimation(outlineLayout, this.outlineOpacity, set);
                     new RadioButtonSelectAnimation(
                         C.quizRadioButtonDeselectDuration,
                         C.quizRadioButtonDeselectEasing,
@@ -157,7 +175,7 @@ export default class Quiz extends VBox {
                 // Animate all options
                 allOutlines.forEach((layout: ContentLayoutState, index: number) => {
                     // If correct, go green. Otherwise go red.
-                    const color = this.answers[index] ? C.quizCorrectColor : C.quizIncorrectColor;
+                    const color = this.answers[index] ? this.correctColor : this.incorrectColor;
                     new OutlineColorAnimation(layout, color, set);
                     new OutlineFadeAnimation(layout, C.revealedOutlineOpacity, set);
                     return true;

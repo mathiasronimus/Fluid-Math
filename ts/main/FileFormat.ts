@@ -1,5 +1,26 @@
 
 /**
+ * Standalone object for configuring the colors of all 
+ * animations on the page.
+ */
+export interface ColorsFormat {
+    // The color of CurvedOutlines 
+    curvedOutlineColor?: [number, number, number];
+    // The opacity of CurvedOutlines
+    curvedOutlineOpacity?: number;
+    // The color of radio buttons
+    radioButtonColor?: [number, number, number];
+    // The opacity of radio buttons
+    radioButtonOpacity?: number;
+    // Color of quiz answers if correct
+    quizCorrectColor?: [number, number, number];
+    // Color of quiz answers if incorrect
+    quizIncorrectColor?: [number, number, number];
+    // Colors of content
+    colors?: {[color: string]: [number, number, number]};
+}
+
+/**
  * Animation files are in the JSON format
  * described by this interface.
  */

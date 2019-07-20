@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit } from '@angular/core';
 import Icon from './Icon';
 import { UndoRedoService } from './undo-redo.service';
 import { CentralAreaComponent } from './central-area/central-area.component';
@@ -17,13 +17,16 @@ import { FontSettingsComponent } from './font-settings/font-settings.component';
 import { ProjectOptionsComponent } from './project-options/project-options.component';
 import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
 import { TableAddComponent } from './table-add/table-add.component';
+import EqContent from '@shared/layout/EqContent';
+import C from '@shared/main/consts';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
   defaultLeftIcons: Icon[];
   defaultRightIcons: Icon[];
 
@@ -115,6 +118,10 @@ export class AppComponent {
 
   get modalHost() {
     return this.modalHostVar;
+  }
+
+  ngOnInit(): void {
+    EqContent.colors = C.colors;
   }
 
   /**

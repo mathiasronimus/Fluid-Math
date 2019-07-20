@@ -21,7 +21,7 @@ const constants = {
     restartAndProgressSize: 28,
     // The total padding (x and y) of the progress indicator in px
     restartAndProgressPadding: 16,
-    progressFill: "rgba(255, 255, 255, 0.275)",
+    progressOpacity: 0.275,
     
     //Layout:
     defaultVBoxPadding: 0,
@@ -51,11 +51,11 @@ const constants = {
     // Curved outlines:
     curvedOutlineBorderRadius: 5,
     curvedOutlineDefaultOpacity: 0.3,
-    curvedOutlineColor: [255, 255, 255],
+    curvedOutlineColor: [255, 255, 255] as [number, number, number],
 
     // Radio buttons:
     radioButtonDefaultOpacity: 0.3,
-    radioButtonColor: [255, 255, 255],
+    radioButtonColor: [255, 255, 255] as [number, number, number],
 
     // Quizzes:
     answerVMargin: 20,
@@ -63,8 +63,8 @@ const constants = {
     revealedOutlineOpacity: 1,
     outlineFadeInDuration: 300,
     outlineFadeInEasing: bezier(0.5, 0.5, 0.5, 0.5),
-    quizCorrectColor: [100,221,23],
-    quizIncorrectColor: [198,40,40],
+    quizCorrectColor: [100,221,23] as [number, number, number],
+    quizIncorrectColor: [198,40,40] as [number, number, number],
     quizCurvedOutlinePadding: new Padding(0, 5, 0, 5),
     quizRadioButtonDimen: 35,
     quizRadioButtonPadding: Padding.even(10),
@@ -108,7 +108,7 @@ const constants = {
         "green": [88, 199, 75],
         "orange": [255, 102, 0],
         "default": [255, 255, 255]
-    },
+    } as {[cName: string]: [number, number, number]},
     fadedOpacity: 0.5,
     normalOpacity: 0.9,
     focusedOpacity: 1,

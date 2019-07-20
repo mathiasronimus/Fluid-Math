@@ -3,9 +3,11 @@ import HeightComputeCanvasController from './HeightComputeCanvasController';
 import * as WebFont from 'webfontloader';
 import C from './consts';
 import { addStyleSheet, getMetrics } from './helpers';
-import { GoogleFontFormat, CustomFontFormat, FileFormat, FontFormat } from './FileFormat';
+import { GoogleFontFormat, CustomFontFormat, FileFormat, FontFormat, ColorsFormat } from './FileFormat';
+import EqContent from '../layout/EqContent';
 
-addStyleSheet();
+let loadedColorsFile: ColorsFormat;
+let loadedColorsResCode: number = 0;
 
 const defaultFontObj: GoogleFontFormat = {
     type: "g",
@@ -45,6 +47,27 @@ declare var define;
         }
     }
 }));
+
+/**
+ * Make a request for the colors file, updating the variables at the top
+ * when they are received.
+ */
+function requestColors() {
+    const req = new XMLHttpRequest();
+    req.addEventListener("load", () => {
+        if (req.status === 200) {
+            loadedColorsFile = JSON.parse(req.responseText);
+            EqContent.colors = loadedColorsFile.colors;
+            addStyleSheet(loadedColorsFile.colors);
+        } else {
+            EqContent.colors = C.colors;
+            addStyleSheet();
+        }
+        loadedColorsResCode = req.status;
+    });
+    req.open("GET", "colors.json");
+    req.send();
+}
 
 /**
  * Given a font object for a custom font,
@@ -94,7 +117,19 @@ function initCanvController(element: HTMLElement, instructions: FileFormat) {
         // doesn't have it.
         instructions.maxHeights = new HeightComputeCanvasController(instructions).compute();
     }
-    new CanvasController(element, instructions);
+
+    // Wait for the colors to be loaded, if necessary
+    const doLoad = () => {
+        if (loadedColorsResCode === 0) {
+            // Not loaded yet
+            setTimeout(doLoad, 10);
+        } else if (loadedColorsResCode === 200) {
+            new CanvasController(element, instructions, loadedColorsFile);
+        } else {
+            new CanvasController(element, instructions);
+        }
+    };
+    doLoad();
 }
 
 /**
@@ -106,6 +141,11 @@ function initCanvController(element: HTMLElement, instructions: FileFormat) {
  *                  attribute on the element.
  */
 function initOne(element: HTMLElement, urlOrObj: string | FileFormat) {
+
+    // Request colors for this page
+    if (loadedColorsResCode === 0) {
+        requestColors();
+    }
 
     let instructionsObj: FileFormat;
     
@@ -172,6 +212,12 @@ function initOne(element: HTMLElement, urlOrObj: string | FileFormat) {
  * @param className The class name.
  */
 function initAll(className: string) {
+
+    // Request colors for this page
+    if (loadedColorsResCode === 0) {
+        requestColors();
+    }
+
     let containers = document.getElementsByClassName(className) as HTMLCollectionOf<HTMLElement>;
     // Once loaded, instructions are put here. Each container is
     // associated with its instructions by index.

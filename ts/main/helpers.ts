@@ -4,11 +4,13 @@ import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from '.
 
 /**
  * Add styles based on the contents of consts
+ * 
+ * @param otherColors If present, use other colors than the default.
  */
-export function addStyleSheet() {
+export function addStyleSheet(otherColors?: {[colName: string]: [number, number, number]}) {
     const styleEl = document.createElement('style');
     let styleText = '';
-    Object.keys(C.colors).forEach(colorName => {
+    Object.keys(otherColors? otherColors : C.colors).forEach(colorName => {
         const colorVal = C.colors[colorName];
         styleText += '.' + colorName + ' { color: ' + 'rgb(' + colorVal[0] + ',' + colorVal[1] + ',' + colorVal[2] + ')}';
     });

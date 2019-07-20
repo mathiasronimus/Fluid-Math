@@ -21,7 +21,7 @@ import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
-import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat, TableFormat } from "./FileFormat";
+import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat, TableFormat, ColorsFormat } from "./FileFormat";
 import ProgressIndicator from "./ProgressIndicator";
 import Quiz from "../layout/Quiz";
 import ContentLayoutState from "../animation/ContentLayoutState";
@@ -48,6 +48,7 @@ export default class CanvasController {
     protected steps: StepFormat[];
     protected stepOptions: TransitionOptionsFormat[];
     protected isAutoplay: AutoplayFormat;
+    protected customColors: ColorsFormat;
 
     protected terms: Term[];
     protected termHeights: number[];
@@ -86,7 +87,7 @@ export default class CanvasController {
      * @param container The container. 
      * @param instructions The instructions.
      */
-    constructor(container: HTMLElement, instructions: FileFormat) {
+    constructor(container: HTMLElement, instructions: FileFormat, colors?: ColorsFormat) {
         this.container = container;
         this.steps = instructions.steps;
         this.stepOptions = instructions.stepOpts;
@@ -98,6 +99,7 @@ export default class CanvasController {
         this.startAutoplay = this.startAutoplay.bind(this);
 
         this.isAutoplay = instructions.autoplay;
+        this.customColors = colors;
         
         //Create area above canvas
         let upperArea = document.createElement("div");
@@ -926,7 +928,13 @@ export default class CanvasController {
             return new Quiz(
                 this.parseContainerChildren(format.children, depth + 1),
                 C.defaultQuizPadding,
-                format.answers
+                format.answers,
+                this.customColors && this.customColors.curvedOutlineOpacity ? this.customColors.curvedOutlineOpacity : C.curvedOutlineDefaultOpacity,
+                this.customColors && this.customColors.curvedOutlineColor ? this.customColors.curvedOutlineColor : C.curvedOutlineColor,
+                this.customColors && this.customColors.radioButtonOpacity ? this.customColors.radioButtonOpacity : C.radioButtonDefaultOpacity,
+                this.customColors && this.customColors.radioButtonColor ? this.customColors.radioButtonColor : C.radioButtonColor,
+                this.customColors && this.customColors.quizCorrectColor ? this.customColors.quizCorrectColor : C.quizCorrectColor,
+                this.customColors && this.customColors.quizIncorrectColor ? this.customColors.quizIncorrectColor : C.quizIncorrectColor
             );
         } else if (type === 'table') {
             let format = containerObj as TableFormat;

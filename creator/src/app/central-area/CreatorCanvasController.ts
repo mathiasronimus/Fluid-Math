@@ -273,7 +273,13 @@ export default class CreatorCanvasController extends CanvasController {
             return new CreatorQuiz(
                 this.parseContainerChildren(format.children, depth),
                 C.creatorContainerPadding,
-                format.answers
+                format.answers,
+                C.curvedOutlineDefaultOpacity,
+                C.curvedOutlineColor,
+                C.radioButtonDefaultOpacity,
+                C.radioButtonColor,
+                C.quizCorrectColor,
+                C.quizIncorrectColor
             );
         } else if (type === 'table') {
             const format = containerObj as TableFormat;
