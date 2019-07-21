@@ -16,6 +16,7 @@ export default class AnimationSet {
     private clearWidth: number;
     private clearHeight: number;
     private states: LayoutState[];
+    private stopped = false;
 
     /**
      * Create a new Animation Set.
@@ -60,7 +61,7 @@ export default class AnimationSet {
                     }
                 });
             }
-            if (this_.numRunning > 0) {
+            if (this_.numRunning > 0 && !this_.stopped) {
                 requestAnimationFrame(doAll);
             }
         }
@@ -74,6 +75,17 @@ export default class AnimationSet {
     public finished() {
         this.numRunning--;
         if (this.numRunning === 0 && this.done) {
+            this.done();
+        }
+    }
+
+    /**
+     * Stop all running animations and call the done event,
+     * if it was provided.
+     */
+    public stop() {
+        this.stopped = true;
+        if (this.done) {
             this.done();
         }
     }

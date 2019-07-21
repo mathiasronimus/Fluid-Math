@@ -27,6 +27,7 @@ import Quiz from "../layout/Quiz";
 import ContentLayoutState from "../animation/ContentLayoutState";
 import TableContainer from "../layout/TableContainer";
 import VDivider from "../layout/VDivider";
+import BezierCallback from "../animation/BezierCallback";
 
 export type MouseEventCallback = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => void;
 
@@ -40,6 +41,7 @@ export default class CanvasController {
     protected container: Element;
     protected textArea: HTMLDivElement;
     protected canvas: HTMLCanvasElement;
+    protected restartOrNextButton: HTMLElement;
     protected overlayContainer: HTMLElement;
     protected ctx: CanvasRenderingContext2D;
     protected progress: ProgressIndicator;
@@ -60,7 +62,7 @@ export default class CanvasController {
 
     protected currStates: Map<EqComponent<any>, LayoutState>;
     protected currRootContainer: EqContainer<any>;
-    protected animating = false;
+    protected currAnimation: AnimationSet;
 
     // Various mouse events. When triggered, the callback
     // may add animations to the set or manipulate the controller.
@@ -97,55 +99,10 @@ export default class CanvasController {
         this.radicals = [];
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
-
+        this.handleMouseClick = this.handleMouseClick.bind(this);
+        
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
-        
-        //Create area above canvas
-        let upperArea = document.createElement("div");
-        upperArea.className = "eqUpper";
-        this.container.appendChild(upperArea);
-        
-        //Create back button, if needed
-        if (this.steps.length > 1 && !this.isAutoplay) {
-            let backButton = document.createElement("div");
-            backButton.className = "material-icons eqIcon";
-            backButton.innerHTML = "arrow_back";
-            backButton.setAttribute("role", "button");
-            upperArea.appendChild(backButton);
-            this.prevStep = this.prevStep.bind(this);
-            backButton.addEventListener("click", this.prevStep);
-        }
-        
-        // Create text area, if needed
-        // text doesn't show if: none of the steps define any text
-        for (let i = 0; i < this.steps.length; i++) {
-            let step = this.steps[i];
-            if (step.text) {
-                this.textArea = document.createElement("div");
-                this.textArea.className = "eqText";
-                upperArea.appendChild(this.textArea);
-                break;
-            }
-        }
-        
-        //Create restart button and progress indicator
-        if (this.steps.length > 1 && !this.isAutoplay) {
-            let restButton = document.createElement("div");
-            restButton.className = "material-icons eqIcon restartIcon";
-            restButton.innerHTML = "replay";
-            restButton.setAttribute("role", "button");
-            upperArea.appendChild(restButton);
-            this.restart = this.restart.bind(this);
-            restButton.addEventListener("click", this.restart);
-
-            const progressCanvas = document.createElement("canvas");
-            progressCanvas.className = "progressCanvas";
-            progressCanvas.setAttribute("height", ProgressIndicator.DIMEN + "");
-            progressCanvas.setAttribute("width", ProgressIndicator.DIMEN + "");
-            this.progress = new ProgressIndicator(progressCanvas);
-            upperArea.appendChild(progressCanvas);
-        }
         
         //Create canvas
         let canvasContainer = document.createElement('div');
@@ -155,7 +112,70 @@ export default class CanvasController {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         canvasContainer.appendChild(this.canvas);
+
         
+        // Check if any steps have text
+        let hasText = false;
+        for (let i = 0; i < this.steps.length; i++) {
+            if (this.steps[i].text) {
+                hasText = true;
+                break;
+            }
+        }
+        
+        // Whether navigational buttons are necessary
+        const needButtons = this.steps.length > 1 && !this.isAutoplay;
+        
+        // Create area below canvas, if needed
+        if (needButtons || hasText) {
+            let lowerArea = document.createElement("div");
+            lowerArea.className = "eqUpper";
+            this.container.appendChild(lowerArea);
+            
+            //Create back button, if needed
+            if (needButtons) {
+                let backButton = document.createElement("div");
+                backButton.className = "material-icons eqIcon";
+                backButton.innerHTML = "keyboard_arrow_left";
+                backButton.setAttribute("role", "button");
+                lowerArea.appendChild(backButton);
+                this.prevStep = this.prevStep.bind(this);
+                backButton.addEventListener("click", this.prevStep);
+                // Highlight button on mouse over
+                backButton.addEventListener("mouseenter", this.highlightButton.bind(this, backButton));
+                backButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, backButton));
+            }
+            
+            // Create text area, if needed
+            // text doesn't show if: none of the steps define any text
+            if (hasText) {
+                this.textArea = document.createElement("div");
+                this.textArea.className = "eqText";
+                lowerArea.appendChild(this.textArea);
+            }
+            
+            //Create restart button and progress indicator
+            if (needButtons) {
+                this.restartOrNextButton = document.createElement("div");
+                this.restartOrNextButton.className = "material-icons eqIcon";
+                this.restartOrNextButton.innerHTML = "keyboard_arrow_right";
+                this.restartOrNextButton.setAttribute("role", "button");
+                lowerArea.appendChild(this.restartOrNextButton);
+                this.restart = this.restart.bind(this);
+                this.restartOrNextButton.addEventListener("click", this.handleMouseClick);
+                // Highlight next/restart in all regions where it will happen
+                this.canvas.addEventListener("mouseenter", this.highlightButton.bind(this, this.restartOrNextButton));
+                this.restartOrNextButton.addEventListener("mouseenter", this.highlightButton.bind(this, this.restartOrNextButton));
+                this.canvas.addEventListener("mouseleave", this.unhighlightButton.bind(this, this.restartOrNextButton));
+                this.restartOrNextButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, this.restartOrNextButton));
+            }
+        }
+
+        // Initialize progress indicator, if not autoplaying
+        if (!this.isAutoplay) {
+            this.progress = new ProgressIndicator(this.canvas);
+        }
+
         //Check whether to fix the height of the canvas
         if (container.hasAttribute('data-fix-height')) {
             this.fixedHeights = instructions.maxHeights;
@@ -173,9 +193,8 @@ export default class CanvasController {
         this.updateFontSize();
         this.recalc(true);
         
-        //Bind next step to canvas/text click if not autoplaying
+        // Bind next step to canvas/text click if not autoplaying
         if (!this.isAutoplay) {
-            this.handleMouseClick = this.handleMouseClick.bind(this);
             this.canvas.addEventListener("click", this.handleMouseClick);
             if (this.textArea) {
                 this.textArea.addEventListener('click', this.handleMouseClick);
@@ -184,8 +203,11 @@ export default class CanvasController {
 
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
-        window.addEventListener('resize', this.updateFontSize.bind(this));
-        window.addEventListener('resize', () => this.recalc(false));
+        window.addEventListener('resize', () => {
+            this.updateFontSize();
+            this.updateDimensions();
+            this.recalc(false);
+        });
 
         // Add overlay for play if autoplaying
         if (this.isAutoplay) {
@@ -207,6 +229,48 @@ export default class CanvasController {
     }
 
     /**
+     * Emphasize a button.
+     * @param button The element of the button.
+     */
+    protected highlightButton(button: HTMLElement) {
+        const set = new AnimationSet(() => {}, this.ctx, 0, 0);
+
+        const anim = new class extends BezierCallback {
+            constructor() {
+                super(C.buttonHighlightDuration, C.buttonHighlightEasing, set);
+            }
+            protected step(completion: number): void {
+                const opacity = 0.4 * (1 - completion) + C.buttonHighlightedOpacity * completion;
+                button.style.opacity = "" + opacity;
+            }
+        };
+
+        set.addAnimation(anim);
+        set.start();
+    }
+
+    /**
+     * De-emphasize a button
+     * @param button The element of the button.
+     */
+    protected unhighlightButton(button: HTMLElement) {
+        const set = new AnimationSet(() => {}, this.ctx, 0, 0);
+
+        const anim = new class extends BezierCallback {
+            constructor() {
+                super(C.buttonUnhighlightDuration, C.buttonUnhighlightEasing, set);
+            }
+            protected step(completion: number): void {
+                const opacity = C.buttonHighlightedOpacity * (1 - completion) + 0.4 * completion;
+                button.style.opacity = "" + opacity;
+            }
+        };
+
+        set.addAnimation(anim);
+        set.start();
+    }
+
+    /**
      * Set what the cursor will be above the canvas.
      * @param cursor The css style property for cursor.
      */
@@ -225,7 +289,7 @@ export default class CanvasController {
     }
 
     /**
-     * Fire mouse events if necessary when the mouse clicks.
+     * Decide what to do when the mouse clicks.
      * @param e The mouse event.
      */
     protected handleMouseClick(e: MouseEvent) {
@@ -257,6 +321,8 @@ export default class CanvasController {
             });
 
             animSet.start();
+        } else if (this.currStep >= this.steps.length - 1) {
+            this.restart();
         } else {
             this.nextStep();
         }
@@ -384,6 +450,18 @@ export default class CanvasController {
     }
 
     /**
+     * Update the dimensions of all content, and the current layout.
+     */
+    protected updateDimensions() {
+        this.forAllContent(content => {
+            content.recalcDimensions();
+        });
+        if (this.currRootContainer) {
+            this.currRootContainer.recalcDimensions();
+        }
+    }
+
+    /**
      * Redraw the current step without animating.
      * Does not recalculate layout.
      */
@@ -405,13 +483,9 @@ export default class CanvasController {
      */
     protected recalc(reparse: boolean) {
         let rootLayout;
-        if (!reparse) {
-            // Keep container instances, may need different dimensions.
-            this.currRootContainer.recalcDimensions();
-        }
         [
             this.currStates, 
-            rootLayout, 
+            rootLayout,
             this.mouseEnterEvents, 
             this.mouseExitEvents, 
             this.mouseClickEvents,
@@ -421,6 +495,9 @@ export default class CanvasController {
         let [width, height] = this.getSize(rootLayout);
         this.setSize(width, height);
         this.redraw();
+        if (this.progress) {
+            this.progress.draw(this.currStep / (this.steps.length - 1), width, height);
+        }
     }
 
     /**
@@ -429,7 +506,7 @@ export default class CanvasController {
      * @param whenDone A function to call when the next step animation is complete.
      */
     protected nextStep(whenDone?: () => void) {
-        if (this.currStep + 1 >= this.steps.length || this.animating) {
+        if (this.currStep + 1 >= this.steps.length || this.currAnimation) {
             //Can't go to next step
             return;
         }
@@ -448,18 +525,23 @@ export default class CanvasController {
         ] = this.calcLayout(this.currStep, true);
         this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);
-        let anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
+        this.currAnimation.start();
     }
 
     /**
      * If possible, animate to the previous step.
      */
     protected prevStep() {
-        if (this.currStep - 1 < 0 || this.animating) {
+        if (this.currStep - 1 < 0) {
             //Can't go to next step
             return;
+        }
+
+        // Stop the current animation if there is one
+        if (this.currAnimation) {
+            this.currAnimation.stop();
+            this.redraw();
         }
 
         this.currStep--;
@@ -476,16 +558,15 @@ export default class CanvasController {
         ] = this.calcLayout(this.currStep, true);
         this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);        
-        let anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
+        this.currAnimation.start();
     }
 
     /**
      * Return to the first step.
      */
     protected restart() {
-        if (this.animating || this.currStep === 0) {
+        if (this.currAnimation || this.currStep === 0) {
             //Can't go to next step
             return;
         }
@@ -505,9 +586,8 @@ export default class CanvasController {
         ] = this.calcLayout(this.currStep, true);
         this.mouseOnLast = [];
         let [width, height] = this.getSize(rootLayout);
-        let anims = this.diff(oldStates, width, height, oldStep, 0, undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, oldStep, 0, undefined);
+        this.currAnimation.start();
     }
 
     /**
@@ -559,7 +639,21 @@ export default class CanvasController {
                 this.setSize(canvasWidth, canvasHeight);
                 this.redraw();
             }
-            this.animating = false;
+            // Update next/restart button
+            if (this.restartOrNextButton) {
+                if (stepAfter === this.steps.length - 1) {
+                    // Going to last step, show restart button (unless only two steps, can just go back)
+                    this.restartOrNextButton.innerHTML = 'refresh';
+                } else {
+                    // Not going to last step, show next step button
+                    this.restartOrNextButton.innerHTML = 'keyboard_arrow_right';
+                }
+            }
+            // If we weren't animating the progress bar, draw it on the final frame.
+            if (this.progress && updateDimenAfter) {
+                this.progress.draw(this.currStep / (this.steps.length - 1), canvasWidth, canvasHeight);
+            }
+            this.currAnimation = undefined;
             if (whenDone) {
                 whenDone();
             }
@@ -628,9 +722,10 @@ export default class CanvasController {
             set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
 
-        //Animate the progress circle
-        if (this.progress) {
-            set.addAnimation(new ProgressAnimation(stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration));
+        //Animate the progress indicator
+        if (this.progress && !updateDimenAfter) {
+            set.addAnimation(new ProgressAnimation( stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration,
+                                                    C.progressEasing, canvasWidth, canvasHeight));
         }
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -877,7 +972,7 @@ export default class CanvasController {
         let type: string = containerObj.type;
         if (type === "vbox") {
             const c = this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1);
-            const p = Padding.even(C.defaultVBoxPadding);
+            const p = depth === 0 ? C.defaultRootVBoxPadding : Padding.even(C.defaultVBoxPadding);
             if (this.fixedHeights && depth === 0) {
                 return new VCenterVBox(c, p);
             } else {

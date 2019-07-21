@@ -39,3 +39,7 @@ html {
     border-radius: 10px;
     cursor: pointer;
 }
+
+.eqUpper {
+    color: rgba(255, 255, 255, 0.9);
+}

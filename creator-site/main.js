@@ -118,6 +118,7 @@ var AnimationSet = /** @class */ (function () {
      * @param drawStates (optional) the states to draw after each frame.
      */
     function AnimationSet(done, ctx, clearWidth, clearHeight, drawStates) {
+        this.stopped = false;
         this.animations = [];
         this.done = done;
         this.ctx = ctx;
@@ -149,7 +150,7 @@ var AnimationSet = /** @class */ (function () {
                     }
                 });
             }
-            if (this_.numRunning > 0) {
+            if (this_.numRunning > 0 && !this_.stopped) {
                 requestAnimationFrame(doAll);
             }
         };
@@ -161,6 +162,16 @@ var AnimationSet = /** @class */ (function () {
     AnimationSet.prototype.finished = function () {
         this.numRunning--;
         if (this.numRunning === 0 && this.done) {
+            this.done();
+        }
+    };
+    /**
+     * Stop all running animations and call the done event,
+     * if it was provided.
+     */
+    AnimationSet.prototype.stop = function () {
+        this.stopped = true;
+        if (this.done) {
             this.done();
         }
     };
@@ -574,7 +585,6 @@ var OutlineFadeAnimation = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BezierCallback__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BezierCallback */ "../ts/animation/BezierCallback.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../ts/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -589,22 +599,23 @@ var __extends = (undefined && undefined.__extends) || (function () {
     };
 })();
 
-
 /**
  * Animate the progress indicator.
  */
 var ProgressAnimation = /** @class */ (function (_super) {
     __extends(ProgressAnimation, _super);
-    function ProgressAnimation(startStep, endStep, numSteps, pi, set, duration) {
-        var _this = _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].progressEasing, set) || this;
+    function ProgressAnimation(startStep, endStep, numSteps, pi, set, duration, easing, canvasWidth, canvasHeight) {
+        var _this = _super.call(this, duration, easing, set) || this;
         _this.startCompletion = startStep / (numSteps - 1);
         _this.endCompletion = endStep / (numSteps - 1);
         _this.pi = pi;
+        _this.canvasWidth = canvasWidth;
+        _this.canvasHeight = canvasHeight;
         return _this;
     }
     ProgressAnimation.prototype.step = function (animCompletion) {
         var currCompletion = this.startCompletion * (1 - animCompletion) + this.endCompletion * animCompletion;
-        this.pi.draw(currCompletion);
+        this.pi.draw(currCompletion, this.canvasWidth, this.canvasHeight);
     };
     return ProgressAnimation;
 }(_BezierCallback__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -2353,9 +2364,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var Term = /** @class */ (function (_super) {
     __extends(Term, _super);
     function Term(text, widths, heights, ascents, ref) {
-        var _this = 
-        //At the time of term initialization, layout is unknown.
-        _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].termPadding, ref) || this;
+        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].termPadding, ref) || this;
         _this.widths = widths;
         _this.heights = heights;
         _this.halfInnerWidths = _this.widths.map(function (width) { return width / 2; });
@@ -2590,13 +2599,13 @@ var VCenterVBox = /** @class */ (function (_super) {
         });
     };
     VCenterVBox.prototype.recalcDimensions = function () {
-        this.calcChildHeight();
         _super.prototype.recalcDimensions.call(this);
+        this.calcChildHeight();
     };
     VCenterVBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
         var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         var innerWidth = (this.getWidth() - this.padding.width()) * currScale;
-        var upToY = tly + this.padding.top * currScale + (this.getHeight() - this.totalChildHeight) / 2;
+        var upToY = tly + (this.getHeight() - this.totalChildHeight) / 2;
         for (var i = 0; i < this.children.length; i++) {
             var currChild = this.children[i];
             var childWidth = currChild.getWidth() * currScale;
@@ -2712,6 +2721,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _layout_Quiz__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../layout/Quiz */ "../ts/layout/Quiz.ts");
 /* harmony import */ var _layout_TableContainer__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../layout/TableContainer */ "../ts/layout/TableContainer.ts");
 /* harmony import */ var _layout_VDivider__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../layout/VDivider */ "../ts/layout/VDivider.ts");
+/* harmony import */ var _animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../animation/BezierCallback */ "../ts/animation/BezierCallback.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
 
 
 
@@ -2753,7 +2777,6 @@ var CanvasController = /** @class */ (function () {
         var _a;
         var _this = this;
         this.currStep = 0;
-        this.animating = false;
         this.mouseOnLast = [];
         this.lastHeight = 0;
         this.lastWidth = 0;
@@ -2766,49 +2789,9 @@ var CanvasController = /** @class */ (function () {
         this.radicals = [];
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
+        this.handleMouseClick = this.handleMouseClick.bind(this);
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
-        //Create area above canvas
-        var upperArea = document.createElement("div");
-        upperArea.className = "eqUpper";
-        this.container.appendChild(upperArea);
-        //Create back button, if needed
-        if (this.steps.length > 1 && !this.isAutoplay) {
-            var backButton = document.createElement("div");
-            backButton.className = "material-icons eqIcon";
-            backButton.innerHTML = "arrow_back";
-            backButton.setAttribute("role", "button");
-            upperArea.appendChild(backButton);
-            this.prevStep = this.prevStep.bind(this);
-            backButton.addEventListener("click", this.prevStep);
-        }
-        // Create text area, if needed
-        // text doesn't show if: none of the steps define any text
-        for (var i = 0; i < this.steps.length; i++) {
-            var step = this.steps[i];
-            if (step.text) {
-                this.textArea = document.createElement("div");
-                this.textArea.className = "eqText";
-                upperArea.appendChild(this.textArea);
-                break;
-            }
-        }
-        //Create restart button and progress indicator
-        if (this.steps.length > 1 && !this.isAutoplay) {
-            var restButton = document.createElement("div");
-            restButton.className = "material-icons eqIcon restartIcon";
-            restButton.innerHTML = "replay";
-            restButton.setAttribute("role", "button");
-            upperArea.appendChild(restButton);
-            this.restart = this.restart.bind(this);
-            restButton.addEventListener("click", this.restart);
-            var progressCanvas = document.createElement("canvas");
-            progressCanvas.className = "progressCanvas";
-            progressCanvas.setAttribute("height", _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__["default"].DIMEN + "");
-            progressCanvas.setAttribute("width", _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__["default"].DIMEN + "");
-            this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__["default"](progressCanvas);
-            upperArea.appendChild(progressCanvas);
-        }
         //Create canvas
         var canvasContainer = document.createElement('div');
         canvasContainer.className = 'canvas-container';
@@ -2816,6 +2799,61 @@ var CanvasController = /** @class */ (function () {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         canvasContainer.appendChild(this.canvas);
+        // Check if any steps have text
+        var hasText = false;
+        for (var i = 0; i < this.steps.length; i++) {
+            if (this.steps[i].text) {
+                hasText = true;
+                break;
+            }
+        }
+        // Whether navigational buttons are necessary
+        var needButtons = this.steps.length > 1 && !this.isAutoplay;
+        // Create area below canvas, if needed
+        if (needButtons || hasText) {
+            var lowerArea = document.createElement("div");
+            lowerArea.className = "eqUpper";
+            this.container.appendChild(lowerArea);
+            //Create back button, if needed
+            if (needButtons) {
+                var backButton = document.createElement("div");
+                backButton.className = "material-icons eqIcon";
+                backButton.innerHTML = "keyboard_arrow_left";
+                backButton.setAttribute("role", "button");
+                lowerArea.appendChild(backButton);
+                this.prevStep = this.prevStep.bind(this);
+                backButton.addEventListener("click", this.prevStep);
+                // Highlight button on mouse over
+                backButton.addEventListener("mouseenter", this.highlightButton.bind(this, backButton));
+                backButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, backButton));
+            }
+            // Create text area, if needed
+            // text doesn't show if: none of the steps define any text
+            if (hasText) {
+                this.textArea = document.createElement("div");
+                this.textArea.className = "eqText";
+                lowerArea.appendChild(this.textArea);
+            }
+            //Create restart button and progress indicator
+            if (needButtons) {
+                this.restartOrNextButton = document.createElement("div");
+                this.restartOrNextButton.className = "material-icons eqIcon";
+                this.restartOrNextButton.innerHTML = "keyboard_arrow_right";
+                this.restartOrNextButton.setAttribute("role", "button");
+                lowerArea.appendChild(this.restartOrNextButton);
+                this.restart = this.restart.bind(this);
+                this.restartOrNextButton.addEventListener("click", this.handleMouseClick);
+                // Highlight next/restart in all regions where it will happen
+                this.canvas.addEventListener("mouseenter", this.highlightButton.bind(this, this.restartOrNextButton));
+                this.restartOrNextButton.addEventListener("mouseenter", this.highlightButton.bind(this, this.restartOrNextButton));
+                this.canvas.addEventListener("mouseleave", this.unhighlightButton.bind(this, this.restartOrNextButton));
+                this.restartOrNextButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, this.restartOrNextButton));
+            }
+        }
+        // Initialize progress indicator, if not autoplaying
+        if (!this.isAutoplay) {
+            this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__["default"](this.canvas);
+        }
         //Check whether to fix the height of the canvas
         if (container.hasAttribute('data-fix-height')) {
             this.fixedHeights = instructions.maxHeights;
@@ -2826,9 +2864,8 @@ var CanvasController = /** @class */ (function () {
         this.initContent(instructions);
         this.updateFontSize();
         this.recalc(true);
-        //Bind next step to canvas/text click if not autoplaying
+        // Bind next step to canvas/text click if not autoplaying
         if (!this.isAutoplay) {
-            this.handleMouseClick = this.handleMouseClick.bind(this);
             this.canvas.addEventListener("click", this.handleMouseClick);
             if (this.textArea) {
                 this.textArea.addEventListener('click', this.handleMouseClick);
@@ -2836,8 +2873,11 @@ var CanvasController = /** @class */ (function () {
         }
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
-        window.addEventListener('resize', this.updateFontSize.bind(this));
-        window.addEventListener('resize', function () { return _this.recalc(false); });
+        window.addEventListener('resize', function () {
+            _this.updateFontSize();
+            _this.updateDimensions();
+            _this.recalc(false);
+        });
         // Add overlay for play if autoplaying
         if (this.isAutoplay) {
             this.overlayContainer = document.createElement("div");
@@ -2853,6 +2893,46 @@ var CanvasController = /** @class */ (function () {
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.canvas.addEventListener("mousemove", this.handleMouseMove);
     }
+    /**
+     * Emphasize a button.
+     * @param button The element of the button.
+     */
+    CanvasController.prototype.highlightButton = function (button) {
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0);
+        var anim = new /** @class */ (function (_super) {
+            __extends(class_1, _super);
+            function class_1() {
+                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightEasing, set) || this;
+            }
+            class_1.prototype.step = function (completion) {
+                var opacity = 0.4 * (1 - completion) + _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightedOpacity * completion;
+                button.style.opacity = "" + opacity;
+            };
+            return class_1;
+        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__["default"]));
+        set.addAnimation(anim);
+        set.start();
+    };
+    /**
+     * De-emphasize a button
+     * @param button The element of the button.
+     */
+    CanvasController.prototype.unhighlightButton = function (button) {
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0);
+        var anim = new /** @class */ (function (_super) {
+            __extends(class_2, _super);
+            function class_2() {
+                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonUnhighlightDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonUnhighlightEasing, set) || this;
+            }
+            class_2.prototype.step = function (completion) {
+                var opacity = _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightedOpacity * (1 - completion) + 0.4 * completion;
+                button.style.opacity = "" + opacity;
+            };
+            return class_2;
+        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__["default"]));
+        set.addAnimation(anim);
+        set.start();
+    };
     /**
      * Set what the cursor will be above the canvas.
      * @param cursor The css style property for cursor.
@@ -2870,7 +2950,7 @@ var CanvasController = /** @class */ (function () {
         }
     };
     /**
-     * Fire mouse events if necessary when the mouse clicks.
+     * Decide what to do when the mouse clicks.
      * @param e The mouse event.
      */
     CanvasController.prototype.handleMouseClick = function (e) {
@@ -2898,6 +2978,9 @@ var CanvasController = /** @class */ (function () {
                 handler(layout, animSet_1, _this);
             });
             animSet_1.start();
+        }
+        else if (this.currStep >= this.steps.length - 1) {
+            this.restart();
         }
         else {
             this.nextStep();
@@ -3016,6 +3099,17 @@ var CanvasController = /** @class */ (function () {
         this.fontSize = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["getFontSizeForTier"])(window['currentWidthTier']);
     };
     /**
+     * Update the dimensions of all content, and the current layout.
+     */
+    CanvasController.prototype.updateDimensions = function () {
+        this.forAllContent(function (content) {
+            content.recalcDimensions();
+        });
+        if (this.currRootContainer) {
+            this.currRootContainer.recalcDimensions();
+        }
+    };
+    /**
      * Redraw the current step without animating.
      * Does not recalculate layout.
      */
@@ -3038,15 +3132,14 @@ var CanvasController = /** @class */ (function () {
     CanvasController.prototype.recalc = function (reparse) {
         var _a;
         var rootLayout;
-        if (!reparse) {
-            // Keep container instances, may need different dimensions.
-            this.currRootContainer.recalcDimensions();
-        }
         _a = this.calcLayout(this.currStep, reparse), this.currStates = _a[0], rootLayout = _a[1], this.mouseEnterEvents = _a[2], this.mouseExitEvents = _a[3], this.mouseClickEvents = _a[4], this.tempContent = _a[5];
         this.mouseOnLast = [];
         var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
         this.setSize(width, height);
         this.redraw();
+        if (this.progress) {
+            this.progress.draw(this.currStep / (this.steps.length - 1), width, height);
+        }
     };
     /**
      * If possible, animate to the next step
@@ -3055,7 +3148,7 @@ var CanvasController = /** @class */ (function () {
      */
     CanvasController.prototype.nextStep = function (whenDone) {
         var _a;
-        if (this.currStep + 1 >= this.steps.length || this.animating) {
+        if (this.currStep + 1 >= this.steps.length || this.currAnimation) {
             //Can't go to next step
             return;
         }
@@ -3065,18 +3158,22 @@ var CanvasController = /** @class */ (function () {
         _a = this.calcLayout(this.currStep, true), this.currStates = _a[0], rootLayout = _a[1], this.mouseEnterEvents = _a[2], this.mouseExitEvents = _a[3], this.mouseClickEvents = _a[4], this.tempContent = _a[5];
         this.mouseOnLast = [];
         var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
-        var anims = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, this.currStep - 1, this.currStep, whenDone instanceof Function ? whenDone : undefined);
+        this.currAnimation.start();
     };
     /**
      * If possible, animate to the previous step.
      */
     CanvasController.prototype.prevStep = function () {
         var _a;
-        if (this.currStep - 1 < 0 || this.animating) {
+        if (this.currStep - 1 < 0) {
             //Can't go to next step
             return;
+        }
+        // Stop the current animation if there is one
+        if (this.currAnimation) {
+            this.currAnimation.stop();
+            this.redraw();
         }
         this.currStep--;
         var oldStates = this.currStates;
@@ -3084,16 +3181,15 @@ var CanvasController = /** @class */ (function () {
         _a = this.calcLayout(this.currStep, true), this.currStates = _a[0], rootLayout = _a[1], this.mouseEnterEvents = _a[2], this.mouseExitEvents = _a[3], this.mouseClickEvents = _a[4], this.tempContent = _a[5];
         this.mouseOnLast = [];
         var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
-        var anims = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
+        this.currAnimation.start();
     };
     /**
      * Return to the first step.
      */
     CanvasController.prototype.restart = function () {
         var _a;
-        if (this.animating || this.currStep === 0) {
+        if (this.currAnimation || this.currStep === 0) {
             //Can't go to next step
             return;
         }
@@ -3104,9 +3200,8 @@ var CanvasController = /** @class */ (function () {
         _a = this.calcLayout(this.currStep, true), this.currStates = _a[0], rootLayout = _a[1], this.mouseEnterEvents = _a[2], this.mouseExitEvents = _a[3], this.mouseClickEvents = _a[4], this.tempContent = _a[5];
         this.mouseOnLast = [];
         var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
-        var anims = this.diff(oldStates, width, height, oldStep, 0, undefined);
-        this.animating = true;
-        anims.start();
+        this.currAnimation = this.diff(oldStates, width, height, oldStep, 0, undefined);
+        this.currAnimation.start();
     };
     /**
      * Run a callback for all content.
@@ -3154,7 +3249,22 @@ var CanvasController = /** @class */ (function () {
                 _this.setSize(canvasWidth, canvasHeight);
                 _this.redraw();
             }
-            _this.animating = false;
+            // Update next/restart button
+            if (_this.restartOrNextButton) {
+                if (stepAfter === _this.steps.length - 1) {
+                    // Going to last step, show restart button (unless only two steps, can just go back)
+                    _this.restartOrNextButton.innerHTML = 'refresh';
+                }
+                else {
+                    // Not going to last step, show next step button
+                    _this.restartOrNextButton.innerHTML = 'keyboard_arrow_right';
+                }
+            }
+            // If we weren't animating the progress bar, draw it on the final frame.
+            if (_this.progress && updateDimenAfter) {
+                _this.progress.draw(_this.currStep / (_this.steps.length - 1), canvasWidth, canvasHeight);
+            }
+            _this.currAnimation = undefined;
             if (whenDone) {
                 whenDone();
             }
@@ -3223,9 +3333,9 @@ var CanvasController = /** @class */ (function () {
             var evalToOldState = oldStates.get(evalTo);
             set.addAnimation(new _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_9__["default"](evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
-        //Animate the progress circle
-        if (this.progress) {
-            set.addAnimation(new _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_12__["default"](stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration));
+        //Animate the progress indicator
+        if (this.progress && !updateDimenAfter) {
+            set.addAnimation(new _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_12__["default"](stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].progressEasing, canvasWidth, canvasHeight));
         }
         //Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(function (content) {
@@ -3454,7 +3564,7 @@ var CanvasController = /** @class */ (function () {
         var type = containerObj.type;
         if (type === "vbox") {
             var c = this.parseContainerChildren(containerObj.children, depth + 1);
-            var p = _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultVBoxPadding);
+            var p = depth === 0 ? _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultRootVBoxPadding : _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultVBoxPadding);
             if (this.fixedHeights && depth === 0) {
                 return new _layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_19__["default"](c, p);
             }
@@ -3654,6 +3764,8 @@ var HeightComputeCanvasController = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./consts */ "../ts/main/consts.ts");
 /* harmony import */ var _layout_EqContent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../layout/EqContent */ "../ts/layout/EqContent.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./helpers */ "../ts/main/helpers.ts");
+
 
 
 /**
@@ -3671,29 +3783,17 @@ var ProgressIndicator = /** @class */ (function () {
         this.ctx = canvas.getContext("2d");
     }
     /**
-     * Draw the arc on the canvas at some level of
+     * Draw the line on the canvas at some level of
      * completion.
      * @param completion The completion as a decimal.
+     * @param width The width of the canvas to draw on.
+     * @param height The height of the canvas to draw on.
      */
-    ProgressIndicator.prototype.draw = function (completion) {
-        this.ctx.clearRect(0, 0, ProgressIndicator.DIMEN, ProgressIndicator.DIMEN);
+    ProgressIndicator.prototype.draw = function (completion, width, height) {
         var color = _layout_EqContent__WEBPACK_IMPORTED_MODULE_1__["default"].colors['default'];
-        this.ctx.fillStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + _consts__WEBPACK_IMPORTED_MODULE_0__["default"].progressOpacity + ')';
-        this.ctx.beginPath();
-        this.ctx.moveTo(ProgressIndicator.CENTER, ProgressIndicator.CENTER);
-        this.ctx.lineTo(ProgressIndicator.CENTER, ProgressIndicator.START_Y);
-        this.ctx.arc(ProgressIndicator.CENTER, ProgressIndicator.CENTER, ProgressIndicator.RADIUS, -Math.PI / 2, Math.PI * 2 * completion - Math.PI / 2);
-        this.ctx.lineTo(ProgressIndicator.CENTER, ProgressIndicator.CENTER);
-        this.ctx.fill();
+        this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + _consts__WEBPACK_IMPORTED_MODULE_0__["default"].progressOpacity + ')';
+        Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(0, height - 1, width * completion, height - 1, this.ctx);
     };
-    // Radius of the circle
-    ProgressIndicator.RADIUS = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].restartAndProgressSize / 2;
-    // Center of the circle (x and y)
-    ProgressIndicator.CENTER = (_consts__WEBPACK_IMPORTED_MODULE_0__["default"].restartAndProgressPadding + _consts__WEBPACK_IMPORTED_MODULE_0__["default"].restartAndProgressSize) / 2;
-    // Start of the filled arc
-    ProgressIndicator.START_Y = ProgressIndicator.CENTER - ProgressIndicator.RADIUS;
-    // Total dimensions
-    ProgressIndicator.DIMEN = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].restartAndProgressPadding + _consts__WEBPACK_IMPORTED_MODULE_0__["default"].restartAndProgressSize;
     return ProgressIndicator;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (ProgressIndicator);
@@ -3735,9 +3835,10 @@ var constants = {
     restartAndProgressSize: 28,
     // The total padding (x and y) of the progress indicator in px
     restartAndProgressPadding: 16,
-    progressOpacity: 0.275,
+    progressOpacity: 0.15,
     //Layout:
     defaultVBoxPadding: 0,
+    defaultRootVBoxPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](20, 0, 20, 0),
     defaultHBoxPadding: 0,
     defaultTightHBoxPadding: 0,
     defaultSubSuperPadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(0),
@@ -3816,8 +3917,14 @@ var constants = {
         "default": [255, 255, 255]
     },
     fadedOpacity: 0.5,
-    normalOpacity: 0.9,
+    normalOpacity: 0.75,
     focusedOpacity: 1,
+    // Button animations
+    buttonHighlightedOpacity: 1,
+    buttonHighlightDuration: 200,
+    buttonHighlightEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1),
+    buttonUnhighlightDuration: 200,
+    buttonUnhighlightEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1)
 };
 /* harmony default export */ __webpack_exports__["default"] = (constants);
 
@@ -3849,11 +3956,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * Add styles based on the contents of consts
+ *
+ * @param otherColors If present, use other colors than the default.
  */
-function addStyleSheet() {
+function addStyleSheet(otherColors) {
     var styleEl = document.createElement('style');
     var styleText = '';
-    Object.keys(_consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors).forEach(function (colorName) {
+    Object.keys(otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors).forEach(function (colorName) {
         var colorVal = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors[colorName];
         styleText += '.' + colorName + ' { color: ' + 'rgb(' + colorVal[0] + ',' + colorVal[1] + ',' + colorVal[2] + ')}';
     });
@@ -4635,10 +4744,12 @@ var CreatorCanvasController = /** @class */ (function (_super) {
     __extends(CreatorCanvasController, _super);
     function CreatorCanvasController(container, instructions, undoRedo, selection, step, error) {
         var _this = _super.call(this, container, instructions) || this;
-        // Remove upper area
-        container.removeChild(container.firstChild);
         // Remove autoplay overlay if present
         if (_this.isAutoplay) {
+            container.removeChild(container.children[container.childElementCount - 1]);
+        }
+        // Remove lower area if present
+        if (container.childElementCount >= 2) {
             container.removeChild(container.children[container.childElementCount - 1]);
         }
         _this.undoRedo = undoRedo;

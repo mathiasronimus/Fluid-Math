@@ -46,10 +46,12 @@ export default class CreatorCanvasController extends CanvasController {
 
     constructor(container: HTMLElement, instructions, undoRedo, selection, step: SelectedStepService, error: ErrorService) {
         super(container, instructions);
-        // Remove upper area
-        container.removeChild(container.firstChild);
         // Remove autoplay overlay if present
         if (this.isAutoplay) {
+            container.removeChild(container.children[container.childElementCount - 1]);
+        }
+        // Remove lower area if present
+        if (container.childElementCount >= 2) {
             container.removeChild(container.children[container.childElementCount - 1]);
         }
         this.undoRedo = undoRedo;

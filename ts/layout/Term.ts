@@ -19,7 +19,6 @@ export default class Term extends EqContent<TermLayoutState> {
     private ascent: number;
 
     constructor(text: string, widths: number[], heights: number[], ascents: number[], ref: string) {
-        //At the time of term initialization, layout is unknown.
         super(C.termPadding, ref);
         this.widths = widths;
         this.heights = heights;

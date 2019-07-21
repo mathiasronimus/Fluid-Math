@@ -17,11 +17,15 @@
     justify-content: space-between;
     color: rgba(0, 0, 0, 0.85);
     position: relative;
+    top: -5px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .eqIcon {
     padding: 10px;
     cursor: pointer;
+    opacity: 0.4;
 }
 
 .eqText {
@@ -30,17 +34,6 @@
     flex-grow: 1;
     padding: 10px;
     text-align: center;
-}
-
-.progressCanvas {
-    width: 44px;
-    height: 44px;
-}
-
-.restartIcon {
-    position: absolute;
-    right: 0px;
-    top: 0px;
 }
 
 em {
@@ -62,7 +55,6 @@ em {
     position: absolute;
     left: 10px;
     bottom: 10px;
-    /* transform: translate(-50%, -50%); */
     border-radius: 100px;
     background-color: rgba(255, 255, 255, 0.9);
     color: black;

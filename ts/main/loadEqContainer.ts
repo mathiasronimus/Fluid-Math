@@ -6,6 +6,7 @@ import { addStyleSheet, getMetrics } from './helpers';
 import { GoogleFontFormat, CustomFontFormat, FileFormat, FontFormat, ColorsFormat } from './FileFormat';
 import EqContent from '../layout/EqContent';
 
+let colorsRequested = false;
 let loadedColorsFile: ColorsFormat;
 let loadedColorsResCode: number = 0;
 
@@ -67,6 +68,7 @@ function requestColors() {
     });
     req.open("GET", "colors.json");
     req.send();
+    colorsRequested = true;
 }
 
 /**
@@ -143,7 +145,7 @@ function initCanvController(element: HTMLElement, instructions: FileFormat) {
 function initOne(element: HTMLElement, urlOrObj: string | FileFormat) {
 
     // Request colors for this page
-    if (loadedColorsResCode === 0) {
+    if (!colorsRequested) {
         requestColors();
     }
 
@@ -214,7 +216,7 @@ function initOne(element: HTMLElement, urlOrObj: string | FileFormat) {
 function initAll(className: string) {
 
     // Request colors for this page
-    if (loadedColorsResCode === 0) {
+    if (!colorsRequested) {
         requestColors();
     }
 

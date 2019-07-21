@@ -29,8 +29,8 @@ export default class VCenterVBox extends VBox {
     }
 
     recalcDimensions() {
-        this.calcChildHeight();
         super.recalcDimensions();
+        this.calcChildHeight();
     }
 
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
@@ -45,7 +45,7 @@ export default class VCenterVBox extends VBox {
             this.getHeight() * currScale,
             currScale);
         const innerWidth = (this.getWidth() - this.padding.width()) * currScale;
-        let upToY = tly + this.padding.top * currScale + (this.getHeight() - this.totalChildHeight) / 2;
+        let upToY = tly + (this.getHeight() - this.totalChildHeight) / 2;
 
         for (let i = 0; i < this.children.length; i++) {
             let currChild = this.children[i];

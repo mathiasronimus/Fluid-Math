@@ -21,10 +21,11 @@ const constants = {
     restartAndProgressSize: 28,
     // The total padding (x and y) of the progress indicator in px
     restartAndProgressPadding: 16,
-    progressOpacity: 0.275,
+    progressOpacity: 0.15,
     
     //Layout:
     defaultVBoxPadding: 0,
+    defaultRootVBoxPadding: new Padding(20, 0, 20, 0),
     defaultHBoxPadding: 0,
     defaultTightHBoxPadding: 0,
     defaultSubSuperPadding: Padding.even(0),
@@ -110,8 +111,15 @@ const constants = {
         "default": [255, 255, 255]
     } as {[cName: string]: [number, number, number]},
     fadedOpacity: 0.5,
-    normalOpacity: 0.9,
+    normalOpacity: 0.75,
     focusedOpacity: 1,
+
+    // Button animations
+    buttonHighlightedOpacity: 1,
+    buttonHighlightDuration: 200,
+    buttonHighlightEasing: bezier(0.0, 0.0, 0.2, 1),
+    buttonUnhighlightDuration: 200,
+    buttonUnhighlightEasing: bezier(0.4, 0.0, 1, 1)
 }
 
 export default constants;
