@@ -51,6 +51,20 @@ export default abstract class EqComponent<L extends LayoutState> {
         this.height = this.calcHeight();
     }
 
+    /**
+     * Return the vertical dimensions that form the 'main text line'
+     * of this component. This is only relevant to HBoxes, which will
+     * ensure that their children's main text lines line up. These
+     * dimensions are given with respect to the top of this component,
+     * including padding. The default implementation given here returns
+     * undefined, indicating that the component does not have a main
+     * text line. Components that do this are simply vertically centered
+     * in the HBox.
+     */
+    getMainTextLine(): [number, number] {
+        return undefined;
+    }
+
     protected abstract calcWidth(): number;
     protected abstract calcHeight(): number;
 

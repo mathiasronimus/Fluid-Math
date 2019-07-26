@@ -29,17 +29,20 @@ export default class TightHBox extends HBox {
     //Override to reduce term padding.
     addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
                 tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object,
-                mouseEnter: Map<LayoutState, MouseEventCallback>, 
-                mouseExit: Map<LayoutState, MouseEventCallback>,
+                opacityObj: Object, colorObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>,
+                mouseExit: Map<LayoutState, MouseEventCallback>, 
                 mouseClick: Map<LayoutState, MouseEventCallback>,
                 tempContent: EqContent<any>[]): LayoutState {
+
         let state = new LayoutState(
-                            parentLayout, this, tlx, tly, 
-                            this.getWidth() * currScale, 
-                            this.getHeight() * currScale, 
-                            currScale);
-        const innerHeight = (this.getHeight() - this.padding.height()) * currScale;
+            parentLayout, this, 
+            tlx, tly, 
+            this.getWidth() * currScale, 
+            this.getHeight() * currScale, 
+            currScale
+        );
+
         let upToX = tlx + this.padding.left * currScale;
 
         for (let i = 0; i < this.children.length; i++) {
@@ -47,18 +50,22 @@ export default class TightHBox extends HBox {
             let childHeight = currChild.getHeight() * currScale;
 
             //Position child in the middle vertically
-            let childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            let childLayout = currChild.addLayout(  state, layouts, 
-                                                    upToX, childTLY, currScale, 
-                                                    opacityObj, colorsObj,
-                                                    mouseEnter, mouseExit, mouseClick,
-                                                    tempContent);
+            let childTLY = this.middleMainLineDist * currScale - childHeight / 2 + tly;
+
+            const childLayout = currChild.addLayout(   
+                state, layouts, 
+                upToX, childTLY, 
+                currScale, opacityObj, colorObj,
+                mouseEnter, mouseExit, mouseClick,
+                tempContent
+            );
+
             if (currChild instanceof Term) {
                 (childLayout as TermLayoutState).tighten(widthDiff * currScale);
             }
+
             upToX += childLayout.width;
         }
-
 
         layouts.set(this, state);
 

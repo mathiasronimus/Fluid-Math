@@ -9,11 +9,15 @@ export default class LayoutState {
     tly: number;
     width: number;
     height: number;
-    //The scaling of the component (width and height reflect this scaling,
-    //but needs to be taken into account for drawing.)
+    // The scaling of the component (width and height reflect this scaling,
+    // but needs to be taken into account for drawing.)
     scale: number;
     component: EqComponent<LayoutState>;
     layoutParent: LayoutState;
+
+    // The distance from the top of the layout to the baseline
+    // of its text.
+    baselineFromTop: number;
 
     constructor(layoutParent, component, tlx, tly, width, height, scale) {
         this.tlx = tlx;

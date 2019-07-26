@@ -36,6 +36,10 @@ export default class Term extends EqContent<TermLayoutState> {
         this.halfInnerHeight = this.halfInnerHeights[tier];
         this.ascent = this.ascents[tier];
     }
+
+    getMainTextLine(): [number, number] {
+        return [this.padding.top, this.height - this.padding.bottom];
+    }
     
     protected calcHeight(): number {
         let tier: number = window['currentWidthTier'];

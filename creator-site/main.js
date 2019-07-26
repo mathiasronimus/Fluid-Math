@@ -1060,6 +1060,19 @@ var EqComponent = /** @class */ (function () {
         this.width = this.calcWidth();
         this.height = this.calcHeight();
     };
+    /**
+     * Return the vertical dimensions that form the 'main text line'
+     * of this component. This is only relevant to HBoxes, which will
+     * ensure that their children's main text lines line up. These
+     * dimensions are given with respect to the top of this component,
+     * including padding. The default implementation given here returns
+     * undefined, indicating that the component does not have a main
+     * text line. Components that do this are simply vertically centered
+     * in the HBox.
+     */
+    EqComponent.prototype.getMainTextLine = function () {
+        return undefined;
+    };
     return EqComponent;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (EqComponent);
@@ -1277,7 +1290,8 @@ var EqContent = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../animation/LayoutState */ "../ts/animation/LayoutState.ts");
-/* harmony import */ var _LinearContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LinearContainer */ "../ts/layout/LinearContainer.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/helpers */ "../ts/main/helpers.ts");
+/* harmony import */ var _LinearContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LinearContainer */ "../ts/layout/LinearContainer.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1293,6 +1307,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 })();
 
 
+
 var HBox = /** @class */ (function (_super) {
     __extends(HBox, _super);
     function HBox(children, padding) {
@@ -1302,15 +1317,72 @@ var HBox = /** @class */ (function (_super) {
         return _this;
     }
     HBox.prototype.calcHeight = function () {
-        var maxHeight = 0;
+        // Line up text of children, then return their position relative to this component
+        // Sort children into those with a line and those without
+        // Store their line if they have one
+        var childrenWithLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["newMap"])();
+        var childrenWithoutLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["newMap"])();
         for (var i = 0; i < this.children.length; i++) {
-            var currChild = this.children[i];
-            var childHeight = currChild.getHeight();
-            if (childHeight > maxHeight) {
-                maxHeight = childHeight;
+            var child = this.children[i];
+            var line = child.getMainTextLine();
+            if (line === undefined) {
+                childrenWithoutLine.set(child, undefined);
+            }
+            else {
+                childrenWithLine.set(child, line);
             }
         }
-        return maxHeight + this.padding.height();
+        // Calculate the height that the aligned children will take up
+        // To do this, we find the maximum of two distances:
+        //  - From the middle of the main line to the top of the component
+        //  - From the middle of the main line to the bottom of the component
+        // And we add them together.
+        var maxAboveAligned = 0;
+        var maxBelowAligned = 0;
+        var lineHeight; // Must be consistently one of CanvasController.termHeights for all components
+        childrenWithLine.forEach(function (line, component) {
+            lineHeight = line[1] - line[0];
+            var compHeight = component.getHeight();
+            var middleOfLine = (line[0] + line[1]) / 2;
+            var above = middleOfLine;
+            var below = compHeight - middleOfLine;
+            if (above > maxAboveAligned) {
+                maxAboveAligned = above;
+            }
+            if (below > maxBelowAligned) {
+                maxBelowAligned = below;
+            }
+        });
+        // See if any non-aligned components will poke above/below this
+        // when centered with the middle of the aligned line
+        var maxAboveNonAligned = maxAboveAligned;
+        var maxBelowNonAligned = maxBelowAligned;
+        childrenWithoutLine.forEach(function (nothing, component) {
+            var halfCompHeight = component.getHeight() / 2;
+            if (halfCompHeight > maxAboveNonAligned) {
+                maxAboveNonAligned = halfCompHeight;
+            }
+            if (halfCompHeight > maxBelowNonAligned) {
+                maxBelowNonAligned = halfCompHeight;
+            }
+        });
+        // Case for if there are no aligned children
+        if (childrenWithLine.size === 0) {
+            this.mainLine = undefined;
+            var finalHeight = maxAboveNonAligned + maxBelowNonAligned + this.padding.height();
+            this.middleMainLineDist = finalHeight / 2;
+            return finalHeight;
+        }
+        // Distance between top of this and start of aligned part
+        var topAlignedDist = maxAboveNonAligned > maxAboveAligned ? maxAboveNonAligned - maxAboveAligned : 0;
+        // Distance from top of this to top of main line
+        var topMainLineDist = this.padding.top + topAlignedDist + maxAboveAligned - lineHeight / 2;
+        // Distance from top of this to bottom of main line
+        var botMainLineDist = topMainLineDist + lineHeight;
+        this.middleMainLineDist = topMainLineDist + (botMainLineDist - topMainLineDist) / 2;
+        this.mainLine = [topMainLineDist, botMainLineDist];
+        // The final height
+        return maxAboveNonAligned + maxBelowNonAligned + this.padding.height();
     };
     HBox.prototype.calcWidth = function () {
         var totalWidth = 0;
@@ -1320,22 +1392,34 @@ var HBox = /** @class */ (function (_super) {
         }
         return totalWidth + this.padding.width();
     };
+    HBox.prototype.getMainTextLine = function () {
+        return this.mainLine.slice();
+    };
     HBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorObj, mouseEnter, mouseExit, mouseClick, tempContent) {
         var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_0__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
-        var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
         var upToX = tlx + this.padding.left * currScale;
         for (var i = 0; i < this.children.length; i++) {
             var currChild = this.children[i];
             var childHeight = currChild.getHeight() * currScale;
-            //Position child in the middle vertically
-            var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
+            var childLine = currChild.getMainTextLine();
+            // Position child in the middle of the main line if it isn't aligned
+            // Position its main line in the middle of this's main line if it is
+            var childTLY = tly;
+            if (childLine) {
+                childLine[0] *= currScale;
+                childLine[1] *= currScale;
+                childTLY += this.middleMainLineDist * currScale - (childLine[1] + childLine[0]) / 2;
+            }
+            else {
+                childTLY += this.middleMainLineDist * currScale - childHeight / 2;
+            }
             upToX += currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorObj, mouseEnter, mouseExit, mouseClick, tempContent).width;
         }
         layouts.set(this, state);
         return state;
     };
     return HBox;
-}(_LinearContainer__WEBPACK_IMPORTED_MODULE_1__["default"]));
+}(_LinearContainer__WEBPACK_IMPORTED_MODULE_2__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (HBox);
 
 
@@ -1926,7 +2010,13 @@ var RootContainer = /** @class */ (function (_super) {
         _this.index = index;
         _this.argument = argument;
         _this.radical = radical;
-        _this.termHeights = termHeights;
+        if (_this.termHeights === undefined || _this.termHeights.length === 0) {
+            // Edge case: sometimes a RootContainer is constructed before any terms exist
+            _this.termHeights = [20, 20, 20];
+        }
+        else {
+            _this.termHeights = termHeights;
+        }
         _this.calcMetrics();
         _this.width = _this.calcWidth();
         _this.height = _this.calcHeight();
@@ -1987,12 +2077,19 @@ var RootContainer = /** @class */ (function (_super) {
         this.calcMetrics();
         _super.prototype.recalcDimensions.call(this);
     };
+    RootContainer.prototype.getMainTextLine = function () {
+        var argLine = this.argument.getMainTextLine();
+        var toAdd = this.indexTopOverflow + this.padding.top;
+        argLine[0] += toAdd;
+        argLine[1] += toAdd;
+        return argLine;
+    };
     RootContainer.prototype.calcWidth = function () {
         var realIdxLeftPortrusion = Math.max(this.indexLeftOverflow, 0);
         return realIdxLeftPortrusion + this.kinkWidth + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
     };
     RootContainer.prototype.calcHeight = function () {
-        return this.indexTopOverflow * 2 + this.argument.getHeight() + this.padding.height();
+        return this.indexTopOverflow + this.argument.getHeight() + this.padding.height();
     };
     /**
      * Add the Layout State for this component, and any other
@@ -2095,25 +2192,29 @@ var SubSuper = /** @class */ (function (_super) {
         _this.top = top;
         _this.middle = middle;
         _this.bottom = bottom;
-        _this.topPortrusion = _this.top.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * _this.portrusionProportion;
-        _this.bottomPortrusion = _this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * _this.portrusionProportion;
-        if (_this.topPortrusion > _this.bottomPortrusion) {
-            _this.topBlank = 0;
-            _this.bottomBlank = _this.topPortrusion - _this.bottomPortrusion;
-        }
-        else {
-            _this.bottomBlank = 0;
-            _this.topBlank = _this.bottomPortrusion - _this.topPortrusion;
-        }
-        _this.width = _this.calcWidth();
+        _this.recalcPortrusion();
         _this.height = _this.calcHeight();
+        _this.width = _this.calcWidth();
         return _this;
     }
+    SubSuper.prototype.recalcPortrusion = function () {
+        this.topPortrusion = this.top.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * this.portrusionProportion;
+        this.bottomPortrusion = this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * this.portrusionProportion;
+    };
     SubSuper.prototype.recalcDimensions = function () {
         this.top.recalcDimensions();
         this.middle.recalcDimensions();
         this.bottom.recalcDimensions();
+        this.recalcPortrusion();
         _super.prototype.recalcDimensions.call(this);
+    };
+    SubSuper.prototype.getMainTextLine = function () {
+        var middleLine = this.middle.getMainTextLine();
+        // Add the y position of the middle inside this container
+        var toAdd = this.topPortrusion + this.padding.top;
+        middleLine[0] += toAdd;
+        middleLine[1] += toAdd;
+        return middleLine;
     };
     SubSuper.prototype.calcWidth = function () {
         //Width of the right portion, ie the top and bottom
@@ -2122,19 +2223,19 @@ var SubSuper = /** @class */ (function (_super) {
     };
     SubSuper.prototype.calcHeight = function () {
         return this.middle.getHeight()
-            + this.topPortrusion + this.topBlank
-            + this.bottomPortrusion + this.bottomBlank
+            + this.topPortrusion
+            + this.bottomPortrusion
             + this.padding.height();
     };
     SubSuper.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
         var layout = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         //Add the middle
-        var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.padding.top) * currScale, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         var rightX = middleLayout.tlx + middleLayout.width;
         //Add the top
-        this.top.addLayout(layout, layouts, rightX, tly + (this.padding.top + this.topBlank) * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        this.top.addLayout(layout, layouts, rightX, tly + this.padding.top * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         //Add the bottom
-        this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale) * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale) * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         //Add own
         layouts.set(this, layout);
         return layout;
@@ -2381,6 +2482,9 @@ var Term = /** @class */ (function (_super) {
         this.halfInnerHeight = this.halfInnerHeights[tier];
         this.ascent = this.ascents[tier];
     };
+    Term.prototype.getMainTextLine = function () {
+        return [this.padding.top, this.height - this.padding.bottom];
+    };
     Term.prototype.calcHeight = function () {
         var tier = window['currentWidthTier'];
         return this.heights[tier] + this.padding.height();
@@ -2455,16 +2559,15 @@ var TightHBox = /** @class */ (function (_super) {
         return totalWidth + this.padding.width() - numTerms * widthDiff;
     };
     //Override to reduce term padding.
-    TightHBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
+    TightHBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorObj, mouseEnter, mouseExit, mouseClick, tempContent) {
         var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_3__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
-        var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
         var upToX = tlx + this.padding.left * currScale;
         for (var i = 0; i < this.children.length; i++) {
             var currChild = this.children[i];
             var childHeight = currChild.getHeight() * currScale;
             //Position child in the middle vertically
-            var childTLY = (innerHeight - childHeight) / 2 + this.padding.top * currScale + tly;
-            var childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+            var childTLY = this.middleMainLineDist * currScale - childHeight / 2 + tly;
+            var childLayout = currChild.addLayout(state, layouts, upToX, childTLY, currScale, opacityObj, colorObj, mouseEnter, mouseExit, mouseClick, tempContent);
             if (currChild instanceof _Term__WEBPACK_IMPORTED_MODULE_2__["default"]) {
                 childLayout.tighten(widthDiff * currScale);
             }
@@ -4766,7 +4869,6 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         });
         _this.selection.canvasInstance = _this;
         _this.currStep = step.selected;
-        _this.recalc();
         // Don't allow going to next step
         _this.canvas.removeEventListener('click', _this.handleMouseClick);
         _this.canvas.removeEventListener('mousemove', _this.handleMouseMove);
@@ -4965,7 +5067,8 @@ var CreatorCanvasController = /** @class */ (function (_super) {
      * @param y Y-ordinate of mouse
      */
     CreatorCanvasController.prototype.finalizeAdd = function (x, y) {
-        this.undoRedo.publishChange(this.getChangedLayout(x, y, true));
+        var newLayout = this.getChangedLayout(x, y, true);
+        this.undoRedo.publishChange(newLayout);
         this.selection.adding = undefined;
     };
     /**
@@ -5074,7 +5177,6 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             var unusedRef = void 0;
             for (var i = 0; i < currState.radicals; i++) {
                 var ref = 'r' + i;
-                console.log(ref);
                 var inCurr = currStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(currStep.root, ref);
                 var inNext = nextStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(nextStep.root, ref);
                 var inPrev = prevStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(prevStep.root, ref);
@@ -8705,7 +8807,6 @@ var QuizConfigurationComponent = /** @class */ (function () {
             var childEl = _this.quizObj.children[i];
             var template = Object(_helpers__WEBPACK_IMPORTED_MODULE_4__["deepClone"])(_this.formatTemplate);
             template.steps[0].root.children[0] = childEl;
-            console.log(template);
             var canv = new _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_5__["default"](container.nativeElement, template);
         });
     };

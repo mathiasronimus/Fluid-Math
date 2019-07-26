@@ -68,7 +68,6 @@ export default class CreatorCanvasController extends CanvasController {
         });
         this.selection.canvasInstance = this;
         this.currStep = step.selected;
-        this.recalc();
         // Don't allow going to next step
         this.canvas.removeEventListener('click', this.handleMouseClick as () => void);
         this.canvas.removeEventListener('mousemove', this.handleMouseMove);
@@ -305,7 +304,8 @@ export default class CreatorCanvasController extends CanvasController {
      * @param y Y-ordinate of mouse
      */
     private finalizeAdd(x: number, y: number) {
-        this.undoRedo.publishChange(this.getChangedLayout(x, y, true));
+        const newLayout = this.getChangedLayout(x, y, true);
+        this.undoRedo.publishChange(newLayout);
         this.selection.adding = undefined;
     }
 
@@ -412,7 +412,6 @@ export default class CreatorCanvasController extends CanvasController {
             let unusedRef;
             for (let i = 0; i < currState.radicals; i++) {
                 const ref = 'r' + i;
-                console.log(ref);
                 const inCurr = currStep && inLayout(currStep.root, ref);
                 const inNext = nextStep && inLayout(nextStep.root, ref);
                 const inPrev = prevStep && inLayout(prevStep.root, ref);

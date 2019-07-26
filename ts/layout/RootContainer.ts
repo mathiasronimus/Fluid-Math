@@ -38,8 +38,6 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
     // The distance that the index rises above the top of the root.
     // This happens when something taller than a regular term is put
     // in the index. If this isn't the case, this will be set to 0. 
-    // This is added to the bottom to ensure the arg text
-    // remains vertically centered.
     private indexTopOverflow: number;
     // If argument is taller than a normal term, this will be >= 0.
     private emptySpaceAboveIndex: number;
@@ -67,7 +65,12 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         this.index = index;
         this.argument = argument;
         this.radical = radical;
-        this.termHeights = termHeights;
+        if (this.termHeights === undefined || this.termHeights.length === 0) {
+            // Edge case: sometimes a RootContainer is constructed before any terms exist
+            this.termHeights = [20, 20, 20];
+        } else {
+            this.termHeights = termHeights;
+        }
         this.calcMetrics();
         this.width = this.calcWidth();
         this.height = this.calcHeight();
@@ -131,13 +134,21 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         super.recalcDimensions();
     }
 
+    getMainTextLine(): [number, number] {
+        const argLine = this.argument.getMainTextLine();
+        const toAdd = this.indexTopOverflow + this.padding.top;
+        argLine[0] += toAdd;
+        argLine[1] += toAdd;
+        return argLine;
+    }
+
     protected calcWidth(): number {
         const realIdxLeftPortrusion = Math.max(this.indexLeftOverflow, 0);
         return realIdxLeftPortrusion + this.kinkWidth + C.rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
     }
 
     protected calcHeight(): number {
-        return this.indexTopOverflow * 2 + this.argument.getHeight() + this.padding.height();
+        return this.indexTopOverflow + this.argument.getHeight() + this.padding.height();
     }
 
     /**

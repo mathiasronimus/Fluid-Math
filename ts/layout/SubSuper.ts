@@ -24,12 +24,8 @@ export default class SubSuper extends EqContainer<LayoutState> {
     protected portrusionProportion: number;
     //The vertical amount the top portrudes from the middle
     private topPortrusion: number;
-    //The amount of blank space above the top
-    private topBlank: number; 
     //The vertical amount the bottom portrudes from the middle
     private bottomPortrusion: number;
-    //The amount of blank space below the bottom
-    private bottomBlank: number;
 
     constructor(top: HBox, middle: HBox, bottom: HBox, portrusion: number, padding: Padding) {
         super(padding);
@@ -37,25 +33,31 @@ export default class SubSuper extends EqContainer<LayoutState> {
         this.top = top;
         this.middle = middle;
         this.bottom = bottom;
+        this.recalcPortrusion();
+        this.height = this.calcHeight();
+        this.width = this.calcWidth();
+    }
 
+    protected recalcPortrusion() {
         this.topPortrusion = this.top.getHeight() * C.expScale * this.portrusionProportion;
         this.bottomPortrusion = this.bottom.getHeight() * C.expScale * this.portrusionProportion;
-        if (this.topPortrusion > this.bottomPortrusion) {
-            this.topBlank = 0;
-            this.bottomBlank = this.topPortrusion - this.bottomPortrusion;
-        } else {
-            this.bottomBlank = 0;
-            this.topBlank = this.bottomPortrusion - this.topPortrusion;
-        }
-        this.width = this.calcWidth();
-        this.height = this.calcHeight();
     }
 
     recalcDimensions() {
         this.top.recalcDimensions();
         this.middle.recalcDimensions();
         this.bottom.recalcDimensions();
+        this.recalcPortrusion();
         super.recalcDimensions();
+    }
+
+    getMainTextLine(): [number, number] {
+        const middleLine = this.middle.getMainTextLine();
+        // Add the y position of the middle inside this container
+        const toAdd = this.topPortrusion + this.padding.top;
+        middleLine[0] += toAdd;
+        middleLine[1] += toAdd;
+        return middleLine;
     }
 
     protected calcWidth(): number {
@@ -66,8 +68,8 @@ export default class SubSuper extends EqContainer<LayoutState> {
 
     protected calcHeight(): number {
         return    this.middle.getHeight() 
-                + this.topPortrusion + this.topBlank
-                + this.bottomPortrusion + this.bottomBlank
+                + this.topPortrusion
+                + this.bottomPortrusion
                 + this.padding.height();
     }
 
@@ -87,7 +89,7 @@ export default class SubSuper extends EqContainer<LayoutState> {
         let middleLayout = this.middle.addLayout(  
             layout, layouts, 
             tlx + this.padding.left * currScale, 
-            tly + (this.topPortrusion + this.topBlank + this.padding.top) * currScale, 
+            tly + (this.topPortrusion + this.padding.top) * currScale, 
             currScale,
             opacityObj, colorsObj,
             mouseEnter, mouseExit, mouseClick,
@@ -99,7 +101,7 @@ export default class SubSuper extends EqContainer<LayoutState> {
         this.top.addLayout( 
             layout, layouts,
             rightX,
-            tly + (this.padding.top + this.topBlank) * currScale, 
+            tly + this.padding.top * currScale, 
             currScale * C.expScale,
             opacityObj, colorsObj,
             mouseEnter, mouseExit, mouseClick,
@@ -110,7 +112,7 @@ export default class SubSuper extends EqContainer<LayoutState> {
         this.bottom.addLayout(  
             layout, layouts,
             rightX, 
-            tly + layout.height - (this.padding.bottom + this.bottomBlank + this.bottom.getHeight() * C.expScale) * currScale,
+            tly + layout.height - (this.padding.bottom + this.bottom.getHeight() * C.expScale) * currScale,
             currScale * C.expScale,
             opacityObj, colorsObj,
             mouseEnter, mouseExit, mouseClick,

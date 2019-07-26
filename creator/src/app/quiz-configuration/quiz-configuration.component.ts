@@ -49,7 +49,6 @@ export class QuizConfigurationComponent implements AfterViewInit {
       const childEl = this.quizObj.children[i] as string | ContainerFormat;
       const template = deepClone(this.formatTemplate) as FileFormat;
       (template.steps[0].root as LinearContainerFormat).children[0] = childEl;
-      console.log(template);
       const canv = new CanvasController(container.nativeElement, template);
     });
   }
