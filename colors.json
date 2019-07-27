@@ -12,5 +12,6 @@
     "curvedOutlineColor": [0, 0, 0],
     "curvedOutlineOpacity": 0.125,
     "radioButtonColor": [0, 0, 0],
-    "radioButtonOpacity": 0.125
+    "radioButtonOpacity": 0.125,
+    "canvasBackground": [238, 238, 238]
 }

@@ -113,6 +113,7 @@ const constants = {
     fadedOpacity: 0.5,
     normalOpacity: 0.75,
     focusedOpacity: 1,
+    backgroundColor: [0, 0, 0] as [number, number, number],
 
     // Button animations
     buttonHighlightedOpacity: 1,

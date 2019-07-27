@@ -17,7 +17,7 @@ import ProgressAnimation from "../animation/ProgressAnimation";
 import HDivider from "../layout/HDivider";
 import TightHBox from "../layout/TightHBox";
 import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont } from "./helpers";
+import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont, rgbaArrayToCssString } from "./helpers";
 import Radical from "../layout/Radical";
 import RootContainer from "../layout/RootContainer";
 import VCenterVBox from "../layout/VCenterVBox";
@@ -45,6 +45,7 @@ export default class CanvasController {
     protected overlayContainer: HTMLElement;
     protected ctx: CanvasRenderingContext2D;
     protected progress: ProgressIndicator;
+    protected backgroundFill: string;
 
     protected currStep = 0;
     protected steps: StepFormat[];
@@ -104,15 +105,17 @@ export default class CanvasController {
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
         
-        //Create canvas
+        // Create canvas
         let canvasContainer = document.createElement('div');
         canvasContainer.className = 'canvas-container';
         this.container.appendChild(canvasContainer);
         
         this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d", { alpha: false });
         canvasContainer.appendChild(this.canvas);
 
+        // Set background color
+        this.backgroundFill = rgbaArrayToCssString(colors && colors.canvasBackground ? colors.canvasBackground : C.backgroundColor);
         
         // Check if any steps have text
         let hasText = false;
@@ -233,7 +236,7 @@ export default class CanvasController {
      * @param button The element of the button.
      */
     protected highlightButton(button: HTMLElement) {
-        const set = new AnimationSet(() => {}, this.ctx, 0, 0);
+        const set = new AnimationSet(() => {}, this.ctx, 0, 0, this.backgroundFill);
 
         const anim = new class extends BezierCallback {
             constructor() {
@@ -254,7 +257,7 @@ export default class CanvasController {
      * @param button The element of the button.
      */
     protected unhighlightButton(button: HTMLElement) {
-        const set = new AnimationSet(() => {}, this.ctx, 0, 0);
+        const set = new AnimationSet(() => {}, this.ctx, 0, 0, this.backgroundFill);
 
         const anim = new class extends BezierCallback {
             constructor() {
@@ -313,7 +316,7 @@ export default class CanvasController {
             this.currStates.forEach(state => allStates.push(state));
 
             // The animations that will be played.
-            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, allStates);
+            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates);
 
             currentlyOn.forEach((layout: LayoutState) => {
                 let handler = this.mouseClickEvents.get(layout);
@@ -358,7 +361,7 @@ export default class CanvasController {
             this.currStates.forEach(state => allStates.push(state));
 
             // The animations that will be played.
-            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, allStates);
+            const animSet = new AnimationSet(undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates);
 
             // For each layout the cursor is on, check if it
             // was on beforehand. If it was not, fire enter
@@ -466,7 +469,10 @@ export default class CanvasController {
      * Does not recalculate layout.
      */
     protected redraw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.save();
+        this.ctx.fillStyle = this.backgroundFill;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
         this.currStates.forEach(f => {
             this.ctx.save();
             if (f.component instanceof EqContent) {
@@ -657,7 +663,7 @@ export default class CanvasController {
             if (whenDone) {
                 whenDone();
             }
-        }, this.ctx, this.lastWidth, this.lastHeight);
+        }, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill);
 
         //Get the step options for this transition
         let stepOptions: TransitionOptionsFormat;

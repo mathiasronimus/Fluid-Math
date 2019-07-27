@@ -18,6 +18,8 @@ export interface ColorsFormat {
     quizIncorrectColor?: [number, number, number];
     // Colors of content
     colors?: {[color: string]: [number, number, number]};
+    // Background color of canvas
+    canvasBackground?: [number, number, number];
 }
 
 /**

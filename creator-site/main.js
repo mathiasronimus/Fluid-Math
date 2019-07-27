@@ -115,9 +115,10 @@ var AnimationSet = /** @class */ (function () {
      * @param ctx Context of the canvas to clear/draw to.
      * @param clearWidth The width of the canvas to clear.
      * @param clearHeight The height of the canvas to clear.
+     * @param clearFill The background color to fill at the start of each frame.
      * @param drawStates (optional) the states to draw after each frame.
      */
-    function AnimationSet(done, ctx, clearWidth, clearHeight, drawStates) {
+    function AnimationSet(done, ctx, clearWidth, clearHeight, clearFill, drawStates) {
         this.stopped = false;
         this.animations = [];
         this.done = done;
@@ -125,6 +126,7 @@ var AnimationSet = /** @class */ (function () {
         this.clearWidth = clearWidth;
         this.clearHeight = clearHeight;
         this.states = drawStates;
+        this.clearFill = clearFill;
     }
     AnimationSet.prototype.addAnimation = function (anim) {
         this.animations.push(anim);
@@ -136,7 +138,11 @@ var AnimationSet = /** @class */ (function () {
         this.numRunning = this.animations.length;
         var this_ = this;
         var doAll = function (timestamp) {
-            this_.ctx.clearRect(0, 0, this_.clearWidth, this_.clearHeight);
+            // Clear the canvas
+            this_.ctx.save();
+            this_.ctx.fillStyle = this_.clearFill;
+            this_.ctx.fillRect(0, 0, this_.clearWidth, this_.clearHeight);
+            this_.ctx.restore();
             this_.animations.forEach(function (a) {
                 a.run(timestamp);
             });
@@ -1131,6 +1137,7 @@ var EqContainer = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqComponent */ "../ts/layout/EqComponent.ts");
 /* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../ts/main/consts.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/helpers */ "../ts/main/helpers.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1144,6 +1151,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
 
 
 var EqContent = /** @class */ (function (_super) {
@@ -1227,7 +1235,7 @@ var EqContent = /** @class */ (function (_super) {
      * @param opacity The opacity.
      */
     EqContent.prototype.setCtxStyle = function (ctx, color, opacity) {
-        var style = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + opacity + ")";
+        var style = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["rgbaArrayToCssString"])(color.concat([opacity]));
         ctx.fillStyle = style;
         ctx.strokeStyle = style;
     };
@@ -2895,13 +2903,15 @@ var CanvasController = /** @class */ (function () {
         this.handleMouseClick = this.handleMouseClick.bind(this);
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
-        //Create canvas
+        // Create canvas
         var canvasContainer = document.createElement('div');
         canvasContainer.className = 'canvas-container';
         this.container.appendChild(canvasContainer);
         this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d", { alpha: false });
         canvasContainer.appendChild(this.canvas);
+        // Set background color
+        this.backgroundFill = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["rgbaArrayToCssString"])(colors && colors.canvasBackground ? colors.canvasBackground : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].backgroundColor);
         // Check if any steps have text
         var hasText = false;
         for (var i = 0; i < this.steps.length; i++) {
@@ -3001,7 +3011,7 @@ var CanvasController = /** @class */ (function () {
      * @param button The element of the button.
      */
     CanvasController.prototype.highlightButton = function (button) {
-        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0);
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
         var anim = new /** @class */ (function (_super) {
             __extends(class_1, _super);
             function class_1() {
@@ -3021,7 +3031,7 @@ var CanvasController = /** @class */ (function () {
      * @param button The element of the button.
      */
     CanvasController.prototype.unhighlightButton = function (button) {
-        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0);
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
         var anim = new /** @class */ (function (_super) {
             __extends(class_2, _super);
             function class_2() {
@@ -3075,7 +3085,7 @@ var CanvasController = /** @class */ (function () {
             var allStates_1 = [];
             this.currStates.forEach(function (state) { return allStates_1.push(state); });
             // The animations that will be played.
-            var animSet_1 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, allStates_1);
+            var animSet_1 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_1);
             currentlyOn_1.forEach(function (layout) {
                 var handler = _this.mouseClickEvents.get(layout);
                 handler(layout, animSet_1, _this);
@@ -3116,7 +3126,7 @@ var CanvasController = /** @class */ (function () {
             var allStates_2 = [];
             this.currStates.forEach(function (state) { return allStates_2.push(state); });
             // The animations that will be played.
-            var animSet_2 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, allStates_2);
+            var animSet_2 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_2);
             // For each layout the cursor is on, check if it
             // was on beforehand. If it was not, fire enter
             // event.
@@ -3218,7 +3228,10 @@ var CanvasController = /** @class */ (function () {
      */
     CanvasController.prototype.redraw = function () {
         var _this = this;
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.save();
+        this.ctx.fillStyle = this.backgroundFill;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
         this.currStates.forEach(function (f) {
             _this.ctx.save();
             if (f.component instanceof _layout_EqContent__WEBPACK_IMPORTED_MODULE_11__["default"]) {
@@ -3371,7 +3384,7 @@ var CanvasController = /** @class */ (function () {
             if (whenDone) {
                 whenDone();
             }
-        }, this.ctx, this.lastWidth, this.lastHeight);
+        }, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill);
         //Get the step options for this transition
         var stepOptions;
         var reverseStep;
@@ -4022,6 +4035,7 @@ var constants = {
     fadedOpacity: 0.5,
     normalOpacity: 0.75,
     focusedOpacity: 1,
+    backgroundColor: [0, 0, 0],
     // Button animations
     buttonHighlightedOpacity: 1,
     buttonHighlightDuration: 200,
@@ -4038,11 +4052,12 @@ var constants = {
 /*!*****************************!*\
   !*** ../ts/main/helpers.ts ***!
   \*****************************/
-/*! exports provided: addStyleSheet, getFont, getMetrics, isIE, line, tri, getWidthTier, getFontSizeForTier, newMap */
+/*! exports provided: rgbaArrayToCssString, addStyleSheet, getFont, getMetrics, isIE, line, tri, getWidthTier, getFontSizeForTier, newMap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rgbaArrayToCssString", function() { return rgbaArrayToCssString; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addStyleSheet", function() { return addStyleSheet; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFont", function() { return getFont; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMetrics", function() { return getMetrics; });
@@ -4058,6 +4073,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
+ * Given an array of r, g, b, and a values respectively,
+ * return the CSS representation of that color.
+ * @param colorArr The CSS color.
+ */
+function rgbaArrayToCssString(colorArr) {
+    var r = colorArr[0];
+    var g = colorArr[1];
+    var b = colorArr[2];
+    var a = colorArr[3];
+    if (a !== undefined) {
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    }
+    else {
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+}
+/**
  * Add styles based on the contents of consts
  *
  * @param otherColors If present, use other colors than the default.
@@ -4067,7 +4099,7 @@ function addStyleSheet(otherColors) {
     var styleText = '';
     Object.keys(otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors).forEach(function (colorName) {
         var colorVal = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors[colorName];
-        styleText += '.' + colorName + ' { color: ' + 'rgb(' + colorVal[0] + ',' + colorVal[1] + ',' + colorVal[2] + ')}';
+        styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
     });
     styleEl.appendChild(document.createTextNode(styleText));
     document.head.appendChild(styleEl);

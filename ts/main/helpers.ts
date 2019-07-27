@@ -3,6 +3,23 @@ import Map from 'map-or-similar';
 import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from './FileFormat';
 
 /**
+ * Given an array of r, g, b, and a values respectively,
+ * return the CSS representation of that color.
+ * @param colorArr The CSS color.
+ */
+export function rgbaArrayToCssString(colorArr: number[]) {
+    const r = colorArr[0];
+    const g = colorArr[1];
+    const b = colorArr[2];
+    const a = colorArr[3];
+    if (a !== undefined) {
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    } else {
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+}
+
+/**
  * Add styles based on the contents of consts
  * 
  * @param otherColors If present, use other colors than the default.
@@ -12,7 +29,7 @@ export function addStyleSheet(otherColors?: {[colName: string]: [number, number,
     let styleText = '';
     Object.keys(otherColors? otherColors : C.colors).forEach(colorName => {
         const colorVal = C.colors[colorName];
-        styleText += '.' + colorName + ' { color: ' + 'rgb(' + colorVal[0] + ',' + colorVal[1] + ',' + colorVal[2] + ')}';
+        styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
     });
     styleEl.appendChild(document.createTextNode(styleText));
     document.head.appendChild(styleEl);

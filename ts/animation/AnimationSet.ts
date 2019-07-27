@@ -15,6 +15,7 @@ export default class AnimationSet {
     private ctx: CanvasRenderingContext2D;
     private clearWidth: number;
     private clearHeight: number;
+    private clearFill: string;
     private states: LayoutState[];
     private stopped = false;
 
@@ -24,15 +25,18 @@ export default class AnimationSet {
      * @param ctx Context of the canvas to clear/draw to.
      * @param clearWidth The width of the canvas to clear.
      * @param clearHeight The height of the canvas to clear.
+     * @param clearFill The background color to fill at the start of each frame.
      * @param drawStates (optional) the states to draw after each frame.
      */
-    constructor(done: () => void, ctx: CanvasRenderingContext2D, clearWidth: number, clearHeight: number, drawStates?: LayoutState[]) {
+    constructor(done: () => void, ctx: CanvasRenderingContext2D, clearWidth: number, clearHeight: number, 
+                clearFill: string, drawStates?: LayoutState[]) {
         this.animations = [];
         this.done = done;
         this.ctx = ctx;
         this.clearWidth = clearWidth;
         this.clearHeight = clearHeight;
         this.states = drawStates;
+        this.clearFill = clearFill;
     }
 
     public addAnimation(anim: BezierCallback) {
@@ -47,7 +51,12 @@ export default class AnimationSet {
         let this_ = this;
 
         let doAll = function(timestamp: number) {
-            this_.ctx.clearRect(0, 0, this_.clearWidth, this_.clearHeight);
+            // Clear the canvas
+            this_.ctx.save();
+            this_.ctx.fillStyle = this_.clearFill;
+            this_.ctx.fillRect(0, 0, this_.clearWidth, this_.clearHeight);
+            this_.ctx.restore();
+
             this_.animations.forEach(a => {
                 a.run(timestamp);
             });

@@ -2,6 +2,7 @@ import EqComponent from "./EqComponent";
 import Padding from "./Padding";
 import C from '../main/consts';
 import ContentLayoutState from "../animation/ContentLayoutState";
+import { rgbaArrayToCssString } from "../main/helpers";
 
 export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent<L> {
 
@@ -100,7 +101,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
      * @param opacity The opacity.
      */
     protected setCtxStyle(ctx: CanvasRenderingContext2D, color: number[], opacity: number) {
-        let style = "rgba(" + color[0] + "," + color[1] + "," + color[2] + "," + opacity + ")";
+        const style = rgbaArrayToCssString(color.concat([opacity]));
         ctx.fillStyle = style;
         ctx.strokeStyle = style;
     }
