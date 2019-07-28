@@ -12,85 +12,62 @@
 </head>
 
 <body>
+
+    <h1>Intro</h1>
     <p>
-        (Tap/Click the examples below to play them)
+        The theory behind <em>Fluid Math</em> is that seeing things move from place to place is a more intuitive way of learning algebra.
     </p>
-    <h1>The Basics</h1>
     <p>
-        Demonstrating expanding a bracket:
-    </p>
-    <div class="eqContainer" data-src="examples/expandbracket.json" data-fix-height></div>
-    <p>
-        Showing a static equation:
-    </p>
-    <div class="eqContainer" data-src="examples/staticequation.json"></div>
-    <h1>Appearance</h1>
-    <p>
-        Using a custom font:
-    </p>
-    <div class="eqContainer" data-src="examples/customfont.json"></div>
-    <p>
-        Using colors/opacity and their transitions:
-    </p>
-    <div class="eqContainer" data-src="examples/colors.json"></div>
-    <p>
-        The same <em class="red">colors</em> can automatically
-        be used on the rest of the page.
-    </p>
-    <h1>
-        Fractions
-    </h1>
-    <p>
-        Demonstrating the rule for adding fractions:
+        The example below shows how to add two algebraic fractions. It's like a slideshow with transitions, and the buttons at the bottom
+        navigate through it.
     </p>
     <div class="eqContainer" data-src="examples/addfractions.json"></div>
     <p>
-        Simplifying nested fractions:
+        Besides fractions, <em>Fluid Math</em> can render many other things. They're summarized below:
     </p>
-    <div class="eqContainer" data-src="examples/nestedfractions.json" data-fix-height></div>
+    <h1>Quizzes</h1>
     <p>
-        A fraction inside an exponent:
+        <em>Quizzes</em> provide a way to test students on what they've just been taught. They're solely multi-choice for now:
     </p>
-    <div class="eqContainer" data-src="examples/fractionalexponent.json"></div>
+    <div class="eqContainer" data-src="examples/quiz.json" data-fix-height></div>
     <h1>
-        Exponents and Subscripts
+        Exponents/Subscripts
     </h1>
     <p>
-        Rearranging from exponential to log form:
+        <em>Exponents/Subscripts</em> are supported in any form, including fractional, nested, etc. The below example shows an
+        equation being rearranged from exponential to logarithmic form.
     </p>
-    <div class="eqContainer" data-src="examples/explogform.json"></div>
-    <p>
-        A double exponent:
-    </p>
-    <div class="eqContainer" data-src="examples/doubleexponent.json" data-fix-height></div>
+    <div class="eqContainer" data-src="examples/explogform.json" data-fix-height></div>
     <h1>
         Roots
     </h1>
     <p>
-        Converting a square root to a power:
-    </p>
-    <div class="eqContainer" data-src="examples/roottoexponent.json" data-fix-height></div>
-    <p>
-        The quadratic formula:
+        Where would we be without <em>roots</em>? Also note that by providing just one step, we can display static equations
+        rather than animated ones.
     </p>
     <div class="eqContainer" data-src="examples/quadformula.json"></div>
+    <h1>Tables</h1>
+    <p>
+        <em>Tables</em> are useful for displaying data, or they can just be used for layout, Web 1.0 style. The below example
+        shows how tables can be used to expand double brackets:
+    </p>
+    <div class="eqContainer" data-src="examples/tableexpand.json" data-fix-height></div>
+    <p>
+        They could also be used for teaching some areas of Computer Science, especially sorting algorithms. The below example
+        is of bubble sort (never use it, by the way). This is also a demo of the autoplay function.
+    </p>
+    <div class="eqContainer" data-src="examples/bubblesort.json"></div>
     <h1>
-        Stress Test
+        Other Features
     </h1>
-    <div class="eqContainer" data-src="examples/stresstest.json"></div>
-    <h1>Autoplay</h1>
-    <div class="eqContainer" data-src="examples/addlogsautoplay.json"></div>
-    <span class="belowAutoplay">Autoplay without text:</span>
-    <div class="eqContainer" data-src="examples/divisionalgebra.json" data-fix-height></div>
-    <span class="belowAutoplay">Autoplay with text:</span>
-    <h1>
-        Quizzes
-    </h1>
-    <div class="eqContainer" data-src="examples/quiz.json" data-fix-height></div>
-    <h1>
-        Tables
-    </h1>
-    <div class="eqContainer" data-src="examples/tablenolines.json"></div>
+    <p>
+        <em>Fluid Math</em> can also use custom fonts; either from Google Fonts, or self-hosted.
+    </p>
+    <div class="eqContainer" data-src="examples/customfont.json"></div>
+    <div class="eqContainer" data-src="examples/customfont2.json"></div>
+    <p>
+        See the <a href="https://mathiasronimus.github.io/Fluid-Math/testingpage.html">testing page</a> for a full range of other layouts it can handle.
+    </p>
     <script src="fluid-math.js"></script>
     <script>
         loadEqContainer('eqContainer');

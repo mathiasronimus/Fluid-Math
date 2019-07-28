@@ -1,22 +1,26 @@
 <div id="outer">
-  <div  *ngFor="let s of Arr(numSteps).fill(1); let stepIdx = index;" 
-        class="step"
-        [ngClass]="{'selected': step.selected === stepIdx}">
-    <div class="step-left"
-        (mouseenter)="showThumbnail[stepIdx] = true;"
-        (mouseleave)="showThumbnail[stepIdx] = false;"
-        (click)="select(stepIdx)">
+  <div class="scrollArrow material-icons" (click)="scrollLeft()">keyboard_arrow_left</div>
+  <div class="scrollInner" #scrollContainer>
+    <div  *ngFor="let s of Arr(numSteps).fill(1); let stepIdx = index;" 
+      class="step"
+      [ngClass]="{'selected': step.selected === stepIdx}">
+      <div class="step-left"
+      (mouseenter)="showThumbnail[stepIdx] = true;"
+      (mouseleave)="showThumbnail[stepIdx] = false;"
+      (click)="select(stepIdx)">
       {{ showThumbnail[stepIdx] ? '' : stepIdx }}
       <canvas #canvas class="thumbnail" [ngClass]="{'show': showThumbnail[stepIdx]}"></canvas>
     </div>
     <div class="step-right" *ngIf="step.selected === stepIdx">
       <span class="material-icons" (click)="add();">add</span>
       <span class="material-icons" 
-            (click)="delete()" 
-            [ngClass]="{'unavailable': !deleteAvailable()}">delete</span>
+      (click)="delete()" 
+      [ngClass]="{'unavailable': !deleteAvailable()}">delete</span>
       <span class="material-icons"
-            (click)="showStepOptions()"
-            [ngClass]="{'unavailable': !stepOptionsAvailable()}">settings</span>
+      (click)="showStepOptions()"
+      [ngClass]="{'unavailable': !stepOptionsAvailable()}">settings</span>
     </div>
   </div>
+  </div>
+  <div class="scrollArrow material-icons" (click)="scrollRight()">keyboard_arrow_right</div>
 </div>

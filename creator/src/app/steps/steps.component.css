@@ -3,9 +3,9 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    overflow: hidden;
     color: rgba(255, 255, 255, 0.9);
+    align-items: stretch;
 }
 
 .thumbnail {
@@ -54,4 +54,18 @@
 
 .unavailable {
     color: rgba(255, 255, 255, 0.3);
+}
+
+.scrollInner {
+    flex-grow: 1;
+    display: flex;
+    max-width: calc(100vw - 60px);
+    overflow-x: scroll;
+}
+
+.scrollArrow {
+    vertical-align: middle;
+    background-color: #111;
+    position: relative;
+    z-index: 2;
 }

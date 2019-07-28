@@ -68,6 +68,8 @@ export default class CreatorCanvasController extends CanvasController {
         });
         this.selection.canvasInstance = this;
         this.currStep = step.selected;
+        // Second recalc after super constructor) needed because step is only updated here
+        this.recalc();
         // Don't allow going to next step
         this.canvas.removeEventListener('click', this.handleMouseClick as () => void);
         this.canvas.removeEventListener('mousemove', this.handleMouseMove);
@@ -289,7 +291,8 @@ export default class CreatorCanvasController extends CanvasController {
                 this.parseChildren2D(format.children),
                 this.parseChildrenObj(format.hLines),
                 this.parseChildrenObj(format.vLines),
-                11
+                11,
+                Padding.even(0)
             );
         } else if (type === undefined) {
             throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');

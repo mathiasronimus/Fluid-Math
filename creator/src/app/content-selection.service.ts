@@ -52,8 +52,7 @@ export class ContentSelectionService {
       return {
         type: 'table',
         children: [
-          [null, null],
-          [null, null]
+          [null]
         ],
         hLines: {},
         vLines: {}

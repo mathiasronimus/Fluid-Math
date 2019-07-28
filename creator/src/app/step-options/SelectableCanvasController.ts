@@ -8,6 +8,7 @@ import EqComponent from '@shared/layout/EqComponent';
 import VDivider from '@shared/layout/VDivider';
 import { ContainerFormat, TableFormat } from '@shared/main/FileFormat';
 import TableContainer from '@shared/layout/TableContainer';
+import Padding from '@shared/layout/Padding';
 
 export default class SelectableCanvasController extends CanvasController {
 
@@ -112,7 +113,8 @@ export default class SelectableCanvasController extends CanvasController {
                 children,
                 this.parseChildrenObj(format.hLines),
                 this.parseChildrenObj(format.vLines),
-                11
+                11,
+                Padding.even(0)
             );
         } else {
             return super.parseContainer(containerObj, depth);

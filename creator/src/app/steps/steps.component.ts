@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import RendererCanvasController from './RendererCanvasController';
 import { deepClone } from '../helpers';
@@ -6,6 +6,8 @@ import { SelectedStepService } from '../selected-step.service';
 import { ModalService } from '../modal.service';
 import { StepOptionsComponent } from '../step-options/step-options.component';
 import { FileFormat, StepFormat } from '@shared/main/FileFormat';
+
+const scrollXAmount = 200;
 
 @Component({
   selector: 'app-steps',
@@ -25,6 +27,9 @@ export class StepsComponent implements AfterViewInit {
 
   @ViewChildren('canvas')
   canvasEls: QueryList<ElementRef>;
+
+  @ViewChild('scrollContainer')
+  scrollContainer: ElementRef;
 
   constructor(private undoRedo: UndoRedoService,
               private step: SelectedStepService,
@@ -192,5 +197,19 @@ export class StepsComponent implements AfterViewInit {
       return;
     }
     this.modal.show(StepOptionsComponent);
+  }
+
+  /**
+   * Scroll the steps left some amount.
+   */
+  scrollLeft() {
+    this.scrollContainer.nativeElement.scrollLeft -= scrollXAmount;
+  }
+
+  /**
+   * Scroll the steps right some amount.
+   */
+  scrollRight() {
+    this.scrollContainer.nativeElement.scrollLeft += scrollXAmount;
   }
 }

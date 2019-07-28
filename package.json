@@ -17,6 +17,7 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-lodash": "^3.3.4",
     "babel-preset-env": "^1.7.0",
+    "http-server": "^0.11.1",
     "lodash-webpack-plugin": "^0.11.5",
     "ts-loader": "^5.4.3",
     "typescript": "^3.4.5",
@@ -27,9 +28,9 @@
     "@types/core-js": "^2.5.2",
     "@types/webfontloader": "^1.6.29",
     "bezier-easing": "^2.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "map-or-similar": "^1.5.0",
-    "npm": "^6.9.0",
+    "npm": "^6.10.2",
     "webfontloader": "^1.6.28"
   }
 }

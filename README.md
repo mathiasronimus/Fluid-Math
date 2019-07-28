@@ -1,2 +1,4 @@
 # Fluid Math
-An equation layout and animation engine for the web. Creates embeddable, interactive animations designed for showing mathematical concepts intuitively. See examples [here](https://mathiasronimus.github.io/Fluid-Math/).
+Fluid Math is a teaching tool for showing mathematical concepts visually. Think [Manim](https://github.com/3b1b/manim) but interactive, in-browser, and more focused on algebra than geometry and graphing. See it for yourself [here](https://mathiasronimus.github.io/Fluid-Math/).
+# Tech Details
+Fluid Math is written in TypeScript, and draws to an HTML5 canvas using its own animation and layout engines. It's performant enough to be smooth on mobile devices, and responsive to different screen sizes and touch. Each slideshow is encoded as a JSON file like those in the examples directory. Writing these files out by hand is pretty tiresome, so there's an accompanying single page Angular app for creating them with a GUI. You can read the docs for that [here](https://github.com/mathiasronimus/Fluid-Math/tree/master/creator), or play around with it [here](https://mathiasronimus.github.io/Fluid-Math/creator-site/).

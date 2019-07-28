@@ -1,27 +1,7 @@
 # Creator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.0.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+The creator is a single page Angular app for creating the slideshows. It should be fairly easy to use,
+but it's very much a preview still and doesn't do many of the things you would expect it to. For instance,
+you can drag and drop new content onto the canvas, but you can't drag and drop content already on the canvas.
+It also **does not** warn you if you're going to close the tab and lose your work. Expect improvements to this over
+time, and for now you can try it out [here](https://mathiasronimus.github.io/Fluid-Math/creator-site/).
