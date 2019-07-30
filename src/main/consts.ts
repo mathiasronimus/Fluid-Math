@@ -110,7 +110,9 @@ const constants = {
         "teal": [0, 181, 193],
         "green": [88, 199, 75],
         "orange": [255, 102, 0],
-        "default": [255, 255, 255]
+        "default": [255, 255, 255],
+        "primary": [212,225,87],
+        "secondary": [255,193,7]
     } as {[cName: string]: [number, number, number]},
     fadedOpacity: 0.5,
     normalOpacity: 0.75,

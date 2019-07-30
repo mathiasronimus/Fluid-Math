@@ -4035,7 +4035,9 @@ var constants = {
         "teal": [0, 181, 193],
         "green": [88, 199, 75],
         "orange": [255, 102, 0],
-        "default": [255, 255, 255]
+        "default": [255, 255, 255],
+        "primary": [212, 225, 87],
+        "secondary": [255, 193, 7]
     },
     fadedOpacity: 0.5,
     normalOpacity: 0.75,
@@ -4102,8 +4104,9 @@ function rgbaArrayToCssString(colorArr) {
 function addStyleSheet(otherColors) {
     var styleEl = document.createElement('style');
     var styleText = '';
-    Object.keys(otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors).forEach(function (colorName) {
-        var colorVal = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors[colorName];
+    var colorObj = otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors;
+    Object.keys(colorObj).forEach(function (colorName) {
+        var colorVal = colorObj[colorName];
         styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
     });
     styleEl.appendChild(document.createTextNode(styleText));
@@ -4387,7 +4390,7 @@ var Icon = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "#main-column {\r\n    display: flex;\r\n    flex-direction: column;\r\n    flex-wrap: nowrap;\r\n    max-height: 100vh;\r\n    position: relative;\r\n    z-index: 1;\r\n}\r\n\r\n#middle-row {\r\n    display: flex;\r\n    flex-direction: row;\r\n    flex-wrap: nowrap;\r\n    flex-grow: 1;\r\n}\r\n\r\n#background {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    bottom: 0px;\r\n    right: 0px;\r\n    background-color: rgba(255, 255, 255, 0.25);\r\n}\r\n\r\n#modal-inner {\r\n    left: 50%;\r\n    top: 50%;\r\n    transform: translate(-50%, -50%);\r\n    position: fixed;\r\n    background-color: #111;\r\n    width: 400px;\r\n    max-height: 100vh;\r\n    padding: 10px;\r\n    overflow-y: auto;\r\n    color: rgba(255, 255, 255, 0.9);\r\n}\r\n\r\n#error {\r\n    position: fixed;\r\n    z-index: 2;\r\n    padding: 10px;\r\n    bottom: 30px;\r\n    right: 30px;\r\n    background-color: black;\r\n    color: #EF5350;\r\n    border-radius: 5px;\r\n    display: flex;\r\n    align-items: center;\r\n    border: 1px solid rgba(255, 255, 255, 0.3);\r\n}\r\n\r\n#error .material-icons {\r\n    padding: 5px;\r\n    cursor: pointer;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxhQUFhO0lBQ2Isc0JBQXNCO0lBQ3RCLGlCQUFpQjtJQUNqQixpQkFBaUI7SUFDakIsa0JBQWtCO0lBQ2xCLFVBQVU7QUFDZDs7QUFFQTtJQUNJLGFBQWE7SUFDYixtQkFBbUI7SUFDbkIsaUJBQWlCO0lBQ2pCLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxlQUFlO0lBQ2YsUUFBUTtJQUNSLFNBQVM7SUFDVCxXQUFXO0lBQ1gsVUFBVTtJQUNWLDJDQUEyQztBQUMvQzs7QUFFQTtJQUNJLFNBQVM7SUFDVCxRQUFRO0lBQ1IsZ0NBQWdDO0lBQ2hDLGVBQWU7SUFDZixzQkFBc0I7SUFDdEIsWUFBWTtJQUNaLGlCQUFpQjtJQUNqQixhQUFhO0lBQ2IsZ0JBQWdCO0lBQ2hCLCtCQUErQjtBQUNuQzs7QUFFQTtJQUNJLGVBQWU7SUFDZixVQUFVO0lBQ1YsYUFBYTtJQUNiLFlBQVk7SUFDWixXQUFXO0lBQ1gsdUJBQXVCO0lBQ3ZCLGNBQWM7SUFDZCxrQkFBa0I7SUFDbEIsYUFBYTtJQUNiLG1CQUFtQjtJQUNuQiwwQ0FBMEM7QUFDOUM7O0FBRUE7SUFDSSxZQUFZO0lBQ1osZUFBZTtBQUNuQiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiI21haW4tY29sdW1uIHtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xyXG4gICAgZmxleC13cmFwOiBub3dyYXA7XHJcbiAgICBtYXgtaGVpZ2h0OiAxMDB2aDtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxuICAgIHotaW5kZXg6IDE7XHJcbn1cclxuXHJcbiNtaWRkbGUtcm93IHtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBmbGV4LWRpcmVjdGlvbjogcm93O1xyXG4gICAgZmxleC13cmFwOiBub3dyYXA7XHJcbiAgICBmbGV4LWdyb3c6IDE7XHJcbn1cclxuXHJcbiNiYWNrZ3JvdW5kIHtcclxuICAgIHBvc2l0aW9uOiBmaXhlZDtcclxuICAgIHRvcDogMHB4O1xyXG4gICAgbGVmdDogMHB4O1xyXG4gICAgYm90dG9tOiAwcHg7XHJcbiAgICByaWdodDogMHB4O1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjI1KTtcclxufVxyXG5cclxuI21vZGFsLWlubmVyIHtcclxuICAgIGxlZnQ6IDUwJTtcclxuICAgIHRvcDogNTAlO1xyXG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XHJcbiAgICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjMTExO1xyXG4gICAgd2lkdGg6IDQwMHB4O1xyXG4gICAgbWF4LWhlaWdodDogMTAwdmg7XHJcbiAgICBwYWRkaW5nOiAxMHB4O1xyXG4gICAgb3ZlcmZsb3cteTogYXV0bztcclxuICAgIGNvbG9yOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOSk7XHJcbn1cclxuXHJcbiNlcnJvciB7XHJcbiAgICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgICB6LWluZGV4OiAyO1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIGJvdHRvbTogMzBweDtcclxuICAgIHJpZ2h0OiAzMHB4O1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7XHJcbiAgICBjb2xvcjogI0VGNTM1MDtcclxuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gICAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjMpO1xyXG59XHJcblxyXG4jZXJyb3IgLm1hdGVyaWFsLWljb25zIHtcclxuICAgIHBhZGRpbmc6IDVweDtcclxuICAgIGN1cnNvcjogcG9pbnRlcjtcclxufSJdfQ== */"
+module.exports = "#main-column {\r\n    display: flex;\r\n    flex-direction: column;\r\n    flex-wrap: nowrap;\r\n    max-height: 100vh;\r\n    position: relative;\r\n    z-index: 1;\r\n}\r\n\r\n#middle-row {\r\n    display: flex;\r\n    flex-direction: row;\r\n    flex-wrap: nowrap;\r\n    flex-grow: 1;\r\n}\r\n\r\n#background {\r\n    position: fixed;\r\n    top: 0px;\r\n    left: 0px;\r\n    bottom: 0px;\r\n    right: 0px;\r\n    background-color: rgba(255, 255, 255, 0.25);\r\n}\r\n\r\n#modal-inner {\r\n    left: 50%;\r\n    top: 50%;\r\n    -webkit-transform: translate(-50%, -50%);\r\n            transform: translate(-50%, -50%);\r\n    position: fixed;\r\n    background-color: #111;\r\n    width: 400px;\r\n    max-height: 100vh;\r\n    padding: 10px;\r\n    overflow-y: auto;\r\n    color: rgba(255, 255, 255, 0.9);\r\n}\r\n\r\n#error {\r\n    position: fixed;\r\n    z-index: 2;\r\n    padding: 10px;\r\n    bottom: 30px;\r\n    right: 30px;\r\n    background-color: black;\r\n    color: #EF5350;\r\n    border-radius: 5px;\r\n    display: flex;\r\n    align-items: center;\r\n    border: 1px solid rgba(255, 255, 255, 0.3);\r\n}\r\n\r\n#error .material-icons {\r\n    padding: 5px;\r\n    cursor: pointer;\r\n}\r\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxhQUFhO0lBQ2Isc0JBQXNCO0lBQ3RCLGlCQUFpQjtJQUNqQixpQkFBaUI7SUFDakIsa0JBQWtCO0lBQ2xCLFVBQVU7QUFDZDs7QUFFQTtJQUNJLGFBQWE7SUFDYixtQkFBbUI7SUFDbkIsaUJBQWlCO0lBQ2pCLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxlQUFlO0lBQ2YsUUFBUTtJQUNSLFNBQVM7SUFDVCxXQUFXO0lBQ1gsVUFBVTtJQUNWLDJDQUEyQztBQUMvQzs7QUFFQTtJQUNJLFNBQVM7SUFDVCxRQUFRO0lBQ1Isd0NBQWdDO1lBQWhDLGdDQUFnQztJQUNoQyxlQUFlO0lBQ2Ysc0JBQXNCO0lBQ3RCLFlBQVk7SUFDWixpQkFBaUI7SUFDakIsYUFBYTtJQUNiLGdCQUFnQjtJQUNoQiwrQkFBK0I7QUFDbkM7O0FBRUE7SUFDSSxlQUFlO0lBQ2YsVUFBVTtJQUNWLGFBQWE7SUFDYixZQUFZO0lBQ1osV0FBVztJQUNYLHVCQUF1QjtJQUN2QixjQUFjO0lBQ2Qsa0JBQWtCO0lBQ2xCLGFBQWE7SUFDYixtQkFBbUI7SUFDbkIsMENBQTBDO0FBQzlDOztBQUVBO0lBQ0ksWUFBWTtJQUNaLGVBQWU7QUFDbkIiLCJmaWxlIjoic3JjL2FwcC9hcHAuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIiNtYWluLWNvbHVtbiB7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcclxuICAgIGZsZXgtd3JhcDogbm93cmFwO1xyXG4gICAgbWF4LWhlaWdodDogMTAwdmg7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICB6LWluZGV4OiAxO1xyXG59XHJcblxyXG4jbWlkZGxlLXJvdyB7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgZmxleC1kaXJlY3Rpb246IHJvdztcclxuICAgIGZsZXgtd3JhcDogbm93cmFwO1xyXG4gICAgZmxleC1ncm93OiAxO1xyXG59XHJcblxyXG4jYmFja2dyb3VuZCB7XHJcbiAgICBwb3NpdGlvbjogZml4ZWQ7XHJcbiAgICB0b3A6IDBweDtcclxuICAgIGxlZnQ6IDBweDtcclxuICAgIGJvdHRvbTogMHB4O1xyXG4gICAgcmlnaHQ6IDBweDtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMjU1LCAyNTUsIDI1NSwgMC4yNSk7XHJcbn1cclxuXHJcbiNtb2RhbC1pbm5lciB7XHJcbiAgICBsZWZ0OiA1MCU7XHJcbiAgICB0b3A6IDUwJTtcclxuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC01MCUsIC01MCUpO1xyXG4gICAgcG9zaXRpb246IGZpeGVkO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogIzExMTtcclxuICAgIHdpZHRoOiA0MDBweDtcclxuICAgIG1heC1oZWlnaHQ6IDEwMHZoO1xyXG4gICAgcGFkZGluZzogMTBweDtcclxuICAgIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgICBjb2xvcjogcmdiYSgyNTUsIDI1NSwgMjU1LCAwLjkpO1xyXG59XHJcblxyXG4jZXJyb3Ige1xyXG4gICAgcG9zaXRpb246IGZpeGVkO1xyXG4gICAgei1pbmRleDogMjtcclxuICAgIHBhZGRpbmc6IDEwcHg7XHJcbiAgICBib3R0b206IDMwcHg7XHJcbiAgICByaWdodDogMzBweDtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IGJsYWNrO1xyXG4gICAgY29sb3I6ICNFRjUzNTA7XHJcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICAgIGJvcmRlcjogMXB4IHNvbGlkIHJnYmEoMjU1LCAyNTUsIDI1NSwgMC4zKTtcclxufVxyXG5cclxuI2Vycm9yIC5tYXRlcmlhbC1pY29ucyB7XHJcbiAgICBwYWRkaW5nOiA1cHg7XHJcbiAgICBjdXJzb3I6IHBvaW50ZXI7XHJcbn0iXX0= */"
 
 /***/ }),
 
@@ -8671,7 +8674,7 @@ module.exports = ".durationRow {\r\n    display: flex;\r\n    justify-content: s
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<span>Play as one animation </span><input type=\"checkbox\" [(ngModel)]=\"isAutoplay\">\r\n<div class=\"durationRow\" *ngIf=\"isAutoplay\">\r\n  <span class=\"durationTitle\">Delay Before Ending: </span>\r\n  <span class=\"durationRow\">\r\n    <input class=\"textBox\" type=\"number\" [(ngModel)]=\"endDelay\">\r\n    <input class=\"slider\" type=\"range\" min=\"0\" max=\"2000\" [(ngModel)]=\"endDelay\">\r\n  </span>\r\n</div>\r\n<div style=\"display: flex\">\r\n  <span class=\"button\" (click)=\"apply()\">Apply</span>\r\n</div>"
+module.exports = "<span>Play as one animation </span><input type=\"checkbox\" [(ngModel)]=\"isAutoplay\">\n<div class=\"durationRow\" *ngIf=\"isAutoplay\">\n  <span class=\"durationTitle\">Delay Before Ending: </span>\n  <span class=\"durationRow\">\n    <input class=\"textBox\" type=\"number\" [(ngModel)]=\"endDelay\">\n    <input class=\"slider\" type=\"range\" min=\"0\" max=\"2000\" [(ngModel)]=\"endDelay\">\n  </span>\n</div>\n<div style=\"display: flex\">\n  <span class=\"button\" (click)=\"apply()\">Apply</span>\n</div>"
 
 /***/ }),
 
@@ -8781,7 +8784,7 @@ module.exports = ".selectRow {\r\n    display: flex;\r\n    align-items: center;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"title\">SELECT ANSWERS</div>\r\n<div class=\"selectRow\" *ngFor=\"let answer of answers; index as idx; trackBy: trackByIndex\">\r\n  <input type=\"checkbox\" [(ngModel)]=\"answers[idx]\">\r\n  <div #eqContainer class=\"eqContainer\"></div>\r\n</div>\r\n<div style=\"display: flex\">\r\n  <div class=\"button\" (click)=\"apply()\">Apply</div>\r\n</div>\r\n"
+module.exports = "<div class=\"title\">SELECT ANSWERS</div>\n<div class=\"selectRow\" *ngFor=\"let answer of answers; index as idx; trackBy: trackByIndex\">\n  <input type=\"checkbox\" [(ngModel)]=\"answers[idx]\">\n  <div #eqContainer class=\"eqContainer\"></div>\n</div>\n<div style=\"display: flex\">\n  <div class=\"button\" (click)=\"apply()\">Apply</div>\n</div>\n"
 
 /***/ }),
 
@@ -10441,7 +10444,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"title\">ADD</div>\r\n<div style=\"display: flex\">\r\n  <div class=\"button\" (click)=\"row()\">Row</div>\r\n</div>\r\n<div style=\"display: flex\">\r\n    <div class=\"button\" (click)=\"column()\">Column</div>\r\n  </div>\r\n"
+module.exports = "<div class=\"title\">ADD</div>\n<div style=\"display: flex\">\n  <div class=\"button\" (click)=\"row()\">Row</div>\n</div>\n<div style=\"display: flex\">\n    <div class=\"button\" (click)=\"column()\">Column</div>\n  </div>\n"
 
 /***/ }),
 
@@ -11338,7 +11341,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Mathias\Desktop\Fluid-Math\creator\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\mathi\Desktop\Github\Math-Animations\creator\src\main.ts */"./src/main.ts");
 
 
 /***/ })

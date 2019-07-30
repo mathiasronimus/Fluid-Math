@@ -27,8 +27,9 @@ export function rgbaArrayToCssString(colorArr: number[]) {
 export function addStyleSheet(otherColors?: {[colName: string]: [number, number, number]}) {
     const styleEl = document.createElement('style');
     let styleText = '';
-    Object.keys(otherColors? otherColors : C.colors).forEach(colorName => {
-        const colorVal = C.colors[colorName];
+    const colorObj = otherColors ? otherColors : C.colors;
+    Object.keys(colorObj).forEach(colorName => {
+        const colorVal = colorObj[colorName];
         styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
     });
     styleEl.appendChild(document.createTextNode(styleText));

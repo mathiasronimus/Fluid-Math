@@ -557,7 +557,7 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Mathias\Desktop\Fluid-Math\creator\src\styles.css */"./src/styles.css");
+module.exports = __webpack_require__(/*! C:\Users\mathi\Desktop\Github\Math-Animations\creator\src\styles.css */"./src/styles.css");
 
 
 /***/ })
