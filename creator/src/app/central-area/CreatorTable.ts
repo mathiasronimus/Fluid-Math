@@ -1,32 +1,55 @@
-import TableContainer from '@shared/layout/TableContainer';
+import TableContainer, { parseChildren2D, parseChildrenObj } from '@shared/layout/TableContainer';
 import CreatorContainer from './CreatorContainer';
 import LayoutState from '@shared/animation/LayoutState';
 import EqComponent from '@shared/layout/EqComponent';
-import CanvasController, { MouseEventCallback } from '@shared/main/CanvasController';
+import CanvasController from '@shared/main/CanvasController';
 import { ContainerFormat, TableFormat } from '@shared/main/FileFormat';
 import EqContent from '@shared/layout/EqContent';
 import EqContainer from '@shared/layout/EqContainer';
-import C from '@shared/main/consts';
 import HDivider from '@shared/layout/HDivider';
 import VDivider from '@shared/layout/VDivider';
 import { line } from '@shared/main/helpers';
 import { creatorContainerCreatorDraw, creatorContainerAddClick } from './CreatorContainerMethods';
 import Radical from '@shared/layout/Radical';
+import {
+    creatorTableMinCellDimen,
+    creatorContainerStroke,
+    creatorLineDash,
+    creatorPlusLineHalfLength,
+    creatorContainerPadding,
+} from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
+import Padding from '@shared/layout/Padding';
 
+@Container({
+    typeString: 'creator-table',
+    parse: (containerObj, depth, contentGetter, containerGetter, inf) => {
+        // Not selectable
+        const format = containerObj as TableFormat;
+        return new CreatorTable(
+            creatorContainerPadding,
+            parseChildren2D(format.children, containerGetter, contentGetter),
+            parseChildrenObj(format.hLines, contentGetter),
+            parseChildrenObj(format.vLines, contentGetter),
+            11,
+            Padding.even(0)
+        );
+    }
+})
 export default class CreatorTable extends TableContainer implements CreatorContainer {
     /**
      * Return the mimimum dimension in either axis
      * for a table cell.
      */
     protected getMinCellDimen(): number {
-        return C.creatorTableMinCellDimen;
+        return creatorTableMinCellDimen;
     }
 
-    getHLines(): {[index: number]: EqComponent<any>} {
+    getHLines(): { [index: number]: EqComponent<any> } {
         return this.hLines;
     }
 
-    getVLines(): {[index: number]: EqComponent<any>} {
+    getVLines(): { [index: number]: EqComponent<any> } {
         return this.vLines;
     }
 
@@ -345,7 +368,7 @@ export default class CreatorTable extends TableContainer implements CreatorConta
         ctx.save();
 
         // Draw an outline
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.strokeStyle = creatorContainerStroke;
         ctx.strokeRect(l.tlx, l.tly, l.width, l.height);
 
         // If any lines are not present, draw them as dotted lines
@@ -365,15 +388,15 @@ export default class CreatorTable extends TableContainer implements CreatorConta
 
         // Draw h lines
         ctx.save();
-        ctx.setLineDash(C.creatorLineDash);
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.setLineDash(creatorLineDash);
+        ctx.strokeStyle = creatorContainerStroke;
         let upToY = l.tly + this.padding.top;
         for (let r = 0; r <= this.children.length; r++) {
             if (hLinesToDraw.has(r)) {
-                line(   l.tlx + this.padding.left,
-                        upToY + this.getLineStroke() / 2,
-                        l.tlx + l.width - this.padding.right,
-                        upToY + this.getLineStroke() / 2, ctx);
+                line(l.tlx + this.padding.left,
+                    upToY + this.getLineStroke() / 2,
+                    l.tlx + l.width - this.padding.right,
+                    upToY + this.getLineStroke() / 2, ctx);
             }
             upToY += this.getLineStroke() + this.heights[r];
         }
@@ -382,10 +405,10 @@ export default class CreatorTable extends TableContainer implements CreatorConta
         let upToX = l.tlx + this.padding.left;
         for (let c = 0; c <= this.children[0].length; c++) {
             if (vLinesToDraw.has(c)) {
-                line(   upToX + this.getLineStroke() / 2,
-                        l.tly + this.padding.top,
-                        upToX + this.getLineStroke() / 2,
-                        l.tly + l.height - this.padding.bottom, ctx);
+                line(upToX + this.getLineStroke() / 2,
+                    l.tly + this.padding.top,
+                    upToX + this.getLineStroke() / 2,
+                    l.tly + l.height - this.padding.bottom, ctx);
             }
             upToX += this.getLineStroke() + this.widths[c];
         }
@@ -407,9 +430,9 @@ export default class CreatorTable extends TableContainer implements CreatorConta
                     // Draw plus
                     ctx.save();
                     ctx.translate(upToX + colWidth / 2, upToY + rowHeight / 2);
-                    ctx.strokeStyle = C.creatorContainerStroke;
-                    line(-C.creatorPlusLineHalfLength, 0, C.creatorPlusLineHalfLength, 0, ctx);
-                    line(0, -C.creatorPlusLineHalfLength, 0, C.creatorPlusLineHalfLength, ctx);
+                    ctx.strokeStyle = creatorContainerStroke;
+                    line(-creatorPlusLineHalfLength, 0, creatorPlusLineHalfLength, 0, ctx);
+                    line(0, -creatorPlusLineHalfLength, 0, creatorPlusLineHalfLength, ctx);
                     ctx.restore();
                 }
                 upToX += colWidth + this.getLineStroke();

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import C from '@shared/main/consts';
+import { creatorErrorTimeout } from '@shared/main/consts';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,6 @@ export class ErrorService {
     }
     this.timeoutID = setTimeout(() => {
       this.active = false;
-    }, C.creatorErrorTimeout);
+    }, creatorErrorTimeout);
   }
 }

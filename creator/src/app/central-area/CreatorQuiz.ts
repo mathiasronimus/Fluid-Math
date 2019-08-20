@@ -10,15 +10,44 @@ import {
     childrenToStepLayout
 } from './CreatorContainerMethods';
 import LayoutState from '@shared/animation/LayoutState';
-import { line, tri } from '@shared/main/helpers';
+import { line, tri, parseContainerChildren } from '@shared/main/helpers';
 import EqComponent from '@shared/layout/EqComponent';
 import Radical from '@shared/layout/Radical';
 import CanvasController, { MouseEventCallback } from '@shared/main/CanvasController';
 import { QuizFormat } from '@shared/main/FileFormat';
-import C from '@shared/main/consts';
 import HDivider from '@shared/layout/HDivider';
 import EqContent from '@shared/layout/EqContent';
+import {
+    creatorContainerStroke,
+    creatorContainerPadding,
+    creatorCaretFillStyle,
+    creatorCaretSize,
+    curvedOutlineDefaultOpacity,
+    curvedOutlineColor,
+    radioButtonDefaultOpacity,
+    radioButtonColor,
+    quizCorrectColor,
+    quizIncorrectColor
+} from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
 
+@Container({
+    typeString: 'creator-quiz',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        const format = containerObj as QuizFormat;
+        return new CreatorQuiz(
+            parseContainerChildren(format.children, depth, containerGetter, contentGetter),
+            creatorContainerPadding,
+            format.answers,
+            curvedOutlineDefaultOpacity,
+            curvedOutlineColor,
+            radioButtonDefaultOpacity,
+            radioButtonColor,
+            quizCorrectColor,
+            quizIncorrectColor
+        );
+    }
+})
 export default class CreatorQuiz extends Quiz implements LinearCreatorContainer {
 
     forEachUnder = linearContainerForEachUnder;
@@ -46,14 +75,14 @@ export default class CreatorQuiz extends Quiz implements LinearCreatorContainer 
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.strokeStyle = creatorContainerStroke;
 
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        const pad = C.creatorContainerPadding.scale(l.scale);
+        const pad = creatorContainerPadding.scale(l.scale);
 
         // Vertical lines
         const y1 = l.tly + pad.top / 2;
@@ -64,19 +93,19 @@ export default class CreatorQuiz extends Quiz implements LinearCreatorContainer 
         line(x2, y1, x2, y2, ctx);
 
         // Carets
-        ctx.fillStyle = C.creatorCaretFillStyle;
+        ctx.fillStyle = creatorCaretFillStyle;
 
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + pad.top * 0.75);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.top * 0.75);
         ctx.rotate(Math.PI);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         // Carets that depend on parent
@@ -86,7 +115,7 @@ export default class CreatorQuiz extends Quiz implements LinearCreatorContainer 
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        const realPad = C.creatorContainerPadding.scale(l.scale);
+        const realPad = creatorContainerPadding.scale(l.scale);
         // Create mock layout states to use like rectangles
         const innerTop = new LayoutState(
             undefined, undefined,

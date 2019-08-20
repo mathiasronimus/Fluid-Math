@@ -3,8 +3,8 @@ import ContentLayoutState from "../animation/ContentLayoutState";
 import LayoutState from "../animation/LayoutState";
 import EqComponent from "./EqComponent";
 import { Map } from '../main/helpers';
-import C from '../main/consts';
 import Padding from "./Padding";
+import { curvedOutlineBorderRadius } from "../main/consts";
 
 /**
  * Temporary content that draws a curved outline.
@@ -50,7 +50,7 @@ export default class CurvedOutline extends EqContent<ContentLayoutState> {
         // Draw rectangle with rounded corners
         const halfWidth = this.width / 2;
         const halfHeight = this.height / 2;
-        const r = C.curvedOutlineBorderRadius;
+        const r = curvedOutlineBorderRadius;
         ctx.beginPath();
         // Top line
         ctx.moveTo(-halfWidth + r, -halfHeight);

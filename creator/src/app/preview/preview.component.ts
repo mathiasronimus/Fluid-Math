@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import CanvasController from '@shared/main/CanvasController';
 

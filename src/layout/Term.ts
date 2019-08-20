@@ -1,10 +1,50 @@
 import LayoutState from '../animation/LayoutState';
-import C from '../main/consts';
+import { widthTiers, termPadding } from '../main/consts';
 import EqContent from './EqContent';
 import TermLayoutState from '../animation/TermLayoutState';
 import { Map } from '../main/helpers';
 import EqComponent from './EqComponent';
+import { Content } from '../main/ComponentModel';
 
+@Content({
+    character: 't',
+    initialize: (file, info) => {
+        const terms: Term[] = [];
+        let ascents = [];
+
+        if (file.terms.length > 0) {
+            //Get the ascents from each tier
+            for (let w = 0; w < widthTiers.length; w++) {
+                ascents.push(file.metrics[w].ascent);
+            }
+        }
+
+        //Initialize all terms
+        for (let t = 0; t < file.terms.length; t++) {
+            let widths = [];
+
+            //Get the widths for each tier
+            for (let w = 0; w < widthTiers.length; w++) {
+                widths.push(file.metrics[w].widths[t]);
+            }
+
+            let text = file.terms[t];
+            let term = new Term(text, widths, info['termHeights'], ascents, 't' + t);
+            terms.push(term);
+        }
+        return terms;
+    },
+    calcInfo: (file, info) => {
+        const termHeights: number[] = [];
+        if (file.terms.length > 0) {
+            //Get the term heights from each tier
+            for (let w = 0; w < widthTiers.length; w++) {
+                termHeights.push(file.metrics[w].height);
+            }
+        }
+        info['termHeights'] = termHeights;
+    }
+})
 export default class Term extends EqContent<TermLayoutState> {
 
     private text: string;
@@ -19,7 +59,7 @@ export default class Term extends EqContent<TermLayoutState> {
     private ascent: number;
 
     constructor(text: string, widths: number[], heights: number[], ascents: number[], ref: string) {
-        super(C.termPadding, ref);
+        super(termPadding, ref);
         this.widths = widths;
         this.heights = heights;
         this.halfInnerWidths = this.widths.map(width => width / 2);

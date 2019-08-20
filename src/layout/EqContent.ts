@@ -1,8 +1,8 @@
 import EqComponent from "./EqComponent";
 import Padding from "./Padding";
-import C from '../main/consts';
 import ContentLayoutState from "../animation/ContentLayoutState";
 import { rgbaArrayToCssString } from "../main/helpers";
+import { normalOpacity } from "../main/consts";
 
 export default abstract class EqContent<L extends ContentLayoutState> extends EqComponent<L> {
 
@@ -134,7 +134,7 @@ export default abstract class EqContent<L extends ContentLayoutState> extends Eq
             return opacityObj[this.ref];
         } else {
             //No opacity specified
-            return C.normalOpacity;
+            return normalOpacity;
         }
     }
 

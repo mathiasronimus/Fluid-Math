@@ -33,7 +33,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var AddAnimation = /** @class */ (function (_super) {
     __extends(AddAnimation, _super);
     function AddAnimation(end, set, ctx, duration) {
-        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].addEasing, set, end.withZeroScale(), end, end.component, ctx) || this;
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["addEasing"], set, end.withZeroScale(), end, end.component, ctx) || this;
     }
     return AddAnimation;
 }(_Animation__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -319,7 +319,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var EvalAnimation = /** @class */ (function (_super) {
     __extends(EvalAnimation, _super);
     function EvalAnimation(evalFrom, evalTo, set, ctx, duration) {
-        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].moveEasing, set, evalFrom, evalTo.withZeroScale(), evalFrom.component, ctx) || this;
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["moveEasing"], set, evalFrom, evalTo.withZeroScale(), evalFrom.component, ctx) || this;
     }
     return EvalAnimation;
 }(_Animation__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -425,7 +425,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var MoveAnimation = /** @class */ (function (_super) {
     __extends(MoveAnimation, _super);
     function MoveAnimation(start, end, set, ctx, duration) {
-        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].moveEasing, set, start, end, end.component, ctx) || this;
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["moveEasing"], set, start, end, end.component, ctx) || this;
     }
     return MoveAnimation;
 }(_Animation__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -514,7 +514,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var OutlineColorAnimation = /** @class */ (function (_super) {
     __extends(OutlineColorAnimation, _super);
     function OutlineColorAnimation(outlineLayout, newColor, set) {
-        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].outlineFadeInDuration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].outlineFadeInEasing, set) || this;
+        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_1__["outlineFadeInDuration"], _main_consts__WEBPACK_IMPORTED_MODULE_1__["outlineFadeInEasing"], set) || this;
         _this.layout = outlineLayout;
         _this.startColor = _this.layout.color;
         _this.endColor = newColor;
@@ -563,7 +563,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var OutlineFadeAnimation = /** @class */ (function (_super) {
     __extends(OutlineFadeAnimation, _super);
     function OutlineFadeAnimation(outlineLayout, newOpacity, set) {
-        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].outlineFadeInDuration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].outlineFadeInEasing, set) || this;
+        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_1__["outlineFadeInDuration"], _main_consts__WEBPACK_IMPORTED_MODULE_1__["outlineFadeInEasing"], set) || this;
         _this.layout = outlineLayout;
         _this.startO = _this.layout.opacity;
         _this.endO = newOpacity;
@@ -729,8 +729,8 @@ var RadioButtonSelectAnimation = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _Animation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Animation */ "../src/animation/Animation.ts");
+/* harmony import */ var _Animation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Animation */ "../src/animation/Animation.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -749,10 +749,10 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var RemoveAnimation = /** @class */ (function (_super) {
     __extends(RemoveAnimation, _super);
     function RemoveAnimation(start, set, ctx, duration) {
-        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].removeEasing, set, start, start.withZeroScale(), start.component, ctx) || this;
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["removeEasing"], set, start, start.withZeroScale(), start.component, ctx) || this;
     }
     return RemoveAnimation;
-}(_Animation__WEBPACK_IMPORTED_MODULE_1__["default"]));
+}(_Animation__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (RemoveAnimation);
 
 
@@ -787,7 +787,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var ReverseEvalAnimation = /** @class */ (function (_super) {
     __extends(ReverseEvalAnimation, _super);
     function ReverseEvalAnimation(from, to, set, ctx, duration) {
-        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].moveEasing, set, from.withZeroScale(), to, to.component, ctx) || this;
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["moveEasing"], set, from.withZeroScale(), to, to.component, ctx) || this;
     }
     return ReverseEvalAnimation;
 }(_Animation__WEBPACK_IMPORTED_MODULE_0__["default"]));
@@ -859,8 +859,8 @@ var RootContainerLayoutState = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _ContentLayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContentLayoutState */ "../src/animation/ContentLayoutState.ts");
+/* harmony import */ var _ContentLayoutState__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContentLayoutState */ "../src/animation/ContentLayoutState.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -880,7 +880,7 @@ var TermLayoutState = /** @class */ (function (_super) {
     __extends(TermLayoutState, _super);
     function TermLayoutState() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.padding = _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].termPadding;
+        _this.padding = _main_consts__WEBPACK_IMPORTED_MODULE_1__["termPadding"];
         return _this;
     }
     /**
@@ -892,7 +892,7 @@ var TermLayoutState = /** @class */ (function (_super) {
      * @param widthDiff The difference in width between a tight and normal term.
      */
     TermLayoutState.prototype.tighten = function (widthDiff) {
-        this.padding = _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].tightTermPadding;
+        this.padding = _main_consts__WEBPACK_IMPORTED_MODULE_1__["tightTermPadding"];
         this.width -= widthDiff;
     };
     /**
@@ -903,7 +903,7 @@ var TermLayoutState = /** @class */ (function (_super) {
         return new TermLayoutState(this.layoutParent, this.component, this.tlx, this.tly, this.width, this.height, 0, this.color, 0);
     };
     return TermLayoutState;
-}(_ContentLayoutState__WEBPACK_IMPORTED_MODULE_1__["default"]));
+}(_ContentLayoutState__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (TermLayoutState);
 
 
@@ -975,7 +975,7 @@ var CurvedOutline = /** @class */ (function (_super) {
         // Draw rectangle with rounded corners
         var halfWidth = this.width / 2;
         var halfHeight = this.height / 2;
-        var r = _main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].curvedOutlineBorderRadius;
+        var r = _main_consts__WEBPACK_IMPORTED_MODULE_2__["curvedOutlineBorderRadius"];
         ctx.beginPath();
         // Top line
         ctx.moveTo(-halfWidth + r, -halfHeight);
@@ -1136,8 +1136,8 @@ var EqContainer = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqComponent */ "../src/layout/EqComponent.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1235,7 +1235,7 @@ var EqContent = /** @class */ (function (_super) {
      * @param opacity The opacity.
      */
     EqContent.prototype.setCtxStyle = function (ctx, color, opacity) {
-        var style = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["rgbaArrayToCssString"])(color.concat([opacity]));
+        var style = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["rgbaArrayToCssString"])(color.concat([opacity]));
         ctx.fillStyle = style;
         ctx.strokeStyle = style;
     };
@@ -1268,7 +1268,7 @@ var EqContent = /** @class */ (function (_super) {
         }
         else {
             //No opacity specified
-            return _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].normalOpacity;
+            return _main_consts__WEBPACK_IMPORTED_MODULE_2__["normalOpacity"];
         }
     };
     /**
@@ -1297,9 +1297,12 @@ var EqContent = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _LinearContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LinearContainer */ "../src/layout/LinearContainer.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _LinearContainer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LinearContainer */ "../src/layout/LinearContainer.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1313,6 +1316,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 
 
@@ -1324,12 +1339,13 @@ var HBox = /** @class */ (function (_super) {
         _this.height = _this.calcHeight();
         return _this;
     }
+    HBox_1 = HBox;
     HBox.prototype.calcHeight = function () {
         // Line up text of children, then return their position relative to this component
         // Sort children into those with a line and those without
         // Store their line if they have one
-        var childrenWithLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["newMap"])();
-        var childrenWithoutLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["newMap"])();
+        var childrenWithLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["newMap"])();
+        var childrenWithoutLine = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["newMap"])();
         for (var i = 0; i < this.children.length; i++) {
             var child = this.children[i];
             var line = child.getMainTextLine();
@@ -1404,7 +1420,7 @@ var HBox = /** @class */ (function (_super) {
         return (this.mainLine ? this.mainLine.slice() : undefined);
     };
     HBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorObj, mouseEnter, mouseExit, mouseClick, tempContent) {
-        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_0__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         var upToX = tlx + this.padding.left * currScale;
         for (var i = 0; i < this.children.length; i++) {
             var currChild = this.children[i];
@@ -1426,8 +1442,21 @@ var HBox = /** @class */ (function (_super) {
         layouts.set(this, state);
         return state;
     };
+    var HBox_1;
+    HBox = HBox_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__["Container"])({
+            typeString: 'hbox',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                // Return HBox from file
+                var format = containerObj;
+                var children = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["parseContainerChildren"])(format.children, depth + 1, containerGetter, contentGetter);
+                return new HBox_1(children, _Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(_main_consts__WEBPACK_IMPORTED_MODULE_5__["defaultHBoxPadding"]));
+            }
+        }),
+        __metadata("design:paramtypes", [Array, _Padding__WEBPACK_IMPORTED_MODULE_0__["default"]])
+    ], HBox);
     return HBox;
-}(_LinearContainer__WEBPACK_IMPORTED_MODULE_2__["default"]));
+}(_LinearContainer__WEBPACK_IMPORTED_MODULE_3__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (HBox);
 
 
@@ -1444,7 +1473,10 @@ var HBox = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqContent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqContent */ "../src/layout/EqContent.ts");
 /* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/OriginalDimenLayoutState */ "../src/animation/OriginalDimenLayoutState.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../animation/OriginalDimenLayoutState */ "../src/animation/OriginalDimenLayoutState.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1458,6 +1490,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 
 
@@ -1472,6 +1516,7 @@ var HDivider = /** @class */ (function (_super) {
         _this.width = _this.calcWidth();
         return _this;
     }
+    HDivider_1 = HDivider;
     HDivider.prototype.setPadding = function (newPadding) {
         this.padding = newPadding;
     };
@@ -1482,7 +1527,7 @@ var HDivider = /** @class */ (function (_super) {
         var x = parentLayout.tlx;
         var width = parentLayout.width;
         var height = this.getHeight();
-        var state = new _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_2__["OriginalDimenLayoutState"](parentLayout, this, x, tly, width, height, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj), width / currScale, height);
+        var state = new _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_3__["OriginalDimenLayoutState"](parentLayout, this, x, tly, width, height, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj), width / currScale, height);
         layouts.set(this, state);
         return state;
     };
@@ -1491,6 +1536,20 @@ var HDivider = /** @class */ (function (_super) {
         var width = before.origInnerWidth * (1 - progress) + after.origInnerWidth * progress;
         Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["line"])(-width / 2 + this.padding.left, 0, width / 2 - this.padding.right, 0, ctx);
     };
+    var HDivider_1;
+    HDivider = HDivider_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__["Content"])({
+            character: 'h',
+            initialize: function (file) {
+                var dividers = [];
+                for (var i = 0; i < file.hDividers; i++) {
+                    dividers.push(new HDivider_1(_main_consts__WEBPACK_IMPORTED_MODULE_5__["hDividerPadding"], 'h' + i));
+                }
+                return dividers;
+            }
+        }),
+        __metadata("design:paramtypes", [_Padding__WEBPACK_IMPORTED_MODULE_2__["default"], String])
+    ], HDivider);
     return HDivider;
 }(_EqContent__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (HDivider);
@@ -1603,14 +1662,17 @@ var Padding = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _VBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VBox */ "../src/layout/VBox.ts");
-/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _CurvedOutline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CurvedOutline */ "../src/layout/CurvedOutline.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../animation/OutlineFadeAnimation */ "../src/animation/OutlineFadeAnimation.ts");
-/* harmony import */ var _animation_OutlineColorAnimation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../animation/OutlineColorAnimation */ "../src/animation/OutlineColorAnimation.ts");
-/* harmony import */ var _RadioButton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./RadioButton */ "../src/layout/RadioButton.ts");
-/* harmony import */ var _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../animation/RadioButtonSelectAnimation */ "../src/animation/RadioButtonSelectAnimation.ts");
-/* harmony import */ var _animation_RadioButtonLayoutState__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../animation/RadioButtonLayoutState */ "../src/animation/RadioButtonLayoutState.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _CurvedOutline__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CurvedOutline */ "../src/layout/CurvedOutline.ts");
+/* harmony import */ var _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../animation/OutlineFadeAnimation */ "../src/animation/OutlineFadeAnimation.ts");
+/* harmony import */ var _animation_OutlineColorAnimation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../animation/OutlineColorAnimation */ "../src/animation/OutlineColorAnimation.ts");
+/* harmony import */ var _RadioButton__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./RadioButton */ "../src/layout/RadioButton.ts");
+/* harmony import */ var _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../animation/RadioButtonSelectAnimation */ "../src/animation/RadioButtonSelectAnimation.ts");
+/* harmony import */ var _animation_RadioButtonLayoutState__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../animation/RadioButtonLayoutState */ "../src/animation/RadioButtonLayoutState.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1624,6 +1686,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 
 
@@ -1648,31 +1722,32 @@ var Quiz = /** @class */ (function (_super) {
         answers.forEach(function (index) { return _this.answers[index] = true; });
         return _this;
     }
+    Quiz_1 = Quiz;
     // Override to add padding
     Quiz.prototype.calcWidth = function () {
-        return _super.prototype.calcWidth.call(this) + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizCurvedOutlinePadding.width() + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDimen;
+        return _super.prototype.calcWidth.call(this) + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizCurvedOutlinePadding"].width() + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDimen"];
     };
     // Override to add margin
     Quiz.prototype.calcHeight = function () {
-        return _super.prototype.calcHeight.call(this) + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].answerVMargin * (this.children.length + 2);
+        return _super.prototype.calcHeight.call(this) + _main_consts__WEBPACK_IMPORTED_MODULE_11__["answerVMargin"] * (this.children.length + 2);
     };
     Quiz.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
         var _this = this;
-        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         var innerWidth = (this.getWidth() - this.padding.width()) * currScale;
-        var upToY = tly + this.padding.top * currScale + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].answerVMargin;
+        var upToY = tly + this.padding.top * currScale + _main_consts__WEBPACK_IMPORTED_MODULE_11__["answerVMargin"];
         var allOutlines = [];
         var allButtons = [];
         var _loop_1 = function (i) {
             var currChild = this_1.children[i];
             // Width of the whole row (button, outline, and child)
-            var rowWidth = currChild.getWidth() + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizCurvedOutlinePadding.width() + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDimen;
+            var rowWidth = currChild.getWidth() + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizCurvedOutlinePadding"].width() + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDimen"];
             // Height of the whole row (same as height of child)
             var rowHeight = currChild.getHeight();
             // Start x of the whole row
             var rowTLX = tlx + (innerWidth - rowWidth) / 2;
             // Add radio button
-            var radioButton = new _RadioButton__WEBPACK_IMPORTED_MODULE_6__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonPadding, rowTLX, upToY + (rowHeight - _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDimen) / 2, _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDimen, layouts, this_1.radioButtonOpacity, this_1.radioButtonColor);
+            var radioButton = new _RadioButton__WEBPACK_IMPORTED_MODULE_7__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonPadding"], rowTLX, upToY + (rowHeight - _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDimen"]) / 2, _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDimen"], layouts, this_1.radioButtonOpacity, this_1.radioButtonColor);
             tempContent.push(radioButton);
             var radioButtonLayout = radioButton.getLayout();
             allButtons.push(radioButtonLayout);
@@ -1680,16 +1755,16 @@ var Quiz = /** @class */ (function (_super) {
                 radioButtonLayout.percentFill = 1;
             }
             // Position child in the middle horizontally
-            var childTLX = rowTLX + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDimen + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizCurvedOutlinePadding.left;
+            var childTLX = rowTLX + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDimen"] + _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizCurvedOutlinePadding"].left;
             var childLayout = currChild.addLayout(state, layouts, childTLX, upToY, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
-            upToY += childLayout.height + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].answerVMargin;
+            upToY += childLayout.height + _main_consts__WEBPACK_IMPORTED_MODULE_11__["answerVMargin"];
             // Give child an outline that can respond to events.
-            var outline = new _CurvedOutline__WEBPACK_IMPORTED_MODULE_2__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizCurvedOutlinePadding, childLayout, layouts, this_1.outlineOpacity, this_1.outlineColor);
+            var outline = new _CurvedOutline__WEBPACK_IMPORTED_MODULE_4__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_11__["quizCurvedOutlinePadding"], childLayout, layouts, this_1.outlineOpacity, this_1.outlineColor);
             tempContent.push(outline);
             var outlineLayout = outline.getLayout();
             allOutlines.push(outlineLayout);
             if (this_1.clickedIndex !== -1) {
-                outlineLayout.opacity = _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].revealedOutlineOpacity;
+                outlineLayout.opacity = _main_consts__WEBPACK_IMPORTED_MODULE_11__["revealedOutlineOpacity"];
                 if (this_1.answers[i]) {
                     outlineLayout.color = this_1.correctColor;
                 }
@@ -1700,8 +1775,8 @@ var Quiz = /** @class */ (function (_super) {
             // If mouse enters outline or button, make it lighter (unless answer has been revealed)
             var onEnter = function (oldLayout, set, controller) {
                 if (_this.clickedIndex === -1) {
-                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_4__["default"](outlineLayout, _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].hoveredOutlineOpacity, set);
-                    new _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_7__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonSelectDuration, _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonSelectEasing, set, radioButtonLayout, 0, 1);
+                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](outlineLayout, _main_consts__WEBPACK_IMPORTED_MODULE_11__["hoveredOutlineOpacity"], set);
+                    new _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_8__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonSelectDuration"], _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonSelectEasing"], set, radioButtonLayout, 0, 1);
                 }
                 controller.setCursor('pointer');
             };
@@ -1712,8 +1787,8 @@ var Quiz = /** @class */ (function (_super) {
             // If mouse exits, make darker again (unless answer has been revealed)
             var onExit = function (oldLayout, set, controller) {
                 if (_this.clickedIndex === -1) {
-                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_4__["default"](outlineLayout, _this.outlineOpacity, set);
-                    new _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_7__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDeselectDuration, _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].quizRadioButtonDeselectEasing, set, radioButtonLayout, 1, 0);
+                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](outlineLayout, _this.outlineOpacity, set);
+                    new _animation_RadioButtonSelectAnimation__WEBPACK_IMPORTED_MODULE_8__["default"](_main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDeselectDuration"], _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizRadioButtonDeselectEasing"], set, radioButtonLayout, 1, 0);
                 }
                 controller.setCursor('default');
             };
@@ -1730,7 +1805,7 @@ var Quiz = /** @class */ (function (_super) {
             // If mouse clicks, reveal answer
             var onClick_1 = function (oldLayout, set, controller) {
                 // Check if correct
-                var clickedIndex = oldLayout instanceof _animation_RadioButtonLayoutState__WEBPACK_IMPORTED_MODULE_8__["default"] ? allButtons.indexOf(oldLayout) : allOutlines.indexOf(oldLayout);
+                var clickedIndex = oldLayout instanceof _animation_RadioButtonLayoutState__WEBPACK_IMPORTED_MODULE_9__["default"] ? allButtons.indexOf(oldLayout) : allOutlines.indexOf(oldLayout);
                 if (_this.answers[clickedIndex]) {
                     controller.setText('<em class="green">Correct!</em> Tap again to see working.');
                 }
@@ -1741,8 +1816,8 @@ var Quiz = /** @class */ (function (_super) {
                 allOutlines.forEach(function (layout, index) {
                     // If correct, go green. Otherwise go red.
                     var color = _this.answers[index] ? _this.correctColor : _this.incorrectColor;
-                    new _animation_OutlineColorAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](layout, color, set);
-                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_4__["default"](layout, _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].revealedOutlineOpacity, set);
+                    new _animation_OutlineColorAnimation__WEBPACK_IMPORTED_MODULE_6__["default"](layout, color, set);
+                    new _animation_OutlineFadeAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](layout, _main_consts__WEBPACK_IMPORTED_MODULE_11__["revealedOutlineOpacity"], set);
                     return true;
                 });
                 _this.clickedIndex = clickedIndex;
@@ -1766,6 +1841,17 @@ var Quiz = /** @class */ (function (_super) {
         layouts.set(this, state);
         return state;
     };
+    var Quiz_1;
+    Quiz = Quiz_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_10__["Container"])({
+            typeString: 'quiz',
+            parse: function (containerObj, depth, contentGetter, containerGetter, inf) {
+                var format = containerObj;
+                return new Quiz_1(Object(_main_helpers__WEBPACK_IMPORTED_MODULE_3__["parseContainerChildren"])(format.children, depth + 1, containerGetter, contentGetter), _main_consts__WEBPACK_IMPORTED_MODULE_11__["defaultQuizPadding"], format.answers, inf['customColors'] && inf['customColors'].curvedOutlineOpacity ? inf['customColors'].curvedOutlineOpacity : _main_consts__WEBPACK_IMPORTED_MODULE_11__["curvedOutlineDefaultOpacity"], inf['customColors'] && inf['customColors'].curvedOutlineColor ? inf['customColors'].curvedOutlineColor : _main_consts__WEBPACK_IMPORTED_MODULE_11__["curvedOutlineColor"], inf['customColors'] && inf['customColors'].radioButtonOpacity ? inf['customColors'].radioButtonOpacity : _main_consts__WEBPACK_IMPORTED_MODULE_11__["radioButtonDefaultOpacity"], inf['customColors'] && inf['customColors'].radioButtonColor ? inf['customColors'].radioButtonColor : _main_consts__WEBPACK_IMPORTED_MODULE_11__["radioButtonColor"], inf['customColors'] && inf['customColors'].quizCorrectColor ? inf['customColors'].quizCorrectColor : _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizCorrectColor"], inf['customColors'] && inf['customColors'].quizIncorrectColor ? inf['customColors'].quizIncorrectColor : _main_consts__WEBPACK_IMPORTED_MODULE_11__["quizIncorrectColor"]);
+            }
+        }),
+        __metadata("design:paramtypes", [Array, _Padding__WEBPACK_IMPORTED_MODULE_1__["default"], Array, Number, Array, Number, Array, Array, Array])
+    ], Quiz);
     return Quiz;
 }(_VBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (Quiz);
@@ -1786,6 +1872,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
 /* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
 /* harmony import */ var _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../animation/OriginalDimenLayoutState */ "../src/animation/OriginalDimenLayoutState.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1799,6 +1886,16 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
 
 
 
@@ -1811,6 +1908,7 @@ var Radical = /** @class */ (function (_super) {
         _this.width = _this.calcWidth();
         return _this;
     }
+    Radical_1 = Radical;
     // Radical mimics dimensions of the root container, so for layout
     // purposes doesn't have dimensions to enforce.
     Radical.prototype.calcWidth = function () { return 0; };
@@ -1871,6 +1969,20 @@ var Radical = /** @class */ (function (_super) {
         layouts.set(this, thisLayout);
         return thisLayout;
     };
+    var Radical_1;
+    Radical = Radical_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__["Content"])({
+            character: 'r',
+            initialize: function (file) {
+                var radicals = [];
+                for (var i = 0; i < file.radicals; i++) {
+                    radicals.push(new Radical_1('r' + i));
+                }
+                return radicals;
+            }
+        }),
+        __metadata("design:paramtypes", [String])
+    ], Radical);
     return Radical;
 }(_EqContent__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (Radical);
@@ -1984,8 +2096,12 @@ var RadioButton = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqContainer */ "../src/layout/EqContainer.ts");
 /* harmony import */ var _animation_RootContainerLayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/RootContainerLayoutState */ "../src/animation/RootContainerLayoutState.ts");
-/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _HBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HBox */ "../src/layout/HBox.ts");
+/* harmony import */ var _Radical__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -1999,6 +2115,19 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
 
 
 
@@ -2030,16 +2159,17 @@ var RootContainer = /** @class */ (function (_super) {
         _this.height = _this.calcHeight();
         return _this;
     }
+    RootContainer_1 = RootContainer;
     /**
      * Calculate the layout parameters for the display
      * of the container.
      */
     RootContainer.prototype.calcMetrics = function () {
-        this.padBottom = _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].termPadding.bottom / 2;
-        var termHeight = this.termHeights[Object(_main_helpers__WEBPACK_IMPORTED_MODULE_2__["getWidthTier"])()] + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].termPadding.height();
-        this.indexHeight = termHeight * _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootIndexScale;
+        this.padBottom = _main_consts__WEBPACK_IMPORTED_MODULE_6__["termPadding"].bottom / 2;
+        var termHeight = this.termHeights[Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["getWidthTier"])()] + _main_consts__WEBPACK_IMPORTED_MODULE_6__["termPadding"].height();
+        this.indexHeight = termHeight * _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootIndexScale"];
         this.kinkHeight = (termHeight - this.padBottom) - this.indexHeight;
-        this.indexTopOverflow = this.index.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootIndexScale - this.indexHeight;
+        this.indexTopOverflow = this.index.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootIndexScale"] - this.indexHeight;
         this.indexTopOverflow = Math.max(this.indexTopOverflow, 0);
         this.emptySpaceAboveIndex = this.argument.getHeight() - this.kinkHeight - this.indexHeight;
         this.emptySpaceAboveIndex = Math.max(this.emptySpaceAboveIndex, 0);
@@ -2055,27 +2185,27 @@ var RootContainer = /** @class */ (function (_super) {
         */
         // tan x = termHeight / argMargin
         // x = atan(termHeight / argMargin)
-        var x = Math.atan(termHeight / _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootArgMarginLeft);
+        var x = Math.atan(termHeight / _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootArgMarginLeft"]);
         // tan x = h / w
         // w = h / tan x
         var mainKinkWidth = this.kinkHeight / Math.tan(x);
         var z = Math.PI - x - Math.PI / 2;
         // y + z = rootKinkTipAngle
         // y = rootKinkTipAngle - z
-        var y = _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootKinkTipAngle - z;
+        var y = _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootKinkTipAngle"] - z;
         // sin y = w / tipLen
         // w = tipLen * sin y
-        this.kinkTipWidth = _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootKinkTipLength * Math.sin(y);
+        this.kinkTipWidth = _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootKinkTipLength"] * Math.sin(y);
         this.kinkWidth = mainKinkWidth + this.kinkTipWidth;
         // cos y = h / tipLen
         // h = tipLen * cos y
-        this.kinkTipHeight = _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootKinkTipLength * Math.cos(y);
+        this.kinkTipHeight = _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootKinkTipLength"] * Math.cos(y);
         this.yToKinkStart = this.indexTopOverflow + this.emptySpaceAboveIndex + this.indexHeight + this.kinkTipHeight - this.padBottom;
         // tan x = kinkHeight / xFromRightOfKink
         // xFromRightOfKink = kinkHeight / tan x
         var xFromRightOfKinkForIdx = this.kinkHeight / Math.tan(x);
         var widthForIdx = this.kinkWidth + xFromRightOfKinkForIdx;
-        var realIdxWidth = this.index.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootIndexScale;
+        var realIdxWidth = this.index.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootIndexScale"];
         this.indexLeftOverflow = realIdxWidth - widthForIdx;
     };
     RootContainer.prototype.recalcDimensions = function () {
@@ -2094,7 +2224,7 @@ var RootContainer = /** @class */ (function (_super) {
     };
     RootContainer.prototype.calcWidth = function () {
         var realIdxLeftPortrusion = Math.max(this.indexLeftOverflow, 0);
-        return realIdxLeftPortrusion + this.kinkWidth + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
+        return realIdxLeftPortrusion + this.kinkWidth + _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootArgMarginLeft"] + this.argument.getWidth() + this.padding.width();
     };
     RootContainer.prototype.calcHeight = function () {
         return this.indexTopOverflow + this.argument.getHeight() + this.padding.height();
@@ -2121,7 +2251,7 @@ var RootContainer = /** @class */ (function (_super) {
         var kinkTopY = kinkTipY - this.kinkTipHeight;
         var tickBotX = realLeftOverflow + this.kinkWidth;
         var tickBotY = kinkTopY + this.kinkHeight;
-        var tickTopX = tickBotX + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootArgMarginLeft;
+        var tickTopX = tickBotX + _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootArgMarginLeft"];
         var tickTopY = tickBotY - this.argument.getHeight() + 1 + this.padBottom;
         var endX = tickTopX + this.argument.getWidth();
         var endY = tickTopY;
@@ -2141,9 +2271,9 @@ var RootContainer = /** @class */ (function (_super) {
         }
         indexTlx += adjustedPad.left - 1 * currScale;
         var indexTly = tly + (this.emptySpaceAboveIndex - 1 - this.padBottom) * currScale + adjustedPad.top;
-        this.index.addLayout(thisLayout, layouts, indexTlx, indexTly, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootIndexScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        this.index.addLayout(thisLayout, layouts, indexTlx, indexTly, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootIndexScale"], opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         // Calculate layout for the argument
-        var argTlx = tlx + (realLeftOverflow + this.kinkWidth + _main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].rootArgMarginLeft) * currScale + adjustedPad.left;
+        var argTlx = tlx + (realLeftOverflow + this.kinkWidth + _main_consts__WEBPACK_IMPORTED_MODULE_6__["rootArgMarginLeft"]) * currScale + adjustedPad.left;
         var argTly = tly + this.indexTopOverflow * currScale + adjustedPad.top;
         this.argument.addLayout(thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         if (this.radical) {
@@ -2152,6 +2282,24 @@ var RootContainer = /** @class */ (function (_super) {
         layouts.set(this, thisLayout);
         return thisLayout;
     };
+    var RootContainer_1;
+    RootContainer = RootContainer_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__["Container"])({
+            typeString: 'root',
+            parse: function (containerObj, depth, contentGetter, containerGetter, genInfo) {
+                // Return container from file
+                var format = containerObj;
+                var idx = new _HBox__WEBPACK_IMPORTED_MODULE_3__["default"](Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.idx, depth + 1, containerGetter, contentGetter), _Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
+                var arg = new _HBox__WEBPACK_IMPORTED_MODULE_3__["default"](Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.arg, depth + 1, containerGetter, contentGetter), _Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
+                var radical;
+                if (format.rad) {
+                    radical = contentGetter(format.rad);
+                }
+                return new RootContainer_1(idx, arg, radical, _main_consts__WEBPACK_IMPORTED_MODULE_6__["defaultRootPadding"], genInfo['termHeights']);
+            }
+        }),
+        __metadata("design:paramtypes", [_HBox__WEBPACK_IMPORTED_MODULE_3__["default"], _HBox__WEBPACK_IMPORTED_MODULE_3__["default"], _Radical__WEBPACK_IMPORTED_MODULE_4__["default"], _Padding__WEBPACK_IMPORTED_MODULE_2__["default"], Array])
+    ], RootContainer);
     return RootContainer;
 }(_EqContainer__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (RootContainer);
@@ -2169,8 +2317,13 @@ var RootContainer = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqContainer */ "../src/layout/EqContainer.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _HBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HBox */ "../src/layout/HBox.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _TightHBox__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TightHBox */ "../src/layout/TightHBox.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2184,6 +2337,20 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
 
 
 
@@ -2205,9 +2372,10 @@ var SubSuper = /** @class */ (function (_super) {
         _this.width = _this.calcWidth();
         return _this;
     }
+    SubSuper_1 = SubSuper;
     SubSuper.prototype.recalcPortrusion = function () {
-        this.topPortrusion = this.top.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * this.portrusionProportion;
-        this.bottomPortrusion = this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale * this.portrusionProportion;
+        this.topPortrusion = this.top.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"] * this.portrusionProportion;
+        this.bottomPortrusion = this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"] * this.portrusionProportion;
     };
     SubSuper.prototype.recalcDimensions = function () {
         this.top.recalcDimensions();
@@ -2229,7 +2397,7 @@ var SubSuper = /** @class */ (function (_super) {
     };
     SubSuper.prototype.calcWidth = function () {
         //Width of the right portion, ie the top and bottom
-        var rightWidth = Math.max(this.top.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, this.bottom.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale);
+        var rightWidth = Math.max(this.top.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"], this.bottom.getWidth() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"]);
         return this.middle.getWidth() + rightWidth + this.padding.width();
     };
     SubSuper.prototype.calcHeight = function () {
@@ -2239,18 +2407,34 @@ var SubSuper = /** @class */ (function (_super) {
             + this.padding.height();
     };
     SubSuper.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
-        var layout = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        var layout = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_4__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         //Add the middle
         var middleLayout = this.middle.addLayout(layout, layouts, tlx + this.padding.left * currScale, tly + (this.topPortrusion + this.padding.top) * currScale, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         var rightX = middleLayout.tlx + middleLayout.width;
         //Add the top
-        this.top.addLayout(layout, layouts, rightX, tly + this.padding.top * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        this.top.addLayout(layout, layouts, rightX, tly + this.padding.top * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"], opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         //Add the bottom
-        this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale) * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].expScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
+        this.bottom.addLayout(layout, layouts, rightX, tly + layout.height - (this.padding.bottom + this.bottom.getHeight() * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"]) * currScale, currScale * _main_consts__WEBPACK_IMPORTED_MODULE_3__["expScale"], opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent);
         //Add own
         layouts.set(this, layout);
         return layout;
     };
+    var SubSuper_1;
+    SubSuper = SubSuper_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_6__["Container"])({
+            typeString: 'subSuper',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                // Return subSuper from file
+                var format = containerObj;
+                var top = new _HBox__WEBPACK_IMPORTED_MODULE_1__["default"](Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.top, depth + 1, containerGetter, contentGetter), _Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
+                var middle = new _TightHBox__WEBPACK_IMPORTED_MODULE_7__["default"](Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.middle, depth + 1, containerGetter, contentGetter), _Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
+                var bottom = new _HBox__WEBPACK_IMPORTED_MODULE_1__["default"](Object(_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.bottom, depth + 1, containerGetter, contentGetter), _Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
+                var portrusion = format.portrusion ? format.portrusion : _main_consts__WEBPACK_IMPORTED_MODULE_3__["defaultExpPortrusion"];
+                return new SubSuper_1(top, middle, bottom, portrusion, _main_consts__WEBPACK_IMPORTED_MODULE_3__["defaultSubSuperPadding"]);
+            }
+        }),
+        __metadata("design:paramtypes", [_HBox__WEBPACK_IMPORTED_MODULE_1__["default"], _HBox__WEBPACK_IMPORTED_MODULE_1__["default"], _HBox__WEBPACK_IMPORTED_MODULE_1__["default"], Number, _Padding__WEBPACK_IMPORTED_MODULE_2__["default"]])
+    ], SubSuper);
     return SubSuper;
 }(_EqContainer__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (SubSuper);
@@ -2262,14 +2446,19 @@ var SubSuper = /** @class */ (function (_super) {
 /*!***************************************!*\
   !*** ../src/layout/TableContainer.ts ***!
   \***************************************/
-/*! exports provided: default */
+/*! exports provided: parseChildrenObj, parseChildren2D, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseChildrenObj", function() { return parseChildrenObj; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseChildren2D", function() { return parseChildren2D; });
 /* harmony import */ var _EqContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqContainer */ "../src/layout/EqContainer.ts");
 /* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2283,9 +2472,51 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 
 
 
+
+
+
+/**
+ * Functions for loading from the file.
+ */
+/**
+ * Parse an object containing references with indices
+ * as keys.
+ * @param obj The object to parse.
+*/
+function parseChildrenObj(obj, contentGetter) {
+    var toReturn = {};
+    if (!obj) {
+        return toReturn;
+    }
+    Object.keys(obj).forEach(function (index) {
+        var ref = obj[index];
+        toReturn[index] = contentGetter(ref);
+    });
+    return toReturn;
+}
+/**
+ * Parse a 2D array of components.
+ * @param fromFile The array from the file.
+ */
+function parseChildren2D(fromFile, containerGetter, contentGetter) {
+    var toReturn = [];
+    fromFile.forEach(function (row) {
+        toReturn.push(Object(_main_helpers__WEBPACK_IMPORTED_MODULE_3__["parseContainerChildren"])(row, 1, containerGetter, contentGetter));
+    });
+    return toReturn;
+}
 /**
  * Lays out components in a table.
  */
@@ -2306,6 +2537,7 @@ var TableContainer = /** @class */ (function (_super) {
         _this.vLines = vLines;
         return _this;
     }
+    TableContainer_1 = TableContainer;
     /**
      * Return the amount of space to leave for lines
      * (both horizontal and vertical).
@@ -2318,7 +2550,7 @@ var TableContainer = /** @class */ (function (_super) {
      * for a table cell.
      */
     TableContainer.prototype.getMinCellDimen = function () {
-        return _main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].tableMinCellDimen;
+        return _main_consts__WEBPACK_IMPORTED_MODULE_4__["tableMinCellDimen"];
     };
     TableContainer.prototype.recalcDimensions = function () {
         this.children.forEach(function (row) {
@@ -2435,6 +2667,18 @@ var TableContainer = /** @class */ (function (_super) {
         layouts.set(this, thisState);
         return thisState;
     };
+    var TableContainer_1;
+    TableContainer = TableContainer_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__["Container"])({
+            typeString: 'table',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                var format = containerObj;
+                var children = parseChildren2D(format.children, containerGetter, contentGetter);
+                return new TableContainer_1(_main_consts__WEBPACK_IMPORTED_MODULE_4__["defaultTablePadding"], children, parseChildrenObj(format.hLines, contentGetter), parseChildrenObj(format.vLines, contentGetter), 1, _main_consts__WEBPACK_IMPORTED_MODULE_4__["tableCellPadding"]);
+            }
+        }),
+        __metadata("design:paramtypes", [_Padding__WEBPACK_IMPORTED_MODULE_2__["default"], Array, Object, Object, Number, _Padding__WEBPACK_IMPORTED_MODULE_2__["default"]])
+    ], TableContainer);
     return TableContainer;
 }(_EqContainer__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (TableContainer);
@@ -2454,6 +2698,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 /* harmony import */ var _EqContent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EqContent */ "../src/layout/EqContent.ts");
 /* harmony import */ var _animation_TermLayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/TermLayoutState */ "../src/animation/TermLayoutState.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2467,13 +2712,23 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
 
 
 
 var Term = /** @class */ (function (_super) {
     __extends(Term, _super);
     function Term(text, widths, heights, ascents, ref) {
-        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].termPadding, ref) || this;
+        var _this = _super.call(this, _main_consts__WEBPACK_IMPORTED_MODULE_0__["termPadding"], ref) || this;
         _this.widths = widths;
         _this.heights = heights;
         _this.halfInnerWidths = _this.widths.map(function (width) { return width / 2; });
@@ -2483,6 +2738,7 @@ var Term = /** @class */ (function (_super) {
         _this.text = text;
         return _this;
     }
+    Term_1 = Term;
     Term.prototype.recalcDimensions = function () {
         _super.prototype.recalcDimensions.call(this);
         var tier = window['currentWidthTier'];
@@ -2510,6 +2766,45 @@ var Term = /** @class */ (function (_super) {
         this.setupCtx(before, after, progress, ctx);
         ctx.fillText(this.text, -this.halfInnerWidth, -this.halfInnerHeight + this.ascent);
     };
+    var Term_1;
+    Term = Term_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_3__["Content"])({
+            character: 't',
+            initialize: function (file, info) {
+                var terms = [];
+                var ascents = [];
+                if (file.terms.length > 0) {
+                    //Get the ascents from each tier
+                    for (var w = 0; w < _main_consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length; w++) {
+                        ascents.push(file.metrics[w].ascent);
+                    }
+                }
+                //Initialize all terms
+                for (var t = 0; t < file.terms.length; t++) {
+                    var widths = [];
+                    //Get the widths for each tier
+                    for (var w = 0; w < _main_consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length; w++) {
+                        widths.push(file.metrics[w].widths[t]);
+                    }
+                    var text = file.terms[t];
+                    var term = new Term_1(text, widths, info['termHeights'], ascents, 't' + t);
+                    terms.push(term);
+                }
+                return terms;
+            },
+            calcInfo: function (file, info) {
+                var termHeights = [];
+                if (file.terms.length > 0) {
+                    //Get the term heights from each tier
+                    for (var w = 0; w < _main_consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length; w++) {
+                        termHeights.push(file.metrics[w].height);
+                    }
+                }
+                info['termHeights'] = termHeights;
+            }
+        }),
+        __metadata("design:paramtypes", [String, Array, Array, Array, String])
+    ], Term);
     return Term;
 }(_EqContent__WEBPACK_IMPORTED_MODULE_1__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (Term);
@@ -2530,6 +2825,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 /* harmony import */ var _Term__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Term */ "../src/layout/Term.ts");
 /* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2543,16 +2841,26 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
 
-var widthDiff = _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].termPadding.width() - _main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].tightTermPadding.width();
+
+
+
+var widthDiff = _main_consts__WEBPACK_IMPORTED_MODULE_1__["termPadding"].width() - _main_consts__WEBPACK_IMPORTED_MODULE_1__["tightTermPadding"].width();
 var TightHBox = /** @class */ (function (_super) {
     __extends(TightHBox, _super);
     function TightHBox() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    TightHBox_1 = TightHBox;
     //Override to account for reduced width of tight terms.
     TightHBox.prototype.calcWidth = function () {
         var totalWidth = 0;
@@ -2584,6 +2892,18 @@ var TightHBox = /** @class */ (function (_super) {
         layouts.set(this, state);
         return state;
     };
+    var TightHBox_1;
+    TightHBox = TightHBox_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__["Container"])({
+            typeString: 'tightHBox',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                // Return HBox from file
+                var format = containerObj;
+                var children = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_4__["parseContainerChildren"])(format.children, depth + 1, containerGetter, contentGetter);
+                return new TightHBox_1(children, _Padding__WEBPACK_IMPORTED_MODULE_6__["default"].even(_main_consts__WEBPACK_IMPORTED_MODULE_1__["defaultHBoxPadding"]));
+            }
+        })
+    ], TightHBox);
     return TightHBox;
 }(_HBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (TightHBox);
@@ -2673,7 +2993,11 @@ var VBox = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _VBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VBox */ "../src/layout/VBox.ts");
-/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2687,12 +3011,27 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
 
 
 /**
  * VBox used at the root of the layout hierarchy.
  * Vertically centers the children
  * as well as horizontally centering.
+ * Decorator defined here to avoid circular
+ * dependency between this and VBox.
  */
 var VCenterVBox = /** @class */ (function (_super) {
     __extends(VCenterVBox, _super);
@@ -2701,6 +3040,7 @@ var VCenterVBox = /** @class */ (function (_super) {
         _this.calcChildHeight();
         return _this;
     }
+    VCenterVBox_1 = VCenterVBox;
     VCenterVBox.prototype.calcChildHeight = function () {
         var _this = this;
         // Calculate total child height
@@ -2714,7 +3054,7 @@ var VCenterVBox = /** @class */ (function (_super) {
         this.calcChildHeight();
     };
     VCenterVBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
-        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        var state = new _animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         var innerWidth = (this.getWidth() - this.padding.width()) * currScale;
         var upToY = tly + (this.getHeight() - this.totalChildHeight) / 2;
         for (var i = 0; i < this.children.length; i++) {
@@ -2727,6 +3067,27 @@ var VCenterVBox = /** @class */ (function (_super) {
         layouts.set(this, state);
         return state;
     };
+    var VCenterVBox_1;
+    VCenterVBox = VCenterVBox_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__["Container"])({
+            typeString: 'vbox',
+            parse: function (containerObj, depth, contentGetter, containerGetter, inf) {
+                // Return VBox from file
+                var format = containerObj;
+                var children = Object(_main_helpers__WEBPACK_IMPORTED_MODULE_3__["parseContainerChildren"])(format.children, depth + 1, containerGetter, contentGetter);
+                // Allocate extra padding if at root of layout
+                var padding = depth === 0 ? _main_consts__WEBPACK_IMPORTED_MODULE_5__["defaultRootVBoxPadding"] : _Padding__WEBPACK_IMPORTED_MODULE_1__["default"].even(_main_consts__WEBPACK_IMPORTED_MODULE_5__["defaultVBoxPadding"]);
+                // Center vertically if at root of layout
+                if (inf['fixedHeights'] && depth === 0) {
+                    return new VCenterVBox_1(children, padding);
+                }
+                else {
+                    return new _VBox__WEBPACK_IMPORTED_MODULE_0__["default"](children, padding);
+                }
+            }
+        }),
+        __metadata("design:paramtypes", [Array, _Padding__WEBPACK_IMPORTED_MODULE_1__["default"]])
+    ], VCenterVBox);
     return VCenterVBox;
 }(_VBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (VCenterVBox);
@@ -2745,7 +3106,10 @@ var VCenterVBox = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EqContent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EqContent */ "../src/layout/EqContent.ts");
 /* harmony import */ var _main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/OriginalDimenLayoutState */ "../src/animation/OriginalDimenLayoutState.ts");
+/* harmony import */ var _Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../animation/OriginalDimenLayoutState */ "../src/animation/OriginalDimenLayoutState.ts");
+/* harmony import */ var _main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2759,6 +3123,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
 
 
 
@@ -2773,6 +3149,7 @@ var VDivider = /** @class */ (function (_super) {
         _this.height = _this.calcHeight();
         return _this;
     }
+    VDivider_1 = VDivider;
     VDivider.prototype.setPadding = function (newPadding) {
         this.padding = newPadding;
     };
@@ -2783,7 +3160,7 @@ var VDivider = /** @class */ (function (_super) {
         var y = parentLayout.tly;
         var height = parentLayout.height;
         var width = this.getWidth();
-        var state = new _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_2__["OriginalDimenLayoutState"](parentLayout, this, tlx, y, width, height, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj), width, height / currScale);
+        var state = new _animation_OriginalDimenLayoutState__WEBPACK_IMPORTED_MODULE_3__["OriginalDimenLayoutState"](parentLayout, this, tlx, y, width, height, currScale, this.getColorForContent(colorsObj), this.getOpacityForContent(opacityObj), width, height / currScale);
         layouts.set(this, state);
         return state;
     };
@@ -2792,6 +3169,20 @@ var VDivider = /** @class */ (function (_super) {
         var height = before.origInnerHeight * (1 - progress) + after.origInnerHeight * progress;
         Object(_main_helpers__WEBPACK_IMPORTED_MODULE_1__["line"])(0, -height / 2 + this.padding.top, 0, height / 2 - this.padding.bottom, ctx);
     };
+    var VDivider_1;
+    VDivider = VDivider_1 = __decorate([
+        Object(_main_ComponentModel__WEBPACK_IMPORTED_MODULE_4__["Content"])({
+            character: 'v',
+            initialize: function (file) {
+                var vDividers = [];
+                for (var i = 0; i < file.vDividers; i++) {
+                    vDividers.push(new VDivider_1(_main_consts__WEBPACK_IMPORTED_MODULE_5__["vDividerPadding"], 'v' + i));
+                }
+                return vDividers;
+            }
+        }),
+        __metadata("design:paramtypes", [_Padding__WEBPACK_IMPORTED_MODULE_2__["default"], String])
+    ], VDivider);
     return VDivider;
 }(_EqContent__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (VDivider);
@@ -2808,31 +3199,19 @@ var VDivider = /** @class */ (function (_super) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _layout_Term__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../layout/Term */ "../src/layout/Term.ts");
-/* harmony import */ var _layout_HBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../layout/HBox */ "../src/layout/HBox.ts");
-/* harmony import */ var _layout_Padding__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../layout/Padding */ "../src/layout/Padding.ts");
-/* harmony import */ var _layout_VBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../layout/VBox */ "../src/layout/VBox.ts");
-/* harmony import */ var _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../animation/AnimationSet */ "../src/animation/AnimationSet.ts");
-/* harmony import */ var _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../animation/MoveAnimation */ "../src/animation/MoveAnimation.ts");
-/* harmony import */ var _animation_RemoveAnimation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../animation/RemoveAnimation */ "../src/animation/RemoveAnimation.ts");
-/* harmony import */ var _animation_AddAnimation__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../animation/AddAnimation */ "../src/animation/AddAnimation.ts");
-/* harmony import */ var _animation_EvalAnimation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../animation/EvalAnimation */ "../src/animation/EvalAnimation.ts");
-/* harmony import */ var _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../animation/ReverseEvalAnimation */ "../src/animation/ReverseEvalAnimation.ts");
-/* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./consts */ "../src/main/consts.ts");
-/* harmony import */ var _layout_EqContent__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../layout/EqContent */ "../src/layout/EqContent.ts");
-/* harmony import */ var _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../animation/ProgressAnimation */ "../src/animation/ProgressAnimation.ts");
-/* harmony import */ var _layout_HDivider__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../layout/HDivider */ "../src/layout/HDivider.ts");
-/* harmony import */ var _layout_TightHBox__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../layout/TightHBox */ "../src/layout/TightHBox.ts");
-/* harmony import */ var _layout_SubSuper__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../layout/SubSuper */ "../src/layout/SubSuper.ts");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _layout_Radical__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../layout/Radical */ "../src/layout/Radical.ts");
-/* harmony import */ var _layout_RootContainer__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../layout/RootContainer */ "../src/layout/RootContainer.ts");
-/* harmony import */ var _layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../layout/VCenterVBox */ "../src/layout/VCenterVBox.ts");
-/* harmony import */ var _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./ProgressIndicator */ "../src/main/ProgressIndicator.ts");
-/* harmony import */ var _layout_Quiz__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../layout/Quiz */ "../src/layout/Quiz.ts");
-/* harmony import */ var _layout_TableContainer__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../layout/TableContainer */ "../src/layout/TableContainer.ts");
-/* harmony import */ var _layout_VDivider__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../layout/VDivider */ "../src/layout/VDivider.ts");
-/* harmony import */ var _animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../animation/BezierCallback */ "../src/animation/BezierCallback.ts");
+/* harmony import */ var _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../animation/AnimationSet */ "../src/animation/AnimationSet.ts");
+/* harmony import */ var _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../animation/MoveAnimation */ "../src/animation/MoveAnimation.ts");
+/* harmony import */ var _animation_RemoveAnimation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../animation/RemoveAnimation */ "../src/animation/RemoveAnimation.ts");
+/* harmony import */ var _animation_AddAnimation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../animation/AddAnimation */ "../src/animation/AddAnimation.ts");
+/* harmony import */ var _animation_EvalAnimation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../animation/EvalAnimation */ "../src/animation/EvalAnimation.ts");
+/* harmony import */ var _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../animation/ReverseEvalAnimation */ "../src/animation/ReverseEvalAnimation.ts");
+/* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./consts */ "../src/main/consts.ts");
+/* harmony import */ var _layout_EqContent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../layout/EqContent */ "../src/layout/EqContent.ts");
+/* harmony import */ var _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../animation/ProgressAnimation */ "../src/animation/ProgressAnimation.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _ProgressIndicator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ProgressIndicator */ "../src/main/ProgressIndicator.ts");
+/* harmony import */ var _animation_BezierCallback__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../animation/BezierCallback */ "../src/animation/BezierCallback.ts");
+/* harmony import */ var _ComponentModel__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -2846,18 +3225,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2894,10 +3261,6 @@ var CanvasController = /** @class */ (function () {
         this.container = container;
         this.steps = instructions.steps;
         this.stepOptions = instructions.stepOpts;
-        this.terms = [];
-        this.hDividers = [];
-        this.vDividers = [];
-        this.radicals = [];
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
         this.handleMouseClick = this.handleMouseClick.bind(this);
@@ -2911,7 +3274,7 @@ var CanvasController = /** @class */ (function () {
         this.ctx = this.canvas.getContext("2d", { alpha: false });
         canvasContainer.appendChild(this.canvas);
         // Set background color
-        this.backgroundFill = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["rgbaArrayToCssString"])(colors && colors.canvasBackground ? colors.canvasBackground : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].backgroundColor);
+        this.backgroundFill = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["rgbaArrayToCssString"])(colors && colors.canvasBackground ? colors.canvasBackground : _consts__WEBPACK_IMPORTED_MODULE_6__["backgroundColor"]);
         // Check if any steps have text
         var hasText = false;
         for (var i = 0; i < this.steps.length; i++) {
@@ -2965,16 +3328,16 @@ var CanvasController = /** @class */ (function () {
         }
         // Initialize progress indicator, if not autoplaying
         if (!this.isAutoplay) {
-            this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_20__["default"](this.canvas);
+            this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_10__["default"](this.canvas);
         }
         //Check whether to fix the height of the canvas
         if (container.hasAttribute('data-fix-height')) {
             this.fixedHeights = instructions.maxHeights;
         }
         //Initialize the font
-        _a = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["getFont"])(instructions), this.fontFamily = _a[0], this.fontStyle = _a[1], this.fontWeight = _a[2];
+        _a = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["getFont"])(instructions), this.fontFamily = _a[0], this.fontStyle = _a[1], this.fontWeight = _a[2];
         //Initialize Components and display first step
-        this.initContent(instructions);
+        this.initComponents(instructions);
         this.updateFontSize();
         this.recalc(true);
         // Bind next step to canvas/text click if not autoplaying
@@ -2987,11 +3350,9 @@ var CanvasController = /** @class */ (function () {
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
         window.addEventListener('resize', function () {
-            console.log('resize');
             _this.updateFontSize();
             _this.updateDimensions();
             _this.recalc(false);
-            console.log('\n');
         });
         // Add overlay for play if autoplaying
         if (this.isAutoplay) {
@@ -3009,22 +3370,31 @@ var CanvasController = /** @class */ (function () {
         this.canvas.addEventListener("mousemove", this.handleMouseMove);
     }
     /**
+     * Initialize the components/content and
+     * add general information.
+     */
+    CanvasController.prototype.initComponents = function (instructions) {
+        this.components = new _ComponentModel__WEBPACK_IMPORTED_MODULE_12__["ComponentModel"](instructions);
+        this.components.setGenInfo('customColors', this.customColors);
+        this.components.setGenInfo('fixedHeights', this.fixedHeights);
+    };
+    /**
      * Emphasize a button.
      * @param button The element of the button.
      */
     CanvasController.prototype.highlightButton = function (button) {
-        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
         var anim = new /** @class */ (function (_super) {
             __extends(class_1, _super);
             function class_1() {
-                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightEasing, set) || this;
+                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_6__["buttonHighlightDuration"], _consts__WEBPACK_IMPORTED_MODULE_6__["buttonHighlightEasing"], set) || this;
             }
             class_1.prototype.step = function (completion) {
-                var opacity = 0.4 * (1 - completion) + _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightedOpacity * completion;
+                var opacity = 0.4 * (1 - completion) + _consts__WEBPACK_IMPORTED_MODULE_6__["buttonHighlightedOpacity"] * completion;
                 button.style.opacity = "" + opacity;
             };
             return class_1;
-        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__["default"]));
+        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_11__["default"]));
         set.addAnimation(anim);
         set.start();
     };
@@ -3033,18 +3403,18 @@ var CanvasController = /** @class */ (function () {
      * @param button The element of the button.
      */
     CanvasController.prototype.unhighlightButton = function (button) {
-        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
         var anim = new /** @class */ (function (_super) {
             __extends(class_2, _super);
             function class_2() {
-                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonUnhighlightDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonUnhighlightEasing, set) || this;
+                return _super.call(this, _consts__WEBPACK_IMPORTED_MODULE_6__["buttonUnhighlightDuration"], _consts__WEBPACK_IMPORTED_MODULE_6__["buttonUnhighlightEasing"], set) || this;
             }
             class_2.prototype.step = function (completion) {
-                var opacity = _consts__WEBPACK_IMPORTED_MODULE_10__["default"].buttonHighlightedOpacity * (1 - completion) + 0.4 * completion;
+                var opacity = _consts__WEBPACK_IMPORTED_MODULE_6__["buttonHighlightedOpacity"] * (1 - completion) + 0.4 * completion;
                 button.style.opacity = "" + opacity;
             };
             return class_2;
-        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_24__["default"]));
+        }(_animation_BezierCallback__WEBPACK_IMPORTED_MODULE_11__["default"]));
         set.addAnimation(anim);
         set.start();
     };
@@ -3087,7 +3457,7 @@ var CanvasController = /** @class */ (function () {
             var allStates_1 = [];
             this.currStates.forEach(function (state) { return allStates_1.push(state); });
             // The animations that will be played.
-            var animSet_1 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_1);
+            var animSet_1 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_1);
             currentlyOn_1.forEach(function (layout) {
                 var handler = _this.mouseClickEvents.get(layout);
                 handler(layout, animSet_1, _this);
@@ -3128,7 +3498,7 @@ var CanvasController = /** @class */ (function () {
             var allStates_2 = [];
             this.currStates.forEach(function (state) { return allStates_2.push(state); });
             // The animations that will be played.
-            var animSet_2 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_2);
+            var animSet_2 = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](undefined, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill, allStates_2);
             // For each layout the cursor is on, check if it
             // was on beforehand. If it was not, fire enter
             // event.
@@ -3211,7 +3581,7 @@ var CanvasController = /** @class */ (function () {
      * changes.
      */
     CanvasController.prototype.updateFontSize = function () {
-        this.fontSize = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["getFontSizeForTier"])(window['currentWidthTier']);
+        this.fontSize = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["getFontSizeForTier"])(window['currentWidthTier']);
     };
     /**
      * Update the dimensions of all content, and the current layout.
@@ -3237,7 +3607,7 @@ var CanvasController = /** @class */ (function () {
         this.ctx.restore();
         this.currStates.forEach(function (f) {
             _this.ctx.save();
-            if (f.component instanceof _layout_EqContent__WEBPACK_IMPORTED_MODULE_11__["default"]) {
+            if (f.component instanceof _layout_EqContent__WEBPACK_IMPORTED_MODULE_7__["default"]) {
                 f.component.interpColorOff();
                 f.component.draw(f, f, 0, _this.ctx);
             }
@@ -3327,10 +3697,7 @@ var CanvasController = /** @class */ (function () {
      * @param forEach A function that will be passed each bit of content.
      */
     CanvasController.prototype.forAllContent = function (forEach) {
-        this.terms.forEach(forEach);
-        this.hDividers.forEach(forEach);
-        this.vDividers.forEach(forEach);
-        this.radicals.forEach(forEach);
+        this.components.forAllContent(forEach);
         this.tempContent.forEach(forEach);
     };
     /**
@@ -3355,14 +3722,14 @@ var CanvasController = /** @class */ (function () {
             IE Workaround: Setting size erases canvas,
             redraw immediately to avoid flash of blank.
             */
-            if (_helpers__WEBPACK_IMPORTED_MODULE_16__["isIE"]) {
+            if (_helpers__WEBPACK_IMPORTED_MODULE_9__["isIE"]) {
                 var actualCurrStates = this.currStates;
                 this.currStates = oldStates;
                 this.redraw();
                 this.currStates = actualCurrStates;
             }
         }
-        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_4__["default"](function () {
+        var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](function () {
             //When done
             if (updateDimenAfter) {
                 _this.setSize(canvasWidth, canvasHeight);
@@ -3414,47 +3781,47 @@ var CanvasController = /** @class */ (function () {
             return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
         // Find the durations for each transition type (may be custom)
-        var moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].moveDuration;
+        var moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultMoveDuration"];
         var addDuration;
         var removeDuration;
         // Add and remove need to be switched if we're going backwards
         if (reverseStep) {
-            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].removeDuration;
-            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].addDuration;
+            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultRemoveDuration"];
+            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultAddDuration"];
         }
         else {
             // Not going backwards
-            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].addDuration;
-            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].removeDuration;
+            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultAddDuration"];
+            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultRemoveDuration"];
         }
         var maxDuration = Math.max(moveDuration, addDuration, removeDuration);
         //Add a merge animation
         var addMerge = function (mergeToRef, stateBefore) {
-            var mergeTo = this.getContentFromRef(mergeToRef);
+            var mergeTo = this.components.getContent(mergeToRef);
             var mergeToNewState = this.currStates.get(mergeTo);
-            set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](stateBefore, mergeToNewState, set, this.ctx, moveDuration));
+            set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](stateBefore, mergeToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a clone animation
         var addClone = function (cloneFromRef, stateAfter) {
-            var cloneFrom = this.getContentFromRef(cloneFromRef);
+            var cloneFrom = this.components.getContent(cloneFromRef);
             var cloneFromOldState = oldStates.get(cloneFrom);
-            set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
+            set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
         //Add an eval animation
         var addEval = function (evalToRef, stateBefore) {
-            var evalTo = this.getContentFromRef(evalToRef);
+            var evalTo = this.components.getContent(evalToRef);
             var evalToNewState = this.currStates.get(evalTo);
-            set.addAnimation(new _animation_EvalAnimation__WEBPACK_IMPORTED_MODULE_8__["default"](stateBefore, evalToNewState, set, this.ctx, moveDuration));
+            set.addAnimation(new _animation_EvalAnimation__WEBPACK_IMPORTED_MODULE_4__["default"](stateBefore, evalToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a reverse eval
         var addRevEval = function (evalToRef, stateAfter) {
-            var evalTo = this.getContentFromRef(evalToRef);
+            var evalTo = this.components.getContent(evalToRef);
             var evalToOldState = oldStates.get(evalTo);
-            set.addAnimation(new _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_9__["default"](evalToOldState, stateAfter, set, this.ctx, moveDuration));
+            set.addAnimation(new _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
         //Animate the progress indicator
         if (this.progress && !updateDimenAfter) {
-            set.addAnimation(new _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_12__["default"](stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].progressEasing, canvasWidth, canvasHeight));
+            set.addAnimation(new _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_8__["default"](stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration, _consts__WEBPACK_IMPORTED_MODULE_6__["progressEasing"], canvasWidth, canvasHeight));
         }
         //Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(function (content) {
@@ -3466,7 +3833,7 @@ var CanvasController = /** @class */ (function () {
             var contentRef = content.getRef();
             if (stateBefore && stateAfter) {
                 //Content has just moved
-                set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](stateBefore, stateAfter, set, _this.ctx, moveDuration));
+                set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](stateBefore, stateAfter, set, _this.ctx, moveDuration));
             }
             else if (stateBefore) {
                 //Doesn't exist after, has been removed
@@ -3485,7 +3852,7 @@ var CanvasController = /** @class */ (function () {
                 }
                 else {
                     //Do a regular remove animation
-                    set.addAnimation(new _animation_RemoveAnimation__WEBPACK_IMPORTED_MODULE_6__["default"](stateBefore, set, _this.ctx, removeDuration));
+                    set.addAnimation(new _animation_RemoveAnimation__WEBPACK_IMPORTED_MODULE_2__["default"](stateBefore, set, _this.ctx, removeDuration));
                 }
             }
             else if (stateAfter) {
@@ -3504,7 +3871,7 @@ var CanvasController = /** @class */ (function () {
                     addRevEval(stepOptions.evals[contentRef], stateAfter);
                 }
                 else {
-                    set.addAnimation(new _animation_AddAnimation__WEBPACK_IMPORTED_MODULE_7__["default"](stateAfter, set, _this.ctx, addDuration));
+                    set.addAnimation(new _animation_AddAnimation__WEBPACK_IMPORTED_MODULE_3__["default"](stateAfter, set, _this.ctx, addDuration));
                 }
             }
         });
@@ -3547,74 +3914,6 @@ var CanvasController = /** @class */ (function () {
         this.lastWidth = newWidth;
     };
     /**
-     * Uses the instructions to initialize all
-     * content that will be used in the
-     * animation. Does not initialize the container
-     * layout.
-     *
-     * @param instructions The instructions JSON Object.
-     */
-    CanvasController.prototype.initContent = function (instructions) {
-        this.termHeights = [];
-        var ascents = [];
-        if (instructions.terms.length > 0) {
-            //Get the heights and ascents from each tier
-            for (var w = 0; w < _consts__WEBPACK_IMPORTED_MODULE_10__["default"].widthTiers.length; w++) {
-                this.termHeights.push(instructions.metrics[w].height);
-                ascents.push(instructions.metrics[w].ascent);
-            }
-        }
-        //Initialize all terms
-        for (var t = 0; t < instructions.terms.length; t++) {
-            var widths = [];
-            //Get the widths for each tier
-            for (var w = 0; w < _consts__WEBPACK_IMPORTED_MODULE_10__["default"].widthTiers.length; w++) {
-                widths.push(instructions.metrics[w].widths[t]);
-            }
-            var text = instructions.terms[t];
-            var term = new _layout_Term__WEBPACK_IMPORTED_MODULE_0__["default"](text, widths, this.termHeights, ascents, 't' + t);
-            this.terms.push(term);
-        }
-        //Initialize h dividers
-        for (var i = 0; i < instructions.hDividers; i++) {
-            this.hDividers.push(new _layout_HDivider__WEBPACK_IMPORTED_MODULE_13__["default"](_consts__WEBPACK_IMPORTED_MODULE_10__["default"].hDividerPadding, 'h' + i));
-        }
-        //Initialize v dividers
-        for (var i = 0; i < instructions.vDividers; i++) {
-            this.vDividers.push(new _layout_VDivider__WEBPACK_IMPORTED_MODULE_23__["default"](_consts__WEBPACK_IMPORTED_MODULE_10__["default"].vDividerPadding, 'v' + i));
-        }
-        //Initialize radicals
-        for (var i = 0; i < instructions.radicals; i++) {
-            this.radicals.push(new _layout_Radical__WEBPACK_IMPORTED_MODULE_17__["default"]('r' + i));
-        }
-    };
-    /**
-     * Returns the content for a particular
-     * content reference as used in the JSON
-     * format.
-     *
-     * @param ref The content reference.
-     */
-    CanvasController.prototype.getContentFromRef = function (ref) {
-        var contentType = ref.substring(0, 1);
-        var contentIndex = parseFloat(ref.substring(1, ref.length));
-        if (contentType === 't') {
-            return this.terms[contentIndex];
-        }
-        else if (contentType === 'h') {
-            return this.hDividers[contentIndex];
-        }
-        else if (contentType === 'r') {
-            return this.radicals[contentIndex];
-        }
-        else if (contentType === 'v') {
-            return this.vDividers[contentIndex];
-        }
-        else {
-            throw "unrecognized content type";
-        }
-    };
-    /**
      * Return the step options object for the
      * transition between two steps. Returns
      * undefined if there are no step options
@@ -3646,7 +3945,7 @@ var CanvasController = /** @class */ (function () {
         //First create the structure of containers in memory
         if (reparse) {
             var rootObj = this.steps[idx].root;
-            this.currRootContainer = this.parseContainer(rootObj, 0);
+            this.currRootContainer = this.components.parseContainer(rootObj, 0);
         }
         //If content doesn't take up full width, center it
         var width = this.container.clientWidth;
@@ -3665,132 +3964,116 @@ var CanvasController = /** @class */ (function () {
         //Get the color info
         var colorsObj = this.steps[idx].color;
         var opacityObj = this.steps[idx].opacity;
-        var allLayouts = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["newMap"])();
-        var mouseEnters = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["newMap"])();
-        var mouseExits = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["newMap"])();
-        var mouseClicks = Object(_helpers__WEBPACK_IMPORTED_MODULE_16__["newMap"])();
+        var allLayouts = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["newMap"])();
+        var mouseEnters = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["newMap"])();
+        var mouseExits = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["newMap"])();
+        var mouseClicks = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["newMap"])();
         var tempContent = [];
         var rootLayout = this.currRootContainer.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj, mouseEnters, mouseExits, mouseClicks, tempContent);
         return [allLayouts, rootLayout, mouseEnters, mouseExits, mouseClicks, tempContent];
     };
-    /**
-     * Parse a container from the JSON Object.
-     *
-     * @param containerObj The JSON Object representing the container.
-     * @param depth The depth in the layout tree.
-     */
-    CanvasController.prototype.parseContainer = function (containerObj, depth) {
-        var type = containerObj.type;
-        if (type === "vbox") {
-            var c = this.parseContainerChildren(containerObj.children, depth + 1);
-            var p = depth === 0 ? _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultRootVBoxPadding : _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultVBoxPadding);
-            if (this.fixedHeights && depth === 0) {
-                return new _layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_19__["default"](c, p);
-            }
-            else {
-                return new _layout_VBox__WEBPACK_IMPORTED_MODULE_3__["default"](c, p);
-            }
-        }
-        else if (type === "hbox") {
-            return new _layout_HBox__WEBPACK_IMPORTED_MODULE_1__["default"](this.parseContainerChildren(containerObj.children, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultHBoxPadding));
-        }
-        else if (type === "tightHBox") {
-            return new _layout_TightHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.children, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultTightHBoxPadding));
-        }
-        else if (type === 'subSuper') {
-            var format = containerObj;
-            var top_1 = new _layout_HBox__WEBPACK_IMPORTED_MODULE_1__["default"](this.parseContainerChildren(format.top, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
-            var middle = new _layout_TightHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(format.middle, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
-            var bottom = new _layout_HBox__WEBPACK_IMPORTED_MODULE_1__["default"](this.parseContainerChildren(format.bottom, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
-            var portrusion = format.portrusion ? format.portrusion : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultExpPortrusion;
-            return new _layout_SubSuper__WEBPACK_IMPORTED_MODULE_15__["default"](top_1, middle, bottom, portrusion, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultSubSuperPadding);
-        }
-        else if (type === 'root') {
-            var format = containerObj;
-            var idx = new _layout_HBox__WEBPACK_IMPORTED_MODULE_1__["default"](this.parseContainerChildren(format.idx, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
-            var arg = new _layout_HBox__WEBPACK_IMPORTED_MODULE_1__["default"](this.parseContainerChildren(format.arg, depth + 1), _layout_Padding__WEBPACK_IMPORTED_MODULE_2__["default"].even(0));
-            var radical = void 0;
-            if (format.rad) {
-                radical = this.getContentFromRef(format.rad);
-            }
-            return new _layout_RootContainer__WEBPACK_IMPORTED_MODULE_18__["default"](idx, arg, radical, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultRootPadding, this.termHeights);
-        }
-        else if (type === 'quiz') {
-            var format = containerObj;
-            return new _layout_Quiz__WEBPACK_IMPORTED_MODULE_21__["default"](this.parseContainerChildren(format.children, depth + 1), _consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultQuizPadding, format.answers, this.customColors && this.customColors.curvedOutlineOpacity ? this.customColors.curvedOutlineOpacity : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].curvedOutlineDefaultOpacity, this.customColors && this.customColors.curvedOutlineColor ? this.customColors.curvedOutlineColor : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].curvedOutlineColor, this.customColors && this.customColors.radioButtonOpacity ? this.customColors.radioButtonOpacity : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].radioButtonDefaultOpacity, this.customColors && this.customColors.radioButtonColor ? this.customColors.radioButtonColor : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].radioButtonColor, this.customColors && this.customColors.quizCorrectColor ? this.customColors.quizCorrectColor : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].quizCorrectColor, this.customColors && this.customColors.quizIncorrectColor ? this.customColors.quizIncorrectColor : _consts__WEBPACK_IMPORTED_MODULE_10__["default"].quizIncorrectColor);
-        }
-        else if (type === 'table') {
-            var format = containerObj;
-            var children = this.parseChildren2D(format.children);
-            return new _layout_TableContainer__WEBPACK_IMPORTED_MODULE_22__["default"](_consts__WEBPACK_IMPORTED_MODULE_10__["default"].defaultTablePadding, children, this.parseChildrenObj(format.hLines), this.parseChildrenObj(format.vLines), 1, _consts__WEBPACK_IMPORTED_MODULE_10__["default"].tableCellPadding);
-        }
-        else if (type === undefined) {
-            throw "Invalid JSON File: Missing type attribute on container descriptor.";
-        }
-        else {
-            throw "Invalid JSON File: Unrecognized type: " + type;
-        }
-    };
-    /**
-     * Parse an object containing references with indices
-     * as keys.
-     * @param obj The object to parse.
-     */
-    CanvasController.prototype.parseChildrenObj = function (obj) {
-        var _this = this;
-        var toReturn = {};
-        if (!obj) {
-            return toReturn;
-        }
-        Object.keys(obj).forEach(function (index) {
-            var ref = obj[index];
-            toReturn[index] = _this.getContentFromRef(ref);
-        });
-        return toReturn;
-    };
-    /**
-     * Parse a 2D array of components.
-     * @param fromFile The array from the file.
-     */
-    CanvasController.prototype.parseChildren2D = function (fromFile) {
-        var _this = this;
-        var toReturn = [];
-        fromFile.forEach(function (row) {
-            toReturn.push(_this.parseContainerChildren(row, 1));
-        });
-        return toReturn;
-    };
-    /**
-     * Parse the children attribute of a container
-     * JSON Object.
-     *
-     * @param children The children array.
-     * @param depth The depth in the layout tree.
-     */
-    CanvasController.prototype.parseContainerChildren = function (children, depth) {
-        var _this = this;
-        var toReturn = [];
-        children.forEach(function (child) {
-            if (typeof child === 'object') {
-                if (child === null) {
-                    toReturn.push(undefined);
-                }
-                else {
-                    toReturn.push(_this.parseContainer(child, depth + 1));
-                }
-            }
-            else if (typeof child === 'string') {
-                toReturn.push(_this.getContentFromRef(child));
-            }
-            else {
-                throw "Invalid type of child in JSON file.";
-            }
-        });
-        return toReturn;
-    };
     return CanvasController;
 }());
 /* harmony default export */ __webpack_exports__["default"] = (CanvasController);
+
+
+/***/ }),
+
+/***/ "../src/main/ComponentModel.ts":
+/*!*************************************!*\
+  !*** ../src/main/ComponentModel.ts ***!
+  \*************************************/
+/*! exports provided: Content, containerParsers, Container, ComponentModel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Content", function() { return Content; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "containerParsers", function() { return containerParsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Container", function() { return Container; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ComponentModel", function() { return ComponentModel; });
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers */ "../src/main/helpers.ts");
+
+var contentSpecs = [];
+function Content(contentSpec) {
+    contentSpecs.push(contentSpec);
+    return function (construc) { };
+}
+var containerParsers = {};
+function Container(containerSpec) {
+    console.log(containerSpec.typeString);
+    containerParsers[containerSpec.typeString] = containerSpec.parse;
+    return function (construc) { };
+}
+/**
+ * Stores content/container information for a Canvas Controller in a way that's
+ * modular. The decorator function above is used to mark content usable
+ * here, and specifies how to load and store it.
+ */
+var ComponentModel = /** @class */ (function () {
+    /**
+     * Initialize the component model and the content
+     * in the file.
+     * @param file The file.
+     */
+    function ComponentModel(file) {
+        var _this = this;
+        this.genInfo = {};
+        this.content = Object(_helpers__WEBPACK_IMPORTED_MODULE_0__["newMap"])();
+        // Initialize general info
+        contentSpecs.forEach(function (spec) {
+            if (spec.calcInfo) {
+                spec.calcInfo(file, _this.genInfo);
+            }
+        });
+        // Initialize content
+        contentSpecs.forEach(function (spec) {
+            _this.content.set(spec.character, spec.initialize(file, _this.genInfo));
+        });
+        this.getContent = this.getContent.bind(this);
+        this.parseContainer = this.parseContainer.bind(this);
+    }
+    /**
+     * Call a function for all content.
+     * @param callback The function.
+     */
+    ComponentModel.prototype.forAllContent = function (callback) {
+        this.content.forEach(function (contentArr) {
+            contentArr.forEach(function (content) {
+                callback(content);
+            });
+        });
+    };
+    /**
+     * Get content by its reference.
+     * @param ref The content reference.
+     */
+    ComponentModel.prototype.getContent = function (ref) {
+        var contentType = ref.substring(0, 1);
+        var contentIndex = parseFloat(ref.substring(1, ref.length));
+        return this.content.get(contentType)[contentIndex];
+    };
+    /**
+     * Parse a container object recursively and return its
+     * class representation.
+     * @param containerObj The container object to parse.
+     * @param depth The depth in the container hierarchy.
+     */
+    ComponentModel.prototype.parseContainer = function (containerObj, depth) {
+        return containerParsers[containerObj.type](containerObj, depth, this.getContent, this.parseContainer, this.genInfo);
+    };
+    /**
+     * Set general info that content/containers might need
+     * to initialize.
+     * @param key The name of the info.
+     * @param val The info.
+     */
+    ComponentModel.prototype.setGenInfo = function (key, val) {
+        this.genInfo[key] = val;
+    };
+    return ComponentModel;
+}());
+
 
 
 /***/ }),
@@ -3830,7 +4113,9 @@ var __extends = (undefined && undefined.__extends) || (function () {
 var HeightComputeCanvasController = /** @class */ (function (_super) {
     __extends(HeightComputeCanvasController, _super);
     function HeightComputeCanvasController(instructions) {
-        return _super.call(this, document.createElement('div'), instructions) || this;
+        var _this = _super.call(this, document.createElement('div'), instructions) || this;
+        _this.origInstructions = instructions;
+        return _this;
     }
     /**
      * Compute the maximum height of all steps for
@@ -3840,9 +4125,9 @@ var HeightComputeCanvasController = /** @class */ (function (_super) {
     HeightComputeCanvasController.prototype.getMaxHeight = function (tier) {
         var win = window;
         win.currentWidthTier = tier;
-        this.terms.forEach(function (term) {
-            term.recalcDimensions();
-        });
+        for (var i = 0; i < this.origInstructions.terms.length; i++) {
+            this.components.getContent('t' + i).recalcDimensions();
+        }
         var maxHeight = 0;
         for (var i = 0; i < this.steps.length; i++) {
             var layout = this.calcLayout(i, true)[1];
@@ -3860,7 +4145,7 @@ var HeightComputeCanvasController = /** @class */ (function (_super) {
      */
     HeightComputeCanvasController.prototype.compute = function () {
         var toReturn = [];
-        for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_1__["default"].widthTiers.length; i++) {
+        for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_1__["widthTiers"].length; i++) {
             toReturn.push(this.getMaxHeight(i));
         }
         return toReturn;
@@ -3910,7 +4195,7 @@ var ProgressIndicator = /** @class */ (function () {
      */
     ProgressIndicator.prototype.draw = function (completion, width, height) {
         var color = _layout_EqContent__WEBPACK_IMPORTED_MODULE_1__["default"].colors['default'];
-        this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + _consts__WEBPACK_IMPORTED_MODULE_0__["default"].progressOpacity + ')';
+        this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + _consts__WEBPACK_IMPORTED_MODULE_0__["progressOpacity"] + ')';
         Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(0, height - 1, width * completion, height - 1, this.ctx);
     };
     return ProgressIndicator;
@@ -3924,133 +4209,210 @@ var ProgressIndicator = /** @class */ (function () {
 /*!*****************************!*\
   !*** ../src/main/consts.ts ***!
   \*****************************/
-/*! exports provided: default */
+/*! exports provided: defaultFontFamily, defaultFontStyle, defaultFontWeight, fontSizes, widthTiers, testCanvasFontSizeMultiple, testCanvasWidth, progressOpacity, defaultVBoxPadding, defaultRootVBoxPadding, defaultHBoxPadding, defaultTightHBoxPadding, defaultSubSuperPadding, defaultRootPadding, defaultQuizPadding, defaultTablePadding, termPadding, tightTermPadding, hDividerPadding, vDividerPadding, tableCellPadding, tableMinCellDimen, expScale, defaultExpPortrusion, rootArgMarginLeft, rootIndexScale, rootKinkTipAngle, rootKinkTipLength, curvedOutlineBorderRadius, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, answerVMargin, hoveredOutlineOpacity, revealedOutlineOpacity, outlineFadeInDuration, outlineFadeInEasing, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, quizRadioButtonPadding, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing, creatorContainerPadding, creatorHDividerPadding, creatorVDividerPadding, creatorSelectableHDividerPadding, creatorSelectableVDividerPadding, creatorContainerStroke, creatorCaretFillStyle, creatorCaretFillStyleLighter, creatorCaretSize, creatorLineDash, creatorErrorTimeout, creatorTableMinCellDimen, creatorPlusLineHalfLength, defaultAddDuration, addEasing, defaultMoveDuration, moveEasing, defaultRemoveDuration, removeEasing, progressEasing, colors, fadedOpacity, normalOpacity, focusedOpacity, backgroundColor, buttonHighlightedOpacity, buttonHighlightDuration, buttonHighlightEasing, buttonUnhighlightDuration, buttonUnhighlightEasing */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFontFamily", function() { return defaultFontFamily; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFontStyle", function() { return defaultFontStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFontWeight", function() { return defaultFontWeight; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fontSizes", function() { return fontSizes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "widthTiers", function() { return widthTiers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testCanvasFontSizeMultiple", function() { return testCanvasFontSizeMultiple; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testCanvasWidth", function() { return testCanvasWidth; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "progressOpacity", function() { return progressOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultVBoxPadding", function() { return defaultVBoxPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultRootVBoxPadding", function() { return defaultRootVBoxPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultHBoxPadding", function() { return defaultHBoxPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTightHBoxPadding", function() { return defaultTightHBoxPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultSubSuperPadding", function() { return defaultSubSuperPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultRootPadding", function() { return defaultRootPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultQuizPadding", function() { return defaultQuizPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultTablePadding", function() { return defaultTablePadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "termPadding", function() { return termPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tightTermPadding", function() { return tightTermPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hDividerPadding", function() { return hDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "vDividerPadding", function() { return vDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tableCellPadding", function() { return tableCellPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tableMinCellDimen", function() { return tableMinCellDimen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "expScale", function() { return expScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultExpPortrusion", function() { return defaultExpPortrusion; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rootArgMarginLeft", function() { return rootArgMarginLeft; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rootIndexScale", function() { return rootIndexScale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rootKinkTipAngle", function() { return rootKinkTipAngle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rootKinkTipLength", function() { return rootKinkTipLength; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "curvedOutlineBorderRadius", function() { return curvedOutlineBorderRadius; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "curvedOutlineDefaultOpacity", function() { return curvedOutlineDefaultOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "curvedOutlineColor", function() { return curvedOutlineColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "radioButtonDefaultOpacity", function() { return radioButtonDefaultOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "radioButtonColor", function() { return radioButtonColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "answerVMargin", function() { return answerVMargin; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hoveredOutlineOpacity", function() { return hoveredOutlineOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "revealedOutlineOpacity", function() { return revealedOutlineOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "outlineFadeInDuration", function() { return outlineFadeInDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "outlineFadeInEasing", function() { return outlineFadeInEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizCorrectColor", function() { return quizCorrectColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizIncorrectColor", function() { return quizIncorrectColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizCurvedOutlinePadding", function() { return quizCurvedOutlinePadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonDimen", function() { return quizRadioButtonDimen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonPadding", function() { return quizRadioButtonPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonSelectDuration", function() { return quizRadioButtonSelectDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonSelectEasing", function() { return quizRadioButtonSelectEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonDeselectDuration", function() { return quizRadioButtonDeselectDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "quizRadioButtonDeselectEasing", function() { return quizRadioButtonDeselectEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorContainerPadding", function() { return creatorContainerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorHDividerPadding", function() { return creatorHDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorVDividerPadding", function() { return creatorVDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorSelectableHDividerPadding", function() { return creatorSelectableHDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorSelectableVDividerPadding", function() { return creatorSelectableVDividerPadding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorContainerStroke", function() { return creatorContainerStroke; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorCaretFillStyle", function() { return creatorCaretFillStyle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorCaretFillStyleLighter", function() { return creatorCaretFillStyleLighter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorCaretSize", function() { return creatorCaretSize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorLineDash", function() { return creatorLineDash; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorErrorTimeout", function() { return creatorErrorTimeout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorTableMinCellDimen", function() { return creatorTableMinCellDimen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatorPlusLineHalfLength", function() { return creatorPlusLineHalfLength; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultAddDuration", function() { return defaultAddDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addEasing", function() { return addEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultMoveDuration", function() { return defaultMoveDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveEasing", function() { return moveEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultRemoveDuration", function() { return defaultRemoveDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeEasing", function() { return removeEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "progressEasing", function() { return progressEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "colors", function() { return colors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fadedOpacity", function() { return fadedOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normalOpacity", function() { return normalOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "focusedOpacity", function() { return focusedOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "backgroundColor", function() { return backgroundColor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buttonHighlightedOpacity", function() { return buttonHighlightedOpacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buttonHighlightDuration", function() { return buttonHighlightDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buttonHighlightEasing", function() { return buttonHighlightEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buttonUnhighlightDuration", function() { return buttonUnhighlightDuration; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buttonUnhighlightEasing", function() { return buttonUnhighlightEasing; });
 /* harmony import */ var _layout_Padding__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../layout/Padding */ "../src/layout/Padding.ts");
 /* harmony import */ var bezier_easing__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bezier-easing */ "../node_modules/bezier-easing/src/index.js");
 /* harmony import */ var bezier_easing__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bezier_easing__WEBPACK_IMPORTED_MODULE_1__);
 
 
-var constants = {
-    //Font: size in px
-    // The DEFAULT Google font, may be overridden.
-    fontFamily: 'PT Serif',
-    fontStyle: 'Normal',
-    fontWeight: '400',
-    fontSizes: [35, 30, 25],
-    //The tiers at which font size will change.
-    //More tiers means better layout but worse
-    //file size.
-    widthTiers: [670, 500, 300],
-    //Tuning variable, turn down for better
-    //performance. Too low will give layout
-    //innacuracies.
-    testCanvasFontSizeMultiple: 5,
-    testCanvasWidth: 800,
-    // The width and height of the progress indicator in px
-    restartAndProgressSize: 28,
-    // The total padding (x and y) of the progress indicator in px
-    restartAndProgressPadding: 16,
-    progressOpacity: 0.25,
-    //Layout:
-    defaultVBoxPadding: 0,
-    defaultRootVBoxPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](18, 0, 20, 0),
-    defaultHBoxPadding: 0,
-    defaultTightHBoxPadding: 0,
-    defaultSubSuperPadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(0),
-    defaultRootPadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(0),
-    defaultQuizPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 10, 0, 10),
-    defaultTablePadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(2),
-    termPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](10, 5, 10, 5),
-    tightTermPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 2, 5, 2),
-    hDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 3, 0, 3),
-    vDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](3, 0, 3, 0),
-    tableCellPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](7, 7, 7, 7),
-    tableMinCellDimen: 30,
-    //The scaling of exponents and subscripts.
-    expScale: 0.575,
-    //The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
-    defaultExpPortrusion: 0.1,
-    //Roots:
-    rootArgMarginLeft: 7,
-    rootIndexScale: 0.5,
-    // The angle the small tip of the radical kink makes
-    // to the rest of the kink.
-    rootKinkTipAngle: Math.PI / 2,
-    rootKinkTipLength: 3,
-    // Curved outlines:
-    curvedOutlineBorderRadius: 5,
-    curvedOutlineDefaultOpacity: 0.3,
-    curvedOutlineColor: [255, 255, 255],
-    // Radio buttons:
-    radioButtonDefaultOpacity: 0.3,
-    radioButtonColor: [255, 255, 255],
-    // Quizzes:
-    answerVMargin: 20,
-    hoveredOutlineOpacity: 0.75,
-    revealedOutlineOpacity: 1,
-    outlineFadeInDuration: 300,
-    outlineFadeInEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.5, 0.5, 0.5, 0.5),
-    quizCorrectColor: [100, 221, 23],
-    quizIncorrectColor: [198, 40, 40],
-    quizCurvedOutlinePadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 5, 0, 5),
-    quizRadioButtonDimen: 35,
-    quizRadioButtonPadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(10),
-    quizRadioButtonSelectDuration: 300,
-    quizRadioButtonSelectEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1),
-    quizRadioButtonDeselectDuration: 300,
-    quizRadioButtonDeselectEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1),
-    //Creator
-    creatorContainerPadding: _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(30),
-    creatorHDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 15, 5, 15),
-    creatorVDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](15, 5, 15, 5),
-    creatorSelectableHDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 0, 5, 0),
-    creatorSelectableVDividerPadding: new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 5, 0, 5),
-    creatorContainerStroke: "rgb(175, 175, 175)",
-    creatorCaretFillStyle: '#eee',
-    creatorCaretFillStyleLighter: '#777',
-    creatorCaretSize: 5,
-    creatorLineDash: [2],
-    creatorErrorTimeout: 5000,
-    creatorTableMinCellDimen: 30,
-    creatorPlusLineHalfLength: 5,
-    //Animations: durations are in MS
-    addDuration: 700,
-    addEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1),
-    moveDuration: 700,
-    moveEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 0.2, 1),
-    removeDuration: 400,
-    removeEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1),
-    progressEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 0.2, 1),
-    //Appearance
-    colors: {
-        //RGB
-        "red": [229, 57, 53],
-        "pink": [247, 18, 171],
-        "purple": [170, 0, 255],
-        "blue": [27, 158, 245],
-        "teal": [0, 181, 193],
-        "green": [88, 199, 75],
-        "orange": [255, 102, 0],
-        "default": [255, 255, 255],
-        "primary": [212, 225, 87],
-        "secondary": [255, 193, 7]
-    },
-    fadedOpacity: 0.5,
-    normalOpacity: 0.75,
-    focusedOpacity: 1,
-    backgroundColor: [0, 0, 0],
-    // Button animations
-    buttonHighlightedOpacity: 1,
-    buttonHighlightDuration: 200,
-    buttonHighlightEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1),
-    buttonUnhighlightDuration: 200,
-    buttonUnhighlightEasing: bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1)
+// The DEFAULT Google font, may be overridden.
+var defaultFontFamily = 'PT Serif';
+// Normal or italic
+var defaultFontStyle = 'Normal';
+// Must be supported by the google font
+var defaultFontWeight = '400';
+// The font size at each width tier below
+var fontSizes = [35, 30, 25];
+// The tiers at which font size will change.
+// More tiers means better layout but worse
+// file size.
+var widthTiers = [670, 500, 300];
+// Tuning variable, turn down for better
+// performance when loading files without
+// inbuilt metrics.Too low will give layout
+// innacuracies.
+var testCanvasFontSizeMultiple = 5;
+// The width of the test canvas. Once again,
+// can turn down for better performance, but
+// will limit the maximum width of terms.
+var testCanvasWidth = 10000;
+// The opacity of the progress bar
+var progressOpacity = 0.25;
+// Layout:
+var defaultVBoxPadding = 0;
+var defaultRootVBoxPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](18, 0, 20, 0);
+var defaultHBoxPadding = 0;
+var defaultTightHBoxPadding = 0;
+var defaultSubSuperPadding = _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(0);
+var defaultRootPadding = _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(0);
+var defaultQuizPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 10, 0, 10);
+var defaultTablePadding = _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(2);
+var termPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](10, 5, 10, 5);
+var tightTermPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 2, 5, 2);
+var hDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 3, 0, 3);
+var vDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](3, 0, 3, 0);
+var tableCellPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](7, 7, 7, 7);
+var tableMinCellDimen = 30;
+// The scaling of exponents and subscripts.
+var expScale = 0.575;
+// The proportion of exponents and subscripts that portrudes from the component they're 'attached' to.
+var defaultExpPortrusion = 0.1;
+// Roots:
+var rootArgMarginLeft = 7;
+var rootIndexScale = 0.5;
+// The angle the small tip of the radical kink makes
+// to the rest of the kink.
+var rootKinkTipAngle = Math.PI / 2;
+var rootKinkTipLength = 3;
+// Curved outlines:
+var curvedOutlineBorderRadius = 5;
+var curvedOutlineDefaultOpacity = 0.3;
+var curvedOutlineColor = [255, 255, 255];
+// Radio buttons:
+var radioButtonDefaultOpacity = 0.3;
+var radioButtonColor = [255, 255, 255];
+// Quizzes:
+var answerVMargin = 20;
+var hoveredOutlineOpacity = 0.75;
+var revealedOutlineOpacity = 1;
+var outlineFadeInDuration = 300;
+var outlineFadeInEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.5, 0.5, 0.5, 0.5);
+var quizCorrectColor = [100, 221, 23];
+var quizIncorrectColor = [198, 40, 40];
+var quizCurvedOutlinePadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 5, 0, 5);
+var quizRadioButtonDimen = 35;
+var quizRadioButtonPadding = _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(10);
+var quizRadioButtonSelectDuration = 300;
+var quizRadioButtonSelectEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1);
+var quizRadioButtonDeselectDuration = 300;
+var quizRadioButtonDeselectEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1);
+// Creator:
+var creatorContainerPadding = _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"].even(30);
+var creatorHDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 15, 5, 15);
+var creatorVDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](15, 5, 15, 5);
+var creatorSelectableHDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](5, 0, 5, 0);
+var creatorSelectableVDividerPadding = new _layout_Padding__WEBPACK_IMPORTED_MODULE_0__["default"](0, 5, 0, 5);
+var creatorContainerStroke = "rgb(175, 175, 175)";
+var creatorCaretFillStyle = '#eee';
+var creatorCaretFillStyleLighter = '#777';
+var creatorCaretSize = 5;
+var creatorLineDash = [2];
+var creatorErrorTimeout = 5000;
+var creatorTableMinCellDimen = 30;
+var creatorPlusLineHalfLength = 5;
+// Animations: durations are in MS
+var defaultAddDuration = 700;
+var addEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1);
+var defaultMoveDuration = 700;
+var moveEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 0.2, 1);
+var defaultRemoveDuration = 400;
+var removeEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1);
+var progressEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 0.2, 1);
+// Appearance:
+var colors = {
+    //RGB
+    "red": [229, 57, 53],
+    "pink": [247, 18, 171],
+    "purple": [170, 0, 255],
+    "blue": [27, 158, 245],
+    "teal": [0, 181, 193],
+    "green": [88, 199, 75],
+    "orange": [255, 102, 0],
+    "default": [255, 255, 255],
+    "primary": [212, 225, 87],
+    "secondary": [255, 193, 7]
 };
-/* harmony default export */ __webpack_exports__["default"] = (constants);
+var fadedOpacity = 0.5;
+var normalOpacity = 0.75;
+var focusedOpacity = 1;
+var backgroundColor = [0, 0, 0];
+// Button animations:
+var buttonHighlightedOpacity = 1;
+var buttonHighlightDuration = 200;
+var buttonHighlightEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.0, 0.0, 0.2, 1);
+var buttonUnhighlightDuration = 200;
+var buttonUnhighlightEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1);
 
 
 /***/ }),
@@ -4059,7 +4421,7 @@ var constants = {
 /*!******************************!*\
   !*** ../src/main/helpers.ts ***!
   \******************************/
-/*! exports provided: rgbaArrayToCssString, addStyleSheet, getFont, getMetrics, isIE, line, tri, getWidthTier, getFontSizeForTier, newMap */
+/*! exports provided: rgbaArrayToCssString, addStyleSheet, getFont, getMetrics, isIE, line, tri, getWidthTier, getFontSizeForTier, newMap, parseContainerChildren */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4074,6 +4436,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWidthTier", function() { return getWidthTier; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFontSizeForTier", function() { return getFontSizeForTier; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newMap", function() { return newMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseContainerChildren", function() { return parseContainerChildren; });
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./consts */ "../src/main/consts.ts");
 /* harmony import */ var map_or_similar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! map-or-similar */ "../node_modules/map-or-similar/map-or-similar.js");
 /* harmony import */ var map_or_similar__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(map_or_similar__WEBPACK_IMPORTED_MODULE_1__);
@@ -4104,7 +4467,7 @@ function rgbaArrayToCssString(colorArr) {
 function addStyleSheet(otherColors) {
     var styleEl = document.createElement('style');
     var styleText = '';
-    var colorObj = otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["default"].colors;
+    var colorObj = otherColors ? otherColors : _consts__WEBPACK_IMPORTED_MODULE_0__["colors"];
     Object.keys(colorObj).forEach(function (colorName) {
         var colorVal = colorObj[colorName];
         styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
@@ -4149,7 +4512,7 @@ function getFont(instructions) {
                     // Not italic
                     return [
                         fontFamily,
-                        _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontStyle,
+                        _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontStyle"],
                         split[1]
                     ];
                 }
@@ -4158,8 +4521,8 @@ function getFont(instructions) {
                 // No defined weight/italic
                 return [
                     fontFamily,
-                    _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontStyle,
-                    _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontWeight
+                    _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontStyle"],
+                    _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontWeight"]
                 ];
             }
         }
@@ -4170,9 +4533,9 @@ function getFont(instructions) {
     else {
         // Use default
         return [
-            _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontFamily,
-            _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontStyle,
-            _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontWeight
+            _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontFamily"],
+            _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontStyle"],
+            _consts__WEBPACK_IMPORTED_MODULE_0__["defaultFontWeight"]
         ];
     }
 }
@@ -4205,7 +4568,7 @@ function getMetrics(instructions) {
         metrics.height = maxAscent + maxDescent;
     };
     // Calculate a metrics object for each width tier
-    for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_0__["default"].widthTiers.length; i++) {
+    for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length; i++) {
         _loop_1(i);
     }
     return metricsArr;
@@ -4222,8 +4585,8 @@ function measureTerm(term, tier, instructions) {
     var _a = getFont(instructions), fontFamily = _a[0], style = _a[1], weight = _a[2];
     // Create a canvas to measure with
     var testCanvas = document.createElement('canvas');
-    testCanvas.width = _consts__WEBPACK_IMPORTED_MODULE_0__["default"].testCanvasWidth;
-    testCanvas.height = fontSize * _consts__WEBPACK_IMPORTED_MODULE_0__["default"].testCanvasFontSizeMultiple;
+    testCanvas.width = _consts__WEBPACK_IMPORTED_MODULE_0__["testCanvasWidth"];
+    testCanvas.height = fontSize * _consts__WEBPACK_IMPORTED_MODULE_0__["testCanvasFontSizeMultiple"];
     var testCtx = testCanvas.getContext('2d');
     testCtx.font = weight + " " + style + " " + fontSize + "px " + fontFamily;
     // Get the width
@@ -4301,19 +4664,19 @@ window.addEventListener('resize', function () {
  */
 function getWidthTier() {
     var currWidth = window.innerWidth;
-    for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_0__["default"].widthTiers.length; i++) {
-        if (currWidth > _consts__WEBPACK_IMPORTED_MODULE_0__["default"].widthTiers[i]) {
+    for (var i = 0; i < _consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length; i++) {
+        if (currWidth > _consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"][i]) {
             return i;
         }
     }
-    return _consts__WEBPACK_IMPORTED_MODULE_0__["default"].widthTiers.length - 1;
+    return _consts__WEBPACK_IMPORTED_MODULE_0__["widthTiers"].length - 1;
 }
 /**
  * Calculates and returns the appropriate
  * font size for a width tier.
  */
 function getFontSizeForTier(tier) {
-    return _consts__WEBPACK_IMPORTED_MODULE_0__["default"].fontSizes[tier];
+    return _consts__WEBPACK_IMPORTED_MODULE_0__["fontSizes"][tier];
 }
 var mapSupported = typeof window['Map'] === 'function';
 /**
@@ -4323,7 +4686,34 @@ var mapSupported = typeof window['Map'] === 'function';
  * below.
  */
 function newMap() {
-    return mapSupported ? new window['Map'] : new map_or_similar__WEBPACK_IMPORTED_MODULE_1___default.a();
+    return mapSupported ? new window['Map']() : new map_or_similar__WEBPACK_IMPORTED_MODULE_1___default.a();
+}
+/**
+ * Parse the children attribute of a container
+ * JSON Object.
+ *
+ * @param children The children array.
+ * @param depth The depth in the layout tree.
+ */
+function parseContainerChildren(children, depth, parseContainer, contentGetter) {
+    var toReturn = [];
+    children.forEach(function (child) {
+        if (typeof child === 'object') {
+            if (child === null) {
+                toReturn.push(undefined);
+            }
+            else {
+                toReturn.push(parseContainer(child, depth + 1));
+            }
+        }
+        else if (typeof child === 'string') {
+            toReturn.push(contentGetter(child));
+        }
+        else {
+            throw "Invalid type of child in JSON file.";
+        }
+    });
+    return toReturn;
 }
 
 
@@ -4540,7 +4930,7 @@ var AppComponent = /** @class */ (function () {
         configurable: true
     });
     AppComponent.prototype.ngOnInit = function () {
-        _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_19__["default"].colors = _shared_main_consts__WEBPACK_IMPORTED_MODULE_20__["default"].colors;
+        _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_19__["default"].colors = _shared_main_consts__WEBPACK_IMPORTED_MODULE_20__["colors"];
     };
     /**
      * Get the state displayed when the creator
@@ -4828,27 +5218,26 @@ var AppModule = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/CanvasController */ "../src/main/CanvasController.ts");
 /* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/VBox */ "../src/layout/VBox.ts");
-/* harmony import */ var _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/HBox */ "../src/layout/HBox.ts");
-/* harmony import */ var _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/TightHBox */ "../src/layout/TightHBox.ts");
-/* harmony import */ var _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/SubSuper */ "../src/layout/SubSuper.ts");
-/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
-/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
-/* harmony import */ var _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shared/layout/RootContainer */ "../src/layout/RootContainer.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
-/* harmony import */ var _CreatorRootContainer__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./CreatorRootContainer */ "./src/app/central-area/CreatorRootContainer.ts");
-/* harmony import */ var _CreatorVBox__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CreatorVBox */ "./src/app/central-area/CreatorVBox.ts");
+/* harmony import */ var _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/VBox */ "../src/layout/VBox.ts");
+/* harmony import */ var _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/HBox */ "../src/layout/HBox.ts");
+/* harmony import */ var _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/TightHBox */ "../src/layout/TightHBox.ts");
+/* harmony import */ var _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/SubSuper */ "../src/layout/SubSuper.ts");
+/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
+/* harmony import */ var _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/layout/RootContainer */ "../src/layout/RootContainer.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shared/layout/Quiz */ "../src/layout/Quiz.ts");
+/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CreatorComponentModel */ "./src/app/central-area/CreatorComponentModel.ts");
 /* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
-/* harmony import */ var _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./CreatorTightHBox */ "./src/app/central-area/CreatorTightHBox.ts");
-/* harmony import */ var _CreatorSubSuper__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./CreatorSubSuper */ "./src/app/central-area/CreatorSubSuper.ts");
-/* harmony import */ var _CreatorQuiz__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./CreatorQuiz */ "./src/app/central-area/CreatorQuiz.ts");
-/* harmony import */ var _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @shared/layout/Quiz */ "../src/layout/Quiz.ts");
-/* harmony import */ var _CreatorTable__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./CreatorTable */ "./src/app/central-area/CreatorTable.ts");
-/* harmony import */ var _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @shared/layout/Padding */ "../src/layout/Padding.ts");
-/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
-/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
+/* harmony import */ var _CreatorQuiz__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./CreatorQuiz */ "./src/app/central-area/CreatorQuiz.ts");
+/* harmony import */ var _CreatorRootContainer__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./CreatorRootContainer */ "./src/app/central-area/CreatorRootContainer.ts");
+/* harmony import */ var _CreatorSubSuper__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./CreatorSubSuper */ "./src/app/central-area/CreatorSubSuper.ts");
+/* harmony import */ var _CreatorTable__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./CreatorTable */ "./src/app/central-area/CreatorTable.ts");
+/* harmony import */ var _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./CreatorTightHBox */ "./src/app/central-area/CreatorTightHBox.ts");
+/* harmony import */ var _CreatorVBox__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./CreatorVBox */ "./src/app/central-area/CreatorVBox.ts");
+/* harmony import */ var _shared_layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @shared/layout/VCenterVBox */ "../src/layout/VCenterVBox.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -4876,7 +5265,7 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-
+// Imports that need to be included but aren't used directly
 
 
 
@@ -4932,15 +5321,10 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         _this.canvas.setAttribute('droppable', 'true');
         return _this;
     }
-    CreatorCanvasController.prototype.addVDivider = function () {
-        var newDivider = new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_21__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].vDividerPadding, 'v' + this.vDividers.length);
-        this.vDividers.push(newDivider);
-        return newDivider;
-    };
-    CreatorCanvasController.prototype.addHDivider = function () {
-        var newDivider = new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_8__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].hDividerPadding, 'h' + this.hDividers.length);
-        this.hDividers.push(newDivider);
-        return newDivider;
+    CreatorCanvasController.prototype.initComponents = function (instructions) {
+        this.components = new _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_13__["default"](instructions);
+        this.components.setGenInfo('customColors', this.customColors);
+        this.components.setGenInfo('fixedHeights', this.fixedHeights);
     };
     /**
      * Add an outer border to the currently selected
@@ -4953,19 +5337,19 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         var children = table.getChildren();
         // Add left border, if none
         if (!vLines[0]) {
-            vLines[0] = this.addVDivider();
+            vLines[0] = this.components.addVDivider();
         }
         // Add right border, if none
         if (!vLines[children[0].length]) {
-            vLines[children[0].length] = this.addVDivider();
+            vLines[children[0].length] = this.components.addVDivider();
         }
         // Add top border, if none
         if (!hLines[0]) {
-            hLines[0] = this.addHDivider();
+            hLines[0] = this.components.addHDivider();
         }
         // Add bottom border, if none
         if (!hLines[children.length]) {
-            hLines[children.length] = this.addHDivider();
+            hLines[children.length] = this.components.addHDivider();
         }
         // Save changes
         this.save();
@@ -4982,13 +5366,13 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         // Add each missing horizontal border
         for (var r = 1; r < children.length; r++) {
             if (!hLines[r]) {
-                hLines[r] = this.addHDivider();
+                hLines[r] = this.components.addHDivider();
             }
         }
         // Add each missing vertical border
         for (var c = 1; c < children[0].length; c++) {
             if (!vLines[c]) {
-                vLines[c] = this.addVDivider();
+                vLines[c] = this.components.addVDivider();
             }
         }
         this.save();
@@ -5025,7 +5409,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
                 l.component.creatorDraw(l, _this.ctx);
             }
             if (_this.selection) {
-                if (l.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_7__["default"] &&
+                if (l.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"] &&
                     l.component.getRef() === _this.selection.adding) {
                     // Highlight what's selected on the content pane.
                     _this.ctx.save();
@@ -5061,49 +5445,6 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         var _b = this.getSize(rootLayout), width = _b[0], height = _b[1];
         this.setSize(width, height);
         this.redraw();
-    };
-    // Override to change padding
-    CreatorCanvasController.prototype.parseContainer = function (containerObj, depth) {
-        var type = containerObj.type;
-        if (type === 'vbox') {
-            return new _CreatorVBox__WEBPACK_IMPORTED_MODULE_13__["default"](this.parseContainerChildren(containerObj.children, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-        }
-        else if (type === 'hbox') {
-            return new _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.children, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-        }
-        else if (type === 'tightHBox') {
-            return new _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_15__["default"](this.parseContainerChildren(containerObj.children, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-        }
-        else if (type === 'subSuper') {
-            var top_1 = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.top, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-            var middle = new _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_15__["default"](this.parseContainerChildren(containerObj.middle, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-            var bottom = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.bottom, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-            var portrusion = containerObj.portrusion ? containerObj.portrusion : _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].defaultExpPortrusion;
-            return new _CreatorSubSuper__WEBPACK_IMPORTED_MODULE_16__["default"](top_1, middle, bottom, portrusion, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-        }
-        else if (type === 'root') {
-            var idx = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.idx, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-            var arg = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__["default"](this.parseContainerChildren(containerObj.arg, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding);
-            var radical = void 0;
-            if (containerObj.rad) {
-                radical = this.getContentFromRef(containerObj.rad);
-            }
-            return new _CreatorRootContainer__WEBPACK_IMPORTED_MODULE_12__["default"](idx, arg, radical, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding, this.termHeights);
-        }
-        else if (type === 'quiz') {
-            var format = containerObj;
-            return new _CreatorQuiz__WEBPACK_IMPORTED_MODULE_17__["default"](this.parseContainerChildren(format.children, depth), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding, format.answers, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].curvedOutlineDefaultOpacity, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].curvedOutlineColor, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].radioButtonDefaultOpacity, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].radioButtonColor, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].quizCorrectColor, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].quizIncorrectColor);
-        }
-        else if (type === 'table') {
-            var format = containerObj;
-            return new _CreatorTable__WEBPACK_IMPORTED_MODULE_19__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding, this.parseChildren2D(format.children), this.parseChildrenObj(format.hLines), this.parseChildrenObj(format.vLines), 11, _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_20__["default"].even(0));
-        }
-        else if (type === undefined) {
-            throw new Error('Invalid JSON File: Missing type attribute on container descriptor.');
-        }
-        else {
-            throw new Error('Invalid JSON File: Unrecognized type: ' + type);
-        }
     };
     /**
      * Add something at (x, y) and save the new state.
@@ -5152,7 +5493,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             // Didn't click on anything
             return this.getLayoutForPublish(modifyWith);
         }
-        else if (clickedLayout.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_7__["default"]) {
+        else if (clickedLayout.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
             try {
                 // Add adjacent to content
                 var container = clickedLayout.layoutParent.component;
@@ -5195,7 +5536,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
      */
     CreatorCanvasController.prototype.getLayoutForPublish = function (modifyWith) {
         var newStepLayout = this.rootContainer.toStepLayout(this);
-        var origInstructionsClone = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["deepClone"])(this.originalInstructions);
+        var origInstructionsClone = Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["deepClone"])(this.originalInstructions);
         origInstructionsClone.steps[this.currStep].root = newStepLayout;
         modifyWith(origInstructionsClone);
         return origInstructionsClone;
@@ -5209,7 +5550,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
      * @param addTo The component being added.
      */
     CreatorCanvasController.prototype.autoAddContent = function (addTo) {
-        if (addTo instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_10__["default"]) {
+        if (addTo instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"]) {
             // Add a radical automatically.
             // Look for a radical not used on the
             // current step, next step, or previous
@@ -5221,9 +5562,9 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             var unusedRef = void 0;
             for (var i = 0; i < currState.radicals; i++) {
                 var ref = 'r' + i;
-                var inCurr = currStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(currStep.root, ref);
-                var inNext = nextStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(nextStep.root, ref);
-                var inPrev = prevStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(prevStep.root, ref);
+                var inCurr = currStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(currStep.root, ref);
+                var inNext = nextStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(nextStep.root, ref);
+                var inPrev = prevStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(prevStep.root, ref);
                 if (!(inCurr || inNext || inPrev)) {
                     // Found an unused ref
                     unusedRef = ref;
@@ -5232,16 +5573,16 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             }
             if (unusedRef) {
                 // Use a previously created radical, no need to add one in instructions.
-                addTo.setRadical(this.getContentFromRef(unusedRef));
+                addTo.setRadical(this.components.getContent(unusedRef));
                 return function () { };
             }
             else {
                 // No radicals, or all used in adjacent steps.
-                var newRef = 'r' + this.radicals.length;
+                var newRef = 'r' + this.components.numRadicals();
                 // Dummy radical, but doesn't matter. Contents of the
                 // container are serialized then re-created with the
                 // modifed instructions.
-                var dummyRadForSave = new _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_11__["default"](newRef);
+                var dummyRadForSave = new _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__["default"](newRef);
                 addTo.setRadical(dummyRadForSave);
                 return function (instructions) {
                     if (!instructions.radicals) {
@@ -5280,7 +5621,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         if (this.selection.addingContainer()) {
             return false;
         }
-        return Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["inLayout"])(this.steps[this.currStep].root, this.selection.adding);
+        return Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(this.steps[this.currStep].root, this.selection.adding);
     };
     /**
      * Select something at (x, y)
@@ -5299,32 +5640,32 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             _this.selection.selectedOnCanvas = ref;
         };
         if (selectedComponent instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__["default"]) {
-            if (selectedComponent instanceof _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+            if (selectedComponent instanceof _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_4__["default"]) {
                 select('c2');
             }
-            else if (selectedComponent instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_4__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__["default"]) {
                 select('c0');
             }
-            else if (selectedComponent instanceof _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_18__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_10__["default"]) {
                 select('c5');
             }
-            else if (selectedComponent instanceof _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_2__["default"]) {
                 select('c1');
             }
-            else if (selectedComponent instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__["default"]) {
                 select('c4');
             }
-            else if (selectedComponent instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_10__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"]) {
                 select('c3');
             }
-            else if (selectedComponent instanceof _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_22__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_11__["default"]) {
                 select('c6');
             }
             else {
                 throw new Error('Unrecognized container selected.');
             }
         }
-        else if (selectedComponent instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_7__["default"]) {
+        else if (selectedComponent instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
             select(selectedComponent.getRef());
         }
     };
@@ -5345,8 +5686,8 @@ var CreatorCanvasController = /** @class */ (function (_super) {
     CreatorCanvasController.prototype.canDelete = function () {
         return this.selectedLayout &&
             this.selectedLayout.layoutParent &&
-            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_6__["default"]) &&
-            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_10__["default"] && this.selectedLayout.component instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_4__["default"]);
+            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__["default"]) &&
+            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"] && this.selectedLayout.component instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__["default"]);
     };
     /**
      * Returns the thing to add as a component.
@@ -5354,22 +5695,10 @@ var CreatorCanvasController = /** @class */ (function (_super) {
     CreatorCanvasController.prototype.getAddComponent = function () {
         if (this.selection.addingContainer()) {
             // Adding a container
-            return this.parseContainer(this.selection.getContainer(), 0);
+            return this.components.parseContainer(this.selection.getContainer(), 0);
         }
         else {
-            return this.getContentFromRef(this.selection.adding);
-        }
-    };
-    // Override to give dividers some padding
-    CreatorCanvasController.prototype.initContent = function (instructions) {
-        _super.prototype.initContent.call(this, instructions);
-        this.hDividers = [];
-        for (var i = 0; i < instructions.hDividers; i++) {
-            this.hDividers.push(new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_8__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorHDividerPadding, 'h' + i));
-        }
-        this.vDividers = [];
-        for (var i = 0; i < instructions.vDividers; i++) {
-            this.vDividers.push(new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_21__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorVDividerPadding, 'v' + i));
+            return this.components.getContent(this.selection.adding);
         }
     };
     /**
@@ -5386,7 +5715,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         var selected = this.selectedLayout.component;
         var newState = this.undoRedo.getStateClone();
         var step = newState.steps[this.currStep];
-        if (selected instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_7__["default"]) {
+        if (selected instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
             this.applyColor(selected, colorName, step);
             this.applyOpacity(selected, opacity, step);
         }
@@ -5432,7 +5761,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             stepObj.opacity = {};
         }
         var ref = content.getRef();
-        if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].normalOpacity) {
+        if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_12__["normalOpacity"]) {
             // Remove any opacity already set for this content
             delete stepObj.opacity[ref];
             if (Object.keys(stepObj.opacity).length === 0) {
@@ -5473,13 +5802,109 @@ var CreatorCanvasController = /** @class */ (function (_super) {
     CreatorCanvasController.prototype.save = function () {
         var newState = this.undoRedo.getStateClone();
         newState.steps[this.step.selected].root = this.rootContainer.toStepLayout(this);
-        newState.hDividers = this.hDividers.length;
-        newState.vDividers = this.vDividers.length;
+        newState.hDividers = this.components.numHDividers();
+        newState.vDividers = this.components.numVDividers();
         this.undoRedo.publishChange(newState);
     };
     return CreatorCanvasController;
 }(_shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorCanvasController);
+
+
+/***/ }),
+
+/***/ "./src/app/central-area/CreatorComponentModel.ts":
+/*!*******************************************************!*\
+  !*** ./src/app/central-area/CreatorComponentModel.ts ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+var CreatorComponentModel = /** @class */ (function (_super) {
+    __extends(CreatorComponentModel, _super);
+    function CreatorComponentModel(file) {
+        var _this = _super.call(this, file) || this;
+        var hDividers = _this.content.get('h');
+        var numHDividers = hDividers.length;
+        hDividers.length = 0;
+        for (var i = 0; i < numHDividers; i++) {
+            hDividers.push(new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_1__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorHDividerPadding"], 'h' + i));
+        }
+        var vDividers = _this.content.get('v');
+        var numVDividers = vDividers.length;
+        vDividers.length = 0;
+        for (var i = 0; i < numVDividers; i++) {
+            vDividers.push(new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_3__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorVDividerPadding"], 'v' + i));
+        }
+        return _this;
+    }
+    CreatorComponentModel.prototype.addVDivider = function () {
+        var vDividers = this.content.get('v');
+        var newDivider = new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_3__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["vDividerPadding"], 'v' + vDividers.length);
+        vDividers.push(newDivider);
+        return newDivider;
+    };
+    CreatorComponentModel.prototype.addHDivider = function () {
+        var hDividers = this.content.get('h');
+        var newDivider = new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_1__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["hDividerPadding"], 'h' + hDividers.length);
+        hDividers.push(newDivider);
+        return newDivider;
+    };
+    /**
+     * Return the amount of radicals there are currently.
+     */
+    CreatorComponentModel.prototype.numRadicals = function () {
+        return this.content.get('r').length;
+    };
+    /**
+     * Return the amount of v dividers there are currently.
+     */
+    CreatorComponentModel.prototype.numVDividers = function () {
+        return this.content.get('v').length;
+    };
+    /**
+     * Return the amount of h dividers there are currently.
+     */
+    CreatorComponentModel.prototype.numHDividers = function () {
+        return this.content.get('h').length;
+    };
+    /**
+     * Parse a container object recursively and return its
+     * class representation.
+     * Override to prefix the type with 'creator-' to
+     * allow customization of behavior.
+     * @param containerObj The container object to parse.
+     * @param depth The depth in the container hierarchy.
+     */
+    CreatorComponentModel.prototype.parseContainer = function (containerObj, depth) {
+        return _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_0__["containerParsers"]['creator-' + containerObj.type](containerObj, depth, this.getContent, this.parseContainer, this.genInfo);
+    };
+    return CreatorComponentModel;
+}(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_0__["ComponentModel"]));
+/* harmony default export */ __webpack_exports__["default"] = (CreatorComponentModel);
 
 
 /***/ }),
@@ -5500,10 +5925,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linearContainerAddAfter", function() { return linearContainerAddAfter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linearContainerForEachUnder", function() { return linearContainerForEachUnder; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "linearContainerDelete", function() { return linearContainerDelete; });
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
-/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
+/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
 
 
 
@@ -5550,40 +5975,40 @@ function creatorContainerCreatorDraw(l, ctx) {
     if (!parentLayout) {
         return;
     }
-    var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorContainerPadding.scale(l.scale);
+    var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorContainerPadding"].scale(l.scale);
     var container = parentLayout.component;
     if (container.addVertically()) {
         // Add carets on top and bottom facing outwards
         ctx.save();
-        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretFillStyleLighter;
+        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretFillStyleLighter"];
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + pad.top / 4);
         ctx.rotate(Math.PI);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_0__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.bottom / 4);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_0__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.restore();
     }
     else if (container.addHorizontally()) {
         // Add carets on left and right facing outwards
         ctx.save();
-        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretFillStyleLighter;
+        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretFillStyleLighter"];
         ctx.save();
         ctx.translate(l.tlx + pad.left / 4, l.tly + l.height / 2);
         ctx.rotate(Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_0__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.save();
         ctx.translate(l.tlx + l.width - pad.right / 4, l.tly + l.height / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_0__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_0__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.restore();
     }
@@ -5597,10 +6022,10 @@ function creatorContainerCreatorDraw(l, ctx) {
 function childrenToStepLayout(children, controller) {
     var toReturn = [];
     children.forEach(function (comp) {
-        if (comp instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        if (comp instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__["default"]) {
             toReturn.push(comp.toStepLayout(controller));
         }
-        else if (comp instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+        else if (comp instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_2__["default"]) {
             toReturn.push(comp.getRef());
         }
         else {
@@ -5621,11 +6046,11 @@ function linearContainerAddAfter(toAdd, after) {
 }
 function linearContainerForEachUnder(forEach) {
     this.children.forEach(function (child) {
-        if (child instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_3__["default"]) {
+        if (child instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_2__["default"]) {
             // Run the function
             forEach(child);
         }
-        else if (child instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+        else if (child instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__["default"]) {
             child.forEachUnder(forEach);
         }
         else {
@@ -5651,11 +6076,12 @@ function linearContainerDelete(toDelete) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/layout/HBox */ "../src/layout/HBox.ts");
 /* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
-/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
+/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5669,6 +6095,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -5680,12 +6113,13 @@ var CreatorHBox = /** @class */ (function (_super) {
     __extends(CreatorHBox, _super);
     function CreatorHBox() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.delete = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerDelete"];
-        _this.forEachUnder = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerForEachUnder"];
-        _this.addBefore = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerAddBefore"];
-        _this.addAfter = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerAddAfter"];
+        _this.delete = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerDelete"];
+        _this.forEachUnder = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerForEachUnder"];
+        _this.addBefore = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerAddBefore"];
+        _this.addAfter = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerAddAfter"];
         return _this;
     }
+    CreatorHBox_1 = CreatorHBox;
     CreatorHBox.prototype.addVertically = function () {
         return false;
     };
@@ -5694,39 +6128,39 @@ var CreatorHBox = /** @class */ (function (_super) {
     };
     CreatorHBox.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerStroke"];
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
-        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding.scale(l.scale);
+        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"].scale(l.scale);
         // Horizontal lines
         var x1 = l.tlx + pad.left / 2;
         var x2 = l.tlx + l.width - pad.right / 2;
         var y1 = l.tly + pad.top / 2;
         var y2 = l.tly + l.height - pad.bottom / 2;
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x1, y1, x2, y1, ctx);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x1, y2, x2, y2, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(x1, y1, x2, y1, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(x1, y2, x2, y2, ctx);
         // Carets
-        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretFillStyle;
+        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretFillStyle"];
         ctx.save();
         ctx.translate(l.tlx + pad.left * 0.75, l.tly + l.height / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.save();
         ctx.translate(l.tlx + l.width - pad.right * 0.75, l.tly + l.height / 2);
         ctx.rotate(Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], ctx);
         ctx.restore();
         // Carets that depend on parent
-        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerCreatorDraw"].call(this, l, ctx);
+        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerCreatorDraw"].call(this, l, ctx);
         ctx.restore();
     };
     CreatorHBox.prototype.addClick = function (l, x, y, toAdd) {
-        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding.scale(l.scale);
+        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"].scale(l.scale);
         // Make fake layout states to use like rectangles
         var innerLeft = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](undefined, undefined, l.tlx + pad.left / 2, l.tly + pad.top / 2, pad.width() / 4, l.height - pad.height() / 2, 1);
         var innerRight = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](undefined, undefined, l.tlx + l.width - pad.right, l.tly + pad.top / 2, pad.width() / 4, l.height - pad.height() / 2, 1);
@@ -5741,7 +6175,7 @@ var CreatorHBox = /** @class */ (function (_super) {
             this.children.push(toAdd);
         }
         else {
-            _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerAddClick"].call(this, l, x, y, toAdd);
+            _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerAddClick"].call(this, l, x, y, toAdd);
         }
     };
     CreatorHBox.prototype.addClickOnChild = function (clickedLayout, x, y, toAdd) {
@@ -5756,19 +6190,30 @@ var CreatorHBox = /** @class */ (function (_super) {
         }
     };
     CreatorHBox.prototype.addValid = function (toAdd) {
-        if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+        if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__["default"]) {
             throw new Error('Fraction lines can only be added inside a vertical container.');
         }
-        if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             throw new Error('Radicals can only be added inside a root container.');
         }
     };
     CreatorHBox.prototype.toStepLayout = function (controller) {
         return {
             type: 'hbox',
-            children: Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["childrenToStepLayout"])(this.children, controller)
+            children: Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["childrenToStepLayout"])(this.children, controller)
         };
     };
+    var CreatorHBox_1;
+    CreatorHBox = CreatorHBox_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__["Container"])({
+            typeString: 'creator-hbox',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                // Return HBox from file
+                var format = containerObj;
+                return new CreatorHBox_1(Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["parseContainerChildren"])(format.children, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"]);
+            }
+        })
+    ], CreatorHBox);
     return CreatorHBox;
 }(_shared_layout_HBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorHBox);
@@ -5790,8 +6235,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
 /* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
 /* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5805,6 +6251,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -5821,6 +6274,7 @@ var CreatorQuiz = /** @class */ (function (_super) {
         _this.addAfter = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_1__["linearContainerAddAfter"];
         return _this;
     }
+    CreatorQuiz_1 = CreatorQuiz;
     // Re-override to not account for extra spacing
     CreatorQuiz.prototype.calcHeight = function () {
         var totalHeight = 0;
@@ -5838,12 +6292,12 @@ var CreatorQuiz = /** @class */ (function (_super) {
     };
     CreatorQuiz.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerStroke"];
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
-        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorContainerPadding.scale(l.scale);
+        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"].scale(l.scale);
         // Vertical lines
         var y1 = l.tly + pad.top / 2;
         var y2 = l.tly + l.height - pad.bottom / 2;
@@ -5852,24 +6306,24 @@ var CreatorQuiz = /** @class */ (function (_super) {
         Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x1, y1, x1, y2, ctx);
         Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x2, y1, x2, y2, ctx);
         // Carets
-        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorCaretFillStyle;
+        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretFillStyle"];
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + pad.top * 0.75);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.top * 0.75);
         ctx.rotate(Math.PI);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorCaretSize"], ctx);
         ctx.restore();
         // Carets that depend on parent
         _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_1__["creatorContainerCreatorDraw"].call(this, l, ctx);
         ctx.restore();
     };
     CreatorQuiz.prototype.addClick = function (l, x, y, toAdd) {
-        var realPad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].creatorContainerPadding.scale(l.scale);
+        var realPad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"].scale(l.scale);
         // Create mock layout states to use like rectangles
         var innerTop = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](undefined, undefined, l.tlx + realPad.left / 2, l.tly + realPad.top / 2, l.width - realPad.width() / 2, realPad.height() / 4, 1);
         var innerBot = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_2__["default"](undefined, undefined, l.tlx + realPad.left / 2, l.tly + l.height - realPad.bottom, l.width - realPad.width() / 2, realPad.height() / 4, 1);
@@ -5907,7 +6361,7 @@ var CreatorQuiz = /** @class */ (function (_super) {
         if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_4__["default"]) {
             throw new Error('Radicals can only be added inside a root container.');
         }
-        if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             throw new Error('Fraction Lines can only be added inside a vertical container.');
         }
     };
@@ -5957,6 +6411,16 @@ var CreatorQuiz = /** @class */ (function (_super) {
     CreatorQuiz.prototype.saveAnswers = function (answers) {
         this.saveAnswersAs = answers;
     };
+    var CreatorQuiz_1;
+    CreatorQuiz = CreatorQuiz_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_7__["Container"])({
+            typeString: 'creator-quiz',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                var format = containerObj;
+                return new CreatorQuiz_1(Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["parseContainerChildren"])(format.children, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["creatorContainerPadding"], format.answers, _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["curvedOutlineDefaultOpacity"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["curvedOutlineColor"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["radioButtonDefaultOpacity"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["radioButtonColor"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["quizCorrectColor"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["quizIncorrectColor"]);
+            }
+        })
+    ], CreatorQuiz);
     return CreatorQuiz;
 }(_shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorQuiz);
@@ -5975,9 +6439,12 @@ var CreatorQuiz = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/layout/RootContainer */ "../src/layout/RootContainer.ts");
 /* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
-/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5991,6 +6458,15 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
 
 
 
@@ -6001,6 +6477,7 @@ var CreatorRootContainer = /** @class */ (function (_super) {
     function CreatorRootContainer() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    CreatorRootContainer_1 = CreatorRootContainer;
     /**
      * When this container is clicked,
      * add a component to it at some
@@ -6013,28 +6490,28 @@ var CreatorRootContainer = /** @class */ (function (_super) {
      * @param toAdd The component to add.
      */
     CreatorRootContainer.prototype.addClick = function (l, x, y, toAdd) {
-        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding.scale(l.scale);
+        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerPadding"].scale(l.scale);
         // Make fake layout state to use like rectangles
         var inner = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](undefined, undefined, l.tlx + pad.left, l.tly + pad.top, l.width - pad.width(), l.height - pad.height(), 1);
         if (inner.contains(x, y)) {
-            if (!(toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_3__["default"])) {
+            if (!(toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_2__["default"])) {
                 throw new Error('Only Radicals can be added to a Root Container.');
             }
             this.radical = toAdd;
         }
         else {
-            _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerAddClick"].call(this, l, x, y, toAdd);
+            _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerAddClick"].call(this, l, x, y, toAdd);
         }
     };
     CreatorRootContainer.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerStroke"];
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
         ctx.restore();
-        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerCreatorDraw"].call(this, l, ctx);
+        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerCreatorDraw"].call(this, l, ctx);
     };
     /**
      * When one of this container's direct
@@ -6056,8 +6533,8 @@ var CreatorRootContainer = /** @class */ (function (_super) {
     CreatorRootContainer.prototype.toStepLayout = function (controller) {
         var toReturn = {};
         toReturn.type = 'root';
-        toReturn.idx = Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["childrenToStepLayout"])(this.index.getChildren(), controller);
-        toReturn.arg = Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["childrenToStepLayout"])(this.argument.getChildren(), controller);
+        toReturn.idx = Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["childrenToStepLayout"])(this.index.getChildren(), controller);
+        toReturn.arg = Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["childrenToStepLayout"])(this.argument.getChildren(), controller);
         if (this.radical) {
             toReturn.rad = this.radical.getRef();
         }
@@ -6117,6 +6594,22 @@ var CreatorRootContainer = /** @class */ (function (_super) {
     CreatorRootContainer.prototype.addAfter = function (toAdd, after) {
         return;
     };
+    var CreatorRootContainer_1;
+    CreatorRootContainer = CreatorRootContainer_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__["Container"])({
+            typeString: 'creator-root',
+            parse: function (containerObj, depth, contentGetter, containerGetter, genInfo) {
+                var format = containerObj;
+                var idx = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_6__["default"](Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["parseContainerChildren"])(format.idx, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerPadding"]);
+                var arg = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_6__["default"](Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["parseContainerChildren"])(format.arg, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerPadding"]);
+                var radical;
+                if (format.rad) {
+                    radical = contentGetter(format.rad);
+                }
+                return new CreatorRootContainer_1(idx, arg, radical, _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerPadding"], genInfo.termHeights);
+            }
+        })
+    ], CreatorRootContainer);
     return CreatorRootContainer;
 }(_shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorRootContainer);
@@ -6136,6 +6629,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/layout/SubSuper */ "../src/layout/SubSuper.ts");
 /* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
 /* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CreatorTightHBox */ "./src/app/central-area/CreatorTightHBox.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6149,6 +6646,16 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
 
 
 
@@ -6157,6 +6664,7 @@ var CreatorSubSuper = /** @class */ (function (_super) {
     function CreatorSubSuper() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    CreatorSubSuper_1 = CreatorSubSuper;
     CreatorSubSuper.prototype.addVertically = function () {
         return false;
     };
@@ -6171,7 +6679,7 @@ var CreatorSubSuper = /** @class */ (function (_super) {
     };
     CreatorSubSuper.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorContainerStroke"];
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
@@ -6203,12 +6711,12 @@ var CreatorSubSuper = /** @class */ (function (_super) {
             bottom: Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_1__["childrenToStepLayout"])(this.bottom.getChildren(), controller)
         };
         if (this.savePortrusionAs) {
-            if (this.savePortrusionAs !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].defaultExpPortrusion) {
+            if (this.savePortrusionAs !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["defaultExpPortrusion"]) {
                 toReturn.portrusion = this.savePortrusionAs;
             }
             this.savePortrusionAs = undefined;
         }
-        else if (this.portrusionProportion !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].defaultExpPortrusion) {
+        else if (this.portrusionProportion !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["defaultExpPortrusion"]) {
             toReturn.portrusion = this.portrusionProportion;
         }
         return toReturn;
@@ -6232,6 +6740,21 @@ var CreatorSubSuper = /** @class */ (function (_super) {
     CreatorSubSuper.prototype.savePortrusion = function (saveAs) {
         this.savePortrusionAs = saveAs;
     };
+    var CreatorSubSuper_1;
+    CreatorSubSuper = CreatorSubSuper_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_3__["Container"])({
+            typeString: 'creator-subSuper',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                // Return subSuper from file
+                var format = containerObj;
+                var top = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_4__["default"](Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.top, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorContainerPadding"]);
+                var middle = new _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_6__["default"](Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.middle, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorContainerPadding"]);
+                var bottom = new _CreatorHBox__WEBPACK_IMPORTED_MODULE_4__["default"](Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_5__["parseContainerChildren"])(format.bottom, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorContainerPadding"]);
+                var portrusion = format.portrusion ? format.portrusion : _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["defaultExpPortrusion"];
+                return new CreatorSubSuper_1(top, middle, bottom, portrusion, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["creatorContainerPadding"]);
+            }
+        })
+    ], CreatorSubSuper);
     return CreatorSubSuper;
 }(_shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorSubSuper);
@@ -6252,12 +6775,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
 /* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
 /* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
-/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
-/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @shared/layout/Padding */ "../src/layout/Padding.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6271,6 +6796,14 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
 
 
 
@@ -6286,12 +6819,13 @@ var CreatorTable = /** @class */ (function (_super) {
     function CreatorTable() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    CreatorTable_1 = CreatorTable;
     /**
      * Return the mimimum dimension in either axis
      * for a table cell.
      */
     CreatorTable.prototype.getMinCellDimen = function () {
-        return _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorTableMinCellDimen;
+        return _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorTableMinCellDimen"];
     };
     CreatorTable.prototype.getHLines = function () {
         return this.hLines;
@@ -6370,7 +6904,7 @@ var CreatorTable = /** @class */ (function (_super) {
      */
     CreatorTable.prototype.delete = function (toDelete) {
         // Deleting always valid
-        if (toDelete instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+        if (toDelete instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__["default"]) {
             // Find the hDivider and delete it
             for (var _i = 0, _a = Object.keys(this.hLines); _i < _a.length; _i++) {
                 var index = _a[_i];
@@ -6383,7 +6917,7 @@ var CreatorTable = /** @class */ (function (_super) {
             }
             throw new Error('HDivider not found');
         }
-        else if (toDelete instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        else if (toDelete instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             // Find the vDivider and delete it
             for (var _b = 0, _c = Object.keys(this.vLines); _b < _c.length; _b++) {
                 var index = _c[_b];
@@ -6531,13 +7065,13 @@ var CreatorTable = /** @class */ (function (_super) {
                 if (emptyChildLayouts[r][c] && emptyChildLayouts[r][c].contains(x, y)) {
                     // Click was on this placeholder
                     // Some content types not allowed
-                    if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__["default"]) {
+                    if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_8__["default"]) {
                         throw new Error('Cannot add that here');
                     }
-                    else if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+                    else if (toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__["default"]) {
                         throw new Error('Cannot add that here');
                     }
-                    else if (toAdd instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+                    else if (toAdd instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__["default"]) {
                         throw new Error('Cannot add that here');
                     }
                     this.children[r][c] = toAdd;
@@ -6550,7 +7084,7 @@ var CreatorTable = /** @class */ (function (_super) {
             if (emptyHLineLayouts[r] && emptyHLineLayouts[r].contains(x, y)) {
                 // Click was on this placeholder
                 // Only an hLine is allowed to be added
-                if (!(toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_5__["default"])) {
+                if (!(toAdd instanceof _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_4__["default"])) {
                     throw new Error('Only Horizontal Lines can be added here.');
                 }
                 this.hLines[r] = toAdd;
@@ -6562,7 +7096,7 @@ var CreatorTable = /** @class */ (function (_super) {
             if (emptyVLineLayouts[c] && emptyVLineLayouts[c].contains(x, y)) {
                 // Click was on this placeholder
                 // Only an hLine is allowed to be added
-                if (!(toAdd instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_6__["default"])) {
+                if (!(toAdd instanceof _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__["default"])) {
                     throw new Error('Only Vertical Lines can be added here.');
                 }
                 this.vLines[c] = toAdd;
@@ -6570,7 +7104,7 @@ var CreatorTable = /** @class */ (function (_super) {
             }
         }
         // If get to here, couldn't find anything else.
-        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_8__["creatorContainerAddClick"].call(this, clickedLayout, x, y, toAdd);
+        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_7__["creatorContainerAddClick"].call(this, clickedLayout, x, y, toAdd);
     };
     /**
      * Draws the container on the canvas,
@@ -6584,7 +7118,7 @@ var CreatorTable = /** @class */ (function (_super) {
     CreatorTable.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
         // Draw an outline
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorContainerStroke"];
         ctx.strokeRect(l.tlx, l.tly, l.width, l.height);
         // If any lines are not present, draw them as dotted lines
         var hLinesToDraw = new Set();
@@ -6601,12 +7135,12 @@ var CreatorTable = /** @class */ (function (_super) {
         }
         // Draw h lines
         ctx.save();
-        ctx.setLineDash(_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorLineDash);
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorContainerStroke;
+        ctx.setLineDash(_shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorLineDash"]);
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorContainerStroke"];
         var upToY = l.tly + this.padding.top;
         for (var r = 0; r <= this.children.length; r++) {
             if (hLinesToDraw.has(r)) {
-                Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["line"])(l.tlx + this.padding.left, upToY + this.getLineStroke() / 2, l.tlx + l.width - this.padding.right, upToY + this.getLineStroke() / 2, ctx);
+                Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["line"])(l.tlx + this.padding.left, upToY + this.getLineStroke() / 2, l.tlx + l.width - this.padding.right, upToY + this.getLineStroke() / 2, ctx);
             }
             upToY += this.getLineStroke() + this.heights[r];
         }
@@ -6614,7 +7148,7 @@ var CreatorTable = /** @class */ (function (_super) {
         var upToX = l.tlx + this.padding.left;
         for (var c = 0; c <= this.children[0].length; c++) {
             if (vLinesToDraw.has(c)) {
-                Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["line"])(upToX + this.getLineStroke() / 2, l.tly + this.padding.top, upToX + this.getLineStroke() / 2, l.tly + l.height - this.padding.bottom, ctx);
+                Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["line"])(upToX + this.getLineStroke() / 2, l.tly + this.padding.top, upToX + this.getLineStroke() / 2, l.tly + l.height - this.padding.bottom, ctx);
             }
             upToX += this.getLineStroke() + this.widths[c];
         }
@@ -6634,9 +7168,9 @@ var CreatorTable = /** @class */ (function (_super) {
                     // Draw plus
                     ctx.save();
                     ctx.translate(upToX + colWidth / 2, upToY + rowHeight / 2);
-                    ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorContainerStroke;
-                    Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["line"])(-_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorPlusLineHalfLength, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorPlusLineHalfLength, 0, ctx);
-                    Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["line"])(0, -_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorPlusLineHalfLength, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorPlusLineHalfLength, ctx);
+                    ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorContainerStroke"];
+                    Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["line"])(-_shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorPlusLineHalfLength"], 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorPlusLineHalfLength"], 0, ctx);
+                    Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["line"])(0, -_shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorPlusLineHalfLength"], 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorPlusLineHalfLength"], ctx);
                     ctx.restore();
                 }
                 upToX += colWidth + this.getLineStroke();
@@ -6645,8 +7179,19 @@ var CreatorTable = /** @class */ (function (_super) {
         }
         ctx.restore();
         // Carets that depend on parent
-        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_8__["creatorContainerCreatorDraw"].call(this, l, ctx);
+        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_7__["creatorContainerCreatorDraw"].call(this, l, ctx);
     };
+    var CreatorTable_1;
+    CreatorTable = CreatorTable_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_10__["Container"])({
+            typeString: 'creator-table',
+            parse: function (containerObj, depth, contentGetter, containerGetter, inf) {
+                // Not selectable
+                var format = containerObj;
+                return new CreatorTable_1(_shared_main_consts__WEBPACK_IMPORTED_MODULE_9__["creatorContainerPadding"], Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_0__["parseChildren2D"])(format.children, containerGetter, contentGetter), Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_0__["parseChildrenObj"])(format.hLines, contentGetter), Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_0__["parseChildrenObj"])(format.vLines, contentGetter), 11, _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_11__["default"].even(0));
+            }
+        })
+    ], CreatorTable);
     return CreatorTable;
 }(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorTable);
@@ -6666,8 +7211,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
 /* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
 /* harmony import */ var _shared_layout_Term__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/Term */ "../src/layout/Term.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6681,17 +7228,26 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 
 
 
 
 
-var widthDiff = _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].termPadding.width() - _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["default"].tightTermPadding.width();
+
+
+var widthDiff = _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["termPadding"].width() - _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["tightTermPadding"].width();
 var CreatorTightHBox = /** @class */ (function (_super) {
     __extends(CreatorTightHBox, _super);
     function CreatorTightHBox() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    CreatorTightHBox_1 = CreatorTightHBox;
     // Override to have right type
     CreatorTightHBox.prototype.toStepLayout = function (controller) {
         return {
@@ -6714,7 +7270,7 @@ var CreatorTightHBox = /** @class */ (function (_super) {
     };
     // Override to reduce term padding.
     CreatorTightHBox.prototype.addLayout = function (parentLayout, layouts, tlx, tly, currScale, opacityObj, colorsObj, mouseEnter, mouseExit, mouseClick, tempContent) {
-        var state = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_4__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
+        var state = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_3__["default"](parentLayout, this, tlx, tly, this.getWidth() * currScale, this.getHeight() * currScale, currScale);
         var innerHeight = (this.getHeight() - this.padding.height()) * currScale;
         var upToX = tlx + this.padding.left * currScale;
         for (var _i = 0, _a = this.children; _i < _a.length; _i++) {
@@ -6731,6 +7287,17 @@ var CreatorTightHBox = /** @class */ (function (_super) {
         layouts.set(this, state);
         return state;
     };
+    var CreatorTightHBox_1;
+    CreatorTightHBox = CreatorTightHBox_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_5__["Container"])({
+            typeString: 'creator-tightHBox',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                var format = containerObj;
+                // Return HBox from file
+                return new CreatorTightHBox_1(Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["parseContainerChildren"])(format.children, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["creatorContainerPadding"]);
+            }
+        })
+    ], CreatorTightHBox);
     return CreatorTightHBox;
 }(_CreatorHBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorTightHBox);
@@ -6749,10 +7316,11 @@ var CreatorTightHBox = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/layout/VBox */ "../src/layout/VBox.ts");
 /* harmony import */ var _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/animation/LayoutState */ "../src/animation/LayoutState.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
-/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CreatorContainerMethods */ "./src/app/central-area/CreatorContainerMethods.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -6766,6 +7334,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
 
 
 
@@ -6776,12 +7351,13 @@ var CreatorVBox = /** @class */ (function (_super) {
     __extends(CreatorVBox, _super);
     function CreatorVBox() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.delete = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerDelete"];
-        _this.forEachUnder = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerForEachUnder"];
-        _this.addBefore = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerAddBefore"];
-        _this.addAfter = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["linearContainerAddAfter"];
+        _this.delete = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerDelete"];
+        _this.forEachUnder = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerForEachUnder"];
+        _this.addBefore = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerAddBefore"];
+        _this.addAfter = _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["linearContainerAddAfter"];
         return _this;
     }
+    CreatorVBox_1 = CreatorVBox;
     CreatorVBox.prototype.addHorizontally = function () {
         return false;
     };
@@ -6790,38 +7366,38 @@ var CreatorVBox = /** @class */ (function (_super) {
     };
     CreatorVBox.prototype.creatorDraw = function (l, ctx) {
         ctx.save();
-        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerStroke;
+        ctx.strokeStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorContainerStroke"];
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
-        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding.scale(l.scale);
+        var pad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorContainerPadding"].scale(l.scale);
         // Vertical lines
         var y1 = l.tly + pad.top / 2;
         var y2 = l.tly + l.height - pad.bottom / 2;
         var x1 = l.tlx + pad.left / 2;
         var x2 = l.tlx + l.width - pad.right / 2;
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x1, y1, x1, y2, ctx);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["line"])(x2, y1, x2, y2, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(x1, y1, x1, y2, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(x2, y1, x2, y2, ctx);
         // Carets
-        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretFillStyle;
+        ctx.fillStyle = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorCaretFillStyle"];
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + pad.top * 0.75);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorCaretSize"], ctx);
         ctx.restore();
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.top * 0.75);
         ctx.rotate(Math.PI);
         ctx.scale(l.scale, l.scale);
-        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_3__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorCaretSize, ctx);
+        Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["tri"])(0, 0, _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorCaretSize"], _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorCaretSize"], ctx);
         ctx.restore();
         // Carets that depend on parent
-        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerCreatorDraw"].call(this, l, ctx);
+        _CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerCreatorDraw"].call(this, l, ctx);
         ctx.restore();
     };
     CreatorVBox.prototype.addClick = function (l, x, y, toAdd) {
-        var realPad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_2__["default"].creatorContainerPadding.scale(l.scale);
+        var realPad = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorContainerPadding"].scale(l.scale);
         // Create mock layout states to use like rectangles
         var innerTop = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](undefined, undefined, l.tlx + realPad.left / 2, l.tly + realPad.top / 2, l.width - realPad.width() / 2, realPad.height() / 4, 1);
         var innerBot = new _shared_animation_LayoutState__WEBPACK_IMPORTED_MODULE_1__["default"](undefined, undefined, l.tlx + realPad.left / 2, l.tly + l.height - realPad.bottom, l.width - realPad.width() / 2, realPad.height() / 4, 1);
@@ -6837,7 +7413,7 @@ var CreatorVBox = /** @class */ (function (_super) {
         }
         else {
             // Click wasn't on inner part, add adjacent to parent container.
-            Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["creatorContainerAddClick"])(l, x, y, toAdd);
+            Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["creatorContainerAddClick"])(l, x, y, toAdd);
         }
     };
     CreatorVBox.prototype.addClickOnChild = function (clickedLayout, x, y, toAdd) {
@@ -6852,16 +7428,27 @@ var CreatorVBox = /** @class */ (function (_super) {
         }
     };
     CreatorVBox.prototype.addValid = function (toAdd) {
-        if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+        if (toAdd instanceof _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_4__["default"]) {
             throw new Error('Radicals can only be added inside a root container.');
         }
     };
     CreatorVBox.prototype.toStepLayout = function (controller) {
         return {
             type: 'vbox',
-            children: Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_4__["childrenToStepLayout"])(this.children, controller)
+            children: Object(_CreatorContainerMethods__WEBPACK_IMPORTED_MODULE_3__["childrenToStepLayout"])(this.children, controller)
         };
     };
+    var CreatorVBox_1;
+    CreatorVBox = CreatorVBox_1 = __decorate([
+        Object(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_6__["Container"])({
+            typeString: 'creator-vbox',
+            parse: function (containerObj, depth, contentGetter, containerGetter) {
+                var format = containerObj;
+                // Return VBox from file
+                return new CreatorVBox_1(Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_2__["parseContainerChildren"])(format.children, depth, containerGetter, contentGetter), _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["creatorContainerPadding"]);
+            }
+        })
+    ], CreatorVBox);
     return CreatorVBox;
 }(_shared_layout_VBox__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (CreatorVBox);
@@ -7009,11 +7596,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ColorPickerComponent", function() { return ColorPickerComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectorData", function() { return SelectorData; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _content_selection_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../content-selection.service */ "./src/app/content-selection.service.ts");
-/* harmony import */ var _undo_redo_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../undo-redo.service */ "./src/app/undo-redo.service.ts");
-/* harmony import */ var _modal_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../modal.service */ "./src/app/modal.service.ts");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
+/* harmony import */ var _content_selection_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../content-selection.service */ "./src/app/content-selection.service.ts");
+/* harmony import */ var _undo_redo_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../undo-redo.service */ "./src/app/undo-redo.service.ts");
+/* harmony import */ var _modal_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modal.service */ "./src/app/modal.service.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7037,15 +7624,15 @@ var ColorPickerComponent = /** @class */ (function () {
         this.opacityData = [];
         this.colorData = [];
         this.opacityData = [
-            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].fadedOpacity + ')', 'Faded'),
-            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].normalOpacity + ')', 'Normal'),
-            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].focusedOpacity + ')', 'Focused')
+            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["fadedOpacity"] + ')', 'Faded'),
+            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["normalOpacity"] + ')', 'Normal'),
+            new SelectorData('rgba(255, 255, 255, ' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["focusedOpacity"] + ')', 'Focused')
         ];
-        var colNames = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].colors);
+        var colNames = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["colors"]);
         this.colorData = colNames
             .map(function (colName) {
-            var colVal = _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].colors[colName];
-            return new SelectorData('rgb(' + colVal[0] + ',' + colVal[1] + ',' + colVal[2] + ')', Object(_helpers__WEBPACK_IMPORTED_MODULE_5__["cap"])(colName));
+            var colVal = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["colors"][colName];
+            return new SelectorData('rgb(' + colVal[0] + ',' + colVal[1] + ',' + colVal[2] + ')', Object(_helpers__WEBPACK_IMPORTED_MODULE_4__["cap"])(colName));
         });
         this.defaultColorIdx = colNames.indexOf('default');
         // Find the color and opacity of what's selected
@@ -7055,10 +7642,10 @@ var ColorPickerComponent = /** @class */ (function () {
         // If selected already has opacity, show it as selected
         if (step.opacity && step.opacity[selectedRef]) {
             var opacity = step.opacity[selectedRef];
-            if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].fadedOpacity) {
+            if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["fadedOpacity"]) {
                 this.selectedOpacityIdx = 0;
             }
-            else if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].focusedOpacity) {
+            else if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["focusedOpacity"]) {
                 this.selectedOpacityIdx = 2;
             }
         }
@@ -7119,17 +7706,17 @@ var ColorPickerComponent = /** @class */ (function () {
         var opacity;
         switch (this.selectedOpacityIdx) {
             case 0:
-                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].fadedOpacity;
+                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["fadedOpacity"];
                 break;
             case 1:
-                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].normalOpacity;
+                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["normalOpacity"];
                 break;
             case 2:
-                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].focusedOpacity;
+                opacity = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["focusedOpacity"];
                 break;
             default: throw new Error('Illegal selected opacity index.');
         }
-        var colorName = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].colors)[this.selectedColorIdx];
+        var colorName = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["colors"])[this.selectedColorIdx];
         this.selection.canvasInstance.applyColorAndOpacity(opacity, colorName);
         this.modal.remove();
     };
@@ -7139,7 +7726,7 @@ var ColorPickerComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./color-picker.component.html */ "./src/app/color-picker/color-picker.component.html"),
             styles: [__webpack_require__(/*! ./color-picker.component.css */ "./src/app/color-picker/color-picker.component.css")]
         }),
-        __metadata("design:paramtypes", [_content_selection_service__WEBPACK_IMPORTED_MODULE_2__["ContentSelectionService"], _undo_redo_service__WEBPACK_IMPORTED_MODULE_3__["UndoRedoService"], _modal_service__WEBPACK_IMPORTED_MODULE_4__["ModalService"]])
+        __metadata("design:paramtypes", [_content_selection_service__WEBPACK_IMPORTED_MODULE_1__["ContentSelectionService"], _undo_redo_service__WEBPACK_IMPORTED_MODULE_2__["UndoRedoService"], _modal_service__WEBPACK_IMPORTED_MODULE_3__["ModalService"]])
     ], ColorPickerComponent);
     return ColorPickerComponent;
 }());
@@ -7904,7 +8491,7 @@ var ErrorService = /** @class */ (function () {
             }
             this.timeoutID = setTimeout(function () {
                 _this.active = false;
-            }, _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["default"].creatorErrorTimeout);
+            }, _shared_main_consts__WEBPACK_IMPORTED_MODULE_1__["creatorErrorTimeout"]);
         },
         enumerable: true,
         configurable: true
@@ -8357,8 +8944,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _error_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../error.service */ "./src/app/error.service.ts");
 /* harmony import */ var _selected_step_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../selected-step.service */ "./src/app/selected-step.service.ts");
 /* harmony import */ var _font_update_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../font-update.service */ "./src/app/font-update.service.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/helpers */ "../src/main/helpers.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8420,13 +9007,13 @@ var LoadComponent = /** @class */ (function () {
             this.showLoading = true;
             var defaultFontObj = {
                 type: 'g',
-                name: _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["default"].fontFamily + ':' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["default"].fontWeight
+                name: _shared_main_consts__WEBPACK_IMPORTED_MODULE_7__["defaultFontFamily"] + ':' + _shared_main_consts__WEBPACK_IMPORTED_MODULE_7__["defaultFontWeight"]
             };
             var fontToLoad = fileObj_1.font ? fileObj_1.font : defaultFontObj;
             // Function to actually load
             var finishLoad_1 = function () {
                 _this.undoRedo.erase();
-                fileObj_1.metrics = Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_7__["getMetrics"])(fileObj_1);
+                fileObj_1.metrics = Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_6__["getMetrics"])(fileObj_1);
                 _this.undoRedo.publishChange(fileObj_1);
                 _this.modal.remove();
             };
@@ -9068,11 +9655,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/CanvasController */ "../src/main/CanvasController.ts");
 /* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
 /* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
-/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
-/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
-/* harmony import */ var _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/layout/Padding */ "../src/layout/Padding.ts");
+/* harmony import */ var _SelectableComponentModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SelectableComponentModel */ "./src/app/step-options/SelectableComponentModel.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -9090,14 +9673,11 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-
-
-
-
 var SelectableCanvasController = /** @class */ (function (_super) {
     __extends(SelectableCanvasController, _super);
     function SelectableCanvasController(container, instructions, selectedRef, index, onChange, changeValid) {
         var _this = _super.call(this, container, instructions) || this;
+        _this.components = new _SelectableComponentModel__WEBPACK_IMPORTED_MODULE_3__["default"](instructions);
         // Remove autoplay overlay if present
         if (_this.isAutoplay) {
             container.removeChild(container.children[container.childElementCount - 1]);
@@ -9107,7 +9687,7 @@ var SelectableCanvasController = /** @class */ (function (_super) {
         _this.onChange = onChange;
         _this.changeValid = changeValid;
         _this.canvas.addEventListener('click', _this.select.bind(_this));
-        _this.redraw();
+        _this.recalc(true);
         return _this;
     }
     // Override to draw selected differently
@@ -9161,37 +9741,83 @@ var SelectableCanvasController = /** @class */ (function (_super) {
         catch (e) { }
         finally { }
     };
-    // Override to give dividers some padding
-    SelectableCanvasController.prototype.initContent = function (instructions) {
-        _super.prototype.initContent.call(this, instructions);
-        this.hDividers = [];
-        for (var i = 0; i < instructions.hDividers; i++) {
-            this.hDividers.push(new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_3__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorSelectableHDividerPadding, 'h' + i));
-        }
-        this.vDividers = [];
-        for (var i = 0; i < instructions.vDividers; i++) {
-            this.vDividers.push(new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_5__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].creatorSelectableVDividerPadding, 'v' + i));
-        }
+    return SelectableCanvasController;
+}(_shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (SelectableCanvasController);
+
+
+/***/ }),
+
+/***/ "./src/app/step-options/SelectableComponentModel.ts":
+/*!**********************************************************!*\
+  !*** ./src/app/step-options/SelectableComponentModel.ts ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @shared/main/ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/HDivider */ "../src/layout/HDivider.ts");
+/* harmony import */ var _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/VDivider */ "../src/layout/VDivider.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
+/* harmony import */ var _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/Padding */ "../src/layout/Padding.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     };
-    /**
-     * Parse a container from the JSON Object.
-     * Override to change stroke for table.
-     * @param containerObj The JSON Object representing the container.
-     * @param depth The depth in the layout tree.
-     */
-    SelectableCanvasController.prototype.parseContainer = function (containerObj, depth) {
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+
+
+
+
+var SelectableComponentModel = /** @class */ (function (_super) {
+    __extends(SelectableComponentModel, _super);
+    function SelectableComponentModel(file) {
+        var _this = _super.call(this, file) || this;
+        // Give dividers more padding to be selectable
+        var hDividers = _this.content.get('h');
+        var numHDividers = hDividers.length;
+        hDividers.length = 0;
+        for (var i = 0; i < numHDividers; i++) {
+            hDividers.push(new _shared_layout_HDivider__WEBPACK_IMPORTED_MODULE_1__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorSelectableHDividerPadding"], 'h' + i));
+        }
+        var vDividers = _this.content.get('v');
+        var numVDividers = vDividers.length;
+        vDividers.length = 0;
+        for (var i = 0; i < numVDividers; i++) {
+            vDividers.push(new _shared_layout_VDivider__WEBPACK_IMPORTED_MODULE_2__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["creatorSelectableVDividerPadding"], 'v' + i));
+        }
+        // For customizing table display
+        _this.genInfo.isSelectable = true;
+        return _this;
+    }
+    // Override to make tables display differently
+    SelectableComponentModel.prototype.parseContainer = function (containerObj, depth) {
         if (containerObj.type === 'table') {
+            // Selectable table, make line stroke bigger
             var format = containerObj;
-            var children = this.parseChildren2D(format.children);
-            return new _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_6__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_4__["default"].defaultTablePadding, children, this.parseChildrenObj(format.hLines), this.parseChildrenObj(format.vLines), 11, _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_7__["default"].even(0));
+            var children = Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_4__["parseChildren2D"])(format.children, this.parseContainer, this.getContent);
+            return new _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_4__["default"](_shared_main_consts__WEBPACK_IMPORTED_MODULE_3__["defaultTablePadding"], children, Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_4__["parseChildrenObj"])(format.hLines, this.getContent), Object(_shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_4__["parseChildrenObj"])(format.vLines, this.getContent), 11, _shared_layout_Padding__WEBPACK_IMPORTED_MODULE_5__["default"].even(0));
         }
         else {
             return _super.prototype.parseContainer.call(this, containerObj, depth);
         }
     };
-    return SelectableCanvasController;
-}(_shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_0__["default"]));
-/* harmony default export */ __webpack_exports__["default"] = (SelectableCanvasController);
+    return SelectableComponentModel;
+}(_shared_main_ComponentModel__WEBPACK_IMPORTED_MODULE_0__["ComponentModel"]));
+/* harmony default export */ __webpack_exports__["default"] = (SelectableComponentModel);
 
 
 /***/ }),
@@ -9360,9 +9986,9 @@ var StepOptionsComponent = /** @class */ (function () {
                 });
             }
             // Load durations
-            this.moveDuration = stepOpts_1.moveDuration ? stepOpts_1.moveDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].moveDuration;
-            this.addDuration = stepOpts_1.addDuration ? stepOpts_1.addDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].addDuration;
-            this.removeDuration = stepOpts_1.removeDuration ? stepOpts_1.removeDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].removeDuration;
+            this.moveDuration = stepOpts_1.moveDuration ? stepOpts_1.moveDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultMoveDuration"];
+            this.addDuration = stepOpts_1.addDuration ? stepOpts_1.addDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultAddDuration"];
+            this.removeDuration = stepOpts_1.removeDuration ? stepOpts_1.removeDuration : _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultRemoveDuration"];
         }
         else {
             // Durations need to be set default if no step options
@@ -9406,21 +10032,21 @@ var StepOptionsComponent = /** @class */ (function () {
      * Reset move duration to default.
      */
     StepOptionsComponent.prototype.setDefaultMoveDuration = function () {
-        this.moveDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].moveDuration;
+        this.moveDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultMoveDuration"];
         this.updateDurations();
     };
     /**
      * Reset add duration to default.
      */
     StepOptionsComponent.prototype.setDefaultAddDuration = function () {
-        this.addDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].addDuration;
+        this.addDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultAddDuration"];
         this.updateDurations();
     };
     /**
      * Reset remove duration to default.
      */
     StepOptionsComponent.prototype.setDefaultRemoveDuration = function () {
-        this.removeDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].removeDuration;
+        this.removeDuration = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultRemoveDuration"];
         this.updateDurations();
     };
     /**
@@ -9748,13 +10374,13 @@ var StepOptionsComponent = /** @class */ (function () {
             toReturn.evals[fromRef] = toRef;
         });
         // Add durations
-        if (this.moveDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].moveDuration) {
+        if (this.moveDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultMoveDuration"]) {
             toReturn.moveDuration = this.moveDuration;
         }
-        if (this.addDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].addDuration) {
+        if (this.addDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultAddDuration"]) {
             toReturn.addDuration = this.addDuration;
         }
-        if (this.removeDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["default"].removeDuration) {
+        if (this.removeDuration !== _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["defaultRemoveDuration"]) {
             toReturn.removeDuration = this.removeDuration;
         }
         return toReturn;
@@ -9993,7 +10619,8 @@ var RendererCanvasController = /** @class */ (function (_super) {
         var toReturn = [];
         this.steps.forEach(function (step) {
             // Get the layouts for the step
-            var rootContainer = _this.parseContainer(step.root, 0);
+            console.log(step.root);
+            var rootContainer = _this.components.parseContainer(step.root, 0);
             var colors = step.color;
             var opacities = step.opacity;
             var layouts = Object(_shared_main_helpers__WEBPACK_IMPORTED_MODULE_1__["newMap"])();
@@ -10328,8 +10955,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _undo_redo_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../undo-redo.service */ "./src/app/undo-redo.service.ts");
 /* harmony import */ var _selected_step_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../selected-step.service */ "./src/app/selected-step.service.ts");
 /* harmony import */ var _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/main/CanvasController */ "../src/main/CanvasController.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _modal_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../modal.service */ "./src/app/modal.service.ts");
+/* harmony import */ var _modal_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../modal.service */ "./src/app/modal.service.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10352,7 +10979,7 @@ var SubSuperAlignmentComponent = /** @class */ (function () {
         this.undoRedo = undoRedo;
         this.step = step;
         this.modal = modal;
-        this.defaultPortrusion = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].defaultExpPortrusion;
+        this.defaultPortrusion = _shared_main_consts__WEBPACK_IMPORTED_MODULE_6__["defaultExpPortrusion"];
         this.portrusionVar = this.defaultPortrusion + '';
         // Create an instructions containing solely the
         // selected subSuper layout. Keep the color, remove
@@ -10417,7 +11044,7 @@ var SubSuperAlignmentComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_content_selection_service__WEBPACK_IMPORTED_MODULE_1__["ContentSelectionService"],
             _undo_redo_service__WEBPACK_IMPORTED_MODULE_2__["UndoRedoService"],
             _selected_step_service__WEBPACK_IMPORTED_MODULE_3__["SelectedStepService"],
-            _modal_service__WEBPACK_IMPORTED_MODULE_6__["ModalService"]])
+            _modal_service__WEBPACK_IMPORTED_MODULE_5__["ModalService"]])
     ], SubSuperAlignmentComponent);
     return SubSuperAlignmentComponent;
 }());
@@ -10700,10 +11327,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _selected_step_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../selected-step.service */ "./src/app/selected-step.service.ts");
 /* harmony import */ var _modal_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modal.service */ "./src/app/modal.service.ts");
 /* harmony import */ var _color_picker_color_picker_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../color-picker/color-picker.component */ "./src/app/color-picker/color-picker.component.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
-/* harmony import */ var _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/main/CanvasController */ "../src/main/CanvasController.ts");
-/* harmony import */ var _error_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../error.service */ "./src/app/error.service.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
+/* harmony import */ var _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/main/CanvasController */ "../src/main/CanvasController.ts");
+/* harmony import */ var _error_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../error.service */ "./src/app/error.service.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10731,9 +11358,9 @@ var TextEditorComponent = /** @class */ (function () {
         this.anyTagPat = new RegExp('(<([^>]+)>)', 'gi');
         this.openTagPat = new RegExp('(<[^/]([^>]*)>)', 'gi');
         this.closeTagPat = new RegExp('(</([^>]+)>)', 'gi');
-        this.styleOpts = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].colors).map(function (colName) {
-            var name = colName === 'default' ? 'Bold' : Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["cap"])(colName);
-            var colorArr = _shared_main_consts__WEBPACK_IMPORTED_MODULE_5__["default"].colors[colName];
+        this.styleOpts = Object.keys(_shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["colors"]).map(function (colName) {
+            var name = colName === 'default' ? 'Bold' : Object(_helpers__WEBPACK_IMPORTED_MODULE_5__["cap"])(colName);
+            var colorArr = _shared_main_consts__WEBPACK_IMPORTED_MODULE_8__["colors"][colName];
             var colStyle = 'rgb(' + colorArr[0] + ',' + colorArr[1] + ',' + colorArr[2] + ')';
             return new _color_picker_color_picker_component__WEBPACK_IMPORTED_MODULE_4__["SelectorData"](colStyle, name);
         });
@@ -10782,7 +11409,7 @@ var TextEditorComponent = /** @class */ (function () {
             startTag = '<em>';
         }
         else {
-            startTag = '<em class="' + Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["deCap"])(styleOpt.text) + '">';
+            startTag = '<em class="' + Object(_helpers__WEBPACK_IMPORTED_MODULE_5__["deCap"])(styleOpt.text) + '">';
         }
         var endTag = '</em>';
         // Remove existing tags and add new ones
@@ -10995,7 +11622,7 @@ var TextEditorComponent = /** @class */ (function () {
         state.steps = [state.steps[this.step.selected]];
         state.steps[0].text = undefined;
         this.eqContainerEl.nativeElement.innerHTML = '';
-        var canv = new _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_7__["default"](this.eqContainerEl.nativeElement, state);
+        var canv = new _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_6__["default"](this.eqContainerEl.nativeElement, state);
     };
     /**
      * Called when a key is down. If it is not a valid
@@ -11028,7 +11655,7 @@ var TextEditorComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_undo_redo_service__WEBPACK_IMPORTED_MODULE_1__["UndoRedoService"],
             _selected_step_service__WEBPACK_IMPORTED_MODULE_2__["SelectedStepService"],
             _modal_service__WEBPACK_IMPORTED_MODULE_3__["ModalService"],
-            _error_service__WEBPACK_IMPORTED_MODULE_8__["ErrorService"]])
+            _error_service__WEBPACK_IMPORTED_MODULE_7__["ErrorService"]])
     ], TextEditorComponent);
     return TextEditorComponent;
 }());

@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren, Directive, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, QueryList, ViewChildren, ElementRef, AfterViewInit } from '@angular/core';
 import { ContentSelectionService } from '../content-selection.service';
 import { QuizFormat, FileFormat, ContainerFormat, LinearContainerFormat } from '@shared/main/FileFormat';
 import { UndoRedoService } from '../undo-redo.service';

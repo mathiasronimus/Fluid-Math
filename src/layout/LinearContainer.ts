@@ -1,8 +1,6 @@
 import EqContainer from "./EqContainer";
 import EqComponent from "./EqComponent";
 import Padding from "./Padding";
-import CanvasController from "../main/CanvasController";
-import EqContent from './EqContent';
 import LayoutState from "../animation/LayoutState";
 
 /**

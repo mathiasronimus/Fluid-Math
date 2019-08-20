@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, AfterViewInit } from '@angular/core';
+import { Component, ViewChildren, AfterViewInit } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { QueryList } from '@angular/core';
 import { ContentSelectionService } from '../content-selection.service';
@@ -15,7 +15,6 @@ import {
   RootContainerFormat,
   TableFormat
 } from '@shared/main/FileFormat';
-import { deepClone } from '../helpers';
 
 @Component({
   selector: 'app-content-pane',

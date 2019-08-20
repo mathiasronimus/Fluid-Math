@@ -1,7 +1,7 @@
 import CanvasController from './CanvasController';
 import HeightComputeCanvasController from './HeightComputeCanvasController';
 import * as WebFont from 'webfontloader';
-import C from './consts';
+import { defaultFontFamily, defaultFontWeight, colors } from './consts';
 import { addStyleSheet, getMetrics } from './helpers';
 import { GoogleFontFormat, CustomFontFormat, FileFormat, FontFormat, ColorsFormat } from './FileFormat';
 import EqContent from '../layout/EqContent';
@@ -12,7 +12,7 @@ let loadedColorsResCode: number = 0;
 
 const defaultFontObj: GoogleFontFormat = {
     type: "g",
-    name: C.fontFamily + ":" + C.fontWeight
+    name: defaultFontFamily + ":" + defaultFontWeight
 }
 
 // Export the loader function as a UMD module.
@@ -61,7 +61,7 @@ function requestColors() {
             EqContent.colors = loadedColorsFile.colors;
             addStyleSheet(loadedColorsFile.colors);
         } else {
-            EqContent.colors = C.colors;
+            EqContent.colors = colors;
             addStyleSheet();
         }
         loadedColorsResCode = req.status;

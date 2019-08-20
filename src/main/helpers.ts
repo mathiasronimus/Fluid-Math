@@ -1,6 +1,9 @@
-import C from './consts';
+import { colors, defaultFontStyle, defaultFontWeight, defaultFontFamily, widthTiers, testCanvasWidth, testCanvasFontSizeMultiple, fontSizes } from './consts';
 import Map from 'map-or-similar';
-import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat } from './FileFormat';
+import { FileFormat, CustomFontFormat, GoogleFontFormat, MetricsFormat, ContainerFormat } from './FileFormat';
+import EqComponent from '../layout/EqComponent';
+import EqContainer from '../layout/EqContainer';
+import EqContent from '../layout/EqContent';
 
 /**
  * Given an array of r, g, b, and a values respectively,
@@ -24,10 +27,10 @@ export function rgbaArrayToCssString(colorArr: number[]) {
  * 
  * @param otherColors If present, use other colors than the default.
  */
-export function addStyleSheet(otherColors?: {[colName: string]: [number, number, number]}) {
+export function addStyleSheet(otherColors?: { [colName: string]: [number, number, number] }) {
     const styleEl = document.createElement('style');
     let styleText = '';
-    const colorObj = otherColors ? otherColors : C.colors;
+    const colorObj = otherColors ? otherColors : colors;
     Object.keys(colorObj).forEach(colorName => {
         const colorVal = colorObj[colorName];
         styleText += '.' + colorName + ' { color: ' + rgbaArrayToCssString(colorVal) + '}';
@@ -48,8 +51,8 @@ export function getFont(instructions: FileFormat): [string, string, string] {
             // There's a custom font
             let font = instructions.font as CustomFontFormat;
             return [
-                font.name, 
-                font.style, 
+                font.name,
+                font.style,
                 font.weight
             ];
         } else if (instructions.font.type === "g") {
@@ -71,7 +74,7 @@ export function getFont(instructions: FileFormat): [string, string, string] {
                     // Not italic
                     return [
                         fontFamily,
-                        C.fontStyle,
+                        defaultFontStyle,
                         split[1]
                     ]
                 }
@@ -79,8 +82,8 @@ export function getFont(instructions: FileFormat): [string, string, string] {
                 // No defined weight/italic
                 return [
                     fontFamily,
-                    C.fontStyle,
-                    C.fontWeight
+                    defaultFontStyle,
+                    defaultFontWeight
                 ];
             }
         } else {
@@ -89,9 +92,9 @@ export function getFont(instructions: FileFormat): [string, string, string] {
     } else {
         // Use default
         return [
-            C.fontFamily,
-            C.fontStyle,
-            C.fontWeight
+            defaultFontFamily,
+            defaultFontStyle,
+            defaultFontWeight
         ];
     }
 }
@@ -103,7 +106,7 @@ export function getFont(instructions: FileFormat): [string, string, string] {
 export function getMetrics(instructions: FileFormat): MetricsFormat[] {
     const metricsArr = [];
     // Calculate a metrics object for each width tier
-    for (let i = 0; i < C.widthTiers.length; i++) {
+    for (let i = 0; i < widthTiers.length; i++) {
         const metrics: any = {};
         metricsArr.push(metrics);
 
@@ -145,8 +148,8 @@ function measureTerm(term: string, tier: number, instructions: FileFormat): obje
 
     // Create a canvas to measure with
     const testCanvas = document.createElement('canvas');
-    testCanvas.width = C.testCanvasWidth;
-    testCanvas.height = fontSize * C.testCanvasFontSizeMultiple;
+    testCanvas.width = testCanvasWidth;
+    testCanvas.height = fontSize * testCanvasFontSizeMultiple;
     const testCtx = testCanvas.getContext('2d');
     testCtx.font = weight + " " + style + " " + fontSize + "px " + fontFamily;
 
@@ -180,9 +183,9 @@ function measureTerm(term: string, tier: number, instructions: FileFormat): obje
 
 //Detects if the browser is ie
 let userAgent = window.navigator.userAgent;
-export const isIE = userAgent.indexOf('MSIE ') > -1 || 
-                    userAgent.indexOf('Trident/') > -1 ||
-                    userAgent.indexOf('Edge/') > -1;
+export const isIE = userAgent.indexOf('MSIE ') > -1 ||
+    userAgent.indexOf('Trident/') > -1 ||
+    userAgent.indexOf('Edge/') > -1;
 
 /**
  * Draws a line from one point to another.
@@ -236,12 +239,12 @@ window.addEventListener('resize', function () {
  */
 export function getWidthTier(): number {
     let currWidth = window.innerWidth;
-    for (let i = 0; i < C.widthTiers.length; i++) {
-        if (currWidth > C.widthTiers[i]) {
+    for (let i = 0; i < widthTiers.length; i++) {
+        if (currWidth > widthTiers[i]) {
             return i;
         }
     }
-    return C.widthTiers.length - 1;
+    return widthTiers.length - 1;
 }
 
 /**
@@ -249,7 +252,7 @@ export function getWidthTier(): number {
  * font size for a width tier.
  */
 export function getFontSizeForTier(tier: number): number {
-    return C.fontSizes[tier];
+    return fontSizes[tier];
 }
 
 let mapSupported = typeof window['Map'] === 'function';
@@ -261,7 +264,7 @@ let mapSupported = typeof window['Map'] === 'function';
  * below.
  */
 export function newMap(): Map<any, any> {
-    return mapSupported ? new window['Map'] : new Map();
+    return mapSupported ? new window['Map']() : new Map();
 }
 
 export interface Map<K, V> {
@@ -271,4 +274,36 @@ export interface Map<K, V> {
     delete(key: K);
     forEach(callback: (val: V, key: K, object) => void);
     size: number;
+}
+
+/**
+ * Parse the children attribute of a container
+ * JSON Object.
+ * 
+ * @param children The children array.
+ * @param depth The depth in the layout tree.
+ */
+export function parseContainerChildren
+(
+        children: any[], 
+        depth: number, 
+        parseContainer: (obj: ContainerFormat, depth: number) => EqContainer<any>,
+        contentGetter: (str: string) => EqContent<any>
+): EqComponent<any>[] {
+
+    const toReturn = [];
+    children.forEach(child => {
+        if (typeof child === 'object') {
+            if (child === null) {
+                toReturn.push(undefined);
+            } else {
+                toReturn.push(parseContainer(child, depth + 1));
+            }
+        } else if (typeof child === 'string') {
+            toReturn.push(contentGetter(child));
+        } else {
+            throw "Invalid type of child in JSON file.";
+        }
+    });
+    return toReturn;
 }

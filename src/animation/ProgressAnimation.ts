@@ -1,6 +1,5 @@
 import BezierCallback from "./BezierCallback";
 import AnimationSet from "./AnimationSet";
-import C from '../main/consts';
 import ProgressIndicator from "../main/ProgressIndicator";
 
 /**

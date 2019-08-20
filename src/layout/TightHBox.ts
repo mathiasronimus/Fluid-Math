@@ -1,15 +1,27 @@
 import HBox from "./HBox";
-import C from '../main/consts';
+import { termPadding, tightTermPadding, defaultHBoxPadding } from '../main/consts';
 import Term from "./Term";
 import LayoutState from '../animation/LayoutState';
 import TermLayoutState from "../animation/TermLayoutState";
 import EqComponent from "./EqComponent";
-import { Map } from '../main/helpers';
+import { Map, parseContainerChildren } from '../main/helpers';
 import { MouseEventCallback } from "../main/CanvasController";
 import EqContent from "./EqContent";
+import { Container } from "../main/ComponentModel";
+import { LinearContainerFormat } from "../main/FileFormat";
+import Padding from "./Padding";
 
-const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
+const widthDiff = termPadding.width() - tightTermPadding.width();
 
+@Container({
+    typeString: 'tightHBox',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        // Return HBox from file
+        const format = containerObj as LinearContainerFormat;
+        const children = parseContainerChildren(format.children, depth + 1, containerGetter, contentGetter);
+        return new TightHBox(children, Padding.even(defaultHBoxPadding));
+    }
+})
 export default class TightHBox extends HBox {
 
     //Override to account for reduced width of tight terms.

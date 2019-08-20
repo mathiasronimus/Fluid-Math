@@ -2,15 +2,36 @@ import VBox from "./VBox";
 import EqComponent from "./EqComponent";
 import Padding from "./Padding";
 import LayoutState from '../animation/LayoutState';
-import { Map } from '../main/helpers';
+import { Map, parseContainerChildren } from '../main/helpers';
 import { MouseEventCallback } from "../main/CanvasController";
 import EqContent from "./EqContent";
+import { Container } from "../main/ComponentModel";
+import { LinearContainerFormat } from "../main/FileFormat";
+import { defaultRootVBoxPadding, defaultVBoxPadding } from '../main/consts';
 
 /**
  * VBox used at the root of the layout hierarchy.
  * Vertically centers the children
  * as well as horizontally centering.
+ * Decorator defined here to avoid circular
+ * dependency between this and VBox.
  */
+@Container({
+    typeString: 'vbox',
+    parse: (containerObj, depth, contentGetter, containerGetter, inf) => {
+        // Return VBox from file
+        const format = containerObj as LinearContainerFormat;
+        const children = parseContainerChildren(format.children, depth + 1, containerGetter, contentGetter);
+        // Allocate extra padding if at root of layout
+        const padding = depth === 0 ? defaultRootVBoxPadding : Padding.even(defaultVBoxPadding);
+        // Center vertically if at root of layout
+        if (inf['fixedHeights'] && depth === 0) {
+           return new VCenterVBox(children, padding);
+        } else {
+            return new VBox(children, padding);
+        }
+    }
+})
 export default class VCenterVBox extends VBox {
 
     private totalChildHeight: number;

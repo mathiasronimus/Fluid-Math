@@ -1,7 +1,22 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/main/loadEqContainer',
+  entry: {
+    "fluid-math": [
+      "./src/main/loadEqContainer",
+      "./src/layout/VCenterVBox",
+      "./src/layout/HBox",
+      "./src/layout/HDivider",
+      "./src/layout/VDivider",
+      "./src/layout/Term",
+      "./src/layout/TightHBox",
+      './src/layout/RootContainer',
+      './src/layout/Radical',
+      './src/layout/SubSuper',
+      './src/layout/TableContainer',
+      './src/layout/Quiz'
+    ]
+  },
   module: {
     rules: [
       {
@@ -12,10 +27,9 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js' ]
+    extensions: ['.ts', '.js']
   },
   output: {
-    filename: 'fluid-math.js',
     path: __dirname
   },
   mode: 'production'

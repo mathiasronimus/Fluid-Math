@@ -5,9 +5,34 @@ import LayoutState from '@shared/animation/LayoutState';
 import { creatorContainerCreatorDraw, childrenToStepLayout } from './CreatorContainerMethods';
 import CanvasController from '@shared/main/CanvasController';
 import { SubSuperContainerFormat } from '@shared/main/FileFormat';
-import C from '@shared/main/consts';
 import EqContent from '@shared/layout/EqContent';
+import { creatorContainerStroke, defaultExpPortrusion, creatorContainerPadding } from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
+import CreatorHBox from './CreatorHBox';
+import { parseContainerChildren } from '@shared/main/helpers';
+import CreatorTightHBox from './CreatorTightHBox';
 
+@Container({
+    typeString: 'creator-subSuper',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        // Return subSuper from file
+        const format = containerObj as SubSuperContainerFormat;
+        const top = new CreatorHBox(
+            parseContainerChildren(format.top, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+        const middle = new CreatorTightHBox(
+            parseContainerChildren(format.middle, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+        const bottom = new CreatorHBox(
+            parseContainerChildren(format.bottom, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+        const portrusion = format.portrusion ? format.portrusion : defaultExpPortrusion;
+        return new CreatorSubSuper(top, middle, bottom, portrusion, creatorContainerPadding);
+    }
+})
 export default class CreatorSubSuper extends SubSuper implements CreatorContainer {
 
     // Used in creator: What to save portrusionProportion as.
@@ -31,7 +56,7 @@ export default class CreatorSubSuper extends SubSuper implements CreatorContaine
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.strokeStyle = creatorContainerStroke;
 
         // Outer border
         ctx.beginPath();
@@ -66,11 +91,11 @@ export default class CreatorSubSuper extends SubSuper implements CreatorContaine
             bottom: childrenToStepLayout(this.bottom.getChildren(), controller)
         };
         if (this.savePortrusionAs) {
-            if (this.savePortrusionAs !== C.defaultExpPortrusion) {
+            if (this.savePortrusionAs !== defaultExpPortrusion) {
                 toReturn.portrusion = this.savePortrusionAs;
             }
             this.savePortrusionAs = undefined;
-        } else if (this.portrusionProportion !== C.defaultExpPortrusion) {
+        } else if (this.portrusionProportion !== defaultExpPortrusion) {
             toReturn.portrusion = this.portrusionProportion;
         }
         return toReturn;

@@ -3,9 +3,8 @@ import EqComponent from "./EqComponent";
 import Padding from "./Padding";
 import LayoutState from "../animation/LayoutState";
 import CanvasController, { MouseEventCallback } from "../main/CanvasController";
-import { Map } from '../main/helpers';
+import { Map, parseContainerChildren } from '../main/helpers';
 import CurvedOutline from "./CurvedOutline";
-import C from '../main/consts';
 import ContentLayoutState from "../animation/ContentLayoutState";
 import AnimationSet from "../animation/AnimationSet";
 import OutlineFadeAnimation from "../animation/OutlineFadeAnimation";
@@ -14,7 +13,27 @@ import EqContent from "./EqContent";
 import RadioButton from "./RadioButton";
 import RadioButtonSelectAnimation from "../animation/RadioButtonSelectAnimation";
 import RadioButtonLayoutState from "../animation/RadioButtonLayoutState";
+import { Container } from "../main/ComponentModel";
+import { QuizFormat } from "../main/FileFormat";
+import { defaultQuizPadding, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, answerVMargin, quizRadioButtonPadding, revealedOutlineOpacity, hoveredOutlineOpacity, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing } from "../main/consts";
 
+@Container({
+    typeString: 'quiz',
+    parse: (containerObj, depth, contentGetter, containerGetter, inf) => {
+        const format = containerObj as QuizFormat;
+        return new Quiz(
+            parseContainerChildren(format.children, depth + 1, containerGetter, contentGetter),
+            defaultQuizPadding,
+            format.answers,
+            inf['customColors'] && inf['customColors'].curvedOutlineOpacity ? inf['customColors'].curvedOutlineOpacity : curvedOutlineDefaultOpacity,
+            inf['customColors'] && inf['customColors'].curvedOutlineColor ? inf['customColors'].curvedOutlineColor : curvedOutlineColor,
+            inf['customColors'] && inf['customColors'].radioButtonOpacity ? inf['customColors'].radioButtonOpacity : radioButtonDefaultOpacity,
+            inf['customColors'] && inf['customColors'].radioButtonColor ? inf['customColors'].radioButtonColor : radioButtonColor,
+            inf['customColors'] && inf['customColors'].quizCorrectColor ? inf['customColors'].quizCorrectColor : quizCorrectColor,
+            inf['customColors'] && inf['customColors'].quizIncorrectColor ? inf['customColors'].quizIncorrectColor : quizIncorrectColor
+        );
+    }
+})
 export default class Quiz extends VBox {
 
     protected answers: boolean[];
@@ -29,10 +48,10 @@ export default class Quiz extends VBox {
     protected correctColor: [number, number, number];
     protected incorrectColor: [number, number, number];
 
-    constructor(children: EqComponent<any>[], padding: Padding, answers: number[], 
-                outlineOpacity: number, outlineColor: [number, number, number],
-                radioButtonOpacity: number, radioButtonColor: [number, number, number],
-                correctColor: [number, number, number], incorrectColor: [number, number, number]) {
+    constructor(children: EqComponent<any>[], padding: Padding, answers: number[],
+        outlineOpacity: number, outlineColor: [number, number, number],
+        radioButtonOpacity: number, radioButtonColor: [number, number, number],
+        correctColor: [number, number, number], incorrectColor: [number, number, number]) {
         super(children, padding);
         this.outlineOpacity = outlineOpacity;
         this.outlineColor = outlineColor;
@@ -46,28 +65,28 @@ export default class Quiz extends VBox {
 
     // Override to add padding
     protected calcWidth(): number {
-        return super.calcWidth() + C.quizCurvedOutlinePadding.width() + C.quizRadioButtonDimen;
+        return super.calcWidth() + quizCurvedOutlinePadding.width() + quizRadioButtonDimen;
     }
 
     // Override to add margin
     protected calcHeight(): number {
-        return super.calcHeight() + C.answerVMargin * (this.children.length + 2);
+        return super.calcHeight() + answerVMargin * (this.children.length + 2);
     }
 
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
-                tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object,
-                mouseEnter: Map<LayoutState, MouseEventCallback>, 
-                mouseExit: Map<LayoutState, MouseEventCallback>, 
-                mouseClick: Map<LayoutState, MouseEventCallback>,
-                tempContent: EqContent<any>[]): LayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
+        tlx: number, tly: number, currScale: number,
+        opacityObj: Object, colorsObj: Object,
+        mouseEnter: Map<LayoutState, MouseEventCallback>,
+        mouseExit: Map<LayoutState, MouseEventCallback>,
+        mouseClick: Map<LayoutState, MouseEventCallback>,
+        tempContent: EqContent<any>[]): LayoutState {
 
         let state = new LayoutState(parentLayout, this, tlx, tly,
             this.getWidth() * currScale,
             this.getHeight() * currScale,
             currScale);
         const innerWidth = (this.getWidth() - this.padding.width()) * currScale;
-        let upToY = tly + this.padding.top * currScale + C.answerVMargin;
+        let upToY = tly + this.padding.top * currScale + answerVMargin;
 
         let allOutlines: LayoutState[] = [];
         let allButtons: LayoutState[] = [];
@@ -76,7 +95,7 @@ export default class Quiz extends VBox {
             let currChild = this.children[i];
 
             // Width of the whole row (button, outline, and child)
-            const rowWidth = currChild.getWidth() + C.quizCurvedOutlinePadding.width() + C.quizRadioButtonDimen;
+            const rowWidth = currChild.getWidth() + quizCurvedOutlinePadding.width() + quizRadioButtonDimen;
 
             // Height of the whole row (same as height of child)
             const rowHeight = currChild.getHeight();
@@ -86,8 +105,8 @@ export default class Quiz extends VBox {
 
             // Add radio button
             const radioButton = new RadioButton(
-                C.quizRadioButtonPadding, rowTLX, upToY + (rowHeight - C.quizRadioButtonDimen) / 2,
-                C.quizRadioButtonDimen, layouts, this.radioButtonOpacity, this.radioButtonColor
+                quizRadioButtonPadding, rowTLX, upToY + (rowHeight - quizRadioButtonDimen) / 2,
+                quizRadioButtonDimen, layouts, this.radioButtonOpacity, this.radioButtonColor
             );
             tempContent.push(radioButton);
             const radioButtonLayout = radioButton.getLayout();
@@ -97,7 +116,7 @@ export default class Quiz extends VBox {
             }
 
             // Position child in the middle horizontally
-            let childTLX = rowTLX + C.quizRadioButtonDimen + C.quizCurvedOutlinePadding.left;
+            let childTLX = rowTLX + quizRadioButtonDimen + quizCurvedOutlinePadding.left;
             let childLayout = currChild.addLayout(
                 state, layouts,
                 childTLX, upToY, currScale,
@@ -105,15 +124,15 @@ export default class Quiz extends VBox {
                 mouseEnter, mouseExit, mouseClick,
                 tempContent
             );
-            upToY += childLayout.height + C.answerVMargin;
+            upToY += childLayout.height + answerVMargin;
 
             // Give child an outline that can respond to events.
-            let outline = new CurvedOutline(C.quizCurvedOutlinePadding, childLayout, layouts, this.outlineOpacity, this.outlineColor);
+            let outline = new CurvedOutline(quizCurvedOutlinePadding, childLayout, layouts, this.outlineOpacity, this.outlineColor);
             tempContent.push(outline);
             let outlineLayout: ContentLayoutState = outline.getLayout();
-            allOutlines.push(outlineLayout);  
+            allOutlines.push(outlineLayout);
             if (this.clickedIndex !== -1) {
-                outlineLayout.opacity = C.revealedOutlineOpacity;
+                outlineLayout.opacity = revealedOutlineOpacity;
                 if (this.answers[i]) {
                     outlineLayout.color = this.correctColor;
                 } else {
@@ -124,10 +143,10 @@ export default class Quiz extends VBox {
             // If mouse enters outline or button, make it lighter (unless answer has been revealed)
             let onEnter = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
                 if (this.clickedIndex === -1) {
-                    new OutlineFadeAnimation(outlineLayout, C.hoveredOutlineOpacity, set);
+                    new OutlineFadeAnimation(outlineLayout, hoveredOutlineOpacity, set);
                     new RadioButtonSelectAnimation(
-                        C.quizRadioButtonSelectDuration,
-                        C.quizRadioButtonSelectEasing,
+                        quizRadioButtonSelectDuration,
+                        quizRadioButtonSelectEasing,
                         set,
                         radioButtonLayout,
                         0,
@@ -146,8 +165,8 @@ export default class Quiz extends VBox {
                 if (this.clickedIndex === -1) {
                     new OutlineFadeAnimation(outlineLayout, this.outlineOpacity, set);
                     new RadioButtonSelectAnimation(
-                        C.quizRadioButtonDeselectDuration,
-                        C.quizRadioButtonDeselectEasing,
+                        quizRadioButtonDeselectDuration,
+                        quizRadioButtonDeselectEasing,
                         set,
                         radioButtonLayout,
                         1,
@@ -177,7 +196,7 @@ export default class Quiz extends VBox {
                     // If correct, go green. Otherwise go red.
                     const color = this.answers[index] ? this.correctColor : this.incorrectColor;
                     new OutlineColorAnimation(layout, color, set);
-                    new OutlineFadeAnimation(layout, C.revealedOutlineOpacity, set);
+                    new OutlineFadeAnimation(layout, revealedOutlineOpacity, set);
                     return true;
                 });
                 this.clickedIndex = clickedIndex;
@@ -194,12 +213,12 @@ export default class Quiz extends VBox {
                 });
                 controller.setCursor("default");
             };
-            
+
             // Bind all outlines to the same click event
             allOutlines.forEach(layout => mouseClick.set(layout, onClick));
             allButtons.forEach(layout => mouseClick.set(layout, onClick));
         }
-            
+
         layouts.set(this, state);
 
         return state;

@@ -3,10 +3,10 @@ import { UndoRedoService } from '../undo-redo.service';
 import { SelectedStepService } from '../selected-step.service';
 import { ModalService } from '../modal.service';
 import { SelectorData } from '../color-picker/color-picker.component';
-import C from '@shared/main/consts';
 import { cap, deCap } from '../helpers';
 import CanvasController from '@shared/main/CanvasController';
 import { ErrorService } from '../error.service';
+import { colors } from '@shared/main/consts';
 
 @Component({
   selector: 'app-text-editor',
@@ -31,9 +31,9 @@ export class TextEditorComponent implements AfterViewInit {
               private step: SelectedStepService,
               private modal: ModalService,
               private error: ErrorService) {
-    this.styleOpts = Object.keys(C.colors).map(colName => {
+    this.styleOpts = Object.keys(colors).map(colName => {
       const name = colName === 'default' ? 'Bold' : cap(colName);
-      const colorArr = C.colors[colName];
+      const colorArr = colors[colName];
       const colStyle = 'rgb(' + colorArr[0] + ',' + colorArr[1] + ',' + colorArr[2] + ')';
       return new SelectorData(colStyle, name);
     });

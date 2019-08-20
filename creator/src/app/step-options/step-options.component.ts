@@ -1,4 +1,4 @@
-import { Component, OnInit, Directive, AfterViewInit, Input, ViewChildren, ElementRef, ViewChild } from '@angular/core';
+import { Component, Directive, AfterViewInit, Input, ViewChildren, ElementRef, ViewChild } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { SelectedStepService } from '../selected-step.service';
 import { deepClone, inLayout } from '../helpers';
@@ -7,8 +7,8 @@ import SelectableCanvasController from './SelectableCanvasController';
 import CanvasController from '@shared/main/CanvasController';
 import { ErrorService } from '../error.service';
 import { ModalService } from '../modal.service';
-import { FileFormat, StepFormat, TransitionOptionsFormat } from '@shared/main/FileFormat';
-import C from '@shared/main/consts';
+import { FileFormat, StepFormat } from '@shared/main/FileFormat';
+import { defaultMoveDuration, defaultAddDuration, defaultRemoveDuration } from '@shared/main/consts';
 
 @Directive({
   selector: '[appCloneContainer]'
@@ -115,9 +115,9 @@ export class StepOptionsComponent implements AfterViewInit {
         });
       }
       // Load durations
-      this.moveDuration = stepOpts.moveDuration ? stepOpts.moveDuration : C.moveDuration;
-      this.addDuration = stepOpts.addDuration ? stepOpts.addDuration : C.addDuration;
-      this.removeDuration = stepOpts.removeDuration ? stepOpts.removeDuration : C.removeDuration;
+      this.moveDuration = stepOpts.moveDuration ? stepOpts.moveDuration : defaultMoveDuration;
+      this.addDuration = stepOpts.addDuration ? stepOpts.addDuration : defaultAddDuration;
+      this.removeDuration = stepOpts.removeDuration ? stepOpts.removeDuration : defaultRemoveDuration;
     } else {
       // Durations need to be set default if no step options
       this.setDefaultMoveDuration();
@@ -166,7 +166,7 @@ export class StepOptionsComponent implements AfterViewInit {
    * Reset move duration to default.
    */
   setDefaultMoveDuration() {
-    this.moveDuration = C.moveDuration;
+    this.moveDuration = defaultMoveDuration;
     this.updateDurations();
   }
 
@@ -174,7 +174,7 @@ export class StepOptionsComponent implements AfterViewInit {
    * Reset add duration to default.
    */
   setDefaultAddDuration() {
-    this.addDuration = C.addDuration;
+    this.addDuration = defaultAddDuration;
     this.updateDurations();
   }
 
@@ -182,7 +182,7 @@ export class StepOptionsComponent implements AfterViewInit {
    * Reset remove duration to default.
    */
   setDefaultRemoveDuration() {
-    this.removeDuration = C.removeDuration;
+    this.removeDuration = defaultRemoveDuration;
     this.updateDurations();
   }
 
@@ -571,13 +571,13 @@ export class StepOptionsComponent implements AfterViewInit {
       toReturn.evals[fromRef] = toRef;
     });
     // Add durations
-    if (this.moveDuration !== C.moveDuration) {
+    if (this.moveDuration !== defaultMoveDuration) {
       toReturn.moveDuration = this.moveDuration;
     }
-    if (this.addDuration !== C.addDuration) {
+    if (this.addDuration !== defaultAddDuration) {
       toReturn.addDuration = this.addDuration;
     }
-    if (this.removeDuration !== C.removeDuration) {
+    if (this.removeDuration !== defaultRemoveDuration) {
       toReturn.removeDuration = this.removeDuration;
     }
 

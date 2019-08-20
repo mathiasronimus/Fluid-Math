@@ -4,12 +4,71 @@ import EqComponent from "./EqComponent";
 import { MouseEventCallback } from "../main/CanvasController";
 import EqContent from "./EqContent";
 import Padding from "./Padding";
-import { Map } from '../main/helpers';
-import C from '../main/consts';
+import { Map, parseContainerChildren } from '../main/helpers';
+import { defaultTablePadding, tableCellPadding, tableMinCellDimen } from '../main/consts';
+import { Container } from "../main/ComponentModel";
+import { TableFormat, ContainerFormat } from "../main/FileFormat";
+
+/**
+ * Functions for loading from the file.
+ */
+
+/**
+ * Parse an object containing references with indices
+ * as keys.
+ * @param obj The object to parse. 
+*/
+export function parseChildrenObj(
+        obj: { [index: number]: string }, 
+        contentGetter: (ref: string) => EqContent<any>
+): { [index: number]: EqComponent<any> } {
+
+    let toReturn = {};
+    if (!obj) {
+        return toReturn;
+    }
+    Object.keys(obj).forEach(index => {
+        let ref = obj[index];
+        toReturn[index] = contentGetter(ref);
+    });
+    return toReturn;
+}
+
+/**
+ * Parse a 2D array of components.
+ * @param fromFile The array from the file.
+ */
+export function parseChildren2D(
+        fromFile: (string | ContainerFormat)[][],
+        containerGetter: (obj: ContainerFormat, depth: number) => EqContainer<any>,
+        contentGetter: (ref: string) => EqContent<any>
+): EqComponent<any>[][] {
+
+    const toReturn: EqComponent<any>[][] = [];
+    fromFile.forEach(row => {
+        toReturn.push(parseContainerChildren(row, 1, containerGetter, contentGetter));
+    });
+    return toReturn;
+}
 
 /**
  * Lays out components in a table.
  */
+@Container({
+    typeString: 'table',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        const format = containerObj as TableFormat;
+        const children = parseChildren2D(format.children, containerGetter, contentGetter);
+        return new TableContainer(
+            defaultTablePadding,
+            children,
+            parseChildrenObj(format.hLines, contentGetter),
+            parseChildrenObj(format.vLines, contentGetter),
+            1,
+            tableCellPadding
+        );
+    }
+})
 export default class TableContainer extends EqContainer<LayoutState> {
 
     protected children: EqComponent<any>[][];
@@ -20,20 +79,20 @@ export default class TableContainer extends EqContainer<LayoutState> {
     // The height of each row
     protected heights: number[] = [];
 
-    protected hLines: {[index: number]: EqComponent<any>};
-    protected vLines: {[index: number]: EqComponent<any>};
+    protected hLines: { [index: number]: EqComponent<any> };
+    protected vLines: { [index: number]: EqComponent<any> };
 
     protected lineStroke: number;
 
     // Padding inside each cell
     protected cellPad: Padding;
 
-    constructor(padding: Padding, 
-                children: EqComponent<any>[][], 
-                hLines: {[index: number]: EqComponent<any>}, 
-                vLines: {[index: number]: EqComponent<any>},
-                lineStroke: number,
-                cellPad: Padding) {
+    constructor(padding: Padding,
+        children: EqComponent<any>[][],
+        hLines: { [index: number]: EqComponent<any> },
+        vLines: { [index: number]: EqComponent<any> },
+        lineStroke: number,
+        cellPad: Padding) {
         super(padding);
         this.cellPad = cellPad;
         this.lineStroke = lineStroke;
@@ -57,7 +116,7 @@ export default class TableContainer extends EqContainer<LayoutState> {
      * for a table cell.
      */
     protected getMinCellDimen(): number {
-        return C.tableMinCellDimen;
+        return tableMinCellDimen;
     }
 
     recalcDimensions() {
@@ -94,7 +153,7 @@ export default class TableContainer extends EqContainer<LayoutState> {
         // and padding.
         return totalWidth + this.padding.width() + (this.children[0].length + 1) * this.getLineStroke();
     }
-    
+
     protected calcHeight(): number {
         let totalHeight = 0;
         // Height of each row is the max height of any component in that row
@@ -135,14 +194,14 @@ export default class TableContainer extends EqContainer<LayoutState> {
      * @param mouseClick Mouse click events for this step.
      * @param tempContent Temporary content added only for this step.
      */
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
-                tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object,
-                mouseEnter: Map<LayoutState, MouseEventCallback>, 
-                mouseExit: Map<LayoutState, MouseEventCallback>, 
-                mouseClick: Map<LayoutState, MouseEventCallback>,
-                tempContent: EqContent<any>[]): LayoutState {
-        
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
+        tlx: number, tly: number, currScale: number,
+        opacityObj: Object, colorsObj: Object,
+        mouseEnter: Map<LayoutState, MouseEventCallback>,
+        mouseExit: Map<LayoutState, MouseEventCallback>,
+        mouseClick: Map<LayoutState, MouseEventCallback>,
+        tempContent: EqContent<any>[]): LayoutState {
+
         const thisState = new LayoutState(
             parentLayout, this, tlx, tly,
             this.width, this.height, currScale

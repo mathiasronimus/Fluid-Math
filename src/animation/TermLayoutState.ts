@@ -1,11 +1,10 @@
-import LayoutState from "./LayoutState";
 import Padding from "../layout/Padding";
-import C from '../main/consts';
 import ContentLayoutState from "./ContentLayoutState";
+import { termPadding, tightTermPadding } from "../main/consts";
 
 export default class TermLayoutState extends ContentLayoutState {
     
-    padding: Padding = C.termPadding;
+    padding: Padding = termPadding;
 
     /**
      * Change this layout state to
@@ -16,7 +15,7 @@ export default class TermLayoutState extends ContentLayoutState {
      * @param widthDiff The difference in width between a tight and normal term.
      */
     tighten(widthDiff: number): void {
-        this.padding = C.tightTermPadding;
+        this.padding = tightTermPadding;
         this.width -= widthDiff;
     }
 

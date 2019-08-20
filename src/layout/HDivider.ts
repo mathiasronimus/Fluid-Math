@@ -5,7 +5,19 @@ import { Map } from '../main/helpers';
 import EqComponent from "./EqComponent";
 import { OriginalDimenLayoutState } from "../animation/OriginalDimenLayoutState";
 import LayoutState from "../animation/LayoutState";
+import { Content } from "../main/ComponentModel";
+import { hDividerPadding } from "../main/consts";
 
+@Content({
+    character: 'h',
+    initialize: file => {
+        const dividers: HDivider[] = [];
+        for (let i = 0; i < file.hDividers; i++) {
+            dividers.push(new HDivider(hDividerPadding, 'h' + i));
+        }
+        return dividers;
+    }
+})
 export default class HDivider extends EqContent<OriginalDimenLayoutState> {
 
     constructor(padding: Padding, ref: string) {

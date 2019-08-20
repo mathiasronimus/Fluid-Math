@@ -1,7 +1,7 @@
 import LayoutState from '../animation/LayoutState';
 import Padding from './Padding';
 import { Map } from '../main/helpers';
-import CanvasController, { MouseEventCallback } from '../main/CanvasController';
+import { MouseEventCallback } from '../main/CanvasController';
 import EqContent from './EqContent';
 
 /**

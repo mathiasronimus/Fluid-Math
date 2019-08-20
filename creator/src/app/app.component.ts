@@ -18,7 +18,7 @@ import { ProjectOptionsComponent } from './project-options/project-options.compo
 import { QuizConfigurationComponent } from './quiz-configuration/quiz-configuration.component';
 import { TableAddComponent } from './table-add/table-add.component';
 import EqContent from '@shared/layout/EqContent';
-import C from '@shared/main/consts';
+import { colors } from '@shared/main/consts';
 
 @Component({
   selector: 'app-root',
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    EqContent.colors = C.colors;
+    EqContent.colors = colors;
   }
 
   /**

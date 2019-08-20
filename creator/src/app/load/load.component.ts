@@ -4,8 +4,8 @@ import { ModalService } from '../modal.service';
 import { ErrorService } from '../error.service';
 import { SelectedStepService } from '../selected-step.service';
 import { FontUpdateService } from '../font-update.service';
-import C from '@shared/main/consts';
 import { getMetrics } from '@shared/main/helpers';
+import { defaultFontFamily, defaultFontWeight } from '@shared/main/consts';
 
 @Component({
   selector: 'app-load',
@@ -62,7 +62,7 @@ export class LoadComponent implements OnInit {
       this.showLoading = true;
       const defaultFontObj = {
         type: 'g',
-        name: C.fontFamily + ':' + C.fontWeight
+        name: defaultFontFamily + ':' + defaultFontWeight
       };
       const fontToLoad = fileObj.font ? fileObj.font : defaultFontObj;
       // Function to actually load

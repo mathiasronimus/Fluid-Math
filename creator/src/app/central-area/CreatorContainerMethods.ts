@@ -1,12 +1,12 @@
 import LayoutState from '@shared/animation/LayoutState';
 import EqComponent from '@shared/layout/EqComponent';
 import CreatorContainer from './CreatorContainer';
-import C from '@shared/main/consts';
 import { tri } from '@shared/main/helpers';
 import CanvasController from '@shared/main/CanvasController';
 import { ContainerFormat } from '@shared/main/FileFormat';
 import EqContainer from '@shared/layout/EqContainer';
 import EqContent from '@shared/layout/EqContent';
+import { creatorContainerPadding, creatorCaretFillStyleLighter, creatorCaretSize } from '@shared/main/consts';
 
 /**
  * Default methods for those declared in CreatorContainer.
@@ -48,24 +48,24 @@ export function creatorContainerCreatorDraw(l: LayoutState, ctx: CanvasRendering
     if (!parentLayout) {
         return;
     }
-    const pad = C.creatorContainerPadding.scale(l.scale);
+    const pad = creatorContainerPadding.scale(l.scale);
     const container = parentLayout.component as unknown as CreatorContainer;
     if (container.addVertically()) {
         // Add carets on top and bottom facing outwards
         ctx.save();
-        ctx.fillStyle = C.creatorCaretFillStyleLighter;
+        ctx.fillStyle = creatorCaretFillStyleLighter;
 
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + pad.top / 4);
         ctx.rotate(Math.PI);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.save();
         ctx.translate(l.tlx + l.width / 2, l.tly + l.height - pad.bottom / 4);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.restore();
@@ -73,20 +73,20 @@ export function creatorContainerCreatorDraw(l: LayoutState, ctx: CanvasRendering
     } else if (container.addHorizontally()) {
         // Add carets on left and right facing outwards
         ctx.save();
-        ctx.fillStyle = C.creatorCaretFillStyleLighter;
+        ctx.fillStyle = creatorCaretFillStyleLighter;
 
         ctx.save();
         ctx.translate(l.tlx + pad.left / 4, l.tly + l.height / 2);
         ctx.rotate(Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.save();
         ctx.translate(l.tlx + l.width - pad.right / 4, l.tly + l.height / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.restore();

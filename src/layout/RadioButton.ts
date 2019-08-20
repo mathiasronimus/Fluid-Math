@@ -3,7 +3,6 @@ import EqContent from "./EqContent";
 import Padding from "./Padding";
 import EqComponent from "./EqComponent";
 import LayoutState from "../animation/LayoutState";
-import C from '../main/consts';
 import { Map } from '../main/helpers';
 import RadioButtonLayoutState from "../animation/RadioButtonLayoutState";
 

@@ -3,11 +3,10 @@ import { ContentSelectionService } from '../content-selection.service';
 import { UndoRedoService } from '../undo-redo.service';
 import { SelectedStepService } from '../selected-step.service';
 import CanvasController from '@shared/main/CanvasController';
-import C from '@shared/main/consts';
-import SubSuper from '@shared/layout/SubSuper';
 import { ModalService } from '../modal.service';
 import { FileFormat, SubSuperContainerFormat, ContainerFormat } from '@shared/main/FileFormat';
 import CreatorSubSuper from '../central-area/CreatorSubSuper';
+import { defaultExpPortrusion } from '@shared/main/consts';
 
 @Component({
   selector: 'app-sub-super-alignment',
@@ -19,7 +18,7 @@ export class SubSuperAlignmentComponent implements AfterViewInit {
   private subSuperLayout: SubSuperContainerFormat;
   private fullInstructions: FileFormat;
 
-  defaultPortrusion = C.defaultExpPortrusion;
+  defaultPortrusion = defaultExpPortrusion;
   private portrusionVar = this.defaultPortrusion + '';
 
   @ViewChild('eqContainer')

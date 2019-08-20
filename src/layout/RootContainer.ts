@@ -5,11 +5,12 @@ import HBox from "./HBox";
 import Radical from './Radical';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
-import CanvasController, { MouseEventCallback } from '../main/CanvasController';
+import { MouseEventCallback } from '../main/CanvasController';
 import EqContent from './EqContent';
-import { Map, getWidthTier } from '../main/helpers';
-import C from '../main/consts';
+import { Map, getWidthTier, parseContainerChildren } from '../main/helpers';
+import { defaultRootPadding, termPadding, rootIndexScale, rootArgMarginLeft, rootKinkTipAngle, rootKinkTipLength } from '../main/consts';
 import { RootContainerFormat } from "../main/FileFormat";
+import { Container } from "../main/ComponentModel";
 
 /**
  * Works together with the 'Radical' content to
@@ -19,6 +20,26 @@ import { RootContainerFormat } from "../main/FileFormat";
  * '3'. The argument is what is being rooted, residing
  * under the radical.
  */
+@Container({
+    typeString: 'root',
+    parse: (containerObj, depth, contentGetter, containerGetter, genInfo) => {
+        // Return container from file
+        const format = containerObj as RootContainerFormat;
+        const idx = new HBox(
+            parseContainerChildren(format.idx, depth + 1, containerGetter, contentGetter),
+            Padding.even(0)
+        );
+        const arg = new HBox(
+            parseContainerChildren(format.arg, depth + 1, containerGetter, contentGetter),
+            Padding.even(0)
+        );
+        let radical: Radical;
+        if (format.rad) {
+            radical = contentGetter(format.rad) as Radical;
+        }
+        return new RootContainer(idx, arg, radical, defaultRootPadding, genInfo['termHeights']);
+    }
+})
 export default class RootContainer extends EqContainer<RootContainerLayoutState> {
 
     protected index: HBox;
@@ -81,11 +102,11 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
      * of the container.
      */
     private calcMetrics() {
-        this.padBottom = C.termPadding.bottom / 2;
-        const termHeight = this.termHeights[getWidthTier()] + C.termPadding.height();
-        this.indexHeight = termHeight * C.rootIndexScale;
+        this.padBottom = termPadding.bottom / 2;
+        const termHeight = this.termHeights[getWidthTier()] + termPadding.height();
+        this.indexHeight = termHeight * rootIndexScale;
         this.kinkHeight = (termHeight - this.padBottom) - this.indexHeight;
-        this.indexTopOverflow = this.index.getHeight() * C.rootIndexScale - this.indexHeight;
+        this.indexTopOverflow = this.index.getHeight() * rootIndexScale - this.indexHeight;
         this.indexTopOverflow = Math.max(this.indexTopOverflow, 0);
         this.emptySpaceAboveIndex = this.argument.getHeight() - this.kinkHeight - this.indexHeight;
         this.emptySpaceAboveIndex = Math.max(this.emptySpaceAboveIndex, 0);
@@ -101,28 +122,28 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         */
         // tan x = termHeight / argMargin
         // x = atan(termHeight / argMargin)
-        const x = Math.atan(termHeight / C.rootArgMarginLeft);
+        const x = Math.atan(termHeight / rootArgMarginLeft);
         // tan x = h / w
         // w = h / tan x
         const mainKinkWidth = this.kinkHeight / Math.tan(x);
         const z = Math.PI - x - Math.PI / 2;
         // y + z = rootKinkTipAngle
         // y = rootKinkTipAngle - z
-        const y = C.rootKinkTipAngle - z;
+        const y = rootKinkTipAngle - z;
         // sin y = w / tipLen
         // w = tipLen * sin y
-        this.kinkTipWidth = C.rootKinkTipLength * Math.sin(y);
+        this.kinkTipWidth = rootKinkTipLength * Math.sin(y);
         this.kinkWidth = mainKinkWidth + this.kinkTipWidth;
         // cos y = h / tipLen
         // h = tipLen * cos y
-        this.kinkTipHeight = C.rootKinkTipLength * Math.cos(y);
+        this.kinkTipHeight = rootKinkTipLength * Math.cos(y);
         this.yToKinkStart = this.indexTopOverflow + this.emptySpaceAboveIndex + this.indexHeight + this.kinkTipHeight - this.padBottom;
 
         // tan x = kinkHeight / xFromRightOfKink
         // xFromRightOfKink = kinkHeight / tan x
         const xFromRightOfKinkForIdx = this.kinkHeight / Math.tan(x);
         const widthForIdx = this.kinkWidth + xFromRightOfKinkForIdx;
-        const realIdxWidth = this.index.getWidth() * C.rootIndexScale;
+        const realIdxWidth = this.index.getWidth() * rootIndexScale;
         this.indexLeftOverflow = realIdxWidth - widthForIdx;
     }
 
@@ -144,7 +165,7 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
 
     protected calcWidth(): number {
         const realIdxLeftPortrusion = Math.max(this.indexLeftOverflow, 0);
-        return realIdxLeftPortrusion + this.kinkWidth + C.rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
+        return realIdxLeftPortrusion + this.kinkWidth + rootArgMarginLeft + this.argument.getWidth() + this.padding.width();
     }
 
     protected calcHeight(): number {
@@ -163,13 +184,13 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
      * @param opacityObj The object storing opacity info for this step.
      * @param colorsObj The object storing color info for this step.
      */
-    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>, 
-                tlx: number, tly: number, currScale: number,
-                opacityObj: Object, colorsObj: Object,
-                mouseEnter: Map<LayoutState, MouseEventCallback>, 
-                mouseExit: Map<LayoutState, MouseEventCallback>, 
-                mouseClick: Map<LayoutState, MouseEventCallback>,
-                tempContent: EqContent<any>[]): RootContainerLayoutState {
+    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
+        tlx: number, tly: number, currScale: number,
+        opacityObj: Object, colorsObj: Object,
+        mouseEnter: Map<LayoutState, MouseEventCallback>,
+        mouseExit: Map<LayoutState, MouseEventCallback>,
+        mouseClick: Map<LayoutState, MouseEventCallback>,
+        tempContent: EqContent<any>[]): RootContainerLayoutState {
         const adjustedPad = this.padding.scale(currScale);
 
         // Points for the radical: Relative to this container
@@ -177,14 +198,14 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
 
         const kinkTipX = realLeftOverflow;
         const kinkTipY = this.yToKinkStart;
-        
+
         const kinkTopX = kinkTipX + this.kinkTipWidth;
         const kinkTopY = kinkTipY - this.kinkTipHeight;
-        
+
         const tickBotX = realLeftOverflow + this.kinkWidth;
         const tickBotY = kinkTopY + this.kinkHeight;
-        
-        const tickTopX = tickBotX + C.rootArgMarginLeft;
+
+        const tickTopX = tickBotX + rootArgMarginLeft;
         const tickTopY = tickBotY - this.argument.getHeight() + 1 + this.padBottom;
 
         const endX = tickTopX + this.argument.getWidth();
@@ -216,19 +237,19 @@ export default class RootContainer extends EqContainer<RootContainerLayoutState>
         const indexTly = tly + (this.emptySpaceAboveIndex - 1 - this.padBottom) * currScale + adjustedPad.top;
 
         this.index.addLayout(
-            thisLayout, layouts, 
+            thisLayout, layouts,
             indexTlx, indexTly,
-            currScale * C.rootIndexScale,
+            currScale * rootIndexScale,
             opacityObj, colorsObj,
             mouseEnter, mouseExit, mouseClick,
             tempContent
         );
 
         // Calculate layout for the argument
-        const argTlx = tlx + (realLeftOverflow + this.kinkWidth + C.rootArgMarginLeft) * currScale + adjustedPad.left;
+        const argTlx = tlx + (realLeftOverflow + this.kinkWidth + rootArgMarginLeft) * currScale + adjustedPad.left;
         const argTly = tly + this.indexTopOverflow * currScale + adjustedPad.top;
         this.argument.addLayout(
-            thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj, 
+            thisLayout, layouts, argTlx, argTly, currScale, opacityObj, colorsObj,
             mouseEnter, mouseExit, mouseClick, tempContent
         );
 

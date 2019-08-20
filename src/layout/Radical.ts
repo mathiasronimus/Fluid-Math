@@ -1,12 +1,22 @@
 import EqContent from "./EqContent";
-import ContentLayoutState from "../animation/ContentLayoutState";
 import Padding from './Padding';
 import { Map, line } from '../main/helpers';
 import LayoutState from '../animation/LayoutState';
 import EqComponent from './EqComponent';
 import RootContainerLayoutState from "../animation/RootContainerLayoutState";
 import { OriginalDimenLayoutState } from "../animation/OriginalDimenLayoutState";
+import { Content } from "../main/ComponentModel";
 
+@Content({
+    character: 'r',
+    initialize: file => {
+        const radicals: Radical[] = [];
+        for (let i = 0; i < file.radicals; i++) {
+            radicals.push(new Radical('r' + i));
+        }
+        return radicals;
+    }
+})
 export default class Radical extends EqContent<OriginalDimenLayoutState> {
 
     constructor(ref: string) {

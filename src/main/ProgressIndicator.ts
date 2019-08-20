@@ -1,4 +1,4 @@
-import C from './consts';
+import { progressOpacity } from './consts';
 import EqContent from '../layout/EqContent';
 import { line } from './helpers';
 
@@ -29,7 +29,7 @@ export default class ProgressIndicator {
      */
     public draw(completion: number, width: number, height: number) {
         const color = EqContent.colors['default'];
-        this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + C.progressOpacity + ')';
+        this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + progressOpacity + ')';
         line(0, height - 1, width * completion, height - 1, this.ctx);
     }
 

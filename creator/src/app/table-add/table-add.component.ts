@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UndoRedoService } from '../undo-redo.service';
 import { ModalService } from '../modal.service';
 import EqComponent from '@shared/layout/EqComponent';
 import { ContentSelectionService } from '../content-selection.service';

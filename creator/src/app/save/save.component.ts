@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import HeightComputeCanvasController from '@shared/main/HeightComputeCanvasController';

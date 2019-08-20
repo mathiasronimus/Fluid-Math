@@ -1,7 +1,3 @@
-import Term from "../layout/Term";
-import HBox from "../layout/HBox";
-import Padding from "../layout/Padding";
-import VBox from "../layout/VBox";
 import EqComponent from "../layout/EqComponent";
 import LayoutState from "../animation/LayoutState";
 import EqContainer from "../layout/EqContainer";
@@ -11,23 +7,15 @@ import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
 import EvalAnimation from '../animation/EvalAnimation';
 import ReverseEvalAnimation from '../animation/ReverseEvalAnimation';
-import C from './consts';
+import { backgroundColor, buttonHighlightDuration, buttonHighlightEasing, buttonHighlightedOpacity, buttonUnhighlightDuration, buttonUnhighlightEasing, defaultMoveDuration, defaultRemoveDuration, defaultAddDuration, progressEasing } from './consts';
 import EqContent from "../layout/EqContent";
 import ProgressAnimation from "../animation/ProgressAnimation";
-import HDivider from "../layout/HDivider";
-import TightHBox from "../layout/TightHBox";
-import SubSuper from "../layout/SubSuper";
-import { getFontSizeForTier, Map, newMap, isIE, getWidthTier, getFont, rgbaArrayToCssString } from "./helpers";
-import Radical from "../layout/Radical";
-import RootContainer from "../layout/RootContainer";
-import VCenterVBox from "../layout/VCenterVBox";
-import { StepFormat, TransitionOptionsFormat, FileFormat, ContainerFormat, LinearContainerFormat, SubSuperContainerFormat, RootContainerFormat, AutoplayFormat, QuizFormat, TableFormat, ColorsFormat } from "./FileFormat";
+import { getFontSizeForTier, Map, newMap, isIE, getFont, rgbaArrayToCssString } from "./helpers";
+import { StepFormat, TransitionOptionsFormat, FileFormat, AutoplayFormat, ColorsFormat } from "./FileFormat";
 import ProgressIndicator from "./ProgressIndicator";
-import Quiz from "../layout/Quiz";
 import ContentLayoutState from "../animation/ContentLayoutState";
-import TableContainer from "../layout/TableContainer";
-import VDivider from "../layout/VDivider";
 import BezierCallback from "../animation/BezierCallback";
+import { ComponentModel } from "./ComponentModel";
 
 export type MouseEventCallback = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => void;
 
@@ -53,11 +41,7 @@ export default class CanvasController {
     protected isAutoplay: AutoplayFormat;
     protected customColors: ColorsFormat;
 
-    protected terms: Term[];
-    protected termHeights: number[];
-    protected hDividers: HDivider[];
-    protected vDividers: VDivider[];
-    protected radicals: Radical[];
+    protected components: ComponentModel;
     // Content added temporarily in the current step
     protected tempContent: EqContent<any>[];
 
@@ -94,10 +78,6 @@ export default class CanvasController {
         this.container = container;
         this.steps = instructions.steps;
         this.stepOptions = instructions.stepOpts;
-        this.terms = [];
-        this.hDividers = [];
-        this.vDividers = [];
-        this.radicals = [];
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
         this.handleMouseClick = this.handleMouseClick.bind(this);
@@ -115,7 +95,7 @@ export default class CanvasController {
         canvasContainer.appendChild(this.canvas);
 
         // Set background color
-        this.backgroundFill = rgbaArrayToCssString(colors && colors.canvasBackground ? colors.canvasBackground : C.backgroundColor);
+        this.backgroundFill = rgbaArrayToCssString(colors && colors.canvasBackground ? colors.canvasBackground : backgroundColor);
         
         // Check if any steps have text
         let hasText = false;
@@ -192,7 +172,7 @@ export default class CanvasController {
         ] = getFont(instructions);
 
         //Initialize Components and display first step
-        this.initContent(instructions);
+        this.initComponents(instructions);
         this.updateFontSize();
         this.recalc(true);
         
@@ -207,11 +187,9 @@ export default class CanvasController {
         //Redraw when window size changes
         this.recalc = this.recalc.bind(this);
         window.addEventListener('resize', () => {
-            console.log('resize');
             this.updateFontSize();
             this.updateDimensions();
             this.recalc(false);
-            console.log('\n');
         });
 
         // Add overlay for play if autoplaying
@@ -234,6 +212,16 @@ export default class CanvasController {
     }
 
     /**
+     * Initialize the components/content and 
+     * add general information.
+     */
+    protected initComponents(instructions: FileFormat) {
+        this.components = new ComponentModel(instructions);
+        this.components.setGenInfo('customColors', this.customColors);
+        this.components.setGenInfo('fixedHeights', this.fixedHeights);
+    }
+
+    /**
      * Emphasize a button.
      * @param button The element of the button.
      */
@@ -242,10 +230,10 @@ export default class CanvasController {
 
         const anim = new class extends BezierCallback {
             constructor() {
-                super(C.buttonHighlightDuration, C.buttonHighlightEasing, set);
+                super(buttonHighlightDuration, buttonHighlightEasing, set);
             }
             protected step(completion: number): void {
-                const opacity = 0.4 * (1 - completion) + C.buttonHighlightedOpacity * completion;
+                const opacity = 0.4 * (1 - completion) + buttonHighlightedOpacity * completion;
                 button.style.opacity = "" + opacity;
             }
         };
@@ -263,10 +251,10 @@ export default class CanvasController {
 
         const anim = new class extends BezierCallback {
             constructor() {
-                super(C.buttonUnhighlightDuration, C.buttonUnhighlightEasing, set);
+                super(buttonUnhighlightDuration, buttonUnhighlightEasing, set);
             }
             protected step(completion: number): void {
-                const opacity = C.buttonHighlightedOpacity * (1 - completion) + 0.4 * completion;
+                const opacity = buttonHighlightedOpacity * (1 - completion) + 0.4 * completion;
                 button.style.opacity = "" + opacity;
             }
         };
@@ -604,10 +592,7 @@ export default class CanvasController {
      * @param forEach A function that will be passed each bit of content.
      */
     private forAllContent(forEach: (content: EqContent<any>) => void) {
-        this.terms.forEach(forEach);
-        this.hDividers.forEach(forEach);
-        this.vDividers.forEach(forEach);
-        this.radicals.forEach(forEach);
+        this.components.forAllContent(forEach);
         this.tempContent.forEach(forEach);
     }
  
@@ -693,40 +678,40 @@ export default class CanvasController {
             return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
         // Find the durations for each transition type (may be custom)
-        const moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : C.moveDuration;
+        const moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : defaultMoveDuration;
         let addDuration;
         let removeDuration;
         // Add and remove need to be switched if we're going backwards
         if (reverseStep) {
-            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : C.removeDuration;
-            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : C.addDuration;
+            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : defaultRemoveDuration;
+            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : defaultAddDuration;
         } else {
             // Not going backwards
-            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : C.addDuration;
-            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : C.removeDuration;
+            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : defaultAddDuration;
+            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : defaultRemoveDuration;
         }
         const maxDuration = Math.max(moveDuration, addDuration, removeDuration);
         //Add a merge animation
         let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
-            let mergeTo = this.getContentFromRef(mergeToRef);
+            let mergeTo = this.components.getContent(mergeToRef);
             let mergeToNewState = this.currStates.get(mergeTo);
             set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a clone animation
         let addClone = function(cloneFromRef: string, stateAfter: LayoutState) {
-            let cloneFrom = this.getContentFromRef(cloneFromRef);
+            let cloneFrom = this.components.getContent(cloneFromRef);
             let cloneFromOldState = oldStates.get(cloneFrom);
             set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
         //Add an eval animation
         let addEval = function(evalToRef: string, stateBefore: LayoutState) {
-            let evalTo = this.getContentFromRef(evalToRef);
+            let evalTo = this.components.getContent(evalToRef);
             let evalToNewState = this.currStates.get(evalTo);
             set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx, moveDuration));
         }.bind(this);
         //Add a reverse eval
         let addRevEval = function(evalToRef: string, stateAfter: LayoutState) {
-            let evalTo = this.getContentFromRef(evalToRef);
+            let evalTo = this.components.getContent(evalToRef);
             let evalToOldState = oldStates.get(evalTo);
             set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
@@ -734,7 +719,7 @@ export default class CanvasController {
         //Animate the progress indicator
         if (this.progress && !updateDimenAfter) {
             set.addAnimation(new ProgressAnimation( stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration,
-                                                    C.progressEasing, canvasWidth, canvasHeight));
+                                                    progressEasing, canvasWidth, canvasHeight));
         }
 
         //Look through content to see what has happened to it (avoiding containers)
@@ -831,77 +816,6 @@ export default class CanvasController {
     }
 
     /**
-     * Uses the instructions to initialize all
-     * content that will be used in the 
-     * animation. Does not initialize the container
-     * layout.
-     * 
-     * @param instructions The instructions JSON Object.
-     */
-    protected initContent(instructions: FileFormat) {
-        this.termHeights = [];
-        let ascents = [];
-
-        if (instructions.terms.length > 0) {
-            //Get the heights and ascents from each tier
-            for (let w = 0; w < C.widthTiers.length; w++) {
-                this.termHeights.push(instructions.metrics[w].height);
-                ascents.push(instructions.metrics[w].ascent);
-            }
-        }
-
-        //Initialize all terms
-        for (let t = 0; t < instructions.terms.length; t++) {
-            let widths = [];
-
-            //Get the widths for each tier
-            for (let w = 0; w < C.widthTiers.length; w++) {
-                widths.push(instructions.metrics[w].widths[t]);
-            }
-
-            let text = instructions.terms[t];
-            let term = new Term(text, widths, this.termHeights, ascents, 't' + t);
-            this.terms.push(term);
-        }
-        //Initialize h dividers
-        for (let i = 0; i < instructions.hDividers; i++) {
-            this.hDividers.push(new HDivider(C.hDividerPadding, 'h' + i));
-        }
-        //Initialize v dividers
-        for (let i = 0; i < instructions.vDividers; i++) {
-            this.vDividers.push(new VDivider(C.vDividerPadding, 'v' + i));
-        }
-        //Initialize radicals
-        for (let i = 0; i < instructions.radicals; i++) {
-            this.radicals.push(new Radical('r' + i));
-        }
-    }
-
-    /**
-     * Returns the content for a particular
-     * content reference as used in the JSON
-     * format.
-     * 
-     * @param ref The content reference.
-     */
-    getContentFromRef(ref: string) {
-        let contentType: string = ref.substring(0, 1);
-        let contentIndex: number = parseFloat(ref.substring(1, ref.length));
-
-        if (contentType === 't') {
-            return this.terms[contentIndex];
-        } else if (contentType === 'h') {
-            return this.hDividers[contentIndex];
-        } else if (contentType === 'r') {
-            return this.radicals[contentIndex];
-        } else if (contentType === 'v') {
-            return this.vDividers[contentIndex];
-        } else {
-            throw "unrecognized content type";
-        }
-    }
-
-    /**
      * Return the step options object for the
      * transition between two steps. Returns
      * undefined if there are no step options
@@ -939,7 +853,7 @@ export default class CanvasController {
         //First create the structure of containers in memory
         if (reparse) {
             let rootObj = this.steps[idx].root;
-            this.currRootContainer = this.parseContainer(rootObj, 0);
+            this.currRootContainer = this.components.parseContainer(rootObj, 0);
         }
         //If content doesn't take up full width, center it
         let width = this.container.clientWidth;
@@ -970,146 +884,4 @@ export default class CanvasController {
                                         mouseEnters, mouseExits, mouseClicks, tempContent);
         return [allLayouts, rootLayout, mouseEnters, mouseExits, mouseClicks, tempContent];
     }
-
-    /**
-     * Parse a container from the JSON Object.
-     * 
-     * @param containerObj The JSON Object representing the container.
-     * @param depth The depth in the layout tree.
-     */
-    protected parseContainer(containerObj: ContainerFormat, depth: number): EqContainer<any> {
-        let type: string = containerObj.type;
-        if (type === "vbox") {
-            const c = this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1);
-            const p = depth === 0 ? C.defaultRootVBoxPadding : Padding.even(C.defaultVBoxPadding);
-            if (this.fixedHeights && depth === 0) {
-                return new VCenterVBox(c, p);
-            } else {
-                return new VBox(c, p);
-            }
-        } else if (type === "hbox") {
-            return new HBox(
-                this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1),
-                Padding.even(C.defaultHBoxPadding));
-        } else if (type === "tightHBox") {
-            return new TightHBox(
-                this.parseContainerChildren((containerObj as LinearContainerFormat).children, depth + 1),
-                Padding.even(C.defaultTightHBoxPadding)
-            );
-        } else if (type === 'subSuper') {
-            let format = containerObj as SubSuperContainerFormat;
-            let top = new HBox(
-                this.parseContainerChildren(format.top, depth + 1),
-                Padding.even(0)
-            );
-            let middle = new TightHBox(
-                this.parseContainerChildren(format.middle, depth + 1),
-                Padding.even(0)
-            );
-            let bottom = new HBox(
-                this.parseContainerChildren(format.bottom, depth + 1),
-                Padding.even(0)
-            );
-            let portrusion = format.portrusion ? format.portrusion : C.defaultExpPortrusion;
-            return new SubSuper(top, middle, bottom, portrusion, C.defaultSubSuperPadding);
-        } else if (type === 'root') {
-            let format = containerObj as RootContainerFormat;
-            let idx = new HBox(
-                this.parseContainerChildren(format.idx, depth + 1),
-                Padding.even(0)
-            );
-            let arg = new HBox(
-                this.parseContainerChildren(format.arg, depth + 1),
-                Padding.even(0)
-            );
-            let radical;
-            if (format.rad) {
-                radical = this.getContentFromRef(format.rad) as Radical;
-            }
-            return new RootContainer(idx, arg, radical, C.defaultRootPadding, this.termHeights);
-        } else if (type === 'quiz') {
-            let format = containerObj as QuizFormat;
-            return new Quiz(
-                this.parseContainerChildren(format.children, depth + 1),
-                C.defaultQuizPadding,
-                format.answers,
-                this.customColors && this.customColors.curvedOutlineOpacity ? this.customColors.curvedOutlineOpacity : C.curvedOutlineDefaultOpacity,
-                this.customColors && this.customColors.curvedOutlineColor ? this.customColors.curvedOutlineColor : C.curvedOutlineColor,
-                this.customColors && this.customColors.radioButtonOpacity ? this.customColors.radioButtonOpacity : C.radioButtonDefaultOpacity,
-                this.customColors && this.customColors.radioButtonColor ? this.customColors.radioButtonColor : C.radioButtonColor,
-                this.customColors && this.customColors.quizCorrectColor ? this.customColors.quizCorrectColor : C.quizCorrectColor,
-                this.customColors && this.customColors.quizIncorrectColor ? this.customColors.quizIncorrectColor : C.quizIncorrectColor
-            );
-        } else if (type === 'table') {
-            let format = containerObj as TableFormat;
-            let children = this.parseChildren2D(format.children);
-            return new TableContainer(
-                C.defaultTablePadding,
-                children,
-                this.parseChildrenObj(format.hLines),
-                this.parseChildrenObj(format.vLines),
-                1,
-                C.tableCellPadding
-            );
-        } else if (type === undefined) {
-            throw "Invalid JSON File: Missing type attribute on container descriptor.";
-        } else {
-            throw "Invalid JSON File: Unrecognized type: " + type;
-        }
-    }
-
-    /**
-     * Parse an object containing references with indices
-     * as keys.
-     * @param obj The object to parse. 
-     */
-    protected parseChildrenObj(obj: {[index: number]: string}): {[index: number]: EqComponent<any>} {
-        let toReturn = {};
-        if (!obj) {
-            return toReturn;
-        }
-        Object.keys(obj).forEach(index => {
-            let ref = obj[index];
-            toReturn[index] = this.getContentFromRef(ref);
-        });
-        return toReturn;
-    }
-
-    /**
-     * Parse a 2D array of components.
-     * @param fromFile The array from the file.
-     */
-    protected parseChildren2D(fromFile: (string | ContainerFormat)[][]): EqComponent<any>[][] {
-        const toReturn: EqComponent<any>[][] = [];
-        fromFile.forEach(row => {
-            toReturn.push(this.parseContainerChildren(row, 1));
-        });
-        return toReturn;
-    }
-
-    /**
-     * Parse the children attribute of a container
-     * JSON Object.
-     * 
-     * @param children The children array.
-     * @param depth The depth in the layout tree.
-     */
-    protected parseContainerChildren(children: any[], depth: number): EqComponent<any>[] {
-        let toReturn = [];
-        children.forEach(child => {
-            if (typeof child === 'object') {
-                if (child === null) {
-                    toReturn.push(undefined);
-                } else {
-                    toReturn.push(this.parseContainer(child, depth + 1));
-                }
-            } else if (typeof child === 'string') {
-                toReturn.push(this.getContentFromRef(child));
-            } else {
-                throw "Invalid type of child in JSON file.";
-            }
-        });
-        return toReturn;
-    }
-
 }

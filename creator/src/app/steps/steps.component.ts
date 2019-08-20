@@ -1,4 +1,4 @@
-import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { UndoRedoService } from '../undo-redo.service';
 import RendererCanvasController from './RendererCanvasController';
 import { deepClone } from '../helpers';

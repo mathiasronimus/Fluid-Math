@@ -2,13 +2,35 @@ import RootContainer from '@shared/layout/RootContainer';
 import CreatorContainer from './CreatorContainer';
 import LayoutState from '@shared/animation/LayoutState';
 import EqComponent from '@shared/layout/EqComponent';
-import C from '@shared/main/consts';
 import Radical from '@shared/layout/Radical';
 import { creatorContainerAddClick, creatorContainerCreatorDraw, childrenToStepLayout } from './CreatorContainerMethods';
 import CanvasController from '@shared/main/CanvasController';
 import { RootContainerFormat } from '@shared/main/FileFormat';
 import EqContent from '@shared/layout/EqContent';
+import { creatorContainerPadding, creatorContainerStroke } from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
+import CreatorHBox from './CreatorHBox';
+import { parseContainerChildren } from '@shared/main/helpers';
 
+@Container({
+    typeString: 'creator-root',
+    parse: (containerObj, depth, contentGetter, containerGetter, genInfo) => {
+        const format = containerObj as RootContainerFormat;
+        const idx = new CreatorHBox(
+            parseContainerChildren(format.idx, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+        const arg = new CreatorHBox(
+            parseContainerChildren(format.arg, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+        let radical: Radical;
+        if (format.rad) {
+            radical = contentGetter(format.rad) as Radical;
+        }
+        return new CreatorRootContainer(idx, arg, radical, creatorContainerPadding, (genInfo as any).termHeights);
+    }
+})
 export default class CreatorRootContainer extends RootContainer implements CreatorContainer {
     /**
      * When this container is clicked,
@@ -22,7 +44,7 @@ export default class CreatorRootContainer extends RootContainer implements Creat
      * @param toAdd The component to add.
      */
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        const pad = C.creatorContainerPadding.scale(l.scale);
+        const pad = creatorContainerPadding.scale(l.scale);
         // Make fake layout state to use like rectangles
         const inner = new LayoutState(
             undefined,
@@ -45,7 +67,7 @@ export default class CreatorRootContainer extends RootContainer implements Creat
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.strokeStyle = creatorContainerStroke;
 
         // Outer border
         ctx.beginPath();

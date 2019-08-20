@@ -1,5 +1,5 @@
 import CanvasController from './CanvasController';
-import C from './consts';
+import { widthTiers } from './consts';
 import { getWidthTier } from './helpers';
 import { FileFormat } from './FileFormat';
 
@@ -9,8 +9,11 @@ import { FileFormat } from './FileFormat';
  */
 export default class HeightComputeCanvasController extends CanvasController {
 
+    private origInstructions: FileFormat;
+
     constructor(instructions: FileFormat) {
         super(document.createElement('div'), instructions);
+        this.origInstructions = instructions;
     }
 
     /**
@@ -21,9 +24,9 @@ export default class HeightComputeCanvasController extends CanvasController {
     private getMaxHeight(tier: number): number {
         const win: any = window;
         win.currentWidthTier = tier;
-        this.terms.forEach(term => {
-            term.recalcDimensions();
-        });
+        for (let i = 0; i < this.origInstructions.terms.length; i++) {
+            this.components.getContent('t' + i).recalcDimensions();
+        }
         let maxHeight = 0;
         for (let i = 0; i < this.steps.length; i++) {
             const layout = this.calcLayout(i, true)[1];
@@ -42,7 +45,7 @@ export default class HeightComputeCanvasController extends CanvasController {
      */
     compute(): number[] {
         const toReturn: number[] = [];
-        for (let i = 0; i < C.widthTiers.length; i++) {
+        for (let i = 0; i < widthTiers.length; i++) {
             toReturn.push(this.getMaxHeight(i));
         }
         return toReturn;

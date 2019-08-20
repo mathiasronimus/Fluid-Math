@@ -1,11 +1,23 @@
 import EqComponent from './EqComponent';
 import Padding from './Padding';
 import LayoutState from '../animation/LayoutState';
-import { Map, newMap } from '../main/helpers';
+import { Map, newMap, parseContainerChildren } from '../main/helpers';
 import LinearContainer from './LinearContainer';
 import { MouseEventCallback } from '../main/CanvasController';
 import EqContent from './EqContent';
+import { Container } from '../main/ComponentModel';
+import { LinearContainerFormat } from '../main/FileFormat';
+import { defaultHBoxPadding } from '../main/consts';
 
+@Container({
+    typeString: 'hbox',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        // Return HBox from file
+        const format = containerObj as LinearContainerFormat;
+        const children = parseContainerChildren(format.children, depth + 1, containerGetter, contentGetter);
+        return new HBox(children, Padding.even(defaultHBoxPadding));
+    }
+})
 export default class HBox extends LinearContainer<LayoutState> {
 
     // Calculated initially, stored for later

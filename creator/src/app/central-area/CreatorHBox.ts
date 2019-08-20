@@ -1,8 +1,7 @@
 import HBox from '@shared/layout/HBox';
 import LinearCreatorContainer from './LinearCreatorContainer';
 import LayoutState from '@shared/animation/LayoutState';
-import C from '@shared/main/consts';
-import { line, tri } from '@shared/main/helpers';
+import { line, tri, parseContainerChildren } from '@shared/main/helpers';
 import {
     creatorContainerCreatorDraw,
     creatorContainerAddClick,
@@ -17,7 +16,19 @@ import HDivider from '@shared/layout/HDivider';
 import Radical from '@shared/layout/Radical';
 import CanvasController from '@shared/main/CanvasController';
 import { LinearContainerFormat } from '@shared/main/FileFormat';
+import { creatorContainerStroke, creatorContainerPadding, creatorCaretFillStyle, creatorCaretSize } from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
 
+@Container({
+    typeString: 'creator-hbox',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        // Return HBox from file
+        const format = containerObj as LinearContainerFormat;
+        return new CreatorHBox(
+            parseContainerChildren(format.children, depth, containerGetter, contentGetter),
+            creatorContainerPadding);
+    }
+})
 export default class CreatorHBox extends HBox implements LinearCreatorContainer {
 
     delete = linearContainerDelete;
@@ -35,14 +46,14 @@ export default class CreatorHBox extends HBox implements LinearCreatorContainer 
 
     creatorDraw(l: LayoutState, ctx: CanvasRenderingContext2D) {
         ctx.save();
-        ctx.strokeStyle = C.creatorContainerStroke;
+        ctx.strokeStyle = creatorContainerStroke;
 
         // Outer border
         ctx.beginPath();
         ctx.rect(l.tlx, l.tly, l.width, l.height);
         ctx.stroke();
 
-        const pad = C.creatorContainerPadding.scale(l.scale);
+        const pad = creatorContainerPadding.scale(l.scale);
 
         // Horizontal lines
         const x1 = l.tlx + pad.left / 2;
@@ -53,20 +64,20 @@ export default class CreatorHBox extends HBox implements LinearCreatorContainer 
         line(x1, y2, x2, y2, ctx);
 
         // Carets
-        ctx.fillStyle = C.creatorCaretFillStyle;
+        ctx.fillStyle = creatorCaretFillStyle;
 
         ctx.save();
         ctx.translate(l.tlx + pad.left * 0.75, l.tly + l.height / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         ctx.save();
         ctx.translate(l.tlx + l.width - pad.right * 0.75, l.tly + l.height / 2);
         ctx.rotate(Math.PI / 2);
         ctx.scale(l.scale, l.scale);
-        tri(0, 0, C.creatorCaretSize, C.creatorCaretSize, ctx);
+        tri(0, 0, creatorCaretSize, creatorCaretSize, ctx);
         ctx.restore();
 
         // Carets that depend on parent
@@ -76,7 +87,7 @@ export default class CreatorHBox extends HBox implements LinearCreatorContainer 
     }
 
     addClick(l: LayoutState, x: number, y: number, toAdd: EqComponent<any>) {
-        const pad = C.creatorContainerPadding.scale(l.scale);
+        const pad = creatorContainerPadding.scale(l.scale);
         // Make fake layout states to use like rectangles
         const innerLeft = new LayoutState(
             undefined,

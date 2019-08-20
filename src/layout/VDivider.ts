@@ -5,7 +5,19 @@ import { Map } from '../main/helpers';
 import EqComponent from "./EqComponent";
 import { OriginalDimenLayoutState } from "../animation/OriginalDimenLayoutState";
 import LayoutState from "../animation/LayoutState";
+import { Content } from "../main/ComponentModel";
+import { vDividerPadding } from '../main/consts';
 
+@Content({
+    character: 'v',
+    initialize: file => {
+        const vDividers: VDivider[] = [];
+        for (let i = 0; i < file.vDividers; i++) {
+            vDividers.push(new VDivider(vDividerPadding, 'v' + i));
+        }
+        return vDividers;
+    }
+})
 export default class VDivider extends EqContent<OriginalDimenLayoutState> {
 
     constructor(padding: Padding, ref: string) {

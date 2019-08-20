@@ -1,7 +1,7 @@
 import BezierCallback from "./BezierCallback";
 import ContentLayoutState from "./ContentLayoutState";
-import C from '../main/consts';
 import AnimationSet from "./AnimationSet";
+import { outlineFadeInDuration, outlineFadeInEasing } from "../main/consts";
 
 export default class OutlineColorAnimation extends BezierCallback {
 
@@ -10,7 +10,7 @@ export default class OutlineColorAnimation extends BezierCallback {
     private endColor: number[];
 
     constructor(outlineLayout: ContentLayoutState, newColor: number[], set: AnimationSet) {
-        super(C.outlineFadeInDuration, C.outlineFadeInEasing, set);
+        super(outlineFadeInDuration, outlineFadeInEasing, set);
         this.layout = outlineLayout;
         this.startColor = this.layout.color;
         this.endColor = newColor;

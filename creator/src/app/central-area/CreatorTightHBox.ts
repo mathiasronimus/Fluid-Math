@@ -3,14 +3,27 @@ import CanvasController, { MouseEventCallback } from '@shared/main/CanvasControl
 import { LinearContainerFormat } from '@shared/main/FileFormat';
 import { childrenToStepLayout } from './CreatorContainerMethods';
 import Term from '@shared/layout/Term';
-import C from '@shared/main/consts';
 import LayoutState from '@shared/animation/LayoutState';
 import EqComponent from '@shared/layout/EqComponent';
 import TermLayoutState from '@shared/animation/TermLayoutState';
 import EqContent from '@shared/layout/EqContent';
+import { termPadding, tightTermPadding, creatorContainerPadding } from '@shared/main/consts';
+import { Container } from '@shared/main/ComponentModel';
+import { parseContainerChildren } from '@shared/main/helpers';
 
-const widthDiff = C.termPadding.width() - C.tightTermPadding.width();
+const widthDiff = termPadding.width() - tightTermPadding.width();
 
+@Container({
+    typeString: 'creator-tightHBox',
+    parse: (containerObj, depth, contentGetter, containerGetter) => {
+        const format = containerObj as LinearContainerFormat;
+        // Return HBox from file
+        return new CreatorTightHBox(
+            parseContainerChildren(format.children, depth, containerGetter, contentGetter),
+            creatorContainerPadding
+        );
+    }
+})
 export default class CreatorTightHBox extends CreatorHBox {
 
     // Override to have right type

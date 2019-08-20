@@ -1,6 +1,5 @@
-import { Injectable, ComponentFactoryResolver, ChangeDetectorRef, ComponentRef } from '@angular/core';
+import { Injectable, ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { AppComponent } from './app.component';
-import { Component } from '@angular/compiler/src/core';
 import { ModalDirective } from './modal.directive';
 
 /**
