@@ -308,6 +308,7 @@ export class TextEditorComponent implements AfterViewInit {
     const state = this.undoRedo.getStateClone();
     state.steps = [state.steps[this.step.selected]];
     state.steps[0].text = undefined;
+    delete state.autoplay;
     this.eqContainerEl.nativeElement.innerHTML = '';
     const canv = new CanvasController(this.eqContainerEl.nativeElement, state);
   }

@@ -4001,7 +4001,6 @@ function Content(contentSpec) {
 }
 var containerParsers = {};
 function Container(containerSpec) {
-    console.log(containerSpec.typeString);
     containerParsers[containerSpec.typeString] = containerSpec.parse;
     return function (construc) { };
 }
@@ -5220,24 +5219,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @shared/layout/EqContainer */ "../src/layout/EqContainer.ts");
 /* harmony import */ var _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/layout/VBox */ "../src/layout/VBox.ts");
 /* harmony import */ var _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/layout/HBox */ "../src/layout/HBox.ts");
-/* harmony import */ var _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/TightHBox */ "../src/layout/TightHBox.ts");
-/* harmony import */ var _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/SubSuper */ "../src/layout/SubSuper.ts");
-/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
-/* harmony import */ var _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/layout/RootContainer */ "../src/layout/RootContainer.ts");
-/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
-/* harmony import */ var _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shared/layout/Quiz */ "../src/layout/Quiz.ts");
-/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
-/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
-/* harmony import */ var _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CreatorComponentModel */ "./src/app/central-area/CreatorComponentModel.ts");
-/* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
-/* harmony import */ var _CreatorQuiz__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./CreatorQuiz */ "./src/app/central-area/CreatorQuiz.ts");
-/* harmony import */ var _CreatorRootContainer__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./CreatorRootContainer */ "./src/app/central-area/CreatorRootContainer.ts");
-/* harmony import */ var _CreatorSubSuper__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./CreatorSubSuper */ "./src/app/central-area/CreatorSubSuper.ts");
-/* harmony import */ var _CreatorTable__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./CreatorTable */ "./src/app/central-area/CreatorTable.ts");
-/* harmony import */ var _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./CreatorTightHBox */ "./src/app/central-area/CreatorTightHBox.ts");
-/* harmony import */ var _CreatorVBox__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./CreatorVBox */ "./src/app/central-area/CreatorVBox.ts");
-/* harmony import */ var _shared_layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @shared/layout/VCenterVBox */ "../src/layout/VCenterVBox.ts");
+/* harmony import */ var _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @shared/layout/SubSuper */ "../src/layout/SubSuper.ts");
+/* harmony import */ var _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @shared/layout/EqContent */ "../src/layout/EqContent.ts");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../helpers */ "./src/app/helpers.ts");
+/* harmony import */ var _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @shared/layout/RootContainer */ "../src/layout/RootContainer.ts");
+/* harmony import */ var _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @shared/layout/Radical */ "../src/layout/Radical.ts");
+/* harmony import */ var _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @shared/layout/Quiz */ "../src/layout/Quiz.ts");
+/* harmony import */ var _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @shared/layout/TableContainer */ "../src/layout/TableContainer.ts");
+/* harmony import */ var _shared_main_consts__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @shared/main/consts */ "../src/main/consts.ts");
+/* harmony import */ var _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./CreatorComponentModel */ "./src/app/central-area/CreatorComponentModel.ts");
+/* harmony import */ var _CreatorHBox__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./CreatorHBox */ "./src/app/central-area/CreatorHBox.ts");
+/* harmony import */ var _CreatorQuiz__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./CreatorQuiz */ "./src/app/central-area/CreatorQuiz.ts");
+/* harmony import */ var _CreatorRootContainer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./CreatorRootContainer */ "./src/app/central-area/CreatorRootContainer.ts");
+/* harmony import */ var _CreatorSubSuper__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./CreatorSubSuper */ "./src/app/central-area/CreatorSubSuper.ts");
+/* harmony import */ var _CreatorTable__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./CreatorTable */ "./src/app/central-area/CreatorTable.ts");
+/* harmony import */ var _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./CreatorTightHBox */ "./src/app/central-area/CreatorTightHBox.ts");
+/* harmony import */ var _CreatorVBox__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./CreatorVBox */ "./src/app/central-area/CreatorVBox.ts");
+/* harmony import */ var _shared_layout_VCenterVBox__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @shared/layout/VCenterVBox */ "../src/layout/VCenterVBox.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -5264,8 +5262,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
 
 
 
-
 // Imports that need to be included but aren't used directly
+
 
 
 
@@ -5322,7 +5320,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         return _this;
     }
     CreatorCanvasController.prototype.initComponents = function (instructions) {
-        this.components = new _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_13__["default"](instructions);
+        this.components = new _CreatorComponentModel__WEBPACK_IMPORTED_MODULE_12__["default"](instructions);
         this.components.setGenInfo('customColors', this.customColors);
         this.components.setGenInfo('fixedHeights', this.fixedHeights);
     };
@@ -5409,7 +5407,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
                 l.component.creatorDraw(l, _this.ctx);
             }
             if (_this.selection) {
-                if (l.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"] &&
+                if (l.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_5__["default"] &&
                     l.component.getRef() === _this.selection.adding) {
                     // Highlight what's selected on the content pane.
                     _this.ctx.save();
@@ -5493,7 +5491,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             // Didn't click on anything
             return this.getLayoutForPublish(modifyWith);
         }
-        else if (clickedLayout.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        else if (clickedLayout.component instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             try {
                 // Add adjacent to content
                 var container = clickedLayout.layoutParent.component;
@@ -5536,7 +5534,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
      */
     CreatorCanvasController.prototype.getLayoutForPublish = function (modifyWith) {
         var newStepLayout = this.rootContainer.toStepLayout(this);
-        var origInstructionsClone = Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["deepClone"])(this.originalInstructions);
+        var origInstructionsClone = Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["deepClone"])(this.originalInstructions);
         origInstructionsClone.steps[this.currStep].root = newStepLayout;
         modifyWith(origInstructionsClone);
         return origInstructionsClone;
@@ -5550,7 +5548,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
      * @param addTo The component being added.
      */
     CreatorCanvasController.prototype.autoAddContent = function (addTo) {
-        if (addTo instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"]) {
+        if (addTo instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_7__["default"]) {
             // Add a radical automatically.
             // Look for a radical not used on the
             // current step, next step, or previous
@@ -5562,9 +5560,9 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             var unusedRef = void 0;
             for (var i = 0; i < currState.radicals; i++) {
                 var ref = 'r' + i;
-                var inCurr = currStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(currStep.root, ref);
-                var inNext = nextStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(nextStep.root, ref);
-                var inPrev = prevStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(prevStep.root, ref);
+                var inCurr = currStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["inLayout"])(currStep.root, ref);
+                var inNext = nextStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["inLayout"])(nextStep.root, ref);
+                var inPrev = prevStep && Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["inLayout"])(prevStep.root, ref);
                 if (!(inCurr || inNext || inPrev)) {
                     // Found an unused ref
                     unusedRef = ref;
@@ -5582,7 +5580,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
                 // Dummy radical, but doesn't matter. Contents of the
                 // container are serialized then re-created with the
                 // modifed instructions.
-                var dummyRadForSave = new _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_9__["default"](newRef);
+                var dummyRadForSave = new _shared_layout_Radical__WEBPACK_IMPORTED_MODULE_8__["default"](newRef);
                 addTo.setRadical(dummyRadForSave);
                 return function (instructions) {
                     if (!instructions.radicals) {
@@ -5621,7 +5619,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         if (this.selection.addingContainer()) {
             return false;
         }
-        return Object(_helpers__WEBPACK_IMPORTED_MODULE_7__["inLayout"])(this.steps[this.currStep].root, this.selection.adding);
+        return Object(_helpers__WEBPACK_IMPORTED_MODULE_6__["inLayout"])(this.steps[this.currStep].root, this.selection.adding);
     };
     /**
      * Select something at (x, y)
@@ -5640,32 +5638,32 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             _this.selection.selectedOnCanvas = ref;
         };
         if (selectedComponent instanceof _shared_layout_EqContainer__WEBPACK_IMPORTED_MODULE_1__["default"]) {
-            if (selectedComponent instanceof _shared_layout_TightHBox__WEBPACK_IMPORTED_MODULE_4__["default"]) {
+            if (selectedComponent instanceof _CreatorTightHBox__WEBPACK_IMPORTED_MODULE_18__["default"]) {
                 select('c2');
             }
             else if (selectedComponent instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__["default"]) {
                 select('c0');
             }
-            else if (selectedComponent instanceof _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_10__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_Quiz__WEBPACK_IMPORTED_MODULE_9__["default"]) {
                 select('c5');
             }
             else if (selectedComponent instanceof _shared_layout_VBox__WEBPACK_IMPORTED_MODULE_2__["default"]) {
                 select('c1');
             }
-            else if (selectedComponent instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_4__["default"]) {
                 select('c4');
             }
-            else if (selectedComponent instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_7__["default"]) {
                 select('c3');
             }
-            else if (selectedComponent instanceof _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_11__["default"]) {
+            else if (selectedComponent instanceof _shared_layout_TableContainer__WEBPACK_IMPORTED_MODULE_10__["default"]) {
                 select('c6');
             }
             else {
                 throw new Error('Unrecognized container selected.');
             }
         }
-        else if (selectedComponent instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        else if (selectedComponent instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             select(selectedComponent.getRef());
         }
     };
@@ -5686,8 +5684,8 @@ var CreatorCanvasController = /** @class */ (function (_super) {
     CreatorCanvasController.prototype.canDelete = function () {
         return this.selectedLayout &&
             this.selectedLayout.layoutParent &&
-            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_5__["default"]) &&
-            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_8__["default"] && this.selectedLayout.component instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__["default"]);
+            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_SubSuper__WEBPACK_IMPORTED_MODULE_4__["default"]) &&
+            !(this.selectedLayout.layoutParent.component instanceof _shared_layout_RootContainer__WEBPACK_IMPORTED_MODULE_7__["default"] && this.selectedLayout.component instanceof _shared_layout_HBox__WEBPACK_IMPORTED_MODULE_3__["default"]);
     };
     /**
      * Returns the thing to add as a component.
@@ -5715,7 +5713,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         var selected = this.selectedLayout.component;
         var newState = this.undoRedo.getStateClone();
         var step = newState.steps[this.currStep];
-        if (selected instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_6__["default"]) {
+        if (selected instanceof _shared_layout_EqContent__WEBPACK_IMPORTED_MODULE_5__["default"]) {
             this.applyColor(selected, colorName, step);
             this.applyOpacity(selected, opacity, step);
         }
@@ -5761,7 +5759,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
             stepObj.opacity = {};
         }
         var ref = content.getRef();
-        if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_12__["normalOpacity"]) {
+        if (opacity === _shared_main_consts__WEBPACK_IMPORTED_MODULE_11__["normalOpacity"]) {
             // Remove any opacity already set for this content
             delete stepObj.opacity[ref];
             if (Object.keys(stepObj.opacity).length === 0) {
@@ -11621,6 +11619,7 @@ var TextEditorComponent = /** @class */ (function () {
         var state = this.undoRedo.getStateClone();
         state.steps = [state.steps[this.step.selected]];
         state.steps[0].text = undefined;
+        delete state.autoplay;
         this.eqContainerEl.nativeElement.innerHTML = '';
         var canv = new _shared_main_CanvasController__WEBPACK_IMPORTED_MODULE_6__["default"](this.eqContainerEl.nativeElement, state);
     };

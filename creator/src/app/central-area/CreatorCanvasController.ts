@@ -31,6 +31,7 @@ import './CreatorTable';
 import './CreatorTightHBox';
 import './CreatorVBox';
 import '@shared/layout/VCenterVBox';
+import CreatorTightHBox from './CreatorTightHBox';
 
 export default class CreatorCanvasController extends CanvasController {
 
@@ -416,7 +417,7 @@ export default class CreatorCanvasController extends CanvasController {
             this.selection.selectedOnCanvas = ref;
         };
         if (selectedComponent instanceof EqContainer) {
-            if (selectedComponent instanceof TightHBox) {
+            if (selectedComponent instanceof CreatorTightHBox) {
                 select('c2');
             } else if (selectedComponent instanceof HBox) {
                 select('c0');

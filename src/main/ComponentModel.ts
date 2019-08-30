@@ -49,7 +49,6 @@ interface ContainerSpec {
 export const containerParsers: {[typeString: string]: parseFunc} = {};
 
 export function Container(containerSpec: ContainerSpec) {
-    console.log(containerSpec.typeString);
     containerParsers[containerSpec.typeString] = containerSpec.parse;
     return (construc: Function) => {};
 }
