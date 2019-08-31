@@ -188,6 +188,51 @@ var AnimationSet = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "../src/animation/AutoplayProgressAnimation.ts":
+/*!*****************************************************!*\
+  !*** ../src/animation/AutoplayProgressAnimation.ts ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BezierCallback__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BezierCallback */ "../src/animation/BezierCallback.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var AutoplayProgressAnimation = /** @class */ (function (_super) {
+    __extends(AutoplayProgressAnimation, _super);
+    function AutoplayProgressAnimation(pi, set, duration, canvasWidth, canvasHeight) {
+        var _this = _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["autoplayProgressEasing"], set) || this;
+        _this.pi = pi;
+        _this.canvasWidth = canvasWidth;
+        _this.canvasHeight = canvasHeight;
+        return _this;
+    }
+    AutoplayProgressAnimation.prototype.step = function (completion) {
+        this.pi.draw(completion, this.canvasWidth, this.canvasHeight);
+    };
+    return AutoplayProgressAnimation;
+}(_BezierCallback__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (AutoplayProgressAnimation);
+
+
+/***/ }),
+
 /***/ "../src/animation/BezierCallback.ts":
 /*!******************************************!*\
   !*** ../src/animation/BezierCallback.ts ***!
@@ -286,6 +331,50 @@ var ContentLayoutState = /** @class */ (function (_super) {
     return ContentLayoutState;
 }(_LayoutState__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (ContentLayoutState);
+
+
+/***/ }),
+
+/***/ "../src/animation/DummyAnimation.ts":
+/*!******************************************!*\
+  !*** ../src/animation/DummyAnimation.ts ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BezierCallback__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BezierCallback */ "../src/animation/BezierCallback.ts");
+/* harmony import */ var _main_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../main/consts */ "../src/main/consts.ts");
+var __extends = (undefined && undefined.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+/**
+ * An animation that doesn't do anything - useful for ensuring
+ * an animation set runs for a particular minimum duration.
+ */
+var DummyAnimation = /** @class */ (function (_super) {
+    __extends(DummyAnimation, _super);
+    function DummyAnimation(duration, set) {
+        return _super.call(this, duration, _main_consts__WEBPACK_IMPORTED_MODULE_1__["moveEasing"], set) || this;
+    }
+    // Do nothing
+    DummyAnimation.prototype.step = function (completion) { };
+    return DummyAnimation;
+}(_BezierCallback__WEBPACK_IMPORTED_MODULE_0__["default"]));
+/* harmony default export */ __webpack_exports__["default"] = (DummyAnimation);
 
 
 /***/ }),
@@ -3212,6 +3301,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ProgressIndicator__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./ProgressIndicator */ "../src/main/ProgressIndicator.ts");
 /* harmony import */ var _animation_BezierCallback__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../animation/BezierCallback */ "../src/animation/BezierCallback.ts");
 /* harmony import */ var _ComponentModel__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ComponentModel */ "../src/main/ComponentModel.ts");
+/* harmony import */ var _animation_DummyAnimation__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../animation/DummyAnimation */ "../src/animation/DummyAnimation.ts");
+/* harmony import */ var _animation_AutoplayProgressAnimation__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../animation/AutoplayProgressAnimation */ "../src/animation/AutoplayProgressAnimation.ts");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3225,6 +3316,8 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+
+
 
 
 
@@ -3276,13 +3369,7 @@ var CanvasController = /** @class */ (function () {
         // Set background color
         this.backgroundFill = Object(_helpers__WEBPACK_IMPORTED_MODULE_9__["rgbaArrayToCssString"])(colors && colors.canvasBackground ? colors.canvasBackground : _consts__WEBPACK_IMPORTED_MODULE_6__["backgroundColor"]);
         // Check if any steps have text
-        var hasText = false;
-        for (var i = 0; i < this.steps.length; i++) {
-            if (this.steps[i].text) {
-                hasText = true;
-                break;
-            }
-        }
+        var hasText = this.steps.some(function (step) { return step.text !== undefined; });
         // Whether navigational buttons are necessary
         var needButtons = this.steps.length > 1 && !this.isAutoplay;
         // Create area below canvas, if needed
@@ -3295,6 +3382,7 @@ var CanvasController = /** @class */ (function () {
                 var backButton = document.createElement("div");
                 backButton.className = "material-icons eqIcon";
                 backButton.innerHTML = "keyboard_arrow_left";
+                backButton.style.left = '0px';
                 backButton.setAttribute("role", "button");
                 lowerArea.appendChild(backButton);
                 this.prevStep = this.prevStep.bind(this);
@@ -3315,6 +3403,7 @@ var CanvasController = /** @class */ (function () {
                 this.restartOrNextButton = document.createElement("div");
                 this.restartOrNextButton.className = "material-icons eqIcon";
                 this.restartOrNextButton.innerHTML = "keyboard_arrow_right";
+                this.restartOrNextButton.style.right = '0px';
                 this.restartOrNextButton.setAttribute("role", "button");
                 lowerArea.appendChild(this.restartOrNextButton);
                 this.restart = this.restart.bind(this);
@@ -3326,12 +3415,10 @@ var CanvasController = /** @class */ (function () {
                 this.restartOrNextButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, this.restartOrNextButton));
             }
         }
-        // Initialize progress indicator, if not autoplaying
-        if (!this.isAutoplay) {
-            this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_10__["default"](this.canvas);
-        }
+        // Initialize progress indicator
+        this.progress = new _ProgressIndicator__WEBPACK_IMPORTED_MODULE_10__["default"](this.canvas, this.backgroundFill);
         //Check whether to fix the height of the canvas
-        if (container.hasAttribute('data-fix-height')) {
+        if (container.hasAttribute('data-fix-height') || this.isAutoplay) {
             this.fixedHeights = instructions.maxHeights;
         }
         //Initialize the font
@@ -3523,11 +3610,34 @@ var CanvasController = /** @class */ (function () {
         }
     };
     /**
+     * @returns The total time this slideshow will take to play.
+     */
+    CanvasController.prototype.getTotalTime = function () {
+        var totalTime = 0;
+        // Look through each step
+        for (var i = 0; i < this.steps.length - 1; i++) {
+            var stepOptions = this.getStepOptions(i, i + 1);
+            // Find the duration for the actual step
+            var stepDuration = this.getDurations(stepOptions)[0];
+            // Find the duration for any delay
+            var delay = this.getAutoplayDelay(i);
+            totalTime += stepDuration + delay;
+        }
+        // Add any delay at the end
+        totalTime += this.getAutoplayDelay(this.steps.length - 1);
+        return totalTime;
+    };
+    /**
      * Start playing the steps one after another.
      */
     CanvasController.prototype.startAutoplay = function () {
+        // Remove play button
         this.overlayContainer.style.display = "none";
+        // Create the progress indicator
+        var progressSet = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](function () { }, this.ctx, 0, 0, this.backgroundFill);
+        progressSet.addAnimation(new _animation_AutoplayProgressAnimation__WEBPACK_IMPORTED_MODULE_14__["default"](this.progress, progressSet, this.getTotalTime(), this.lastWidth, this.lastHeight));
         this.autoplay();
+        progressSet.start();
     };
     /**
      * Animate to the next step until done.
@@ -3603,7 +3713,7 @@ var CanvasController = /** @class */ (function () {
         this.ctx.save();
         var pixelRatio = window.devicePixelRatio || 1;
         this.ctx.fillStyle = this.backgroundFill;
-        this.ctx.fillRect(0, 0, this.canvas.width / pixelRatio, this.canvas.height / pixelRatio);
+        this.ctx.fillRect(0, 0, this.canvas.width / pixelRatio, (this.canvas.height - 2) / pixelRatio);
         this.ctx.restore();
         this.currStates.forEach(function (f) {
             _this.ctx.save();
@@ -3730,7 +3840,7 @@ var CanvasController = /** @class */ (function () {
             }
         }
         var set = new _animation_AnimationSet__WEBPACK_IMPORTED_MODULE_0__["default"](function () {
-            //When done
+            // When done
             if (updateDimenAfter) {
                 _this.setSize(canvasWidth, canvasHeight);
                 _this.redraw();
@@ -3754,120 +3864,120 @@ var CanvasController = /** @class */ (function () {
             if (whenDone) {
                 whenDone();
             }
-        }, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill);
-        //Get the step options for this transition
+        }, this.ctx, this.lastWidth, this.lastHeight - 2, this.backgroundFill);
+        // Get the step options for this transition
         var stepOptions;
         var reverseStep;
         if (stepBefore < stepAfter) {
-            //Going forward
+            // Going forward
             stepOptions = this.getStepOptions(stepBefore, stepAfter);
             reverseStep = false;
         }
         else {
-            //Going backwards
+            // Going backwards
             stepOptions = this.getStepOptions(stepAfter, stepBefore);
             reverseStep = true;
         }
-        //Whether a merge animation exists for this step
+        // Whether a merge animation exists for this step
         var mergeExists = function (ref) {
             return stepOptions && stepOptions.merges && stepOptions.merges[ref];
         };
-        //Whether a clone animation exists for this step
+        // Whether a clone animation exists for this step
         var cloneExists = function (ref) {
             return stepOptions && stepOptions.clones && stepOptions.clones[ref];
         };
-        //Whether an eval animation exists for this step
+        // Whether an eval animation exists for this step
         var evalExists = function (ref) {
             return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
         // Find the durations for each transition type (may be custom)
-        var moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultMoveDuration"];
-        var addDuration;
-        var removeDuration;
+        var _a = this.getDurations(stepOptions), maxDuration = _a[0], addDuration = _a[1], moveDuration = _a[2], removeDuration = _a[3];
         // Add and remove need to be switched if we're going backwards
         if (reverseStep) {
-            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultRemoveDuration"];
-            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultAddDuration"];
+            var temp = addDuration;
+            addDuration = removeDuration;
+            removeDuration = temp;
         }
-        else {
-            // Not going backwards
-            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultAddDuration"];
-            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultRemoveDuration"];
-        }
-        var maxDuration = Math.max(moveDuration, addDuration, removeDuration);
-        //Add a merge animation
+        // Add a merge animation
         var addMerge = function (mergeToRef, stateBefore) {
             var mergeTo = this.components.getContent(mergeToRef);
             var mergeToNewState = this.currStates.get(mergeTo);
             set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](stateBefore, mergeToNewState, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add a clone animation
+        // Add a clone animation
         var addClone = function (cloneFromRef, stateAfter) {
             var cloneFrom = this.components.getContent(cloneFromRef);
             var cloneFromOldState = oldStates.get(cloneFrom);
             set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add an eval animation
+        // Add an eval animation
         var addEval = function (evalToRef, stateBefore) {
             var evalTo = this.components.getContent(evalToRef);
             var evalToNewState = this.currStates.get(evalTo);
             set.addAnimation(new _animation_EvalAnimation__WEBPACK_IMPORTED_MODULE_4__["default"](stateBefore, evalToNewState, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add a reverse eval
+        // Add a reverse eval
         var addRevEval = function (evalToRef, stateAfter) {
             var evalTo = this.components.getContent(evalToRef);
             var evalToOldState = oldStates.get(evalTo);
             set.addAnimation(new _animation_ReverseEvalAnimation__WEBPACK_IMPORTED_MODULE_5__["default"](evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
-        //Animate the progress indicator
-        if (this.progress && !updateDimenAfter) {
+        // Animate the progress indicator
+        if (this.progress && !updateDimenAfter && !this.isAutoplay) {
             set.addAnimation(new _animation_ProgressAnimation__WEBPACK_IMPORTED_MODULE_8__["default"](stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration, _consts__WEBPACK_IMPORTED_MODULE_6__["progressEasing"], canvasWidth, canvasHeight));
         }
-        //Look through content to see what has happened to it (avoiding containers)
+        // Handle edge case:
+        // If autoplaying, need to make sure the animation runs for
+        // maxDuration, or else our calculated duration may be off
+        // depending on the two steps.
+        if (this.autoplay) {
+            set.addAnimation(new _animation_DummyAnimation__WEBPACK_IMPORTED_MODULE_13__["default"](maxDuration, set));
+        }
+        // Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(function (content) {
             var stateBefore = undefined;
-            //We may be initilizing, where there are no old frames and everything is added
+            // We may be initilizing, where there are no old frames and everything is added
             if (oldStates !== undefined)
                 stateBefore = oldStates.get(content);
             var stateAfter = _this.currStates.get(content);
             var contentRef = content.getRef();
             if (stateBefore && stateAfter) {
-                //Content has just moved
+                // Content has just moved
                 set.addAnimation(new _animation_MoveAnimation__WEBPACK_IMPORTED_MODULE_1__["default"](stateBefore, stateAfter, set, _this.ctx, moveDuration));
             }
             else if (stateBefore) {
-                //Doesn't exist after, has been removed
+                // Doesn't exist after, has been removed
                 if (mergeExists(contentRef)) {
-                    //Do a merge animation
+                    // Do a merge animation
                     addMerge(stepOptions.merges[contentRef], stateBefore);
                 }
                 else if (evalExists(contentRef)) {
-                    //Do an eval animation
+                    // Do an eval animation
                     addEval(stepOptions.evals[contentRef], stateBefore);
                 }
                 else if (reverseStep && cloneExists(contentRef)) {
-                    //Do a reverse clone, aka merge.
-                    //Cloning is "to": "from", need to work backwards
+                    // Do a reverse clone, aka merge.
+                    // Cloning is "to": "from", need to work backwards
                     addMerge(stepOptions.clones[contentRef], stateBefore);
                 }
                 else {
-                    //Do a regular remove animation
+                    // Do a regular remove animation
                     set.addAnimation(new _animation_RemoveAnimation__WEBPACK_IMPORTED_MODULE_2__["default"](stateBefore, set, _this.ctx, removeDuration));
                 }
             }
             else if (stateAfter) {
-                //Doesn't exist before, has been added
+                // Doesn't exist before, has been added
                 if (cloneExists(contentRef)) {
-                    //Do a clone animation
+                    // Do a clone animation
                     addClone(stepOptions.clones[contentRef], stateAfter);
                 }
                 else if (reverseStep && mergeExists(contentRef)) {
-                    //Do a reverse merge, aka clone.
-                    //Merging is "from": "to", need to work backwards.
+                    // Do a reverse merge, aka clone.
+                    // Merging is "from": "to", need to work backwards.
                     addClone(stepOptions.merges[contentRef], stateAfter);
                 }
                 else if (reverseStep && evalExists(contentRef)) {
-                    //Do a reverse eval
+                    // Do a reverse eval
                     addRevEval(stepOptions.evals[contentRef], stateAfter);
                 }
                 else {
@@ -3905,7 +4015,7 @@ var CanvasController = /** @class */ (function () {
         this.canvas.style.width = newWidth + "px";
         this.canvas.style.height = newHeight + "px";
         //Update canvas pixel size for HDPI
-        var pixelRatio = window.devicePixelRatio || 1;
+        var pixelRatio = window.devicePixelRatio || (_helpers__WEBPACK_IMPORTED_MODULE_9__["isIE"] && window.screen['deviceXDPI'] / window.screen['logicalXDPI']) || 1;
         this.canvas.width = newWidth * pixelRatio;
         this.canvas.height = newHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
@@ -3933,6 +4043,19 @@ var CanvasController = /** @class */ (function () {
             return undefined;
         }
         return this.stepOptions[step2 - 1];
+    };
+    /**
+     * Given the options of a step, return the durations to use
+     * for that step.
+     * @param stepOptions The step options object.
+     * @returns [maxDuration, addDuration, moveDuration, removeDuration]
+     */
+    CanvasController.prototype.getDurations = function (stepOptions) {
+        var moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultMoveDuration"];
+        var addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultAddDuration"];
+        var removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : _consts__WEBPACK_IMPORTED_MODULE_6__["defaultRemoveDuration"];
+        var maxDuration = Math.max(moveDuration, addDuration, removeDuration);
+        return [maxDuration, addDuration, moveDuration, removeDuration];
     };
     /**
      * Calculate and return the layout for
@@ -4172,18 +4295,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * Given a canvas, draws an arc at some circumference
- * to indicate the completion of the animation. I.E
- * nothing is 0% complete, a circle is 100% complete.
+ * Given a canvas, draws a line at the bottom to indicate
+ * the current completion.
  */
 var ProgressIndicator = /** @class */ (function () {
     /**
      * Create a new ProgressIndicator drawing
      * to a canvas.
      * @param canvas The canvas to draw to.
+     * @param backgroundFill The color to fill the background with. Each frame,
+     * the Progress Indicator erases itself independently to the rest of the canvas.
      */
-    function ProgressIndicator(canvas) {
+    function ProgressIndicator(canvas, backgroundFill) {
         this.ctx = canvas.getContext("2d");
+        this.backgroundFill = backgroundFill;
     }
     /**
      * Draw the line on the canvas at some level of
@@ -4195,6 +4320,8 @@ var ProgressIndicator = /** @class */ (function () {
     ProgressIndicator.prototype.draw = function (completion, width, height) {
         var color = _layout_EqContent__WEBPACK_IMPORTED_MODULE_1__["default"].colors['default'];
         this.ctx.strokeStyle = 'rgba(' + color[0] + ',' + color[1] + ',' + color[2] + ',' + _consts__WEBPACK_IMPORTED_MODULE_0__["progressOpacity"] + ')';
+        this.ctx.fillStyle = this.backgroundFill;
+        this.ctx.fillRect(0, height - 2, width, 2);
         Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["line"])(0, height - 1, width * completion, height - 1, this.ctx);
     };
     return ProgressIndicator;
@@ -4208,7 +4335,7 @@ var ProgressIndicator = /** @class */ (function () {
 /*!*****************************!*\
   !*** ../src/main/consts.ts ***!
   \*****************************/
-/*! exports provided: defaultFontFamily, defaultFontStyle, defaultFontWeight, fontSizes, widthTiers, testCanvasFontSizeMultiple, testCanvasWidth, progressOpacity, defaultVBoxPadding, defaultRootVBoxPadding, defaultHBoxPadding, defaultTightHBoxPadding, defaultSubSuperPadding, defaultRootPadding, defaultQuizPadding, defaultTablePadding, termPadding, tightTermPadding, hDividerPadding, vDividerPadding, tableCellPadding, tableMinCellDimen, expScale, defaultExpPortrusion, rootArgMarginLeft, rootIndexScale, rootKinkTipAngle, rootKinkTipLength, curvedOutlineBorderRadius, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, answerVMargin, hoveredOutlineOpacity, revealedOutlineOpacity, outlineFadeInDuration, outlineFadeInEasing, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, quizRadioButtonPadding, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing, creatorContainerPadding, creatorHDividerPadding, creatorVDividerPadding, creatorSelectableHDividerPadding, creatorSelectableVDividerPadding, creatorContainerStroke, creatorCaretFillStyle, creatorCaretFillStyleLighter, creatorCaretSize, creatorLineDash, creatorErrorTimeout, creatorTableMinCellDimen, creatorPlusLineHalfLength, defaultAddDuration, addEasing, defaultMoveDuration, moveEasing, defaultRemoveDuration, removeEasing, progressEasing, colors, fadedOpacity, normalOpacity, focusedOpacity, backgroundColor, buttonHighlightedOpacity, buttonHighlightDuration, buttonHighlightEasing, buttonUnhighlightDuration, buttonUnhighlightEasing */
+/*! exports provided: defaultFontFamily, defaultFontStyle, defaultFontWeight, fontSizes, widthTiers, testCanvasFontSizeMultiple, testCanvasWidth, progressOpacity, defaultVBoxPadding, defaultRootVBoxPadding, defaultHBoxPadding, defaultTightHBoxPadding, defaultSubSuperPadding, defaultRootPadding, defaultQuizPadding, defaultTablePadding, termPadding, tightTermPadding, hDividerPadding, vDividerPadding, tableCellPadding, tableMinCellDimen, expScale, defaultExpPortrusion, rootArgMarginLeft, rootIndexScale, rootKinkTipAngle, rootKinkTipLength, curvedOutlineBorderRadius, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, answerVMargin, hoveredOutlineOpacity, revealedOutlineOpacity, outlineFadeInDuration, outlineFadeInEasing, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, quizRadioButtonPadding, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing, creatorContainerPadding, creatorHDividerPadding, creatorVDividerPadding, creatorSelectableHDividerPadding, creatorSelectableVDividerPadding, creatorContainerStroke, creatorCaretFillStyle, creatorCaretFillStyleLighter, creatorCaretSize, creatorLineDash, creatorErrorTimeout, creatorTableMinCellDimen, creatorPlusLineHalfLength, defaultAddDuration, addEasing, defaultMoveDuration, moveEasing, defaultRemoveDuration, removeEasing, progressEasing, autoplayProgressEasing, colors, fadedOpacity, normalOpacity, focusedOpacity, backgroundColor, buttonHighlightedOpacity, buttonHighlightDuration, buttonHighlightEasing, buttonUnhighlightDuration, buttonUnhighlightEasing */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4280,6 +4407,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultRemoveDuration", function() { return defaultRemoveDuration; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeEasing", function() { return removeEasing; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "progressEasing", function() { return progressEasing; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "autoplayProgressEasing", function() { return autoplayProgressEasing; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "colors", function() { return colors; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fadedOpacity", function() { return fadedOpacity; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "normalOpacity", function() { return normalOpacity; });
@@ -4388,6 +4516,7 @@ var moveEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 
 var defaultRemoveDuration = 400;
 var removeEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 1, 1);
 var progressEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.4, 0.0, 0.2, 1);
+var autoplayProgressEasing = bezier_easing__WEBPACK_IMPORTED_MODULE_1___default()(0.5, 0.5, 0.5, 0.5);
 // Appearance:
 var colors = {
     //RGB
@@ -5280,6 +5409,7 @@ var CreatorCanvasController = /** @class */ (function (_super) {
         if (_this.isAutoplay) {
             container.removeChild(container.children[container.childElementCount - 1]);
         }
+        _this.fixedHeights = undefined;
         // Remove lower area if present
         if (container.childElementCount >= 2) {
             container.removeChild(container.children[container.childElementCount - 1]);

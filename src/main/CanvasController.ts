@@ -7,7 +7,7 @@ import RemoveAnimation from "../animation/RemoveAnimation";
 import AddAnimation from "../animation/AddAnimation";
 import EvalAnimation from '../animation/EvalAnimation';
 import ReverseEvalAnimation from '../animation/ReverseEvalAnimation';
-import { backgroundColor, buttonHighlightDuration, buttonHighlightEasing, buttonHighlightedOpacity, buttonUnhighlightDuration, buttonUnhighlightEasing, defaultMoveDuration, defaultRemoveDuration, defaultAddDuration, progressEasing } from './consts';
+import { backgroundColor, buttonHighlightDuration, buttonHighlightEasing, buttonHighlightedOpacity, buttonUnhighlightDuration, buttonUnhighlightEasing, defaultMoveDuration, defaultRemoveDuration, defaultAddDuration, progressEasing, autoplayProgressEasing } from './consts';
 import EqContent from "../layout/EqContent";
 import ProgressAnimation from "../animation/ProgressAnimation";
 import { getFontSizeForTier, Map, newMap, isIE, getFont, rgbaArrayToCssString } from "./helpers";
@@ -16,6 +16,8 @@ import ProgressIndicator from "./ProgressIndicator";
 import ContentLayoutState from "../animation/ContentLayoutState";
 import BezierCallback from "../animation/BezierCallback";
 import { ComponentModel } from "./ComponentModel";
+import DummyAnimation from "../animation/DummyAnimation";
+import AutoplayProgressAnimation from "../animation/AutoplayProgressAnimation";
 
 export type MouseEventCallback = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => void;
 
@@ -81,45 +83,40 @@ export default class CanvasController {
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
         this.handleMouseClick = this.handleMouseClick.bind(this);
-        
+
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
-        
+
         // Create canvas
         let canvasContainer = document.createElement('div');
         canvasContainer.className = 'canvas-container';
         this.container.appendChild(canvasContainer);
-        
+
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d", { alpha: false });
         canvasContainer.appendChild(this.canvas);
 
         // Set background color
         this.backgroundFill = rgbaArrayToCssString(colors && colors.canvasBackground ? colors.canvasBackground : backgroundColor);
-        
+
         // Check if any steps have text
-        let hasText = false;
-        for (let i = 0; i < this.steps.length; i++) {
-            if (this.steps[i].text) {
-                hasText = true;
-                break;
-            }
-        }
-        
+        const hasText = this.steps.some(step => step.text !== undefined);
+
         // Whether navigational buttons are necessary
         const needButtons = this.steps.length > 1 && !this.isAutoplay;
-        
+
         // Create area below canvas, if needed
         if (needButtons || hasText) {
             let lowerArea = document.createElement("div");
             lowerArea.className = "eqUpper";
             this.container.appendChild(lowerArea);
-            
+
             //Create back button, if needed
             if (needButtons) {
                 let backButton = document.createElement("div");
                 backButton.className = "material-icons eqIcon";
                 backButton.innerHTML = "keyboard_arrow_left";
+                backButton.style.left = '0px';
                 backButton.setAttribute("role", "button");
                 lowerArea.appendChild(backButton);
                 this.prevStep = this.prevStep.bind(this);
@@ -128,7 +125,7 @@ export default class CanvasController {
                 backButton.addEventListener("mouseenter", this.highlightButton.bind(this, backButton));
                 backButton.addEventListener("mouseleave", this.unhighlightButton.bind(this, backButton));
             }
-            
+
             // Create text area, if needed
             // text doesn't show if: none of the steps define any text
             if (hasText) {
@@ -136,12 +133,13 @@ export default class CanvasController {
                 this.textArea.className = "eqText";
                 lowerArea.appendChild(this.textArea);
             }
-            
+
             //Create restart button and progress indicator
             if (needButtons) {
                 this.restartOrNextButton = document.createElement("div");
                 this.restartOrNextButton.className = "material-icons eqIcon";
                 this.restartOrNextButton.innerHTML = "keyboard_arrow_right";
+                this.restartOrNextButton.style.right = '0px';
                 this.restartOrNextButton.setAttribute("role", "button");
                 lowerArea.appendChild(this.restartOrNextButton);
                 this.restart = this.restart.bind(this);
@@ -154,13 +152,11 @@ export default class CanvasController {
             }
         }
 
-        // Initialize progress indicator, if not autoplaying
-        if (!this.isAutoplay) {
-            this.progress = new ProgressIndicator(this.canvas);
-        }
+        // Initialize progress indicator
+        this.progress = new ProgressIndicator(this.canvas, this.backgroundFill);
 
         //Check whether to fix the height of the canvas
-        if (container.hasAttribute('data-fix-height')) {
+        if (container.hasAttribute('data-fix-height') || this.isAutoplay) {
             this.fixedHeights = instructions.maxHeights;
         }
 
@@ -175,7 +171,7 @@ export default class CanvasController {
         this.initComponents(instructions);
         this.updateFontSize();
         this.recalc(true);
-        
+
         // Bind next step to canvas/text click if not autoplaying
         if (!this.isAutoplay) {
             this.canvas.addEventListener("click", this.handleMouseClick);
@@ -226,7 +222,7 @@ export default class CanvasController {
      * @param button The element of the button.
      */
     protected highlightButton(button: HTMLElement) {
-        const set = new AnimationSet(() => {}, this.ctx, 0, 0, this.backgroundFill);
+        const set = new AnimationSet(() => { }, this.ctx, 0, 0, this.backgroundFill);
 
         const anim = new class extends BezierCallback {
             constructor() {
@@ -247,7 +243,7 @@ export default class CanvasController {
      * @param button The element of the button.
      */
     protected unhighlightButton(button: HTMLElement) {
-        const set = new AnimationSet(() => {}, this.ctx, 0, 0, this.backgroundFill);
+        const set = new AnimationSet(() => { }, this.ctx, 0, 0, this.backgroundFill);
 
         const anim = new class extends BezierCallback {
             constructor() {
@@ -331,7 +327,7 @@ export default class CanvasController {
             const canvasRect = this.canvas.getBoundingClientRect();
             const relX = e.clientX - canvasRect.left;
             const relY = e.clientY - canvasRect.top;
-            
+
             // Get the layouts that the cursor is currently on
             const currentlyOn = [];
             this.mouseEnterEvents.forEach((handler, layout) => {
@@ -381,11 +377,42 @@ export default class CanvasController {
     }
 
     /**
+     * @returns The total time this slideshow will take to play.
+     */
+    protected getTotalTime(): number {
+        let totalTime = 0;
+        // Look through each step
+        for (let i = 0; i < this.steps.length - 1; i++) {
+            const stepOptions = this.getStepOptions(i, i + 1);
+            // Find the duration for the actual step
+            const stepDuration = this.getDurations(stepOptions)[0];
+            // Find the duration for any delay
+            const delay = this.getAutoplayDelay(i);
+            
+            totalTime += stepDuration + delay;
+        }
+
+        // Add any delay at the end
+        totalTime += this.getAutoplayDelay(this.steps.length - 1);
+
+        return totalTime;
+    }
+
+    /**
      * Start playing the steps one after another.
      */
     protected startAutoplay() {
+        // Remove play button
         this.overlayContainer.style.display = "none";
+        // Create the progress indicator
+        const progressSet = new AnimationSet(
+            () => {}, this.ctx, 0, 0, this.backgroundFill
+        );
+        progressSet.addAnimation(new AutoplayProgressAnimation(
+            this.progress, progressSet, this.getTotalTime(), this.lastWidth, this.lastHeight
+        ));
         this.autoplay();
+        progressSet.start();
     }
 
     /**
@@ -462,7 +489,7 @@ export default class CanvasController {
         this.ctx.save();
         const pixelRatio = window.devicePixelRatio || 1;
         this.ctx.fillStyle = this.backgroundFill;
-        this.ctx.fillRect(0, 0, this.canvas.width / pixelRatio, this.canvas.height / pixelRatio);
+        this.ctx.fillRect(0, 0, this.canvas.width / pixelRatio, (this.canvas.height - 2) / pixelRatio);
         this.ctx.restore();
         this.currStates.forEach(f => {
             this.ctx.save();
@@ -481,10 +508,10 @@ export default class CanvasController {
     protected recalc(reparse: boolean) {
         let rootLayout;
         [
-            this.currStates, 
+            this.currStates,
             rootLayout,
-            this.mouseEnterEvents, 
-            this.mouseExitEvents, 
+            this.mouseEnterEvents,
+            this.mouseExitEvents,
             this.mouseClickEvents,
             this.tempContent
         ] = this.calcLayout(this.currStep, reparse);
@@ -546,7 +573,7 @@ export default class CanvasController {
         let oldStates = this.currStates;
         let rootLayout;
         [
-            this.currStates, 
+            this.currStates,
             rootLayout,
             this.mouseEnterEvents,
             this.mouseExitEvents,
@@ -554,7 +581,7 @@ export default class CanvasController {
             this.tempContent
         ] = this.calcLayout(this.currStep, true);
         this.mouseOnLast = [];
-        let [width, height] = this.getSize(rootLayout);        
+        let [width, height] = this.getSize(rootLayout);
         this.currAnimation = this.diff(oldStates, width, height, this.currStep + 1, this.currStep, undefined);
         this.currAnimation.start();
     }
@@ -574,7 +601,7 @@ export default class CanvasController {
         let oldStates = this.currStates;
         let rootLayout;
         [
-            this.currStates, 
+            this.currStates,
             rootLayout,
             this.mouseEnterEvents,
             this.mouseExitEvents,
@@ -595,7 +622,7 @@ export default class CanvasController {
         this.components.forAllContent(forEach);
         this.tempContent.forEach(forEach);
     }
- 
+
     /**
      * Calculates and returns a set of animations
      * to play between the current and old step. 
@@ -609,8 +636,8 @@ export default class CanvasController {
      * @param stepAfter The current step number.
      * @param whenDone A function to call when the animation is done.
      */
-    private diff(   oldStates: Map<EqComponent<any>, LayoutState>, canvasWidth: number, canvasHeight: number, 
-                    stepBefore: number, stepAfter: number, whenDone: () => void): AnimationSet {
+    private diff(oldStates: Map<EqComponent<any>, LayoutState>, canvasWidth: number, canvasHeight: number,
+        stepBefore: number, stepAfter: number, whenDone: () => void): AnimationSet {
 
         let updateDimenAfter = canvasHeight < this.lastHeight;
         if (!updateDimenAfter) {
@@ -628,7 +655,7 @@ export default class CanvasController {
         }
 
         let set = new AnimationSet(() => {
-            //When done
+            // When done
             if (updateDimenAfter) {
                 this.setSize(canvasWidth, canvasHeight);
                 this.redraw();
@@ -651,118 +678,125 @@ export default class CanvasController {
             if (whenDone) {
                 whenDone();
             }
-        }, this.ctx, this.lastWidth, this.lastHeight, this.backgroundFill);
+        }, this.ctx, this.lastWidth, this.lastHeight - 2, this.backgroundFill);
 
-        //Get the step options for this transition
+        // Get the step options for this transition
         let stepOptions: TransitionOptionsFormat;
         let reverseStep: boolean;
         if (stepBefore < stepAfter) {
-            //Going forward
+            // Going forward
             stepOptions = this.getStepOptions(stepBefore, stepAfter);
             reverseStep = false;
         } else {
-            //Going backwards
+            // Going backwards
             stepOptions = this.getStepOptions(stepAfter, stepBefore);
             reverseStep = true;
         }
-        //Whether a merge animation exists for this step
+        // Whether a merge animation exists for this step
         let mergeExists = (ref: string) => {
             return stepOptions && stepOptions.merges && stepOptions.merges[ref];
         };
-        //Whether a clone animation exists for this step
+        // Whether a clone animation exists for this step
         let cloneExists = (ref: string) => {
             return stepOptions && stepOptions.clones && stepOptions.clones[ref];
         };
-        //Whether an eval animation exists for this step
+        // Whether an eval animation exists for this step
         let evalExists = (ref: string) => {
             return stepOptions && stepOptions.evals && stepOptions.evals[ref];
         };
         // Find the durations for each transition type (may be custom)
-        const moveDuration = stepOptions && stepOptions.moveDuration ? stepOptions.moveDuration : defaultMoveDuration;
-        let addDuration;
-        let removeDuration;
+        let [maxDuration, addDuration, moveDuration, removeDuration] = this.getDurations(stepOptions);
         // Add and remove need to be switched if we're going backwards
         if (reverseStep) {
-            addDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : defaultRemoveDuration;
-            removeDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : defaultAddDuration;
-        } else {
-            // Not going backwards
-            addDuration = stepOptions && stepOptions.addDuration ? stepOptions.addDuration : defaultAddDuration;
-            removeDuration = stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration : defaultRemoveDuration;
+            const temp = addDuration;
+            addDuration = removeDuration;
+            removeDuration = temp;
         }
-        const maxDuration = Math.max(moveDuration, addDuration, removeDuration);
-        //Add a merge animation
-        let addMerge = function(mergeToRef: string, stateBefore: LayoutState) {
+
+        // Add a merge animation
+        let addMerge = function (mergeToRef: string, stateBefore: LayoutState) {
             let mergeTo = this.components.getContent(mergeToRef);
             let mergeToNewState = this.currStates.get(mergeTo);
             set.addAnimation(new MoveAnimation(stateBefore, mergeToNewState, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add a clone animation
-        let addClone = function(cloneFromRef: string, stateAfter: LayoutState) {
+        // Add a clone animation
+        let addClone = function (cloneFromRef: string, stateAfter: LayoutState) {
             let cloneFrom = this.components.getContent(cloneFromRef);
             let cloneFromOldState = oldStates.get(cloneFrom);
             set.addAnimation(new MoveAnimation(cloneFromOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add an eval animation
-        let addEval = function(evalToRef: string, stateBefore: LayoutState) {
+        // Add an eval animation
+        let addEval = function (evalToRef: string, stateBefore: LayoutState) {
             let evalTo = this.components.getContent(evalToRef);
             let evalToNewState = this.currStates.get(evalTo);
             set.addAnimation(new EvalAnimation(stateBefore, evalToNewState, set, this.ctx, moveDuration));
         }.bind(this);
-        //Add a reverse eval
-        let addRevEval = function(evalToRef: string, stateAfter: LayoutState) {
+        // Add a reverse eval
+        let addRevEval = function (evalToRef: string, stateAfter: LayoutState) {
             let evalTo = this.components.getContent(evalToRef);
             let evalToOldState = oldStates.get(evalTo);
             set.addAnimation(new ReverseEvalAnimation(evalToOldState, stateAfter, set, this.ctx, moveDuration));
         }.bind(this);
 
-        //Animate the progress indicator
-        if (this.progress && !updateDimenAfter) {
-            set.addAnimation(new ProgressAnimation( stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration,
-                                                    progressEasing, canvasWidth, canvasHeight));
+        // Animate the progress indicator
+        if (this.progress && !updateDimenAfter && !this.isAutoplay) {
+            set.addAnimation(
+                new ProgressAnimation(
+                    stepBefore, stepAfter, this.steps.length, this.progress, set, maxDuration,
+                    progressEasing, canvasWidth, canvasHeight
+                )
+            );
         }
 
-        //Look through content to see what has happened to it (avoiding containers)
+        // Handle edge case:
+        // If autoplaying, need to make sure the animation runs for
+        // maxDuration, or else our calculated duration may be off
+        // depending on the two steps.
+        if (this.autoplay) {
+            set.addAnimation(new DummyAnimation(maxDuration, set));
+        }
+
+        // Look through content to see what has happened to it (avoiding containers)
         this.forAllContent(content => {
 
             let stateBefore: LayoutState = undefined;
-            //We may be initilizing, where there are no old frames and everything is added
+            // We may be initilizing, where there are no old frames and everything is added
             if (oldStates !== undefined) stateBefore = oldStates.get(content);
             let stateAfter: LayoutState = this.currStates.get(content);
             let contentRef = content.getRef();
 
             if (stateBefore && stateAfter) {
-                //Content has just moved
+                // Content has just moved
                 set.addAnimation(new MoveAnimation(stateBefore, stateAfter, set, this.ctx, moveDuration));
 
             } else if (stateBefore) {
-                //Doesn't exist after, has been removed
+                // Doesn't exist after, has been removed
                 if (mergeExists(contentRef)) {
-                    //Do a merge animation
+                    // Do a merge animation
                     addMerge(stepOptions.merges[contentRef], stateBefore);
                 } else if (evalExists(contentRef)) {
-                    //Do an eval animation
+                    // Do an eval animation
                     addEval(stepOptions.evals[contentRef], stateBefore);
                 } else if (reverseStep && cloneExists(contentRef)) {
-                    //Do a reverse clone, aka merge.
-                    //Cloning is "to": "from", need to work backwards
+                    // Do a reverse clone, aka merge.
+                    // Cloning is "to": "from", need to work backwards
                     addMerge(stepOptions.clones[contentRef], stateBefore);
                 } else {
-                    //Do a regular remove animation
+                    // Do a regular remove animation
                     set.addAnimation(new RemoveAnimation(stateBefore, set, this.ctx, removeDuration));
                 }
 
             } else if (stateAfter) {
-                //Doesn't exist before, has been added
+                // Doesn't exist before, has been added
                 if (cloneExists(contentRef)) {
-                    //Do a clone animation
+                    // Do a clone animation
                     addClone(stepOptions.clones[contentRef], stateAfter);
                 } else if (reverseStep && mergeExists(contentRef)) {
-                    //Do a reverse merge, aka clone.
-                    //Merging is "from": "to", need to work backwards.
+                    // Do a reverse merge, aka clone.
+                    // Merging is "from": "to", need to work backwards.
                     addClone(stepOptions.merges[contentRef], stateAfter);
                 } else if (reverseStep && evalExists(contentRef)) {
-                    //Do a reverse eval
+                    // Do a reverse eval
                     addRevEval(stepOptions.evals[contentRef], stateAfter);
                 } else {
                     set.addAnimation(new AddAnimation(stateAfter, set, this.ctx, addDuration));
@@ -805,7 +839,7 @@ export default class CanvasController {
         this.canvas.style.height = newHeight + "px";
 
         //Update canvas pixel size for HDPI
-        let pixelRatio = window.devicePixelRatio || 1;
+        const pixelRatio = window.devicePixelRatio || (isIE && window.screen['deviceXDPI'] / window.screen['logicalXDPI']) ||1;
         this.canvas.width = newWidth * pixelRatio;
         this.canvas.height = newHeight * pixelRatio;
         this.ctx.scale(pixelRatio, pixelRatio);
@@ -838,17 +872,31 @@ export default class CanvasController {
     }
 
     /**
+     * Given the options of a step, return the durations to use
+     * for that step.
+     * @param stepOptions The step options object.
+     * @returns [maxDuration, addDuration, moveDuration, removeDuration]
+     */
+    protected getDurations(stepOptions: TransitionOptionsFormat): [number, number, number, number] {
+        const moveDuration =    stepOptions && stepOptions.moveDuration ?   stepOptions.moveDuration :      defaultMoveDuration;
+        const addDuration =     stepOptions && stepOptions.addDuration ?    stepOptions.addDuration :       defaultAddDuration;
+        const removeDuration =  stepOptions && stepOptions.removeDuration ? stepOptions.removeDuration :    defaultRemoveDuration;
+        const maxDuration = Math.max(moveDuration, addDuration, removeDuration);
+        return [maxDuration, addDuration, moveDuration, removeDuration];
+    }
+
+    /**
      * Calculate and return the layout for
      * a particular step. Returns [all layouts, root layout, mouse enter events, mouse exit events, mouse click events, temp content].
      * 
      * @param idx The step number.
      * @param reparse Whether to re-create the container hierarchy.
      */
-    protected calcLayout(idx: number, reparse: boolean):  [ Map<EqComponent<any>, LayoutState>, LayoutState, 
-                                                            Map<LayoutState, MouseEventCallback>,
-                                                            Map<LayoutState, MouseEventCallback>,
-                                                            Map<LayoutState, MouseEventCallback>,
-                                                            EqContent<any>[]] {
+    protected calcLayout(idx: number, reparse: boolean): [Map<EqComponent<any>, LayoutState>, LayoutState,
+        Map<LayoutState, MouseEventCallback>,
+        Map<LayoutState, MouseEventCallback>,
+        Map<LayoutState, MouseEventCallback>,
+        EqContent<any>[]] {
 
         //First create the structure of containers in memory
         if (reparse) {
@@ -880,8 +928,8 @@ export default class CanvasController {
         let mouseExits = newMap();
         let mouseClicks = newMap();
         let tempContent = [];
-        let rootLayout = this.currRootContainer.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj, 
-                                        mouseEnters, mouseExits, mouseClicks, tempContent);
+        let rootLayout = this.currRootContainer.addLayout(undefined, allLayouts, 0, 0, 1, opacityObj, colorsObj,
+            mouseEnters, mouseExits, mouseClicks, tempContent);
         return [allLayouts, rootLayout, mouseEnters, mouseExits, mouseClicks, tempContent];
     }
 }

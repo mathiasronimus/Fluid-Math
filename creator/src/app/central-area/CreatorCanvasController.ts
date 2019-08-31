@@ -54,6 +54,7 @@ export default class CreatorCanvasController extends CanvasController {
         if (this.isAutoplay) {
             container.removeChild(container.children[container.childElementCount - 1]);
         }
+        this.fixedHeights = undefined;
         // Remove lower area if present
         if (container.childElementCount >= 2) {
             container.removeChild(container.children[container.childElementCount - 1]);

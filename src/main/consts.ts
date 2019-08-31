@@ -101,6 +101,7 @@ export const moveEasing = bezier(0.4, 0.0, 0.2, 1)
 export const defaultRemoveDuration = 400
 export const removeEasing = bezier(0.4, 0.0, 1, 1)
 export const progressEasing = bezier(0.4, 0.0, 0.2, 1)
+export const autoplayProgressEasing = bezier(0.5, 0.5, 0.5, 0.5)
 
 // Appearance:
 export const colors = {

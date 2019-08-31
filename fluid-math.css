@@ -11,10 +11,6 @@
 }
 
 .eqUpper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
     color: rgba(0, 0, 0, 0.85);
     position: relative;
     top: -5px;
@@ -26,6 +22,8 @@
     padding: 10px;
     cursor: pointer;
     opacity: 0.4;
+    position: absolute;
+    top: 5px;
 }
 
 .eqText {
@@ -34,6 +32,9 @@
     flex-grow: 1;
     padding: 10px;
     text-align: center;
+    min-height: 25px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 em {
