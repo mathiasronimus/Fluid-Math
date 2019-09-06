@@ -34,15 +34,17 @@ export default class CanvasController {
     protected restartOrNextButton: HTMLElement;
     protected overlayContainer: HTMLElement;
     protected ctx: CanvasRenderingContext2D;
-    protected progress: ProgressIndicator;
-    protected backgroundFill: string;
 
+    
     protected currStep = 0;
     protected steps: StepFormat[];
     protected stepOptions: TransitionOptionsFormat[];
     protected isAutoplay: AutoplayFormat;
+    
     protected customColors: ColorsFormat;
-
+    protected backgroundFill: string;
+    
+    protected progress: ProgressIndicator;
     protected components: ComponentModel;
     // Content added temporarily in the current step
     protected tempContent: EqContent<any>[];
@@ -69,6 +71,8 @@ export default class CanvasController {
     protected lastWidth: number = 0;
     protected fixedHeights: number[];
 
+    protected lastIcon: string;
+
     /**
      * Create a new Canvas Controller,
      * setting up equation playback in the
@@ -83,6 +87,7 @@ export default class CanvasController {
         this.setSize = this.setSize.bind(this);
         this.startAutoplay = this.startAutoplay.bind(this);
         this.handleMouseClick = this.handleMouseClick.bind(this);
+        this.setNextButton = this.setNextButton.bind(this);
 
         this.isAutoplay = instructions.autoplay;
         this.customColors = colors;
@@ -215,6 +220,7 @@ export default class CanvasController {
         this.components = new ComponentModel(instructions);
         this.components.setGenInfo('customColors', this.customColors);
         this.components.setGenInfo('fixedHeights', this.fixedHeights);
+        this.components.setGenInfo('iconSetter', this.setNextButton);
     }
 
     /**
@@ -274,6 +280,46 @@ export default class CanvasController {
     setText(innerHTML: string) {
         if (this.textArea) {
             this.textArea.innerHTML = innerHTML;
+        }
+    }
+
+    /**
+     * Set the icon that will be displayed as
+     * the next/restart button, if it exists. If called
+     * before an animation (i.e if called during layout initialization),
+     * the new icon will persist after the animation.
+     * 
+     * @param iconName The name of the icon, as defined by
+     * https://material.io/resources/icons/. Pass the empty string
+     * to make it blank, and undefined to reset to default.
+     */
+    protected setNextButton(iconName?: string): void {
+        if (iconName === undefined) {
+            // Reset to default
+            this.updateNextButton(this.currStep, false);
+        } else if (this.restartOrNextButton) {
+            this.restartOrNextButton.innerHTML = iconName;
+            this.lastIcon = iconName;
+        }
+    }
+
+    /**
+     * Update the next button to be either a next symbol,
+     * or a restart symbol if at the end of the slideshow.
+     * @param step The step to use to determine the symbol.
+     * @param useStored Whether to use the stored custom icon.
+     */
+    protected updateNextButton(step: number, useStored: boolean): void {
+        if (this.restartOrNextButton) {
+            if (useStored) {
+                this.setNextButton(this.lastIcon);
+            } else if (step === this.steps.length - 1) {
+                // Going to last step, show restart button
+                this.restartOrNextButton.innerHTML = 'refresh';
+            } else {
+                // Not going to last step, show next step button
+                this.restartOrNextButton.innerHTML = 'keyboard_arrow_right';
+            }
         }
     }
 
@@ -661,15 +707,7 @@ export default class CanvasController {
                 this.redraw();
             }
             // Update next/restart button
-            if (this.restartOrNextButton) {
-                if (stepAfter === this.steps.length - 1) {
-                    // Going to last step, show restart button (unless only two steps, can just go back)
-                    this.restartOrNextButton.innerHTML = 'refresh';
-                } else {
-                    // Not going to last step, show next step button
-                    this.restartOrNextButton.innerHTML = 'keyboard_arrow_right';
-                }
-            }
+            this.updateNextButton(stepAfter, true);
             // If we weren't animating the progress bar, draw it on the final frame.
             if (this.progress && updateDimenAfter) {
                 this.progress.draw(this.currStep / (this.steps.length - 1), canvasWidth, canvasHeight);
@@ -892,34 +930,37 @@ export default class CanvasController {
      * @param idx The step number.
      * @param reparse Whether to re-create the container hierarchy.
      */
-    protected calcLayout(idx: number, reparse: boolean): [Map<EqComponent<any>, LayoutState>, LayoutState,
-        Map<LayoutState, MouseEventCallback>,
-        Map<LayoutState, MouseEventCallback>,
-        Map<LayoutState, MouseEventCallback>,
-        EqContent<any>[]] {
+    protected calcLayout(idx: number, reparse: boolean): [  Map<EqComponent<any>, LayoutState>, LayoutState,
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            Map<LayoutState, MouseEventCallback>,
+                                                            EqContent<any>[]] {
 
-        //First create the structure of containers in memory
+        // Reset stored next icon
+        this.lastIcon = undefined;
+
+        // First create the structure of containers in memory
         if (reparse) {
             let rootObj = this.steps[idx].root;
             this.currRootContainer = this.components.parseContainer(rootObj, 0);
         }
-        //If content doesn't take up full width, center it
+        // If content doesn't take up full width, center it
         let width = this.container.clientWidth;
         if (this.currRootContainer.getWidth() < width) {
             this.currRootContainer.setWidth(width);
         }
-        //Apply fixed height
+        // Apply fixed height
         if (this.fixedHeights) {
             let height = this.fixedHeights[window['currentWidthTier']];
             this.currRootContainer.setHeight(height);
         }
 
-        //Set the text
+        // Set the text
         if (reparse && this.textArea) {
             this.textArea.innerHTML = this.steps[idx].text ? this.steps[idx].text : "";
         }
 
-        //Get the color info
+        // Get the color info
         let colorsObj = this.steps[idx].color;
         let opacityObj = this.steps[idx].opacity;
 

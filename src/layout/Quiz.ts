@@ -30,7 +30,8 @@ import { defaultQuizPadding, curvedOutlineDefaultOpacity, curvedOutlineColor, ra
             inf['customColors'] && inf['customColors'].radioButtonOpacity ? inf['customColors'].radioButtonOpacity : radioButtonDefaultOpacity,
             inf['customColors'] && inf['customColors'].radioButtonColor ? inf['customColors'].radioButtonColor : radioButtonColor,
             inf['customColors'] && inf['customColors'].quizCorrectColor ? inf['customColors'].quizCorrectColor : quizCorrectColor,
-            inf['customColors'] && inf['customColors'].quizIncorrectColor ? inf['customColors'].quizIncorrectColor : quizIncorrectColor
+            inf['customColors'] && inf['customColors'].quizIncorrectColor ? inf['customColors'].quizIncorrectColor : quizIncorrectColor,
+            inf['iconSetter']
         );
     }
 })
@@ -48,10 +49,13 @@ export default class Quiz extends VBox {
     protected correctColor: [number, number, number];
     protected incorrectColor: [number, number, number];
 
+    protected iconSetter: (icon?: string) => void;
+
     constructor(children: EqComponent<any>[], padding: Padding, answers: number[],
-        outlineOpacity: number, outlineColor: [number, number, number],
-        radioButtonOpacity: number, radioButtonColor: [number, number, number],
-        correctColor: [number, number, number], incorrectColor: [number, number, number]) {
+                outlineOpacity: number, outlineColor: [number, number, number],
+                radioButtonOpacity: number, radioButtonColor: [number, number, number],
+                correctColor: [number, number, number], incorrectColor: [number, number, number],
+                iconSetter: (icon?: string) => void) {
         super(children, padding);
         this.outlineOpacity = outlineOpacity;
         this.outlineColor = outlineColor;
@@ -60,6 +64,7 @@ export default class Quiz extends VBox {
         this.correctColor = correctColor;
         this.incorrectColor = incorrectColor;
         this.answers = [];
+        this.iconSetter = iconSetter;
         answers.forEach(index => this.answers[index] = true);
     }
 
@@ -73,13 +78,16 @@ export default class Quiz extends VBox {
         return super.calcHeight() + answerVMargin * (this.children.length + 2);
     }
 
-    addLayout(parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
-        tlx: number, tly: number, currScale: number,
-        opacityObj: Object, colorsObj: Object,
-        mouseEnter: Map<LayoutState, MouseEventCallback>,
-        mouseExit: Map<LayoutState, MouseEventCallback>,
-        mouseClick: Map<LayoutState, MouseEventCallback>,
-        tempContent: EqContent<any>[]): LayoutState {
+    addLayout(  parentLayout: LayoutState, layouts: Map<EqComponent<any>, LayoutState>,
+                tlx: number, tly: number, currScale: number,
+                opacityObj: Object, colorsObj: Object,
+                mouseEnter: Map<LayoutState, MouseEventCallback>,
+                mouseExit: Map<LayoutState, MouseEventCallback>,
+                mouseClick: Map<LayoutState, MouseEventCallback>,
+                tempContent: EqContent<any>[]): LayoutState {
+
+        // If a quiz is in a layout, next icon is not valid
+        this.iconSetter('');
 
         let state = new LayoutState(parentLayout, this, tlx, tly,
             this.getWidth() * currScale,
@@ -140,7 +148,7 @@ export default class Quiz extends VBox {
                 }
             }
 
-            // If mouse enters outline or button, make it lighter (unless answer has been revealed)
+            // If mouse enters outline or button, make it darker (unless answer has been revealed)
             let onEnter = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
                 if (this.clickedIndex === -1) {
                     new OutlineFadeAnimation(outlineLayout, hoveredOutlineOpacity, set);
@@ -160,7 +168,7 @@ export default class Quiz extends VBox {
                 mouseEnter.set(radioButtonLayout, onEnter);
             }
 
-            // If mouse exits, make darker again (unless answer has been revealed)
+            // If mouse exits, make lighter again (unless answer has been revealed)
             let onExit = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
                 if (this.clickedIndex === -1) {
                     new OutlineFadeAnimation(outlineLayout, this.outlineOpacity, set);
@@ -184,6 +192,8 @@ export default class Quiz extends VBox {
         if (this.clickedIndex === -1) {
             // If mouse clicks, reveal answer
             let onClick = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
+                // Now we can go next
+                this.iconSetter();
                 // Check if correct
                 const clickedIndex = oldLayout instanceof RadioButtonLayoutState ? allButtons.indexOf(oldLayout) : allOutlines.indexOf(oldLayout);
                 if (this.answers[clickedIndex]) {
