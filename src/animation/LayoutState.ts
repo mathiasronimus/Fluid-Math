@@ -15,10 +15,6 @@ export default class LayoutState {
     component: EqComponent<LayoutState>;
     layoutParent: LayoutState;
 
-    // The distance from the top of the layout to the baseline
-    // of its text.
-    baselineFromTop: number;
-
     constructor(layoutParent, component, tlx, tly, width, height, scale) {
         this.tlx = tlx;
         this.tly = tly;
@@ -75,5 +71,25 @@ export default class LayoutState {
                                 this.width, 
                                 this.height,
                                 0);
+    }
+
+    /**
+     * Given two layout states, return the smallest layout
+     * state that totally encompasses both of them. The scale,
+     * component, and parent of the returned layout are undefined.
+     * @param l1 The first layout state.
+     * @param l2 The second layout state.
+     */
+    static encompassing(l1: LayoutState, l2: LayoutState): LayoutState {
+        const minLeft = Math.min(l1.tlx, l2.tlx);
+        const maxRight = Math.max(l1.tlx + l1.width, l2.tlx + l2.width);
+        const minTop = Math.min(l1.tly, l2.tly);
+        const maxBot = Math.max(l1.tly + l1.height, l2.tly + l2.height);
+        const width = maxRight - minLeft;
+        const height = maxBot - minTop;
+        return new LayoutState(
+            undefined, undefined,
+            minLeft, minTop, width, height, undefined
+        )
     }
 }

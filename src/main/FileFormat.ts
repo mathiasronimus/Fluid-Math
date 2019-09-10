@@ -154,6 +154,15 @@ export interface QuizFormat extends LinearContainerFormat {
     // quiz. Indices are defined by their order in the
     // quizzes children array.
     answers: number[];
+    // Defines a custom message for a correct answer.
+    correctMessage?: string;
+    // Defines a custom message for an incorrect answer.
+    incorrectMessage?: string;
+    // Defines a custom message individually for each answer.
+    // These override correct and incorrect messages defined above.
+    // Once again, indices are defined by their order in
+    // the children array.
+    customMessages?: {[idx: number]: string};
 }
 
 // Format for type = table

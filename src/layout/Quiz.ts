@@ -15,7 +15,7 @@ import RadioButtonSelectAnimation from "../animation/RadioButtonSelectAnimation"
 import RadioButtonLayoutState from "../animation/RadioButtonLayoutState";
 import { Container } from "../main/ComponentModel";
 import { QuizFormat } from "../main/FileFormat";
-import { defaultQuizPadding, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, answerVMargin, quizRadioButtonPadding, revealedOutlineOpacity, hoveredOutlineOpacity, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing } from "../main/consts";
+import { defaultQuizPadding, curvedOutlineDefaultOpacity, curvedOutlineColor, radioButtonDefaultOpacity, radioButtonColor, quizCorrectColor, quizIncorrectColor, quizCurvedOutlinePadding, quizRadioButtonDimen, answerVMargin, quizRadioButtonPadding, revealedOutlineOpacity, hoveredOutlineOpacity, quizRadioButtonSelectDuration, quizRadioButtonSelectEasing, quizRadioButtonDeselectDuration, quizRadioButtonDeselectEasing, defaultIncorrectText, defaultCorrectText } from "../main/consts";
 
 @Container({
     typeString: 'quiz',
@@ -31,7 +31,10 @@ import { defaultQuizPadding, curvedOutlineDefaultOpacity, curvedOutlineColor, ra
             inf['customColors'] && inf['customColors'].radioButtonColor ? inf['customColors'].radioButtonColor : radioButtonColor,
             inf['customColors'] && inf['customColors'].quizCorrectColor ? inf['customColors'].quizCorrectColor : quizCorrectColor,
             inf['customColors'] && inf['customColors'].quizIncorrectColor ? inf['customColors'].quizIncorrectColor : quizIncorrectColor,
-            inf['iconSetter']
+            inf['iconSetter'],
+            format.correctMessage,
+            format.incorrectMessage,
+            format.customMessages
         );
     }
 })
@@ -39,6 +42,11 @@ export default class Quiz extends VBox {
 
     protected answers: boolean[];
     protected clickedIndex = -1;
+
+    // Custom text: may be undefined
+    protected correctMessage: string;
+    protected incorrectMessage: string;
+    protected customMessages: {[idx: number]: string};
 
     protected outlineOpacity: number;
     protected outlineColor: [number, number, number];
@@ -55,7 +63,8 @@ export default class Quiz extends VBox {
                 outlineOpacity: number, outlineColor: [number, number, number],
                 radioButtonOpacity: number, radioButtonColor: [number, number, number],
                 correctColor: [number, number, number], incorrectColor: [number, number, number],
-                iconSetter: (icon?: string) => void) {
+                iconSetter: (icon?: string) => void, correctMessage: string, incorrectMessage: string,
+                customMessages: {[idx: number]: string}) {
         super(children, padding);
         this.outlineOpacity = outlineOpacity;
         this.outlineColor = outlineColor;
@@ -66,6 +75,9 @@ export default class Quiz extends VBox {
         this.answers = [];
         this.iconSetter = iconSetter;
         answers.forEach(index => this.answers[index] = true);
+        this.correctMessage = correctMessage;
+        this.incorrectMessage = incorrectMessage;
+        this.customMessages = customMessages;
     }
 
     // Override to add padding
@@ -148,6 +160,9 @@ export default class Quiz extends VBox {
                 }
             }
 
+            // Layout that encompasses both of them for detecting events
+            const selectionRow = LayoutState.encompassing(outlineLayout, radioButtonLayout);
+
             // If mouse enters outline or button, make it darker (unless answer has been revealed)
             let onEnter = (oldLayout: ContentLayoutState, set: AnimationSet, controller: CanvasController) => {
                 if (this.clickedIndex === -1) {
@@ -164,8 +179,7 @@ export default class Quiz extends VBox {
                 controller.setCursor('pointer');
             };
             if (this.clickedIndex === -1) {
-                mouseEnter.set(outlineLayout, onEnter);
-                mouseEnter.set(radioButtonLayout, onEnter);
+                mouseEnter.set(selectionRow, onEnter);
             }
 
             // If mouse exits, make lighter again (unless answer has been revealed)
@@ -184,8 +198,7 @@ export default class Quiz extends VBox {
                 controller.setCursor('default');
             };
             if (this.clickedIndex === -1) {
-                mouseExit.set(outlineLayout, onExit);
-                mouseExit.set(radioButtonLayout, onExit);
+                mouseExit.set(selectionRow, onExit)
             }
         }
 
@@ -197,9 +210,29 @@ export default class Quiz extends VBox {
                 // Check if correct
                 const clickedIndex = oldLayout instanceof RadioButtonLayoutState ? allButtons.indexOf(oldLayout) : allOutlines.indexOf(oldLayout);
                 if (this.answers[clickedIndex]) {
-                    controller.setText('<em class="green">Correct!</em> Tap again to see working.');
+                    // Is correct
+                    if (this.customMessages && this.customMessages[clickedIndex]) {
+                        // Show the custom message
+                        controller.setText(this.customMessages[clickedIndex]);
+                    } else if (this.correctMessage) {
+                        // If no custom message, show custom correct message
+                        controller.setText(this.correctMessage);
+                    } else {
+                        // If neither, show default
+                        controller.setText(defaultCorrectText);
+                    }
                 } else {
-                    controller.setText('<em class="red">Not quite...</em> Tap again to see working.');
+                    // Is not correct
+                    if (this.customMessages && this.customMessages[clickedIndex]) {
+                        // Show the custom message
+                        controller.setText(this.customMessages[clickedIndex]);
+                    } else if (this.incorrectMessage) {
+                        // If no custom message, show custom incorrect message
+                        controller.setText(this.incorrectMessage);
+                    } else {
+                        // If neither, show default
+                        controller.setText(defaultIncorrectText);
+                    }
                 }
                 // Animate all options
                 allOutlines.forEach((layout: ContentLayoutState, index: number) => {

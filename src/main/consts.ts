@@ -77,6 +77,8 @@ export const quizRadioButtonSelectDuration = 300
 export const quizRadioButtonSelectEasing = bezier(0.0, 0.0, 0.2, 1)
 export const quizRadioButtonDeselectDuration = 300
 export const quizRadioButtonDeselectEasing = bezier(0.4, 0.0, 1, 1)
+export const defaultCorrectText = '<em class="green">Correct!</em> Tap again to see working.'
+export const defaultIncorrectText = '<em class="red">Not quite...</em> Tap again to see working.'
 
 // Creator:
 export const creatorContainerPadding = Padding.even(30)

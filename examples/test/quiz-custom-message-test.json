@@ -1,0 +1,35 @@
+{
+    "steps": [
+        {
+            "root": {
+                "type": "vbox",
+                "children": [
+                    {
+                        "type": "quiz",
+                        "children": [
+                            "t0",
+                            "t1",
+                            "t2",
+                            "t3",
+                            "t4"
+                        ],
+                        "answers": [0],
+                        "correctMessage": "Custom correct text!",
+                        "incorrectMessage": "Custom incorrect text!",
+                        "customMessages": {
+                            "2": "Custom message!"
+                        }
+                    }
+                ]
+            },
+            "text": "Clicking an answer should show the corresponding text"
+        }
+    ],
+    "terms": [
+        "Custom correct text!",
+        "Custom incorrect text!",
+        "Custom message!",
+        "Custom incorrect text!",
+        "Custom incorrect text!"
+    ]
+}
