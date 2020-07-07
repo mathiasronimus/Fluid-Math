@@ -30,7 +30,7 @@
     "bezier-easing": "^2.1.0",
     "lodash": "^4.17.15",
     "map-or-similar": "^1.5.0",
-    "npm": "^6.10.2",
+    "npm": "^6.14.6",
     "webfontloader": "^1.6.28"
   }
 }
